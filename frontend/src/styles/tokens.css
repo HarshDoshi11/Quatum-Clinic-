@@ -1,0 +1,85 @@
+/*
+ * Q/Clinical design tokens — "Lab Instrument".
+ * All colors live here as CSS variables; Tailwind utilities map onto them
+ * (see index.css @theme), so components never branch on theme.
+ */
+
+:root,
+:root[data-theme='light'] {
+  --bg: #f3f1ec;
+  --surface: #ece9e2;
+  --ink: #0d0d0d;
+  --muted: #6b6b6b;
+  --rule: rgba(13, 13, 13, 0.15);
+  --rule-strong: rgba(13, 13, 13, 0.32);
+
+  --accent: #2340ff;
+  --accent-ink: #f3f1ec; /* text placed on an accent fill */
+  --classical: #8c8c8c;
+
+  --risk-low: #5e8c61;
+  --risk-mid: #c8912b;
+  --risk-high: #b23a2e;
+
+  --overlay: rgba(13, 13, 13, 0.28);
+  --shadow-float: 0 12px 40px -12px rgba(13, 13, 13, 0.22), 0 0 0 1px var(--rule);
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0d0d0d;
+  --surface: #151515;
+  --ink: #f3f1ec;
+  --muted: #8a8a8a;
+  --rule: rgba(243, 241, 236, 0.14);
+  --rule-strong: rgba(243, 241, 236, 0.3);
+
+  --accent: #4d63ff;
+  --accent-ink: #0d0d0d;
+  --classical: #7a7a7a;
+
+  --risk-low: #7fb083;
+  --risk-mid: #e0a84a;
+  --risk-high: #d25a4d;
+
+  --overlay: rgba(0, 0, 0, 0.55);
+  --shadow-float: 0 16px 48px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--rule);
+
+  color-scheme: dark;
+}
+
+:root {
+  /* Type */
+  --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  --text-display-xl: clamp(64px, 7.2vw, 120px);
+  --text-display-lg: clamp(56px, 5.6vw, 88px);
+  --text-display-md: clamp(44px, 4.4vw, 64px);
+
+  /* Shape */
+  --radius: 2px;
+  --radius-max: 4px;
+  --hairline: 1px;
+
+  /* Shell */
+  --sidebar-w: 248px;
+  --topbar-h: 56px;
+  --strip-h: 28px;
+  --gutter: 24px;
+  --page-pad-x: 56px;
+
+  /* Motion */
+  --dur-fast: 200ms;
+  --dur-base: 300ms;
+  --ease-precise: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --sidebar-w: 232px;
+    --page-pad-x: 40px;
+  }
+}
