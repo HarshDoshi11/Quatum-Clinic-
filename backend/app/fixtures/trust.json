@@ -5,155 +5,155 @@
     "experimentId": "EXP-2047",
     "calibration": [
       {
-        "predicted": 0.035,
-        "observed": 0.043,
-        "count": 70
+        "predicted": 0.01,
+        "observed": 0.013,
+        "count": 95
       },
       {
-        "predicted": 0.142,
-        "observed": 0.159,
-        "count": 15
+        "predicted": 0.132,
+        "observed": 0.149,
+        "count": 4
       },
       {
-        "predicted": 0.241,
-        "observed": 0.256,
-        "count": 11
+        "predicted": 0.226,
+        "observed": 0.242,
+        "count": 3
       },
       {
-        "predicted": 0.337,
-        "observed": 0.349,
-        "count": 8
+        "predicted": 0.315,
+        "observed": 0.327,
+        "count": 2
       },
       {
-        "predicted": 0.437,
-        "observed": 0.442,
-        "count": 8
+        "predicted": 0.472,
+        "observed": 0.474,
+        "count": 2
       },
       {
-        "predicted": 0.543,
-        "observed": 0.54,
+        "predicted": 0.539,
+        "observed": 0.536,
+        "count": 3
+      },
+      {
+        "predicted": 0.672,
+        "observed": 0.66,
+        "count": 2
+      },
+      {
+        "predicted": 0.774,
+        "observed": 0.758,
         "count": 5
       },
       {
-        "predicted": 0.645,
-        "observed": 0.635,
-        "count": 6
+        "predicted": 0.86,
+        "observed": 0.843,
+        "count": 5
       },
       {
-        "predicted": 0.747,
-        "observed": 0.731,
-        "count": 15
-      },
-      {
-        "predicted": 0.839,
-        "observed": 0.822,
-        "count": 8
-      },
-      {
-        "predicted": 0.957,
-        "observed": 0.948,
-        "count": 25
+        "predicted": 0.984,
+        "observed": 0.98,
+        "count": 50
       }
     ],
-    "ece": 0.01,
+    "ece": 0.005,
     "thresholdCurve": [
       {
         "threshold": 0.05,
-        "sensitivity": 0.987,
-        "specificity": 0.386
+        "sensitivity": 0.99,
+        "specificity": 0.763
       },
       {
         "threshold": 0.1,
-        "sensitivity": 0.967,
-        "specificity": 0.539
+        "sensitivity": 0.981,
+        "specificity": 0.832
       },
       {
         "threshold": 0.15,
-        "sensitivity": 0.945,
-        "specificity": 0.632
+        "sensitivity": 0.972,
+        "specificity": 0.868
       },
       {
         "threshold": 0.2,
-        "sensitivity": 0.921,
-        "specificity": 0.698
+        "sensitivity": 0.964,
+        "specificity": 0.891
       },
       {
         "threshold": 0.25,
-        "sensitivity": 0.897,
-        "specificity": 0.748
+        "sensitivity": 0.956,
+        "specificity": 0.908
       },
       {
         "threshold": 0.3,
-        "sensitivity": 0.872,
-        "specificity": 0.787
+        "sensitivity": 0.948,
+        "specificity": 0.921
       },
       {
         "threshold": 0.35,
-        "sensitivity": 0.845,
-        "specificity": 0.82
+        "sensitivity": 0.939,
+        "specificity": 0.931
       },
       {
         "threshold": 0.4,
-        "sensitivity": 0.817,
-        "specificity": 0.847
-      },
-      {
-        "threshold": 0.45,
-        "sensitivity": 0.788,
-        "specificity": 0.871
-      },
-      {
-        "threshold": 0.5,
-        "sensitivity": 0.757,
-        "specificity": 0.892
-      },
-      {
-        "threshold": 0.55,
-        "sensitivity": 0.723,
-        "specificity": 0.91
-      },
-      {
-        "threshold": 0.6,
-        "sensitivity": 0.687,
-        "specificity": 0.926
-      },
-      {
-        "threshold": 0.65,
-        "sensitivity": 0.646,
+        "sensitivity": 0.93,
         "specificity": 0.94
       },
       {
+        "threshold": 0.45,
+        "sensitivity": 0.921,
+        "specificity": 0.948
+      },
+      {
+        "threshold": 0.5,
+        "sensitivity": 0.911,
+        "specificity": 0.954
+      },
+      {
+        "threshold": 0.55,
+        "sensitivity": 0.899,
+        "specificity": 0.96
+      },
+      {
+        "threshold": 0.6,
+        "sensitivity": 0.887,
+        "specificity": 0.966
+      },
+      {
+        "threshold": 0.65,
+        "sensitivity": 0.873,
+        "specificity": 0.971
+      },
+      {
         "threshold": 0.7,
-        "sensitivity": 0.602,
-        "specificity": 0.953
-      },
-      {
-        "threshold": 0.75,
-        "sensitivity": 0.551,
-        "specificity": 0.964
-      },
-      {
-        "threshold": 0.8,
-        "sensitivity": 0.491,
+        "sensitivity": 0.857,
         "specificity": 0.975
       },
       {
-        "threshold": 0.85,
-        "sensitivity": 0.42,
+        "threshold": 0.75,
+        "sensitivity": 0.837,
+        "specificity": 0.98
+      },
+      {
+        "threshold": 0.8,
+        "sensitivity": 0.813,
         "specificity": 0.984
       },
       {
+        "threshold": 0.85,
+        "sensitivity": 0.78,
+        "specificity": 0.988
+      },
+      {
         "threshold": 0.9,
-        "sensitivity": 0.329,
-        "specificity": 0.991
+        "sensitivity": 0.732,
+        "specificity": 0.992
       },
       {
         "threshold": 0.95,
-        "sensitivity": 0.204,
-        "specificity": 0.997
+        "sensitivity": 0.646,
+        "specificity": 0.996
       }
     ],
-    "defaultThreshold": 0.27,
+    "defaultThreshold": 0.32,
     "testPatients": 171,
     "abstained": 7,
     "abstainRate": 0.0409,

@@ -15,6 +15,15 @@ export type BackendId = 'ideal-sim' | 'noisy-sim' | 'fake-backend-1' | 'fake-bac
 /** e.g. "EXP-2048" */
 export type ExperimentId = string
 
+/**
+ * Identity of one evaluated configuration, e.g. "wdbc|vqc|4q|angle|d3|linear|ideal-sim".
+ * The same key always carries the same result on every page (results store).
+ */
+export type ConfigKey = string
+
+/** Variational ansatz family; decides the trainable-parameter formula. */
+export type Ansatz = 'strongly-entangling' | 'real-amplitudes' | 'zz-kernel'
+
 /** ISO-8601 timestamp with offset, e.g. "2026-09-27T14:32:00+05:30". */
 export type ISODateTime = string
 

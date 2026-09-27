@@ -4,6 +4,7 @@
       "type": "small-data",
       "dataset": "wdbc",
       "experimentId": "EXP-2038",
+      "evaluation": "5 seeds per size · held-out 30% · benchmark backends · WDBC",
       "sizes": [
         25,
         50,
@@ -20,40 +21,40 @@
               "trainSize": 25,
               "label": "25",
               "auc": {
-                "mean": 0.862,
-                "std": 0.048
+                "mean": 0.932,
+                "std": 0.024
               }
             },
             {
               "trainSize": 50,
               "label": "50",
               "auc": {
-                "mean": 0.882,
-                "std": 0.034
+                "mean": 0.952,
+                "std": 0.017
               }
             },
             {
               "trainSize": 100,
               "label": "100",
               "auc": {
-                "mean": 0.897,
-                "std": 0.024
+                "mean": 0.967,
+                "std": 0.012
               }
             },
             {
               "trainSize": 200,
               "label": "200",
               "auc": {
-                "mean": 0.907,
-                "std": 0.017
+                "mean": 0.977,
+                "std": 0.008
               }
             },
             {
               "trainSize": 398,
               "label": "All (398)",
               "auc": {
-                "mean": 0.914,
-                "std": 0.012
+                "mean": 0.984,
+                "std": 0.006
               }
             }
           ]
@@ -66,53 +67,7 @@
               "trainSize": 25,
               "label": "25",
               "auc": {
-                "mean": 0.842,
-                "std": 0.06
-              }
-            },
-            {
-              "trainSize": 50,
-              "label": "50",
-              "auc": {
-                "mean": 0.868,
-                "std": 0.042
-              }
-            },
-            {
-              "trainSize": 100,
-              "label": "100",
-              "auc": {
-                "mean": 0.887,
-                "std": 0.03
-              }
-            },
-            {
-              "trainSize": 200,
-              "label": "200",
-              "auc": {
-                "mean": 0.9,
-                "std": 0.021
-              }
-            },
-            {
-              "trainSize": 398,
-              "label": "All (398)",
-              "auc": {
-                "mean": 0.909,
-                "std": 0.015
-              }
-            }
-          ]
-        },
-        {
-          "model": "xgboost",
-          "family": "classical",
-          "points": [
-            {
-              "trainSize": 25,
-              "label": "25",
-              "auc": {
-                "mean": 0.809,
+                "mean": 0.905,
                 "std": 0.036
               }
             },
@@ -120,7 +75,7 @@
               "trainSize": 50,
               "label": "50",
               "auc": {
-                "mean": 0.853,
+                "mean": 0.931,
                 "std": 0.025
               }
             },
@@ -128,7 +83,7 @@
               "trainSize": 100,
               "label": "100",
               "auc": {
-                "mean": 0.884,
+                "mean": 0.95,
                 "std": 0.018
               }
             },
@@ -136,7 +91,7 @@
               "trainSize": 200,
               "label": "200",
               "auc": {
-                "mean": 0.906,
+                "mean": 0.963,
                 "std": 0.013
               }
             },
@@ -144,8 +99,54 @@
               "trainSize": 398,
               "label": "All (398)",
               "auc": {
-                "mean": 0.921,
+                "mean": 0.972,
                 "std": 0.009
+              }
+            }
+          ]
+        },
+        {
+          "model": "svm",
+          "family": "classical",
+          "points": [
+            {
+              "trainSize": 25,
+              "label": "25",
+              "auc": {
+                "mean": 0.889,
+                "std": 0.012
+              }
+            },
+            {
+              "trainSize": 50,
+              "label": "50",
+              "auc": {
+                "mean": 0.93,
+                "std": 0.008
+              }
+            },
+            {
+              "trainSize": 100,
+              "label": "100",
+              "auc": {
+                "mean": 0.959,
+                "std": 0.006
+              }
+            },
+            {
+              "trainSize": 200,
+              "label": "200",
+              "auc": {
+                "mean": 0.98,
+                "std": 0.004
+              }
+            },
+            {
+              "trainSize": 398,
+              "label": "All (398)",
+              "auc": {
+                "mean": 0.994,
+                "std": 0.003
               }
             }
           ]
@@ -158,57 +159,59 @@
               "trainSize": 25,
               "label": "25",
               "auc": {
-                "mean": 0.825,
-                "std": 0.04
+                "mean": 0.91,
+                "std": 0.016
               }
             },
             {
               "trainSize": 50,
               "label": "50",
               "auc": {
-                "mean": 0.857,
-                "std": 0.028
+                "mean": 0.942,
+                "std": 0.011
               }
             },
             {
               "trainSize": 100,
               "label": "100",
               "auc": {
-                "mean": 0.88,
-                "std": 0.02
+                "mean": 0.965,
+                "std": 0.008
               }
             },
             {
               "trainSize": 200,
               "label": "200",
               "auc": {
-                "mean": 0.896,
-                "std": 0.014
+                "mean": 0.981,
+                "std": 0.006
               }
             },
             {
               "trainSize": 398,
               "label": "All (398)",
               "auc": {
-                "mean": 0.907,
-                "std": 0.01
+                "mean": 0.992,
+                "std": 0.004
               }
             }
           ]
         }
       ],
       "crossover": {
-        "trainSize": 219,
-        "auc": 0.908,
+        "trainSize": 161,
+        "auc": 0.974,
         "quantumModel": "qsvm",
-        "classicalModel": "xgboost"
+        "classicalModel": "svm"
       },
-      "takeaway": "With 25 training patients QSVM leads XGBoost by 5.3 AUC points; XGBoost overtakes at ~219 patients."
+      "gapClosesAt": null,
+      "takeaway": "With 25 training patients QSVM leads SVM by 4.3 AUC points (beyond seed noise); SVM overtakes at ~161 patients, where the bands separate again."
     },
     "heart": {
       "type": "small-data",
       "dataset": "heart",
       "experimentId": "EXP-2032",
+      "evaluation": "5 seeds per size · held-out 30% · benchmark backends · UCI",
       "sizes": [
         25,
         50,
@@ -402,13 +405,9 @@
           ]
         }
       ],
-      "crossover": {
-        "trainSize": 135,
-        "auc": 0.89,
-        "quantumModel": "qsvm",
-        "classicalModel": "xgboost"
-      },
-      "takeaway": "With 25 training patients QSVM leads XGBoost by 4.5 AUC points; XGBoost overtakes at ~135 patients."
+      "crossover": null,
+      "gapClosesAt": null,
+      "takeaway": "The quantum and classical curves overlap within seed noise at every training size."
     }
   },
   "scalability": {
@@ -416,107 +415,137 @@
       "type": "scalability",
       "dataset": "wdbc",
       "experimentId": "EXP-2039",
+      "evaluation": "5 seeds · held-out 30% · ideal sim · WDBC",
       "model": "vqc",
       "points": [
         {
+          "configKey": "wdbc|vqc|4q|angle|d3|linear|ideal-sim",
           "qubits": 4,
           "circuitDepth": 25,
           "gateCount": 43,
           "twoQubitGates": 15,
           "runtimeS": 48,
-          "auc": 0.904
+          "auc": 0.965,
+          "aucStd": 0.0072
         },
         {
+          "configKey": "wdbc|vqc|6q|angle|d3|linear|ideal-sim",
           "qubits": 6,
           "circuitDepth": 33,
           "gateCount": 70,
           "twoQubitGates": 28,
           "runtimeS": 169,
-          "auc": 0.907
+          "auc": 0.97,
+          "aucStd": 0.0081
         },
         {
+          "configKey": "wdbc|vqc|8q|angle|d3|linear|ideal-sim",
           "qubits": 8,
           "circuitDepth": 41,
           "gateCount": 99,
           "twoQubitGates": 43,
           "runtimeS": 412,
-          "auc": 0.909
+          "auc": 0.972,
+          "aucStd": 0.009
         },
         {
+          "configKey": "wdbc|vqc|10q|angle|d3|linear|ideal-sim",
           "qubits": 10,
           "circuitDepth": 51,
           "gateCount": 132,
           "twoQubitGates": 62,
           "runtimeS": 823,
-          "auc": 0.908
+          "auc": 0.971,
+          "aucStd": 0.0099
         },
         {
+          "configKey": "wdbc|vqc|12q|angle|d3|linear|ideal-sim",
           "qubits": 12,
           "circuitDepth": 62,
           "gateCount": 167,
           "twoQubitGates": 83,
           "runtimeS": 1448,
-          "auc": 0.905
+          "auc": 0.968,
+          "aucStd": 0.0108
         }
       ],
       "bottleneck": {
-        "qubits": 10,
-        "explanation": "From 8 to 10 qubits runtime grows ×2.0 and two-qubit gates ×1.4, while AUC falls by 0.001."
+        "qubits": 6,
+        "explanation": "From 4 to 6 qubits training time grows ×3.5 and two-qubit gates ×1.9, while AUC changes by +0.005 — inside the ±0.011 seed noise."
       },
-      "takeaway": "AUC peaks at 8 qubits; from 10 qubits cost grows faster than accuracy."
+      "rule": {
+        "runtimeGrowth": 1.8,
+        "text": "Marker rule · first step where training time grows ≥ ×1.8 while the AUC gain is within the combined seed std"
+      },
+      "takeaway": "AUC stays flat within seed noise from 4 to 12 qubits (0.965–0.972); training time keeps rising, ×30 overall."
     },
     "heart": {
       "type": "scalability",
       "dataset": "heart",
       "experimentId": "EXP-2033",
+      "evaluation": "5 seeds · held-out 30% · ideal sim · UCI",
       "model": "vqc",
       "points": [
         {
+          "configKey": "heart|vqc|4q|angle|d3|linear|ideal-sim",
           "qubits": 4,
           "circuitDepth": 25,
           "gateCount": 43,
           "twoQubitGates": 15,
           "runtimeS": 28,
-          "auc": 0.884
+          "auc": 0.882,
+          "aucStd": 0.0144
         },
         {
+          "configKey": "heart|vqc|6q|angle|d3|linear|ideal-sim",
           "qubits": 6,
           "circuitDepth": 33,
           "gateCount": 70,
           "twoQubitGates": 28,
           "runtimeS": 98,
-          "auc": 0.887
+          "auc": 0.887,
+          "aucStd": 0.0162
         },
         {
+          "configKey": "heart|vqc|8q|angle|d3|linear|ideal-sim",
           "qubits": 8,
           "circuitDepth": 41,
           "gateCount": 99,
           "twoQubitGates": 43,
           "runtimeS": 238,
-          "auc": 0.889
+          "auc": 0.889,
+          "aucStd": 0.018
         },
         {
+          "configKey": "heart|vqc|10q|angle|d3|linear|ideal-sim",
           "qubits": 10,
           "circuitDepth": 51,
           "gateCount": 132,
           "twoQubitGates": 62,
           "runtimeS": 475,
-          "auc": 0.888
+          "auc": 0.888,
+          "aucStd": 0.0198
         },
         {
+          "configKey": "heart|vqc|12q|angle|d3|linear|ideal-sim",
           "qubits": 12,
           "circuitDepth": 62,
           "gateCount": 167,
           "twoQubitGates": 83,
           "runtimeS": 836,
-          "auc": 0.885
+          "auc": 0.885,
+          "aucStd": 0.0216
         }
       ],
       "bottleneck": {
-        "qubits": 10,
-        "explanation": "From 8 to 10 qubits runtime grows ×2.0 and two-qubit gates ×1.4, while AUC falls by 0.001."
+        "qubits": 6,
+        "explanation": "From 4 to 6 qubits training time grows ×3.5 and two-qubit gates ×1.9, while AUC changes by +0.005 — inside the ±0.022 seed noise."
       },
-      "takeaway": "AUC peaks at 8 qubits; from 10 qubits cost grows faster than accuracy."
+      "rule": {
+        "runtimeGrowth": 1.8,
+        "text": "Marker rule · first step where training time grows ≥ ×1.8 while the AUC gain is within the combined seed std"
+      },
+      "takeaway": "AUC stays flat within seed noise from 4 to 12 qubits (0.882–0.889); training time keeps rising, ×30 overall."
     }
   },
   "evolution": {
@@ -524,461 +553,633 @@
       "type": "evolution",
       "dataset": "wdbc",
       "experimentId": "EXP-2040",
+      "evaluation": "5 seeds · held-out 30% · ideal sim · WDBC",
       "model": "vqc",
       "configs": [
         {
           "id": "C01",
+          "configKey": "wdbc|vqc|4q|angle|d1|linear|ideal-sim",
+          "experimentId": "EXP-2040.C01",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 1,
           "entanglement": "linear",
           "parameters": 8,
-          "auc": 0.884,
+          "auc": 0.949,
+          "aucStd": 0.0058,
           "trainTimeS": 16,
           "pareto": false
         },
         {
           "id": "C02",
+          "configKey": "wdbc|vqc|4q|angle|d2|linear|ideal-sim",
+          "experimentId": "EXP-2040.C02",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 2,
           "entanglement": "linear",
-          "parameters": 16,
-          "auc": 0.893,
+          "parameters": 12,
+          "auc": 0.96,
+          "aucStd": 0.0065,
           "trainTimeS": 32,
           "pareto": false
         },
         {
           "id": "C03",
+          "configKey": "wdbc|vqc|4q|angle|d2|circular|ideal-sim",
+          "experimentId": "EXP-2040.C03",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 2,
           "entanglement": "circular",
-          "parameters": 16,
-          "auc": 0.896,
+          "parameters": 12,
+          "auc": 0.961,
+          "aucStd": 0.0065,
           "trainTimeS": 32,
           "pareto": false
         },
         {
           "id": "C04",
+          "configKey": "wdbc|vqc|4q|angle|d3|full|ideal-sim",
+          "experimentId": "EXP-2040.C04",
+          "ansatz": "strongly-entangling",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 3,
           "entanglement": "full",
-          "parameters": 24,
-          "auc": 0.899,
+          "parameters": 36,
+          "auc": 0.966,
+          "aucStd": 0.0072,
           "trainTimeS": 48,
           "pareto": false
         },
         {
           "id": "C05",
+          "configKey": "wdbc|vqc|4q|angle|d4|linear|ideal-sim",
+          "experimentId": "EXP-2040.C05",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 4,
           "entanglement": "linear",
-          "parameters": 32,
-          "auc": 0.897,
+          "parameters": 20,
+          "auc": 0.963,
+          "aucStd": 0.0079,
           "trainTimeS": 64,
           "pareto": false
         },
         {
           "id": "C06",
+          "configKey": "wdbc|vqc|4q|amplitude|d1|linear|ideal-sim",
+          "experimentId": "EXP-2040.C06",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 4,
           "circuitDepth": 1,
           "entanglement": "linear",
-          "parameters": 12,
-          "auc": 0.875,
+          "parameters": 8,
+          "auc": 0.942,
+          "aucStd": 0.0058,
           "trainTimeS": 16,
           "pareto": false
         },
         {
           "id": "C07",
+          "configKey": "wdbc|vqc|4q|amplitude|d2|full|ideal-sim",
+          "experimentId": "EXP-2040.C07",
+          "ansatz": "strongly-entangling",
           "encoding": "amplitude",
           "qubits": 4,
           "circuitDepth": 2,
           "entanglement": "full",
           "parameters": 24,
-          "auc": 0.885,
+          "auc": 0.949,
+          "aucStd": 0.0065,
           "trainTimeS": 32,
           "pareto": false
         },
         {
           "id": "C08",
+          "configKey": "wdbc|vqc|4q|amplitude|d3|circular|ideal-sim",
+          "experimentId": "EXP-2040.C08",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 4,
           "circuitDepth": 3,
           "entanglement": "circular",
-          "parameters": 36,
-          "auc": 0.893,
+          "parameters": 16,
+          "auc": 0.958,
+          "aucStd": 0.0072,
           "trainTimeS": 48,
           "pareto": false
         },
         {
           "id": "C09",
+          "configKey": "wdbc|vqc|6q|angle|d1|circular|ideal-sim",
+          "experimentId": "EXP-2040.C09",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 6,
           "circuitDepth": 1,
           "entanglement": "circular",
           "parameters": 12,
-          "auc": 0.89,
+          "auc": 0.951,
+          "aucStd": 0.0067,
           "trainTimeS": 56,
-          "pareto": true
+          "pareto": false
         },
         {
           "id": "C10",
+          "configKey": "wdbc|vqc|6q|angle|d2|linear|ideal-sim",
+          "experimentId": "EXP-2040.C10",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 6,
           "circuitDepth": 2,
           "entanglement": "linear",
-          "parameters": 24,
-          "auc": 0.899,
+          "parameters": 18,
+          "auc": 0.96,
+          "aucStd": 0.0074,
           "trainTimeS": 113,
           "pareto": false
         },
         {
           "id": "C11",
+          "configKey": "wdbc|vqc|6q|angle|d3|linear|ideal-sim",
+          "experimentId": "EXP-2040.C11",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 6,
           "circuitDepth": 3,
           "entanglement": "linear",
-          "parameters": 36,
-          "auc": 0.906,
+          "parameters": 24,
+          "auc": 0.97,
+          "aucStd": 0.0081,
           "trainTimeS": 169,
           "pareto": false
         },
         {
           "id": "C12",
+          "configKey": "wdbc|vqc|6q|angle|d4|full|ideal-sim",
+          "experimentId": "EXP-2040.C12",
+          "ansatz": "strongly-entangling",
           "encoding": "angle",
           "qubits": 6,
           "circuitDepth": 4,
           "entanglement": "full",
-          "parameters": 48,
-          "auc": 0.896,
+          "parameters": 72,
+          "auc": 0.957,
+          "aucStd": 0.0088,
           "trainTimeS": 225,
           "pareto": false
         },
         {
           "id": "C13",
+          "configKey": "wdbc|vqc|6q|amplitude|d2|linear|ideal-sim",
+          "experimentId": "EXP-2040.C13",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 6,
           "circuitDepth": 2,
           "entanglement": "linear",
-          "parameters": 36,
-          "auc": 0.89,
+          "parameters": 18,
+          "auc": 0.955,
+          "aucStd": 0.0074,
           "trainTimeS": 113,
           "pareto": false
         },
         {
           "id": "C14",
+          "configKey": "wdbc|vqc|6q|amplitude|d4|circular|ideal-sim",
+          "experimentId": "EXP-2040.C14",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 6,
           "circuitDepth": 4,
           "entanglement": "circular",
-          "parameters": 72,
-          "auc": 0.895,
+          "parameters": 30,
+          "auc": 0.961,
+          "aucStd": 0.0088,
           "trainTimeS": 225,
           "pareto": false
         },
         {
           "id": "C15",
+          "configKey": "wdbc|vqc|8q|angle|d1|linear|ideal-sim",
+          "experimentId": "EXP-2040.C15",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 8,
           "circuitDepth": 1,
           "entanglement": "linear",
           "parameters": 16,
-          "auc": 0.89,
+          "auc": 0.956,
+          "aucStd": 0.0076,
           "trainTimeS": 137,
-          "pareto": false
+          "pareto": true
         },
         {
           "id": "C16",
+          "configKey": "wdbc|vqc|8q|angle|d2|circular|ideal-sim",
+          "experimentId": "EXP-2040.C16",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 8,
           "circuitDepth": 2,
           "entanglement": "circular",
-          "parameters": 32,
-          "auc": 0.903,
+          "parameters": 24,
+          "auc": 0.966,
+          "aucStd": 0.0083,
           "trainTimeS": 275,
           "pareto": true
         },
         {
           "id": "C17",
+          "configKey": "wdbc|vqc|8q|angle|d3|linear|ideal-sim",
+          "experimentId": "EXP-2040.C17",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 8,
           "circuitDepth": 3,
           "entanglement": "linear",
-          "parameters": 48,
-          "auc": 0.909,
+          "parameters": 32,
+          "auc": 0.972,
+          "aucStd": 0.009,
           "trainTimeS": 412,
           "pareto": true
         },
         {
           "id": "C18",
+          "configKey": "wdbc|vqc|8q|angle|d4|full|ideal-sim",
+          "experimentId": "EXP-2040.C18",
+          "ansatz": "strongly-entangling",
           "encoding": "angle",
           "qubits": 8,
           "circuitDepth": 4,
           "entanglement": "full",
-          "parameters": 64,
-          "auc": 0.899,
+          "parameters": 96,
+          "auc": 0.963,
+          "aucStd": 0.0097,
           "trainTimeS": 549,
           "pareto": false
         },
         {
           "id": "C19",
+          "configKey": "wdbc|vqc|8q|amplitude|d3|linear|ideal-sim",
+          "experimentId": "EXP-2040.C19",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 8,
           "circuitDepth": 3,
           "entanglement": "linear",
-          "parameters": 72,
-          "auc": 0.9,
+          "parameters": 32,
+          "auc": 0.963,
+          "aucStd": 0.009,
           "trainTimeS": 412,
           "pareto": false
         },
         {
           "id": "C20",
+          "configKey": "wdbc|vqc|8q|amplitude|d4|full|ideal-sim",
+          "experimentId": "EXP-2040.C20",
+          "ansatz": "strongly-entangling",
           "encoding": "amplitude",
           "qubits": 8,
           "circuitDepth": 4,
           "entanglement": "full",
           "parameters": 96,
-          "auc": 0.89,
+          "auc": 0.953,
+          "aucStd": 0.0097,
           "trainTimeS": 549,
           "pareto": false
         }
       ],
       "recommendedId": "C16",
-      "takeaway": "C16 reaches 0.903 AUC at depth 2 — 0.006 below the best with 16 fewer parameters."
+      "recommendationRule": "Knee point: best AUC per layer",
+      "aucRange": [
+        0.94,
+        0.98
+      ],
+      "takeaway": "C16 reaches 0.966 AUC at depth 2 — 0.006 below the best (within seed noise) with 8 fewer trainable parameters."
     },
     "heart": {
       "type": "evolution",
       "dataset": "heart",
       "experimentId": "EXP-2034",
+      "evaluation": "5 seeds · held-out 30% · ideal sim · UCI",
       "model": "vqc",
       "configs": [
         {
           "id": "C01",
+          "configKey": "heart|vqc|4q|angle|d1|linear|ideal-sim",
+          "experimentId": "EXP-2034.C01",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 1,
           "entanglement": "linear",
           "parameters": 8,
-          "auc": 0.865,
-          "trainTimeS": 9,
+          "auc": 0.868,
+          "aucStd": 0.0115,
+          "trainTimeS": 9.25,
           "pareto": false
         },
         {
           "id": "C02",
+          "configKey": "heart|vqc|4q|angle|d2|linear|ideal-sim",
+          "experimentId": "EXP-2034.C02",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 2,
           "entanglement": "linear",
-          "parameters": 16,
-          "auc": 0.872,
+          "parameters": 12,
+          "auc": 0.876,
+          "aucStd": 0.013,
           "trainTimeS": 19,
           "pareto": false
         },
         {
           "id": "C03",
+          "configKey": "heart|vqc|4q|angle|d2|circular|ideal-sim",
+          "experimentId": "EXP-2034.C03",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 2,
           "entanglement": "circular",
-          "parameters": 16,
-          "auc": 0.877,
+          "parameters": 12,
+          "auc": 0.878,
+          "aucStd": 0.013,
           "trainTimeS": 19,
           "pareto": false
         },
         {
           "id": "C04",
+          "configKey": "heart|vqc|4q|angle|d3|full|ideal-sim",
+          "experimentId": "EXP-2034.C04",
+          "ansatz": "strongly-entangling",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 3,
           "entanglement": "full",
-          "parameters": 24,
-          "auc": 0.878,
+          "parameters": 36,
+          "auc": 0.881,
+          "aucStd": 0.0144,
           "trainTimeS": 28,
           "pareto": false
         },
         {
           "id": "C05",
+          "configKey": "heart|vqc|4q|angle|d4|linear|ideal-sim",
+          "experimentId": "EXP-2034.C05",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 4,
           "circuitDepth": 4,
           "entanglement": "linear",
-          "parameters": 32,
-          "auc": 0.877,
+          "parameters": 20,
+          "auc": 0.88,
+          "aucStd": 0.0158,
           "trainTimeS": 37,
           "pareto": false
         },
         {
           "id": "C06",
+          "configKey": "heart|vqc|4q|amplitude|d1|linear|ideal-sim",
+          "experimentId": "EXP-2034.C06",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 4,
           "circuitDepth": 1,
           "entanglement": "linear",
-          "parameters": 12,
-          "auc": 0.854,
-          "trainTimeS": 9,
+          "parameters": 8,
+          "auc": 0.858,
+          "aucStd": 0.0115,
+          "trainTimeS": 9.25,
           "pareto": false
         },
         {
           "id": "C07",
+          "configKey": "heart|vqc|4q|amplitude|d2|full|ideal-sim",
+          "experimentId": "EXP-2034.C07",
+          "ansatz": "strongly-entangling",
           "encoding": "amplitude",
           "qubits": 4,
           "circuitDepth": 2,
           "entanglement": "full",
           "parameters": 24,
-          "auc": 0.863,
+          "auc": 0.864,
+          "aucStd": 0.013,
           "trainTimeS": 19,
           "pareto": false
         },
         {
           "id": "C08",
+          "configKey": "heart|vqc|4q|amplitude|d3|circular|ideal-sim",
+          "experimentId": "EXP-2034.C08",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 4,
           "circuitDepth": 3,
           "entanglement": "circular",
-          "parameters": 36,
-          "auc": 0.876,
+          "parameters": 16,
+          "auc": 0.877,
+          "aucStd": 0.0144,
           "trainTimeS": 28,
           "pareto": false
         },
         {
           "id": "C09",
+          "configKey": "heart|vqc|6q|angle|d1|circular|ideal-sim",
+          "experimentId": "EXP-2034.C09",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 6,
           "circuitDepth": 1,
           "entanglement": "circular",
           "parameters": 12,
-          "auc": 0.868,
+          "auc": 0.87,
+          "aucStd": 0.0133,
           "trainTimeS": 33,
-          "pareto": false
+          "pareto": true
         },
         {
           "id": "C10",
+          "configKey": "heart|vqc|6q|angle|d2|linear|ideal-sim",
+          "experimentId": "EXP-2034.C10",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 6,
           "circuitDepth": 2,
           "entanglement": "linear",
-          "parameters": 24,
-          "auc": 0.876,
+          "parameters": 18,
+          "auc": 0.878,
+          "aucStd": 0.0148,
           "trainTimeS": 65,
           "pareto": false
         },
         {
           "id": "C11",
+          "configKey": "heart|vqc|6q|angle|d3|linear|ideal-sim",
+          "experimentId": "EXP-2034.C11",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 6,
           "circuitDepth": 3,
           "entanglement": "linear",
-          "parameters": 36,
-          "auc": 0.884,
+          "parameters": 24,
+          "auc": 0.887,
+          "aucStd": 0.0162,
           "trainTimeS": 98,
           "pareto": false
         },
         {
           "id": "C12",
+          "configKey": "heart|vqc|6q|angle|d4|full|ideal-sim",
+          "experimentId": "EXP-2034.C12",
+          "ansatz": "strongly-entangling",
           "encoding": "angle",
           "qubits": 6,
           "circuitDepth": 4,
           "entanglement": "full",
-          "parameters": 48,
+          "parameters": 72,
           "auc": 0.876,
+          "aucStd": 0.0176,
           "trainTimeS": 130,
           "pareto": false
         },
         {
           "id": "C13",
+          "configKey": "heart|vqc|6q|amplitude|d2|linear|ideal-sim",
+          "experimentId": "EXP-2034.C13",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 6,
           "circuitDepth": 2,
           "entanglement": "linear",
-          "parameters": 36,
-          "auc": 0.869,
+          "parameters": 18,
+          "auc": 0.872,
+          "aucStd": 0.0148,
           "trainTimeS": 65,
           "pareto": false
         },
         {
           "id": "C14",
+          "configKey": "heart|vqc|6q|amplitude|d4|circular|ideal-sim",
+          "experimentId": "EXP-2034.C14",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 6,
           "circuitDepth": 4,
           "entanglement": "circular",
-          "parameters": 72,
-          "auc": 0.877,
+          "parameters": 30,
+          "auc": 0.875,
+          "aucStd": 0.0176,
           "trainTimeS": 130,
           "pareto": false
         },
         {
           "id": "C15",
+          "configKey": "heart|vqc|8q|angle|d1|linear|ideal-sim",
+          "experimentId": "EXP-2034.C15",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 8,
           "circuitDepth": 1,
           "entanglement": "linear",
           "parameters": 16,
-          "auc": 0.869,
+          "auc": 0.87,
+          "aucStd": 0.0151,
           "trainTimeS": 79,
-          "pareto": true
+          "pareto": false
         },
         {
           "id": "C16",
+          "configKey": "heart|vqc|8q|angle|d2|circular|ideal-sim",
+          "experimentId": "EXP-2034.C16",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 8,
           "circuitDepth": 2,
           "entanglement": "circular",
-          "parameters": 32,
-          "auc": 0.882,
+          "parameters": 24,
+          "auc": 0.884,
+          "aucStd": 0.0166,
           "trainTimeS": 159,
           "pareto": true
         },
         {
           "id": "C17",
+          "configKey": "heart|vqc|8q|angle|d3|linear|ideal-sim",
+          "experimentId": "EXP-2034.C17",
+          "ansatz": "real-amplitudes",
           "encoding": "angle",
           "qubits": 8,
           "circuitDepth": 3,
           "entanglement": "linear",
-          "parameters": 48,
+          "parameters": 32,
           "auc": 0.889,
+          "aucStd": 0.018,
           "trainTimeS": 238,
           "pareto": true
         },
         {
           "id": "C18",
+          "configKey": "heart|vqc|8q|angle|d4|full|ideal-sim",
+          "experimentId": "EXP-2034.C18",
+          "ansatz": "strongly-entangling",
           "encoding": "angle",
           "qubits": 8,
           "circuitDepth": 4,
           "entanglement": "full",
-          "parameters": 64,
+          "parameters": 96,
           "auc": 0.878,
+          "aucStd": 0.0194,
           "trainTimeS": 317,
           "pareto": false
         },
         {
           "id": "C19",
+          "configKey": "heart|vqc|8q|amplitude|d3|linear|ideal-sim",
+          "experimentId": "EXP-2034.C19",
+          "ansatz": "real-amplitudes",
           "encoding": "amplitude",
           "qubits": 8,
           "circuitDepth": 3,
           "entanglement": "linear",
-          "parameters": 72,
-          "auc": 0.877,
+          "parameters": 32,
+          "auc": 0.881,
+          "aucStd": 0.018,
           "trainTimeS": 238,
           "pareto": false
         },
         {
           "id": "C20",
+          "configKey": "heart|vqc|8q|amplitude|d4|full|ideal-sim",
+          "experimentId": "EXP-2034.C20",
+          "ansatz": "strongly-entangling",
           "encoding": "amplitude",
           "qubits": 8,
           "circuitDepth": 4,
           "entanglement": "full",
           "parameters": 96,
           "auc": 0.87,
+          "aucStd": 0.0194,
           "trainTimeS": 317,
           "pareto": false
         }
       ],
       "recommendedId": "C16",
-      "takeaway": "C16 reaches 0.882 AUC at depth 2 — 0.007 below the best with 16 fewer parameters."
+      "recommendationRule": "Knee point: best AUC per layer",
+      "aucRange": [
+        0.85,
+        0.89
+      ],
+      "takeaway": "C16 reaches 0.884 AUC at depth 2 — 0.005 below the best (within seed noise) with 8 fewer trainable parameters."
     }
   },
   "failure-envelope": {
@@ -986,6 +1187,7 @@
       "type": "failure-envelope",
       "dataset": "wdbc",
       "experimentId": "EXP-2041",
+      "evaluation": "5 seeds · held-out 30% · FakeBackend-1 noise · WDBC",
       "model": "qsvm",
       "noiseAxis": {
         "label": "Two-qubit gate error",
@@ -1027,214 +1229,215 @@
       },
       "sensitivity": [
         [
-          0.8827,
-          0.8759,
-          0.8691,
-          0.8623,
-          0.8554,
-          0.8486,
-          0.8418,
-          0.835,
-          0.8282,
-          0.8214,
-          0.8146,
-          0.8078,
-          0.801
+          0.9447,
+          0.925,
+          0.9052,
+          0.8855,
+          0.8658,
+          0.8461,
+          0.8263,
+          0.8066,
+          0.7869,
+          0.7672,
+          0.7474,
+          0.7277,
+          0.708
         ],
         [
-          0.8787,
-          0.8717,
-          0.8648,
-          0.8579,
-          0.8509,
-          0.844,
-          0.8371,
-          0.8301,
-          0.8232,
-          0.8163,
-          0.8093,
-          0.8024,
-          0.7955
+          0.9407,
+          0.9208,
+          0.901,
+          0.8811,
+          0.8613,
+          0.8414,
+          0.8216,
+          0.8017,
+          0.7819,
+          0.762,
+          0.7422,
+          0.7223,
+          0.7025
         ],
         [
-          0.8747,
-          0.8676,
-          0.8606,
-          0.8535,
-          0.8464,
-          0.8394,
-          0.8323,
-          0.8253,
-          0.8182,
-          0.8112,
-          0.8041,
-          0.797,
-          0.79
+          0.9367,
+          0.9167,
+          0.8967,
+          0.8768,
+          0.8568,
+          0.8368,
+          0.8168,
+          0.7969,
+          0.7769,
+          0.7569,
+          0.7369,
+          0.717,
+          0.697
         ],
         [
-          0.8707,
-          0.8635,
-          0.8563,
-          0.8491,
-          0.8419,
-          0.8348,
-          0.8276,
-          0.8204,
-          0.8132,
-          0.806,
-          0.7988,
-          0.7917,
-          0.7845
+          0.9327,
+          0.9126,
+          0.8925,
+          0.8724,
+          0.8523,
+          0.8322,
+          0.8121,
+          0.792,
+          0.7719,
+          0.7518,
+          0.7317,
+          0.7116,
+          0.6915
         ],
         [
-          0.8667,
-          0.8594,
-          0.8521,
-          0.8448,
-          0.8374,
-          0.8301,
-          0.8228,
-          0.8155,
-          0.8082,
-          0.8009,
-          0.7936,
-          0.7863,
-          0.779
-        ],
-        [
-          0.8627,
-          0.8552,
+          0.9287,
+          0.9085,
+          0.8882,
+          0.868,
           0.8478,
-          0.8404,
-          0.8329,
-          0.8255,
-          0.8181,
-          0.8106,
-          0.8032,
-          0.7958,
-          0.7883,
-          0.7809,
-          0.7735
+          0.8276,
+          0.8073,
+          0.7871,
+          0.7669,
+          0.7467,
+          0.7264,
+          0.7062,
+          0.686
         ],
         [
-          0.8587,
-          0.8511,
-          0.8436,
-          0.836,
-          0.8284,
-          0.8209,
-          0.8133,
-          0.8058,
-          0.7982,
-          0.7907,
-          0.7831,
-          0.7755,
-          0.768
-        ],
-        [
-          0.8547,
-          0.847,
-          0.8393,
-          0.8316,
-          0.8239,
-          0.8163,
-          0.8086,
-          0.8009,
-          0.7932,
-          0.7855,
-          0.7778,
-          0.7702,
-          0.7625
-        ],
-        [
-          0.8507,
-          0.8429,
-          0.8351,
-          0.8273,
-          0.8194,
-          0.8116,
-          0.8038,
-          0.796,
-          0.7882,
-          0.7804,
-          0.7726,
-          0.7648,
-          0.757
-        ],
-        [
-          0.8467,
-          0.8387,
-          0.8308,
+          0.9247,
+          0.9043,
+          0.884,
+          0.8636,
+          0.8433,
           0.8229,
-          0.8149,
-          0.807,
-          0.7991,
-          0.7911,
-          0.7832,
-          0.7753,
-          0.7673,
-          0.7594,
-          0.7515
+          0.8026,
+          0.7822,
+          0.7619,
+          0.7415,
+          0.7212,
+          0.7008,
+          0.6805
         ],
         [
-          0.8427,
-          0.8346,
-          0.8266,
-          0.8185,
-          0.8104,
-          0.8024,
-          0.7943,
-          0.7863,
-          0.7782,
-          0.7702,
-          0.7621,
-          0.754,
-          0.746
-        ],
-        [
-          0.8387,
-          0.8305,
-          0.8223,
-          0.8141,
-          0.8059,
+          0.9207,
+          0.9002,
+          0.8797,
+          0.8593,
+          0.8388,
+          0.8183,
           0.7978,
-          0.7896,
-          0.7814,
-          0.7732,
-          0.765,
-          0.7568,
-          0.7487,
-          0.7405
+          0.7774,
+          0.7569,
+          0.7364,
+          0.7159,
+          0.6955,
+          0.675
         ],
         [
-          0.8347,
-          0.8264,
-          0.8181,
-          0.8098,
-          0.8014,
+          0.9167,
+          0.8961,
+          0.8755,
+          0.8549,
+          0.8343,
+          0.8137,
           0.7931,
-          0.7848,
-          0.7765,
-          0.7682,
-          0.7599,
-          0.7516,
-          0.7433,
-          0.735
+          0.7725,
+          0.7519,
+          0.7313,
+          0.7107,
+          0.6901,
+          0.6695
+        ],
+        [
+          0.9127,
+          0.892,
+          0.8712,
+          0.8505,
+          0.8298,
+          0.8091,
+          0.7883,
+          0.7676,
+          0.7469,
+          0.7262,
+          0.7054,
+          0.6847,
+          0.664
+        ],
+        [
+          0.9087,
+          0.8878,
+          0.867,
+          0.8461,
+          0.8253,
+          0.8044,
+          0.7836,
+          0.7627,
+          0.7419,
+          0.721,
+          0.7002,
+          0.6793,
+          0.6585
+        ],
+        [
+          0.9047,
+          0.8837,
+          0.8627,
+          0.8418,
+          0.8208,
+          0.7998,
+          0.7788,
+          0.7579,
+          0.7369,
+          0.7159,
+          0.6949,
+          0.674,
+          0.653
+        ],
+        [
+          0.9007,
+          0.8796,
+          0.8585,
+          0.8374,
+          0.8163,
+          0.7952,
+          0.7741,
+          0.753,
+          0.7319,
+          0.7108,
+          0.6897,
+          0.6686,
+          0.6475
+        ],
+        [
+          0.8967,
+          0.8755,
+          0.8542,
+          0.833,
+          0.8118,
+          0.7906,
+          0.7693,
+          0.7481,
+          0.7269,
+          0.7057,
+          0.6844,
+          0.6632,
+          0.642
         ]
       ],
       "threshold": 0.85,
       "current": {
         "noise": 1.5,
         "corruption": 0,
-        "sensitivity": 0.8418,
+        "sensitivity": 0.8263,
         "profileName": "FakeBackend-1"
       },
-      "takeaway": "Only 15% of the tested conditions keep sensitivity at or above 85%; FakeBackend-1 already sits outside that region."
+      "takeaway": "31% of the tested conditions keep sensitivity at or above 85%; FakeBackend-1 already sits outside that region."
     },
     "heart": {
       "type": "failure-envelope",
       "dataset": "heart",
       "experimentId": "EXP-2035",
+      "evaluation": "5 seeds · held-out 30% · FakeBackend-1 noise · UCI",
       "model": "qsvm",
       "noiseAxis": {
         "label": "Two-qubit gate error",
@@ -1276,209 +1479,209 @@
       },
       "sensitivity": [
         [
-          0.8676,
-          0.8608,
-          0.854,
-          0.8472,
-          0.8404,
-          0.8336,
-          0.8268,
-          0.82,
-          0.8132,
-          0.8064,
-          0.7996,
-          0.7927,
-          0.7859
+          0.8728,
+          0.8531,
+          0.8334,
+          0.8136,
+          0.7939,
+          0.7742,
+          0.7545,
+          0.7347,
+          0.715,
+          0.6953,
+          0.6756,
+          0.6558,
+          0.6361
         ],
         [
-          0.8636,
-          0.8567,
-          0.8498,
-          0.8428,
-          0.8359,
-          0.829,
-          0.822,
-          0.8151,
-          0.8082,
-          0.8012,
-          0.7943,
-          0.7874,
-          0.7804
-        ],
-        [
-          0.8596,
-          0.8526,
-          0.8455,
-          0.8385,
-          0.8314,
-          0.8243,
-          0.8173,
-          0.8102,
-          0.8032,
-          0.7961,
-          0.7891,
-          0.782,
-          0.7749
-        ],
-        [
-          0.8556,
-          0.8485,
-          0.8413,
-          0.8341,
-          0.8269,
-          0.8197,
-          0.8125,
-          0.8054,
-          0.7982,
-          0.791,
-          0.7838,
-          0.7766,
-          0.7694
-        ],
-        [
-          0.8516,
-          0.8443,
-          0.837,
-          0.8297,
-          0.8224,
-          0.8151,
-          0.8078,
-          0.8005,
-          0.7932,
-          0.7859,
-          0.7786,
-          0.7712,
-          0.7639
-        ],
-        [
-          0.8476,
-          0.8402,
-          0.8328,
-          0.8253,
-          0.8179,
-          0.8105,
-          0.803,
-          0.7956,
-          0.7882,
-          0.7807,
-          0.7733,
-          0.7659,
-          0.7584
-        ],
-        [
-          0.8436,
-          0.8361,
-          0.8285,
-          0.821,
-          0.8134,
-          0.8058,
-          0.7983,
-          0.7907,
-          0.7832,
-          0.7756,
-          0.7681,
-          0.7605,
-          0.7529
-        ],
-        [
-          0.8396,
-          0.832,
-          0.8243,
-          0.8166,
-          0.8089,
-          0.8012,
-          0.7935,
-          0.7859,
-          0.7782,
-          0.7705,
-          0.7628,
-          0.7551,
-          0.7474
-        ],
-        [
-          0.8356,
-          0.8278,
-          0.82,
-          0.8122,
-          0.8044,
-          0.7966,
-          0.7888,
-          0.781,
-          0.7732,
-          0.7654,
-          0.7576,
+          0.8688,
+          0.849,
+          0.8291,
+          0.8093,
+          0.7894,
+          0.7696,
           0.7497,
-          0.7419
+          0.7299,
+          0.71,
+          0.6902,
+          0.6703,
+          0.6505,
+          0.6306
         ],
         [
-          0.8316,
-          0.8237,
-          0.8158,
-          0.8078,
-          0.7999,
-          0.792,
-          0.784,
-          0.7761,
-          0.7682,
-          0.7602,
-          0.7523,
-          0.7444,
-          0.7364
+          0.8648,
+          0.8448,
+          0.8249,
+          0.8049,
+          0.7849,
+          0.7649,
+          0.745,
+          0.725,
+          0.705,
+          0.685,
+          0.6651,
+          0.6451,
+          0.6251
         ],
         [
-          0.8276,
-          0.8196,
-          0.8115,
-          0.8035,
-          0.7954,
-          0.7873,
-          0.7793,
-          0.7712,
-          0.7632,
-          0.7551,
-          0.7471,
-          0.739,
-          0.7309
+          0.8608,
+          0.8407,
+          0.8206,
+          0.8005,
+          0.7804,
+          0.7603,
+          0.7402,
+          0.7201,
+          0.7,
+          0.6799,
+          0.6598,
+          0.6397,
+          0.6196
         ],
         [
-          0.8236,
-          0.8155,
-          0.8073,
-          0.7991,
-          0.7909,
-          0.7827,
-          0.7745,
-          0.7664,
-          0.7582,
-          0.75,
+          0.8568,
+          0.8366,
+          0.8164,
+          0.7961,
+          0.7759,
+          0.7557,
+          0.7355,
+          0.7152,
+          0.695,
+          0.6748,
+          0.6546,
+          0.6343,
+          0.6141
+        ],
+        [
+          0.8528,
+          0.8325,
+          0.8121,
+          0.7918,
+          0.7714,
+          0.7511,
+          0.7307,
+          0.7104,
+          0.69,
+          0.6697,
+          0.6493,
+          0.629,
+          0.6086
+        ],
+        [
+          0.8488,
+          0.8283,
+          0.8079,
+          0.7874,
+          0.7669,
+          0.7464,
+          0.726,
+          0.7055,
+          0.685,
+          0.6645,
+          0.6441,
+          0.6236,
+          0.6031
+        ],
+        [
+          0.8448,
+          0.8242,
+          0.8036,
+          0.783,
+          0.7624,
           0.7418,
-          0.7336,
-          0.7254
+          0.7212,
+          0.7006,
+          0.68,
+          0.6594,
+          0.6388,
+          0.6182,
+          0.5976
         ],
         [
-          0.8196,
-          0.8113,
-          0.803,
-          0.7947,
-          0.7864,
-          0.7781,
-          0.7698,
-          0.7615,
-          0.7532,
-          0.7449,
-          0.7366,
-          0.7282,
-          0.7199
+          0.8408,
+          0.8201,
+          0.7994,
+          0.7786,
+          0.7579,
+          0.7372,
+          0.7165,
+          0.6957,
+          0.675,
+          0.6543,
+          0.6336,
+          0.6128,
+          0.5921
+        ],
+        [
+          0.8368,
+          0.816,
+          0.7951,
+          0.7743,
+          0.7534,
+          0.7326,
+          0.7117,
+          0.6909,
+          0.67,
+          0.6492,
+          0.6283,
+          0.6075,
+          0.5866
+        ],
+        [
+          0.8328,
+          0.8118,
+          0.7909,
+          0.7699,
+          0.7489,
+          0.7279,
+          0.707,
+          0.686,
+          0.665,
+          0.644,
+          0.6231,
+          0.6021,
+          0.5811
+        ],
+        [
+          0.8288,
+          0.8077,
+          0.7866,
+          0.7655,
+          0.7444,
+          0.7233,
+          0.7022,
+          0.6811,
+          0.66,
+          0.6389,
+          0.6178,
+          0.5967,
+          0.5756
+        ],
+        [
+          0.8248,
+          0.8036,
+          0.7824,
+          0.7611,
+          0.7399,
+          0.7187,
+          0.6975,
+          0.6762,
+          0.655,
+          0.6338,
+          0.6126,
+          0.5913,
+          0.5701
         ]
       ],
       "threshold": 0.85,
       "current": {
         "noise": 1.5,
         "corruption": 0,
-        "sensitivity": 0.8268,
+        "sensitivity": 0.7545,
         "profileName": "FakeBackend-1"
       },
-      "takeaway": "Only 5% of the tested conditions keep sensitivity at or above 85%; FakeBackend-1 already sits outside that region."
+      "takeaway": "4% of the tested conditions keep sensitivity at or above 85%; FakeBackend-1 already sits outside that region."
     }
   }
 }

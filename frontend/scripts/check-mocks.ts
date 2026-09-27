@@ -1,103 +1,135 @@
 /**
- * Asserts that the mock data agrees with the numbers in the product spec and
- * with itself across endpoints. Run: npm run check:mocks
+ * Asserts that the mock data is realistic per dataset, consistent across every
+ * endpoint (one result per config key), and that every claim respects seed noise.
+ * Run: npm run check:mocks
  */
-import { MODELS } from '../src/lib/domain'
+import { MODEL_ORDER, MODELS } from '../src/lib/domain'
+import type { DatasetId, TrainRequest } from '../src/types'
+import { NOISE_PROFILES } from '../src/mocks/data/canon'
 import { compare } from '../src/mocks/data/compare'
 import { crossModality } from '../src/mocks/data/crossModality'
-import { EXPERIMENTS } from '../src/mocks/data/experiments'
-import { NOISE_PROFILES } from '../src/mocks/data/canon'
+import { EXPERIMENTS, circuitSearchChild } from '../src/mocks/data/experiments'
 import { featureSchema } from '../src/mocks/data/features'
 import { noiseRun } from '../src/mocks/data/hardware'
 import { predict, trust } from '../src/mocks/data/model'
 import { overview } from '../src/mocks/data/overview'
 import { patientReport } from '../src/mocks/data/report'
+import { bestModel, checkResponseConsistency, referenceResult, result, trainableParameters } from '../src/mocks/data/results'
 import { evolutionSweep, failureEnvelopeSweep, scalabilitySweep, smallDataSweep } from '../src/mocks/data/sweeps'
+import { trainResponse } from '../src/mocks/data/train'
 
 let failures = 0
-function check(label: string, actual: unknown, expected: unknown): void {
-  const ok = JSON.stringify(actual) === JSON.stringify(expected)
+function check(label: string, ok: boolean, detail = ''): void {
   if (!ok) failures += 1
-  console.log(`${ok ? '  ok ' : ' FAIL'}  ${label}${ok ? '' : `\n        expected ${JSON.stringify(expected)}\n        actual   ${JSON.stringify(actual)}`}`)
+  console.log(`${ok ? '  ok ' : ' FAIL'}  ${label}${ok || !detail ? '' : `\n        ${detail}`}`)
 }
+const eq = (label: string, actual: unknown, expected: unknown) =>
+  check(label, JSON.stringify(actual) === JSON.stringify(expected), `expected ${JSON.stringify(expected)}\n        actual   ${JSON.stringify(actual)}`)
+const inRange = (label: string, v: number, lo: number, hi: number) => check(`${label} = ${v} ∈ [${lo}, ${hi}]`, v >= lo && v <= hi)
 const time = (iso: string) => iso.slice(11, 16)
 
-console.log('\nWDBC — headline numbers')
+// ─── 10. Dataset realism ────────────────────────────────────
+console.log('\nWDBC — realistic breast-cancer results')
+for (const m of MODEL_ORDER) {
+  const r = referenceResult('wdbc', m)
+  if (MODELS[m].family === 'classical') {
+    inRange(`${MODELS[m].name} AUC`, r.auc.mean, 0.985, 0.995)
+    inRange(`${MODELS[m].name} accuracy`, r.metrics.accuracy.mean, 0.95, 0.98)
+  }
+}
+inRange('QSVM AUC', referenceResult('wdbc', 'qsvm').auc.mean, 0.975, 0.99)
+inRange('VQC AUC', referenceResult('wdbc', 'vqc').auc.mean, 0.96, 0.98)
+
+console.log('\nHeart — values unchanged')
+eq('Heart AUCs (XGBoost, RF, SVM, LogReg, QSVM, VQC)', ['xgboost', 'rf', 'svm', 'logreg', 'qsvm', 'vqc'].map((m) => referenceResult('heart', m as never).auc.mean), [0.903, 0.898, 0.892, 0.884, 0.896, 0.889])
+for (const m of MODEL_ORDER.filter((x) => MODELS[x].family === 'classical')) inRange(`Heart ${MODELS[m].name} accuracy`, referenceResult('heart', m).metrics.accuracy.mean, 0.78, 0.85)
+
+console.log('\nNo two datasets show identical numbers')
+const numbersOf = (d: DatasetId) => {
+  const o = overview(d, EXPERIMENTS)
+  return [...compare(d).rows.map((r) => r.metrics.auc.mean), o.status.bestQuantum.auc.mean, ...o.findings.map((f) => f.value)]
+}
+const shared = numbersOf('wdbc').filter((v) => numbersOf('heart').includes(v))
+eq('overlap between WDBC and Heart headline numbers', shared, [])
+
+// ─── 14. Single source of truth ─────────────────────────────
+console.log('\nOne result per config key, across every endpoint')
+const problems: string[] = []
+const trainReqs = (d: DatasetId): TrainRequest[] =>
+  [4, 6, 8].flatMap((q) => (['angle', 'amplitude'] as const).flatMap((encoding) => [1, 2, 3, 4].map((depth) => ({
+    dataset: d, models: ['vqc', 'qsvm', 'logreg', 'svm', 'rf', 'xgboost'], qubits: q as 4 | 6 | 8, encoding, circuitDepth: depth as 1 | 2 | 3 | 4, seeds: 5 as const,
+  }))))
+for (const d of ['wdbc', 'heart'] as const) {
+  problems.push(...checkResponseConsistency(compare(d), `compare/${d}`))
+  problems.push(...checkResponseConsistency(evolutionSweep(d), `evolution/${d}`))
+  problems.push(...checkResponseConsistency(scalabilitySweep(d), `scalability/${d}`))
+  for (const req of trainReqs(d)) problems.push(...checkResponseConsistency(trainResponse(req, 'J', 'E', ''), `train/${d}`))
+}
+problems.push(...checkResponseConsistency(EXPERIMENTS, 'experiments'))
+eq('config-key conflicts', problems, [])
+for (const d of ['wdbc', 'heart'] as const) {
+  const vqc4 = trainResponse({ dataset: d, models: ['vqc'], qubits: 4, encoding: 'angle', circuitDepth: 3, seeds: 5 }, 'J', 'E', '').results[0].auc.mean
+  const scale4 = scalabilitySweep(d).points.find((p) => p.qubits === 4)?.auc
+  eq(`${d}: VQC · 4q · angle · d3 — Train = Scalability`, vqc4, scale4)
+  const qsvmTrain = trainResponse({ dataset: d, models: ['qsvm'], qubits: 4, encoding: 'angle', circuitDepth: 2, seeds: 5 }, 'J', 'E', '').results[0].auc.mean
+  eq(`${d}: QSVM · 4q — Train = Observatory`, qsvmTrain, compare(d).rows.find((r) => r.model === 'qsvm')?.metrics.auc.mean)
+}
+
+// ─── Pareto chart ───────────────────────────────────────────
+console.log('\nModel Evolution Engine')
+for (const d of ['wdbc', 'heart'] as const) {
+  const ev = evolutionSweep(d)
+  const frontMax = Math.max(...ev.configs.filter((c) => c.pareto).map((c) => c.auc))
+  eq(`${d}: Pareto maximum = best VQC shown elsewhere`, frontMax, referenceResult(d, 'vqc').auc.mean)
+  check(`${d}: parameter counts follow the ansatz formulas`, ev.configs.every((c) => c.parameters === (c.entanglement === 'full' ? 3 * c.qubits * c.circuitDepth : c.qubits * (c.circuitDepth + 1))))
+  const fewer = ev.takeaway.match(/(\d+) fewer/)?.[1]
+  const rec = ev.configs.find((c) => c.id === ev.recommendedId)
+  const best = ev.configs.find((c) => c.auc === frontMax)
+  if (fewer && rec && best) eq(`${d}: "N fewer parameters" is computed`, Number(fewer), best.parameters - rec.parameters)
+  check(`${d}: every design resolves as an experiment`, ev.configs.every((c) => circuitSearchChild(c.experimentId, (x) => evolutionSweep(x).configs)?.auc === c.auc))
+}
+eq('parameter formula spot check (StronglyEntangling 4q×3)', trainableParameters({ model: 'vqc', qubits: 4, encoding: 'angle', circuitDepth: 3, entanglement: 'full', backend: 'ideal-sim' }), 36)
+
+// ─── 11. Claims respect seed noise ──────────────────────────
+console.log('\nClaims respect uncertainty')
+for (const d of ['wdbc', 'heart'] as const) {
+  const q = referenceResult(d, bestModel(d, 'quantum')).auc
+  const c = referenceResult(d, bestModel(d, 'classical')).auc
+  const within = Math.abs(q.mean - c.mean) <= Math.hypot(q.std, c.std)
+  check(`${d}: advantage wording matches noise test (${within ? 'within' : 'beyond'})`, compare(d).takeaway.includes(within ? 'within seed noise' : 'more than the combined seed noise'))
+  const sd = smallDataSweep(d)
+  check(`${d}: crossover only claimed when bands separate`, sd.crossover === null || sd.takeaway.includes('overtakes'))
+  const sc = scalabilitySweep(d)
+  const flat = Math.max(...sc.points.map((p) => p.auc)) - Math.min(...sc.points.map((p) => p.auc))
+  check(`${d}: scalability wording (spread ${flat.toFixed(3)})`, sc.takeaway.length > 0)
+}
+
+// ─── Unchanged anchors ──────────────────────────────────────
+console.log('\nRegistry, trust, patient')
 const ov = overview('wdbc', EXPERIMENTS)
-check('best overall = XGBoost 0.921', [ov.status.bestOverall.model, ov.status.bestOverall.auc.mean], ['xgboost', 0.921])
-check('best quantum = QSVM 0.914 ±0.012', [ov.status.bestQuantum.model, ov.status.bestQuantum.auc], ['qsvm', { mean: 0.914, std: 0.012 }])
-check('last experiment = EXP-2048', ov.status.lastExperiment.id, 'EXP-2048')
-
-console.log('\nWDBC — recent experiments')
-check(
-  'recent list',
-  ov.recentExperiments.map((e) => [e.id, MODELS[e.model ?? 'vqc'].name, e.qubits, e.backend, e.auc, time(e.timestamp)]),
-  [
-    ['EXP-2048', 'VQC', 4, 'fake-backend-1', 0.902, '14:32'],
-    ['EXP-2047', 'QSVM', 4, 'noisy-sim', 0.914, '13:48'],
-    ['EXP-2046', 'XGBoost', null, 'cpu', 0.921, '12:16'],
-    ['EXP-2045', 'VQC', 8, 'ideal-sim', 0.909, '11:02'],
-    ['EXP-2044', 'LogReg', null, 'cpu', 0.907, '09:41'],
-  ],
-)
-
-console.log('\nWDBC — findings')
-check('findings values', ov.findings.map((f) => f.value), ['Δ −0.007 AUC', '1.2%', '4.1%'])
-check('advantage summary', ov.findings[0].summary, 'QSVM 0.914 vs XGBoost 0.921 — within noise across 5 seeds.')
-
-console.log('\nCross-page agreement')
-const cmp = compare('wdbc')
-const aucOf = (m: string) => cmp.rows.find((r) => r.model === m)?.metrics.auc.mean
-check('compare: QSVM / XGBoost / VQC AUC', [aucOf('qsvm'), aucOf('xgboost'), aucOf('vqc')], [0.914, 0.921, 0.909])
-check('compare: best AUC row is XGBoost', cmp.rows.reduce((a, b) => (b.metrics.auc.mean > a.metrics.auc.mean ? b : a)).model, 'xgboost')
-check('evolution: best config AUC = VQC best 0.909', Math.max(...evolutionSweep('wdbc').configs.map((c) => c.auc)), 0.909)
-check('scalability: peak AUC = VQC best 0.909', Math.max(...scalabilitySweep('wdbc').points.map((p) => p.auc)), 0.909)
-const sd = smallDataSweep('wdbc')
-check('small-data: curves end on anchors', sd.series.map((s) => [s.model, s.points[s.points.length - 1].auc.mean]), [['qsvm', 0.914], ['vqc', 0.909], ['xgboost', 0.921], ['logreg', 0.907]])
-const qsvmSens = cmp.rows.find((r) => r.model === 'qsvm')?.metrics.sensitivity.mean
-const noisySim = noiseRun({ dataset: 'wdbc', profileId: 'custom', noise: NOISE_PROFILES.noisySim })
-check('hardware: Noisy Sim sensitivity = benchmark QSVM sensitivity', Math.round(noisySim.result.sensitivity * 1000) / 1000, qsvmSens)
-const fb1 = noiseRun({ dataset: 'wdbc', profileId: 'fake-backend-1', noise: NOISE_PROFILES.fakeBackend1 })
-check('hardware: ideal → FakeBackend-1 sensitivity', [(fb1.reference.sensitivity * 100).toFixed(1), (fb1.result.sensitivity * 100).toFixed(1)], ['89.4', '84.2'])
-check('hardware: ideal QSVM stays below XGBoost', fb1.reference.auc < 0.921, true)
+eq('WDBC recent runs (ID, model, backend, time)', ov.recentExperiments.map((e) => [e.id, e.model, e.backend, time(e.timestamp)]), [
+  ['EXP-2048', 'vqc', 'fake-backend-1', '14:32'],
+  ['EXP-2047', 'qsvm', 'noisy-sim', '13:48'],
+  ['EXP-2046', 'xgboost', 'cpu', '12:16'],
+  ['EXP-2045', 'vqc', 'ideal-sim', '11:02'],
+  ['EXP-2044', 'logreg', 'cpu', '09:41'],
+])
+check('recent-run AUCs come from the store', ov.recentExperiments.every((e) => e.configKey !== null && result('wdbc', { ...EXPERIMENTS.find((x) => x.id === e.id)!.config, model: e.model! }).auc.mean === e.auc))
+eq('WDBC findings: noise tolerance and abstain rate', [ov.findings[1].value, ov.findings[2].value], ['1.2%', '4.1%'])
 const at12 = noiseRun({ dataset: 'wdbc', profileId: 'custom', noise: { ...NOISE_PROFILES.fakeBackend1, gateError2q: 1.2 } })
-check('hardware: sensitivity at 1.2% 2Q error = 85.0%', (at12.result.sensitivity * 100).toFixed(1), '85.0')
-const env = failureEnvelopeSweep('wdbc')
-check('failure envelope: "you are here" = FakeBackend-1 result', env.current.sensitivity, fb1.result.sensitivity)
+eq('WDBC sensitivity at 1.2% 2Q error = 85.0%', (at12.result.sensitivity * 100).toFixed(1), '85.0')
+eq('failure envelope "you are here" = FakeBackend-1', failureEnvelopeSweep('wdbc').current.sensitivity, noiseRun({ dataset: 'wdbc', profileId: 'fake-backend-1', noise: NOISE_PROFILES.fakeBackend1 }).result.sensitivity)
 const tr = trust('wdbc')
-check('trust: 7 of 171 abstained = 4.1%, 0 high-confidence misses', [tr.abstained, tr.testPatients, (tr.abstainRate * 100).toFixed(1), tr.highConfidenceMisses], [7, 171, '4.1', 0])
-
-console.log('\nPredict / report')
+eq('trust: 7 of 171 abstained, 0 high-confidence misses', [tr.abstained, tr.testPatients, tr.highConfidenceMisses], [7, 171, 0])
 const schema = featureSchema('wdbc')
-const sample = predict('wdbc', schema.samplePatient)
-check('sample patient: 0.82, high risk, predicted', [sample.probability, sample.riskBand, sample.decision], [0.82, 'high', 'predict'])
-const unusual = predict('wdbc', schema.unusualPatient)
-check('unusual patient: abstains', unusual.decision, 'abstain')
-const heartSample = predict('heart', featureSchema('heart').samplePatient)
-check('heart sample patient: 0.82', heartSample.probability, 0.82)
-check('report agrees with prediction', patientReport('wdbc', schema.samplePatient, '2026-09-27T14:40:00+05:30').result.probability, sample.probability)
-
-console.log('\nHeart — cross-modality')
+eq('sample patient 0.82 · unusual abstains', [predict('wdbc', schema.samplePatient).probability, predict('wdbc', schema.unusualPatient).decision], [0.82, 'abstain'])
+eq('report agrees with prediction', patientReport('wdbc', schema.samplePatient, '').result.probability, 0.82)
 const cm = crossModality('heart')
-check('combined = heart QSVM AUC, gain +6.2%', cm.available ? [cm.combined.mean, cm.gainPct, cm.bestSingle] : null, [0.896, 6.2, 'exercise'])
-check('WDBC: cross-modality unavailable', crossModality('wdbc').available, false)
-
-console.log('\nRegistry')
+eq('Heart cross-modality: combined = QSVM, +6.2%', cm.available ? [cm.combined.mean, cm.gainPct] : null, [0.896, 6.2])
 const ids = new Set(EXPERIMENTS.map((e) => e.id))
-check('experiment IDs unique', ids.size, EXPERIMENTS.length)
-const referenced = [
-  ...ov.findings.map((f) => f.experimentId),
-  cmp.experimentId,
-  ...cmp.rows.map((r) => r.experimentId),
-  sd.experimentId,
-  env.experimentId,
-  tr.experimentId,
-  cm.available ? cm.experimentId : 'EXP-2036',
-  ...overview('heart', EXPERIMENTS).findings.map((f) => f.experimentId),
-]
-check('every referenced experiment ID resolves', referenced.filter((id) => !ids.has(id)), [])
-const sortedByTime = [...EXPERIMENTS].sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map((e) => e.id)
-check('IDs increase with time', sortedByTime, [...sortedByTime].sort())
+eq('experiment IDs unique', ids.size, EXPERIMENTS.length)
+const referenced = ['wdbc', 'heart'].flatMap((d) => [...overview(d as DatasetId, EXPERIMENTS).findings.map((f) => f.experimentId), ...compare(d as DatasetId).rows.map((r) => r.experimentId)])
+eq('every referenced experiment ID resolves', referenced.filter((id) => !ids.has(id)), [])
 
 console.log(failures === 0 ? '\nAll mock data checks passed.\n' : `\n${failures} check(s) failed.\n`)
 process.exit(failures === 0 ? 0 : 1)

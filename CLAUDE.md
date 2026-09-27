@@ -31,6 +31,33 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 - User actions that other parts of the UI can also trigger go through `useAppActions()` (`src/features/actions.ts`),
   so each action shows the same toast wherever it's triggered.
 
+## Results data (required everywhere)
+
+1. **Realistic, per-dataset results.** Every page reads the selected dataset. WDBC is realistic for that dataset:
+   classical AUC ≈ 0.985–0.995 and accuracy ≈ 95–98%, with quantum slightly below or comparable (QSVM ≈ 0.975–0.99,
+   VQC ≈ 0.96–0.98). Heart keeps classical AUC ≈ 0.88–0.92 and accuracy ≈ 80–85%. No two datasets may show
+   identical numbers; `check:mocks` enforces this.
+2. **Respect uncertainty.** Every line chart shows a shaded ±1 std band across the 5 seeds. Every headline claim is
+   *computed*, and its wording depends on whether the difference exceeds the combined std
+   (`√(σ₁² + σ₂²)`):
+   - Within noise, the text says so ("within seed noise", "stays flat within seed noise", "all models vary similarly").
+   - Only claim a crossover if the bands separate on both sides. Otherwise say "the gap closes by ~N patients".
+   - Never write a comparative result into copy by hand. Put the wording rule in the mock or API layer.
+3. **One formatter per column.** Use `src/lib/format.ts` everywhere. A column of durations uses a single unit chosen
+   by `durationColumn(values)` (seconds with 1 decimal, or mm:ss for the whole column). Never mix units in a cell or
+   column. Inference uses `formatMs`, which prints "<0.01 ms", never "±0.00".
+4. **Chart honesty.** Overlapping points get small deterministic, symmetric jitter, so every seed or design stays
+   visible. A zoomed axis carries an "AXIS ZOOMED · min–max" note. Markers such as the bottleneck or recommendation
+   are placed by an explicit computed rule, and the rule is shown on the chart. Every figure shows its evaluation
+   setting as a mono subtitle (e.g. "5 SEEDS · HELD-OUT 30% · IDEAL SIM · WDBC"). Parameter counts come from the
+   ansatz formula (StronglyEntanglingLayers 3·q·d; RealAmplitudes q·(d+1); ZZ kernel 0), and differences such as
+   "N fewer parameters" are computed.
+5. **Single source of truth.** All results come from the results store, `src/mocks/data/results.ts`, keyed by
+   dataset + model + config (`configKey`). The same config shows the same number on every page: Train, Advantage
+   Observatory, Scalability, Evolution, experiment records and the status strip. Responses carry `configKey` next to
+   `auc`. In dev, the mock API warns on any key reported with two values, and `check:mocks` asserts no conflicts
+   across all endpoints. The real backend must keep the same contract.
+
 ## Beginner-friendly layer (required on every page)
 
 1. **Page header.** Every page renders `<PageHeader route={route} />`. It provides the section label, the question

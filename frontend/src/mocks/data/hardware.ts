@@ -37,6 +37,7 @@ export function noiseRun(req: NoiseRunRequest): NoiseRunResponse {
     sensitivityVsT2: T2_SWEEP.map((t2Us) => ({
       t2Us,
       sensitivity: round(noisyOperatingPoint(dataset, { ...noise, t2Us }).sensitivity, 4),
+      std: round(noisySensitivityStd({ ...noise, t2Us }), 4),
     })),
   }
 }

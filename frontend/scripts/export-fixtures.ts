@@ -11,7 +11,7 @@ import type { DatasetId, SweepType, TrainRequest } from '../src/types'
 import { compare } from '../src/mocks/data/compare'
 import { crossModality } from '../src/mocks/data/crossModality'
 import { datasetDetail, datasetSummary } from '../src/mocks/data/datasets'
-import { EXPERIMENTS } from '../src/mocks/data/experiments'
+import { EXPERIMENTS, circuitSearchChild } from '../src/mocks/data/experiments'
 import { featureSchema } from '../src/mocks/data/features'
 import { HARDWARE_PROFILES, noiseRun } from '../src/mocks/data/hardware'
 import { explain, predict, trust } from '../src/mocks/data/model'
@@ -52,6 +52,8 @@ const fixtures: Record<string, unknown> = {
   dataset_detail: perDataset(datasetDetail),
   schema: perDataset(featureSchema),
   experiments: EXPERIMENTS,
+  // Circuit-search designs (EXP-2040.C07 …): resolvable by ID, never listed.
+  experiment_children: DATASET_IDS.flatMap((d) => evolutionSweep(d).configs.map((c) => circuitSearchChild(c.experimentId, (x) => evolutionSweep(x).configs))),
   train: perDataset((d) => trainResponse(defaultTrain(d), 'JOB-2049', 'EXP-2049', GENERATED_AT)),
   compare: perDataset(compare),
   sweeps: Object.fromEntries(Object.entries(sweepBuilders).map(([type, build]) => [type, perDataset(build)])),

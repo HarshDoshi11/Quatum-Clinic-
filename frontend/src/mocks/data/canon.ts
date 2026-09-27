@@ -1,9 +1,13 @@
 /**
- * THE single source of truth for mock numbers.
+ * The hand-written anchors of the mock data.
  *
- * Only the values in ANCHORS and NOISE_PROFILES are hand-written. Everything
- * else (sensitivity, specificity, accuracy, noise tolerance, thresholds, curves)
- * is derived from them below, so numbers agree on every page by construction.
+ * Only ANCHORS (each model's benchmark configuration) and NOISE_PROFILES are
+ * written by hand. Every displayed result is derived from them by the results
+ * store (results.ts), keyed by dataset + model + config, so the same config shows
+ * the same number on every page by construction.
+ *
+ * WDBC is realistic for this dataset (classical AUC ≈ 0.99, accuracy ≈ 95–96%);
+ * Heart keeps its harder profile (classical AUC ≈ 0.88–0.90, accuracy ≈ 80–81%).
  */
 import { DATASETS } from '../../lib/domain'
 import type { DatasetId, ExperimentMetrics, ModelId, NoiseParams } from '../../types'
@@ -22,12 +26,12 @@ export interface ModelAnchor {
 
 export const ANCHORS: Record<DatasetId, Record<ModelId, ModelAnchor>> = {
   wdbc: {
-    xgboost: { auc: 0.921, aucStd: 0.009, trainTimeS: 2.6, inferenceMs: 0.9, qubits: null, circuitDepth: null },
-    qsvm: { auc: 0.914, aucStd: 0.012, trainTimeS: 184, inferenceMs: 38, qubits: 4, circuitDepth: 2 },
-    vqc: { auc: 0.909, aucStd: 0.015, trainTimeS: 412, inferenceMs: 12, qubits: 8, circuitDepth: 3 },
-    rf: { auc: 0.916, aucStd: 0.01, trainTimeS: 1.8, inferenceMs: 1.1, qubits: null, circuitDepth: null },
-    svm: { auc: 0.911, aucStd: 0.011, trainTimeS: 0.21, inferenceMs: 0.3, qubits: null, circuitDepth: null },
-    logreg: { auc: 0.907, aucStd: 0.01, trainTimeS: 0.04, inferenceMs: 0.02, qubits: null, circuitDepth: null },
+    xgboost: { auc: 0.993, aucStd: 0.004, trainTimeS: 2.6, inferenceMs: 0.9, qubits: null, circuitDepth: null },
+    qsvm: { auc: 0.984, aucStd: 0.006, trainTimeS: 184, inferenceMs: 38, qubits: 4, circuitDepth: 2 },
+    vqc: { auc: 0.972, aucStd: 0.009, trainTimeS: 412, inferenceMs: 12, qubits: 8, circuitDepth: 3 },
+    rf: { auc: 0.991, aucStd: 0.005, trainTimeS: 1.8, inferenceMs: 1.1, qubits: null, circuitDepth: null },
+    svm: { auc: 0.994, aucStd: 0.003, trainTimeS: 0.21, inferenceMs: 0.3, qubits: null, circuitDepth: null },
+    logreg: { auc: 0.992, aucStd: 0.004, trainTimeS: 0.04, inferenceMs: 0.02, qubits: null, circuitDepth: null },
   },
   heart: {
     xgboost: { auc: 0.903, aucStd: 0.014, trainTimeS: 1.4, inferenceMs: 0.7, qubits: null, circuitDepth: null },
@@ -40,8 +44,8 @@ export const ANCHORS: Record<DatasetId, Record<ModelId, ModelAnchor>> = {
 }
 
 export const SEEDS = 5
+/** The quantum model the patient-facing pages deploy (the best quantum model on both datasets). */
 export const BEST_QUANTUM: ModelId = 'qsvm'
-export const BEST_OVERALL: ModelId = 'xgboost'
 
 /** Abstained test patients (of the 30% test split). WDBC: 7 / 171 = 4.1%. */
 export const ABSTAINED: Record<DatasetId, number> = { wdbc: 7, heart: 4 }
@@ -64,8 +68,11 @@ export const NOISE_PROFILES = {
 /** Separation d' of an equal-variance binormal ROC with the given AUC. */
 export const dPrime = (auc: number): number => Math.SQRT2 * normInv(auc)
 
-/** Threshold sits 0.25σ below the midpoint: screening favours sensitivity. */
-const OPERATING_SHIFT = 0.25
+/**
+ * Decision threshold, in σ below the ROC midpoint. WDBC is diagnostic cytology
+ * (near-balanced, slight sensitivity lean); Heart is screening, so it leans harder toward sensitivity.
+ */
+const OPERATING_SHIFT: Record<DatasetId, number> = { wdbc: 0.08, heart: 0.25 }
 
 export const prevalence = (dataset: DatasetId): number => DATASETS[dataset].positive / DATASETS[dataset].samples
 
@@ -96,7 +103,7 @@ export function sensSpecAtScore(auc: number, s: number): { sensitivity: number; 
 }
 
 export function operatingPoint(dataset: DatasetId, auc: number): OperatingPointDetail {
-  const s = dPrime(auc) / 2 - OPERATING_SHIFT
+  const s = dPrime(auc) / 2 - OPERATING_SHIFT[dataset]
   const { sensitivity, specificity } = sensSpecAtScore(auc, s)
   const pi = prevalence(dataset)
   return {
@@ -111,17 +118,16 @@ export function operatingPoint(dataset: DatasetId, auc: number): OperatingPointD
 export const aucFromOperatingPoint = (sensitivity: number, specificity: number): number =>
   normCdf((normInv(sensitivity) + normInv(specificity)) / Math.SQRT2)
 
-export function modelMetrics(dataset: DatasetId, model: ModelId, aucOverride?: number): ExperimentMetrics {
-  const a = ANCHORS[dataset][model]
-  const auc = aucOverride ?? a.auc
+/** Full metric set for one configuration's AUC ± std and timings (used by the results store). */
+export function metricsFor(dataset: DatasetId, auc: number, aucStd: number, trainTimeS: number, inferenceMs: number): ExperimentMetrics {
   const op = operatingPoint(dataset, auc)
   return {
-    accuracy: { mean: round(op.accuracy), std: round(a.aucStd * 1.2) },
-    sensitivity: { mean: round(op.sensitivity), std: round(a.aucStd * 1.8) },
-    specificity: { mean: round(op.specificity), std: round(a.aucStd * 1.5) },
-    auc: { mean: auc, std: a.aucStd },
-    trainTimeS: { mean: a.trainTimeS, std: round(a.trainTimeS * 0.06, a.trainTimeS < 1 ? 3 : 1) },
-    inferenceMs: { mean: a.inferenceMs, std: round(a.inferenceMs * 0.08, a.inferenceMs < 1 ? 3 : 1) },
+    accuracy: { mean: round(op.accuracy), std: round(aucStd * 1.2) },
+    sensitivity: { mean: round(op.sensitivity), std: round(aucStd * 1.8) },
+    specificity: { mean: round(op.specificity), std: round(aucStd * 1.5) },
+    auc: { mean: auc, std: aucStd },
+    trainTimeS: { mean: trainTimeS, std: round(trainTimeS * 0.06, trainTimeS < 1 ? 3 : 1) },
+    inferenceMs: { mean: inferenceMs, std: round(inferenceMs * 0.08, inferenceMs < 1 ? 4 : 2) },
   }
 }
 
@@ -156,6 +162,11 @@ const SLOPE_2Q: number = (() => {
 
 const idealSensPct = (dataset: DatasetId): number =>
   noisySimSensPct(dataset) + SLOPE_2Q * NOISE_PROFILES.noisySim.gateError2q + otherNoiseDrop(NOISE_PROFILES.noisySim)
+
+/** Sensitivity lost (percentage points) to hardware noise, relative to the noiseless circuit. */
+export function noiseDropPct(noise: NoiseParams): number {
+  return SLOPE_2Q * noise.gateError2q + otherNoiseDrop(noise)
+}
 
 export interface NoisyOperatingPoint {
   sensitivity: number

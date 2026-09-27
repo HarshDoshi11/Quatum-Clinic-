@@ -1,4 +1,4 @@
-import type { DatasetId, ExperimentId, ModelFamily, ModelId, QuantumModelId } from './common'
+import type { BackendId, ConfigKey, DatasetId, ExperimentId, ModelFamily, ModelId, QuantumModelId } from './common'
 import type { ExperimentMetrics } from './experiment'
 
 export type MetricKey = keyof ExperimentMetrics
@@ -6,6 +6,8 @@ export type MetricKey = keyof ExperimentMetrics
 export interface ComparisonRow {
   model: ModelId
   family: ModelFamily
+  configKey: ConfigKey
+  backend: BackendId
   experimentId: ExperimentId
   metrics: ExperimentMetrics
   qubits: number | null
@@ -15,10 +17,12 @@ export interface ComparisonRow {
 /** A quantum configuration placed on the performance-vs-resources scatter. */
 export interface ResourcePoint {
   id: string
+  configKey: ConfigKey
   model: QuantumModelId
   qubits: number
   circuitDepth: number
   auc: number
+  aucStd: number
 }
 
 export interface Baseline {
@@ -40,5 +44,10 @@ export interface CompareResponse {
   resources: ResourcePoint[]
   baselines: Baseline[]
   stability: SeedPoint[]
+  /** Main claim, worded by whether the gap exceeds the combined seed std. */
   takeaway: string
+  resourcesTakeaway: string
+  stabilityTakeaway: string
+  /** Evaluation setting, e.g. "5 SEEDS · HELD-OUT 30% · WDBC". */
+  evaluation: string
 }

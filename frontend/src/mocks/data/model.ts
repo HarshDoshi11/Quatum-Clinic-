@@ -16,8 +16,9 @@ import type {
   TrustResponse,
   TrustSignal,
 } from '../../types'
-import { ABSTAINED, ANCHORS, BEST_QUANTUM, dPrime, operatingPoint, prevalence, probToScore, sensSpecAtScore } from './canon'
+import { ABSTAINED, BEST_QUANTUM, dPrime, operatingPoint, prevalence, probToScore, sensSpecAtScore } from './canon'
 import { EXPERIMENT_IDS } from './ids'
+import { referenceResult } from './results'
 import { MODEL_FEATURES, SAMPLE_PATIENTS, SAMPLE_PROBABILITY, type ModelFeature } from './features'
 import { gaussian, logit, rng, round, sigmoid } from './math'
 
@@ -45,7 +46,7 @@ function scoreLogit(dataset: DatasetId, input: PatientInput): number {
 export const probability = (dataset: DatasetId, input: PatientInput): number => sigmoid(scoreLogit(dataset, input))
 
 export const defaultThreshold = (dataset: DatasetId): number =>
-  round(operatingPoint(dataset, ANCHORS[dataset][MODEL].auc).probThreshold, 2)
+  round(operatingPoint(dataset, referenceResult(dataset, MODEL).auc.mean).probThreshold, 2)
 
 export function riskBand(p: number): RiskBand {
   return p < 0.3 ? 'low' : p < 0.6 ? 'moderate' : 'high'
@@ -92,7 +93,7 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
   const p = sigmoid(l)
 
   // Stability: spread across seeds.
-  const sigma = ANCHORS[dataset][MODEL].aucStd * 8
+  const sigma = referenceResult(dataset, MODEL).auc.std * 8
   const [lo, hi] = [sigmoid(l - 1.96 * sigma), sigmoid(l + 1.96 * sigma)]
   const spread = hi - lo
   const crosses = lo < threshold && hi >= threshold
@@ -222,7 +223,7 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
   }
 
   const l = scoreLogit(dataset, input)
-  const sigma = ANCHORS[dataset][MODEL].aucStd * 8
+  const sigma = referenceResult(dataset, MODEL).auc.std * 8
   const p = sigmoid(l)
   return {
     ...base,
@@ -273,7 +274,7 @@ interface TestCase {
 
 /** Deterministic synthetic test set drawn from the binormal model. */
 function testSet(dataset: DatasetId): TestCase[] {
-  const auc = ANCHORS[dataset][MODEL].auc
+  const auc = referenceResult(dataset, MODEL).auc.mean
   const d = dPrime(auc)
   const n = testSize(dataset)
   const nPos = Math.round(n * prevalence(dataset))
@@ -309,7 +310,7 @@ export function calibrationBins(dataset: DatasetId): CalibrationBin[] {
 }
 
 export function trust(dataset: DatasetId): TrustResponse {
-  const auc = ANCHORS[dataset][MODEL].auc
+  const auc = referenceResult(dataset, MODEL).auc.mean
   const bins = calibrationBins(dataset)
   const total = bins.reduce((s, b) => s + b.count, 0)
   const ece = bins.reduce((s, b) => s + (b.count / total) * Math.abs(b.observed - b.predicted), 0)

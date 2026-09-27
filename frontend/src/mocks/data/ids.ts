@@ -1,5 +1,5 @@
 /** Experiment IDs referenced across pages. IDs increase with time. */
-import type { DatasetId, ExperimentId } from '../../types'
+import type { DatasetId, ExperimentId, ModelId } from '../../types'
 
 export interface DatasetExperimentIds {
   benchmark: ExperimentId
@@ -53,3 +53,17 @@ export const EXPERIMENT_IDS: Record<DatasetId, DatasetExperimentIds> = {
 
 /** Next ID handed out by train / re-run in the mock session. */
 export const FIRST_NEW_EXPERIMENT = 2049
+
+const RUN_KEY: Record<ModelId, keyof DatasetExperimentIds> = {
+  vqc: 'vqcIdealRun',
+  qsvm: 'qsvmRun',
+  logreg: 'logregRun',
+  svm: 'svmRun',
+  rf: 'rfRun',
+  xgboost: 'xgboostRun',
+}
+
+/** The single-model benchmark run for a model on a dataset. */
+export function runIdFor(dataset: DatasetId, model: ModelId): ExperimentId {
+  return EXPERIMENT_IDS[dataset][RUN_KEY[model]] ?? EXPERIMENT_IDS[dataset].benchmark
+}

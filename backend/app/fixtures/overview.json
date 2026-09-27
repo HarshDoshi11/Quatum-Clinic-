@@ -12,19 +12,19 @@
       "bestQuantum": {
         "model": "qsvm",
         "auc": {
-          "mean": 0.914,
-          "std": 0.012
+          "mean": 0.984,
+          "std": 0.006
         },
         "experimentId": "EXP-2047",
         "qubits": 4
       },
       "bestOverall": {
-        "model": "xgboost",
+        "model": "svm",
         "auc": {
-          "mean": 0.921,
-          "std": 0.009
+          "mean": 0.994,
+          "std": 0.003
         },
-        "experimentId": "EXP-2046"
+        "experimentId": "EXP-2042"
       },
       "lastExperiment": {
         "id": "EXP-2048",
@@ -36,8 +36,8 @@
       {
         "id": "advantage",
         "label": "Quantum vs classical",
-        "value": "Δ −0.007 AUC",
-        "summary": "QSVM 0.914 vs XGBoost 0.921 — within noise across 5 seeds.",
+        "value": "Δ −0.010 AUC",
+        "summary": "QSVM 0.984 vs SVM 0.994 — a gap beyond seed noise across 5 seeds.",
         "link": {
           "label": "View advantage",
           "path": "/advantage"
@@ -105,65 +105,70 @@
       {
         "id": "EXP-2048",
         "kind": "run",
+        "configKey": "wdbc|vqc|4q|angle|d3|linear|fake-backend-1",
         "title": "VQC · 4q",
         "dataset": "wdbc",
         "model": "vqc",
         "family": "quantum",
         "backend": "fake-backend-1",
         "qubits": 4,
-        "auc": 0.902,
+        "auc": 0.919,
         "timestamp": "2026-09-27T14:32:00+05:30",
         "status": "complete"
       },
       {
         "id": "EXP-2047",
         "kind": "run",
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|noisy-sim",
         "title": "QSVM · 4q",
         "dataset": "wdbc",
         "model": "qsvm",
         "family": "quantum",
         "backend": "noisy-sim",
         "qubits": 4,
-        "auc": 0.914,
+        "auc": 0.984,
         "timestamp": "2026-09-27T13:48:00+05:30",
         "status": "complete"
       },
       {
         "id": "EXP-2046",
         "kind": "run",
+        "configKey": "wdbc|xgboost|cpu",
         "title": "XGBoost",
         "dataset": "wdbc",
         "model": "xgboost",
         "family": "classical",
         "backend": "cpu",
         "qubits": null,
-        "auc": 0.921,
+        "auc": 0.993,
         "timestamp": "2026-09-27T12:16:00+05:30",
         "status": "complete"
       },
       {
         "id": "EXP-2045",
         "kind": "run",
+        "configKey": "wdbc|vqc|8q|angle|d3|linear|ideal-sim",
         "title": "VQC · 8q",
         "dataset": "wdbc",
         "model": "vqc",
         "family": "quantum",
         "backend": "ideal-sim",
         "qubits": 8,
-        "auc": 0.909,
+        "auc": 0.972,
         "timestamp": "2026-09-27T11:02:00+05:30",
         "status": "complete"
       },
       {
         "id": "EXP-2044",
         "kind": "run",
+        "configKey": "wdbc|logreg|cpu",
         "title": "LogReg",
         "dataset": "wdbc",
         "model": "logreg",
         "family": "classical",
         "backend": "cpu",
         "qubits": null,
-        "auc": 0.907,
+        "auc": 0.992,
         "timestamp": "2026-09-27T09:41:00+05:30",
         "status": "complete"
       }
@@ -207,7 +212,7 @@
         "id": "advantage",
         "label": "Quantum vs classical",
         "value": "Δ −0.007 AUC",
-        "summary": "QSVM 0.896 vs XGBoost 0.903 — within noise across 5 seeds.",
+        "summary": "QSVM 0.896 vs XGBoost 0.903 — within seed noise across 5 seeds.",
         "link": {
           "label": "View advantage",
           "path": "/advantage"
@@ -217,7 +222,7 @@
       {
         "id": "noise",
         "label": "Noise tolerance",
-        "value": "0.6%",
+        "value": "0.3%",
         "summary": "Sensitivity holds ≥ 85% up to this two-qubit gate error.",
         "link": {
           "label": "View hardware lab",
@@ -275,19 +280,21 @@
       {
         "id": "EXP-2030",
         "kind": "run",
+        "configKey": "heart|vqc|4q|angle|d3|linear|fake-backend-1",
         "title": "VQC · 4q",
         "dataset": "heart",
         "model": "vqc",
         "family": "quantum",
         "backend": "fake-backend-1",
         "qubits": 4,
-        "auc": 0.881,
+        "auc": 0.837,
         "timestamp": "2026-09-25T12:20:00+05:30",
         "status": "complete"
       },
       {
         "id": "EXP-2029",
         "kind": "run",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim",
         "title": "QSVM · 4q",
         "dataset": "heart",
         "model": "qsvm",
@@ -301,6 +308,7 @@
       {
         "id": "EXP-2028",
         "kind": "run",
+        "configKey": "heart|vqc|8q|angle|d3|linear|ideal-sim",
         "title": "VQC · 8q",
         "dataset": "heart",
         "model": "vqc",
@@ -314,6 +322,7 @@
       {
         "id": "EXP-2027",
         "kind": "run",
+        "configKey": "heart|xgboost|cpu",
         "title": "XGBoost",
         "dataset": "heart",
         "model": "xgboost",
@@ -327,6 +336,7 @@
       {
         "id": "EXP-2026",
         "kind": "run",
+        "configKey": "heart|logreg|cpu",
         "title": "LogReg",
         "dataset": "heart",
         "model": "logreg",

@@ -15,7 +15,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { Slider } from '@/components/ui/Slider'
 import { Term } from '@/components/ui/Term'
 import { useToast } from '@/components/ui/Toast'
-import { MODEL_ORDER, MODELS } from '@/lib/domain'
+import { BACKENDS, MODEL_ORDER, MODELS } from '@/lib/domain'
 import { formatAuc, formatStd } from '@/lib/format'
 import { easePrecise } from '@/lib/motion'
 import type { RouteMeta } from '@/routes'
@@ -258,7 +258,11 @@ export function Train({ route }: { route: RouteMeta }) {
                 hint="More seeds give a more honest average."
               />
             </div>
-            <p className="num mt-8 type-small text-muted">
+            <p className="measure mt-6 type-small text-muted">
+              Encoding and circuit depth apply to <Term term="vqc">VQC</Term>; <Term term="qsvm">QSVM</Term> keeps its fixed two-repetition ZZ feature
+              map. Each model runs on its benchmark backend, so a default run reproduces the Advantage Observatory exactly.
+            </p>
+            <p className="num mt-4 type-small text-muted">
               config · {selected.size} model{selected.size === 1 ? '' : 's'} · {qubits}q · {encoding} · depth {depth} · {seeds} seed{seeds > 1 ? 's' : ''} ·{' '}
               {datasetId.toUpperCase()}
             </p>
@@ -314,9 +318,15 @@ export function Train({ route }: { route: RouteMeta }) {
               <dl className="mt-3 border-t border-rule">
                 {result.results.map((r) => (
                   <div key={r.model} className="flex min-h-11 items-center justify-between border-b border-rule py-2">
-                    <dt className="flex items-center gap-2.5 type-ui text-ink">
-                      <span className={`block h-[8px] w-[8px] ${r.family === 'quantum' ? 'bg-accent' : 'bg-classical'}`} aria-hidden="true" />
-                      {MODELS[r.model].name}
+                    <dt className="flex items-center gap-2.5">
+                      <span className={`block h-[8px] w-[8px] shrink-0 ${r.family === 'quantum' ? 'bg-accent' : 'bg-classical'}`} aria-hidden="true" />
+                      <span className="flex flex-col">
+                        <span className="type-ui text-ink">{MODELS[r.model].name}</span>
+                        <span className="num type-small text-muted">
+                          {r.qubits ? `${r.qubits}q · ${r.model === 'qsvm' ? `ZZ map · ${r.circuitDepth} reps` : `${r.encoding} · d${r.circuitDepth}`} · ` : ''}
+                          {BACKENDS[r.backend].name}
+                        </span>
+                      </span>
                     </dt>
                     <dd className="num type-ui">
                       <span className={r.model === bestResult?.model ? 'text-accent' : 'text-ink'}>{formatAuc(r.auc.mean)}</span>

@@ -38,11 +38,11 @@ export const AXIS = {
 /** Line-draw duration; charts skip animation under reduced motion. */
 export const DRAW_MS = 900
 
-/** Round step (1, 2, 2.5, 5 × 10^k) closest to `raw`. */
+/** Round step (1, 2, 5 × 10^k) closest to `raw` — steps that print cleanly at the axis precision. */
 function niceStep(raw: number): number {
   const exp = Math.floor(Math.log10(raw))
   const base = raw / 10 ** exp
-  const nice = base <= 1 ? 1 : base <= 2 ? 2 : base <= 2.5 ? 2.5 : base <= 5 ? 5 : 10
+  const nice = base <= 1 ? 1 : base <= 2 ? 2 : base <= 5 ? 5 : 10
   return nice * 10 ** exp
 }
 

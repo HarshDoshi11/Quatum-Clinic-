@@ -1,32 +1,27 @@
-/** Training jobs: loss curve + per-model results, anchored to the benchmark. */
+/** Training jobs: loss curve + per-model results, read from the results store. */
 import { MODELS } from '../../lib/domain'
 import type { Experiment, LossPoint, ModelId, TrainModelResult, TrainRequest, TrainResponse } from '../../types'
-import { ANCHORS, modelMetrics } from './canon'
 import { NOISE_FOR_BACKEND, SELECTED_FEATURES } from './experiments'
-import { evolutionSweep } from './sweeps'
 import { gaussian, hashSeed, rng, round } from './math'
+import { DEFAULT_BACKEND, result, type ModelConfig } from './results'
 
 const EPOCHS = 50
 
-function quantumAuc(req: TrainRequest, model: ModelId): number {
-  const anchor = ANCHORS[req.dataset][model]
-  if (model === 'qsvm') {
-    const penalty = { 4: 0, 6: 0.003, 8: 0.008 }[req.qubits]
-    return round(anchor.auc - penalty - (req.encoding === 'amplitude' ? 0.006 : 0))
+/**
+ * The configuration a Train request evaluates for one model. The circuit settings
+ * apply to VQC; QSVM keeps its fixed ZZ feature map; each model runs on its
+ * benchmark backend, so a default run matches the Observatory exactly.
+ */
+export function trainConfig(req: TrainRequest, model: ModelId): ModelConfig {
+  if (MODELS[model].family === 'classical') {
+    return { model, qubits: null, encoding: null, circuitDepth: null, entanglement: null, backend: 'cpu' }
   }
-  // VQC: look the configuration up in the circuit search; fall back to the closest one.
-  const configs = evolutionSweep(req.dataset).configs
-  const exact = configs.find((c) => c.encoding === req.encoding && c.qubits === req.qubits && c.circuitDepth === req.circuitDepth)
-  if (exact) return exact.auc
-  const close = configs
-    .filter((c) => c.encoding === req.encoding)
-    .sort((a, b) => Math.abs(a.qubits - req.qubits) + Math.abs(a.circuitDepth - req.circuitDepth) - (Math.abs(b.qubits - req.qubits) + Math.abs(b.circuitDepth - req.circuitDepth)))[0]
-  return close?.auc ?? anchor.auc
+  return { model, qubits: req.qubits, encoding: req.encoding, circuitDepth: req.circuitDepth, entanglement: 'linear', backend: DEFAULT_BACKEND[model] }
 }
 
 function lossCurve(req: TrainRequest): LossPoint[] {
   const next = rng(hashSeed(`loss-${req.dataset}-${req.qubits}-${req.circuitDepth}-${req.encoding}`))
-  const floor = 0.26 + (req.encoding === 'amplitude' ? 0.03 : 0) - 0.01 * (req.circuitDepth - 1)
+  const floor = 0.26 + (req.encoding === 'amplitude' ? 0.03 : 0) - 0.01 * (req.circuitDepth - 1) - (req.dataset === 'wdbc' ? 0.12 : 0)
   const tau = 9 + req.qubits * 0.8
   return Array.from({ length: EPOCHS }, (_, i) => {
     const epoch = i + 1
@@ -38,11 +33,18 @@ function lossCurve(req: TrainRequest): LossPoint[] {
 
 export function trainResults(req: TrainRequest): TrainModelResult[] {
   return req.models.map((model) => {
-    const info = MODELS[model]
-    const anchor = ANCHORS[req.dataset][model]
-    const mean = info.family === 'quantum' ? quantumAuc(req, model) : anchor.auc
-    const std = req.seeds === 1 ? 0 : round(anchor.aucStd * Math.sqrt(5 / req.seeds))
-    return { model, family: info.family, auc: { mean, std } }
+    const r = result(req.dataset, trainConfig(req, model))
+    return {
+      model,
+      family: MODELS[model].family,
+      configKey: r.key,
+      backend: r.config.backend,
+      qubits: r.config.qubits,
+      circuitDepth: r.config.circuitDepth,
+      encoding: r.config.encoding,
+      // Same config → same mean everywhere; a single-seed run just has no spread to report.
+      auc: { mean: r.auc.mean, std: req.seeds === 1 ? 0 : r.auc.std },
+    }
   })
 }
 
@@ -63,14 +65,17 @@ export function trainExperiment(req: TrainRequest, id: string, timestamp: string
   const single = req.models.length === 1 ? req.models[0] : null
   const hasQuantum = req.models.some((m) => MODELS[m].family === 'quantum')
   const best = results.reduce((a, b) => (b.auc.mean > a.auc.mean ? b : a), results[0])
+  const singleResult = single ? result(req.dataset, trainConfig(req, single)) : null
+  const backend = single ? (singleResult?.config.backend ?? 'cpu') : hasQuantum ? 'ideal-sim' : 'cpu'
   return {
     id,
     kind: single ? 'run' : 'benchmark',
+    configKey: singleResult?.key ?? null,
     title: single ? (hasQuantum ? `${MODELS[single].name} · ${req.qubits}q` : MODELS[single].name) : `Training · ${req.models.length} models`,
     dataset: req.dataset,
     model: single,
     family: single ? MODELS[single].family : null,
-    backend: hasQuantum ? 'ideal-sim' : 'cpu',
+    backend,
     qubits: hasQuantum ? req.qubits : null,
     auc: best?.auc.mean ?? null,
     timestamp,
@@ -84,12 +89,12 @@ export function trainExperiment(req: TrainRequest, id: string, timestamp: string
       qubits: hasQuantum ? req.qubits : null,
       circuitDepth: hasQuantum ? req.circuitDepth : null,
       entanglement: hasQuantum ? 'linear' : null,
-      backend: hasQuantum ? 'ideal-sim' : 'cpu',
-      noise: hasQuantum ? (NOISE_FOR_BACKEND['ideal-sim'] ?? null) : null,
+      backend,
+      noise: hasQuantum ? (NOISE_FOR_BACKEND[backend] ?? null) : null,
       seed: 42,
       seeds: req.seeds,
     },
-    metrics: single && best ? modelMetrics(req.dataset, single, best.auc.mean) : null,
+    metrics: singleResult ? singleResult.metrics : null,
     notes: 'Started from the Train page.',
   }
 }

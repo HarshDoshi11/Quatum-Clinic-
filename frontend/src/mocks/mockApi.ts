@@ -9,7 +9,7 @@ import type { Experiment, SweepResponseMap, SweepType } from '@/types'
 import { compare } from './data/compare'
 import { crossModality } from './data/crossModality'
 import { datasetDetail, datasetSummary, profileCsv } from './data/datasets'
-import { EXPERIMENTS } from './data/experiments'
+import { EXPERIMENTS, circuitSearchChild } from './data/experiments'
 import { featureSchema } from './data/features'
 import { HARDWARE_PROFILES, noiseRun } from './data/hardware'
 import { FIRST_NEW_EXPERIMENT } from './data/ids'
@@ -17,6 +17,7 @@ import { explain, predict, trust } from './data/model'
 import { overview, systemStatus, toSummary } from './data/overview'
 import { patientReport } from './data/report'
 import { evolutionSweep, failureEnvelopeSweep, scalabilitySweep, smallDataSweep } from './data/sweeps'
+import { checkResponseConsistency } from './data/results'
 import { trainExperiment, trainResponse } from './data/train'
 import { APP_VERSION } from '@/config'
 
@@ -36,7 +37,12 @@ function respond<T>(produce: () => T, opts?: RequestOptions, latency?: number): 
       signal?.removeEventListener('abort', onAbort)
       try {
         // Deep-copy so callers can't mutate the mock's source data.
-        resolve(structuredClone(produce()))
+        const value = structuredClone(produce())
+        if (import.meta.env.DEV) {
+          // Single source of truth: the same config key must never carry two different results.
+          for (const problem of checkResponseConsistency(value, 'mock API')) console.warn(`[results store] inconsistent result for ${problem}`)
+        }
+        resolve(value)
       } catch (error) {
         reject(error)
       }
@@ -74,7 +80,7 @@ function newExperimentId(): string {
 }
 
 function findExperiment(id: string): Experiment {
-  const found = registry.find((e) => e.id === id)
+  const found = registry.find((e) => e.id === id) ?? circuitSearchChild(id, (d) => evolutionSweep(d).configs)
   if (!found) throw new ApiError(404, `Experiment ${id} not found`)
   return found
 }

@@ -1,9 +1,10 @@
 /** Overview page: status strip values, findings, backends, recent runs. */
 import { MODELS, testSize } from '../../lib/domain'
 import type { DatasetId, Experiment, ExperimentSummary, Finding, OverviewResponse, SystemStatus } from '../../types'
-import { ABSTAINED, ANCHORS, BEST_OVERALL, BEST_QUANTUM, SAFE_SENSITIVITY, SEEDS, toleranceGateError2q } from './canon'
+import { ABSTAINED, SAFE_SENSITIVITY, SEEDS, toleranceGateError2q } from './canon'
 import { BACKEND_STATUS } from './hardware'
-import { EXPERIMENT_IDS } from './ids'
+import { EXPERIMENT_IDS, runIdFor } from './ids'
+import { bestModel, referenceResult } from './results'
 
 /** Unicode minus for negative numbers in display strings. */
 const signed = (x: number, dp: number): string => `${x < 0 ? '−' : '+'}${Math.abs(x).toFixed(dp)}`
@@ -12,6 +13,7 @@ export function toSummary(e: Experiment): ExperimentSummary {
   return {
     id: e.id,
     kind: e.kind,
+    configKey: e.configKey,
     title: e.title,
     dataset: e.dataset,
     model: e.model,
@@ -25,17 +27,18 @@ export function toSummary(e: Experiment): ExperimentSummary {
 }
 
 export function systemStatus(dataset: DatasetId, experiments: Experiment[]): SystemStatus {
-  const ids = EXPERIMENT_IDS[dataset]
-  const q = ANCHORS[dataset][BEST_QUANTUM]
-  const c = ANCHORS[dataset][BEST_OVERALL]
+  const qm = bestModel(dataset, 'quantum')
+  const om = bestModel(dataset)
+  const q = referenceResult(dataset, qm)
+  const c = referenceResult(dataset, om)
   const own = experiments.filter((e) => e.dataset === dataset)
   const last = own.reduce((a, b) => (b.timestamp > a.timestamp ? b : a), own[0])
   const newest = experiments.reduce((a, b) => (b.timestamp > a.timestamp ? b : a), experiments[0])
   return {
     dataset,
     activeBackend: { id: 'ideal-sim', kind: 'SIM', mode: 'IDEAL', qubits: 4 },
-    bestQuantum: { model: BEST_QUANTUM, auc: { mean: q.auc, std: q.aucStd }, experimentId: ids.qsvmRun, qubits: q.qubits ?? 4 },
-    bestOverall: { model: BEST_OVERALL, auc: { mean: c.auc, std: c.aucStd }, experimentId: ids.xgboostRun },
+    bestQuantum: { model: qm, auc: q.auc, experimentId: runIdFor(dataset, qm), qubits: q.config.qubits ?? 4 },
+    bestOverall: { model: om, auc: c.auc, experimentId: runIdFor(dataset, om) },
     lastExperiment: { id: last.id, timestamp: last.timestamp },
     updatedAt: newest.timestamp,
   }
@@ -43,10 +46,12 @@ export function systemStatus(dataset: DatasetId, experiments: Experiment[]): Sys
 
 export function findings(dataset: DatasetId): Finding[] {
   const ids = EXPERIMENT_IDS[dataset]
-  const q = ANCHORS[dataset][BEST_QUANTUM]
-  const c = ANCHORS[dataset][BEST_OVERALL]
-  const delta = q.auc - c.auc
-  const pooled = Math.sqrt(q.aucStd ** 2 + c.aucStd ** 2)
+  const qm = bestModel(dataset, 'quantum')
+  const cm = bestModel(dataset, 'classical')
+  const q = referenceResult(dataset, qm).auc
+  const c = referenceResult(dataset, cm).auc
+  const delta = q.mean - c.mean
+  const pooled = Math.sqrt(q.std ** 2 + c.std ** 2)
   const tolerance = toleranceGateError2q(dataset)
   const abstainRate = ABSTAINED[dataset] / testSize(dataset)
 
@@ -55,7 +60,7 @@ export function findings(dataset: DatasetId): Finding[] {
       id: 'advantage',
       label: 'Quantum vs classical',
       value: `Δ ${signed(delta, 3)} AUC`,
-      summary: `${MODELS[BEST_QUANTUM].name} ${q.auc.toFixed(3)} vs ${MODELS[BEST_OVERALL].name} ${c.auc.toFixed(3)} — ${Math.abs(delta) < pooled ? 'within noise' : 'beyond noise'} across ${SEEDS} seeds.`,
+      summary: `${MODELS[qm].name} ${q.mean.toFixed(3)} vs ${MODELS[cm].name} ${c.mean.toFixed(3)} — ${Math.abs(delta) <= pooled ? 'within seed noise' : 'a gap beyond seed noise'} across ${SEEDS} seeds.`,
       link: { label: 'View advantage', path: '/advantage' },
       experimentId: ids.benchmark,
     },

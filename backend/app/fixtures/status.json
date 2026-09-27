@@ -10,19 +10,19 @@
     "bestQuantum": {
       "model": "qsvm",
       "auc": {
-        "mean": 0.914,
-        "std": 0.012
+        "mean": 0.984,
+        "std": 0.006
       },
       "experimentId": "EXP-2047",
       "qubits": 4
     },
     "bestOverall": {
-      "model": "xgboost",
+      "model": "svm",
       "auc": {
-        "mean": 0.921,
-        "std": 0.009
+        "mean": 0.994,
+        "std": 0.003
       },
-      "experimentId": "EXP-2046"
+      "experimentId": "EXP-2042"
     },
     "lastExperiment": {
       "id": "EXP-2048",

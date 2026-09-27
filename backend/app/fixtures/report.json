@@ -17,10 +17,10 @@
         "level": "strong",
         "summary": "The model was consistent and your information was complete.",
         "points": [
-          "Prediction stability: 5 seeds agree within ±2.8 points.",
+          "Prediction stability: 5 seeds agree within ±1.4 points.",
           "Data quality: All 10 inputs present and within valid ranges.",
           "Distribution shift (OOD): Patient resembles the training population.",
-          "Calibration: At ~84% predicted, 82% of similar test patients were positive.",
+          "Calibration: At ~86% predicted, 84% of similar test patients were positive.",
           "Input sensitivity: Small measurement errors move the result by at most 0.9 points.",
           "Hardware sensitivity: On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
         ]

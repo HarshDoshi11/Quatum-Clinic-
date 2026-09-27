@@ -1,9 +1,9 @@
 import { useReducedMotion } from 'motion/react'
-import { CartesianGrid, Line, LineChart, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, CartesianGrid, ComposedChart, Line, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { api, useResource } from '@/api'
 import { ChartFigure, type LegendItem } from '@/components/charts/ChartFigure'
 import { ChartTooltipCard } from '@/components/charts/ChartTooltip'
-import { AXIS, C, DRAW_MS, familyColor, useChartUnits } from '@/components/charts/chartTheme'
+import { AXIS, C, DRAW_MS, familyColor, niceScale, useChartUnits } from '@/components/charts/chartTheme'
 import { endLabel, resolveLabelOffsets } from '@/components/charts/directLabels'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ExperimentTag } from '@/components/ui/ExperimentTag'
@@ -20,16 +20,22 @@ import { useDataset } from '@/state/dataset'
 import type { ModelId, SmallDataSweep } from '@/types'
 
 /** Second model of each family is dashed, so identity never relies on colour alone. */
-const DASHED: Partial<Record<ModelId, boolean>> = { vqc: true, logreg: true }
+const DASHED: Partial<Record<ModelId, boolean>> = { vqc: true, logreg: true, rf: true }
 
 const X_AXIS_H = 40
 
-type Row = { trainSize: number; label: string } & Partial<Record<ModelId, number>>
+type Row = { trainSize: number; label: string } & Partial<Record<ModelId, number>> & Partial<Record<`${ModelId}Band`, [number, number]>>
 
 function toRows(sweep: SmallDataSweep): Row[] {
   return sweep.sizes.map((size, i) => {
     const row: Row = { trainSize: size, label: sweep.series[0]?.points[i]?.label ?? String(size) }
-    for (const s of sweep.series) row[s.model] = s.points[i]?.auc.mean
+    for (const s of sweep.series) {
+      const p = s.points[i]
+      if (!p) continue
+      row[s.model] = p.auc.mean
+      // ±1 std across the 5 seeds, drawn as a shaded band.
+      row[`${s.model}Band`] = [p.auc.mean - p.auc.std, p.auc.mean + p.auc.std]
+    }
     return row
   })
 }
@@ -40,8 +46,9 @@ function LearningCurves({ sweep }: { sweep: SmallDataSweep }) {
   const MARGIN = { top: 16, right: units.labelGutter, bottom: 8, left: 8 }
   const [ref, size] = useElementSize<HTMLDivElement>()
   const rows = toRows(sweep)
-  const all = sweep.series.flatMap((s) => s.points.map((p) => p.auc.mean))
-  const domain: [number, number] = [Math.floor((Math.min(...all) - 0.01) * 100) / 100, Math.ceil((Math.max(...all) + 0.005) * 100) / 100]
+  const lows = sweep.series.flatMap((s) => s.points.map((p) => p.auc.mean - p.auc.std))
+  const highs = sweep.series.flatMap((s) => s.points.map((p) => Math.min(1, p.auc.mean + p.auc.std)))
+  const { domain, ticks } = niceScale(Math.min(...lows), Math.max(...highs), 6)
   const last = rows.length - 1
   const offsets = resolveLabelOffsets(
     sweep.series.map((s) => ({ key: s.model, value: s.points[last]?.auc.mean ?? 0 })),
@@ -50,11 +57,12 @@ function LearningCurves({ sweep }: { sweep: SmallDataSweep }) {
     units.labelGap,
   )
   const cross = sweep.crossover
+  const closes = sweep.gapClosesAt
 
   return (
     <div ref={ref} className="h-full w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={rows} margin={MARGIN}>
+        <ComposedChart data={rows} margin={MARGIN}>
           <CartesianGrid vertical={false} stroke={C.rule} />
           <XAxis
             {...AXIS}
@@ -67,7 +75,7 @@ function LearningCurves({ sweep }: { sweep: SmallDataSweep }) {
             height={X_AXIS_H}
             label={{ value: 'Training patients (log scale)', position: 'insideBottom', offset: -2, fill: C.muted, fontSize: '0.8125rem', fontFamily: 'var(--font-mono)' }}
           />
-          <YAxis {...AXIS} domain={domain} tickFormatter={(v: number) => v.toFixed(2)} width={56} tickCount={6} />
+          <YAxis {...AXIS} domain={domain} ticks={ticks} tickFormatter={(v: number) => v.toFixed(2)} width={56} />
           <Tooltip
             cursor={{ stroke: C.ruleStrong, strokeWidth: 1 }}
             content={({ active, payload }) => {
@@ -81,7 +89,10 @@ function LearningCurves({ sweep }: { sweep: SmallDataSweep }) {
                     color: familyColor(s.family),
                     dashed: DASHED[s.model],
                     label: MODELS[s.model].name,
-                    value: row[s.model] !== undefined ? formatAuc(row[s.model] as number) : '—',
+                    value: (() => {
+                      const p = s.points.find((x) => x.trainSize === row.trainSize)
+                      return p ? `${formatAuc(p.auc.mean)} ${formatStd(p.auc.std)}` : '—'
+                    })(),
                   }))}
                 />
               )
@@ -93,6 +104,28 @@ function LearningCurves({ sweep }: { sweep: SmallDataSweep }) {
               stroke={C.ink}
               strokeDasharray="4 4"
               label={{ value: `Crossover · ~${cross.trainSize}`, position: 'insideTopRight', fill: C.ink, fontSize: '0.8125rem', fontFamily: 'var(--font-mono)' }}
+            />
+          )}
+          {sweep.series.map((s) => (
+            <Area
+              key={`${s.model}-band`}
+              dataKey={`${s.model}Band`}
+              type="monotone"
+              stroke="none"
+              fill={familyColor(s.family)}
+              fillOpacity={s.family === 'quantum' ? 0.1 : 0.14}
+              isAnimationActive={false}
+              activeDot={false}
+              legendType="none"
+              tooltipType="none"
+            />
+          ))}
+          {closes && !cross && (
+            <ReferenceLine
+              x={closes}
+              stroke={C.ink}
+              strokeDasharray="4 4"
+              label={{ value: `Gap within noise · ~${closes}`, position: 'insideTopRight', fill: C.ink, fontSize: '0.8125rem', fontFamily: 'var(--font-mono)' }}
             />
           )}
           {sweep.series.map((s) => (
@@ -113,7 +146,7 @@ function LearningCurves({ sweep }: { sweep: SmallDataSweep }) {
             />
           ))}
           {cross && <ReferenceDot x={cross.trainSize} y={cross.auc} r={6} fill="none" stroke={C.ink} strokeWidth={1.5} />}
-        </LineChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   )
@@ -130,6 +163,7 @@ export function SmallData({ route }: { route: RouteMeta }) {
     color: familyColor(s.family),
     dashed: DASHED[s.model],
   }))
+  const heading = data ? `Learning curves · ${data.series.map((s) => MODELS[s.model].name).join(', ')}` : 'Learning curves'
 
   const columns: Column<Row>[] = [
     { key: 'size', header: 'Training patients', mono: true, render: (r) => r.label },
@@ -156,7 +190,7 @@ export function SmallData({ route }: { route: RouteMeta }) {
       <PageItem as="section" className="mt-20">
         <SectionHeader
           index="01"
-          title="Learning curves"
+          title={heading}
           plain="Each line shows how good a model gets as we give it more patients to learn from. Lines further left and higher learn more from less."
         />
         <div className="mt-8">
@@ -164,8 +198,10 @@ export function SmallData({ route }: { route: RouteMeta }) {
             <EmptyState tone="error" title="Couldn't load the sweep." body={sweep.error.message} />
           ) : (
             <ChartFigure<Row>
-              label={`Fig. 01 — ${MODELS.qsvm.name} vs classical · ${dataset.code}`}
+              label={`Fig. 01 — Quantum vs classical · ${dataset.code}`}
+              subtitle={data?.evaluation}
               takeaway={data?.takeaway}
+              caption="Shaded bands show ±1 standard deviation across the 5 seeds; where bands overlap, the difference is within seed noise."
               legend={legend}
               loading={!data}
               height="26rem"

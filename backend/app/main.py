@@ -252,7 +252,8 @@ def list_experiments(dataset: Optional[DatasetId] = None, limit: Optional[int] =
 
 @app.get("/experiments/{experiment_id}")
 def get_experiment(experiment_id: str) -> dict[str, Any]:
-    for exp in _all_experiments():
+    # Circuit-search designs (e.g. EXP-2040.C07) are resolvable but not listed.
+    for exp in _all_experiments() + fixture("experiment_children"):
         if exp["id"] == experiment_id:
             return exp
     raise HTTPException(404, f"Experiment {experiment_id} not found")

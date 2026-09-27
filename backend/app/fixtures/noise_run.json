@@ -5,14 +5,14 @@
       "experimentId": "EXP-2041",
       "model": "qsvm",
       "reference": {
-        "sensitivity": 0.8936,
-        "specificity": 0.7649,
-        "auc": 0.918
+        "sensitivity": 0.9556,
+        "specificity": 0.9283,
+        "auc": 0.987
       },
       "result": {
-        "sensitivity": 0.8936,
-        "specificity": 0.7649,
-        "auc": 0.918
+        "sensitivity": 0.9556,
+        "specificity": 0.9283,
+        "auc": 0.987
       },
       "sensitivityStd": 0.006,
       "threshold": 0.85,
@@ -20,39 +20,48 @@
       "sensitivityVsT2": [
         {
           "t2Us": 20,
-          "sensitivity": 0.8798
+          "sensitivity": 0.9418,
+          "std": 0.006
         },
         {
           "t2Us": 40,
-          "sensitivity": 0.8867
+          "sensitivity": 0.9487,
+          "std": 0.006
         },
         {
           "t2Us": 60,
-          "sensitivity": 0.889
+          "sensitivity": 0.951,
+          "std": 0.006
         },
         {
           "t2Us": 80,
-          "sensitivity": 0.8901
+          "sensitivity": 0.9521,
+          "std": 0.006
         },
         {
           "t2Us": 100,
-          "sensitivity": 0.8908
+          "sensitivity": 0.9528,
+          "std": 0.006
         },
         {
           "t2Us": 150,
-          "sensitivity": 0.8917
+          "sensitivity": 0.9537,
+          "std": 0.006
         },
         {
           "t2Us": 200,
-          "sensitivity": 0.8922
+          "sensitivity": 0.9542,
+          "std": 0.006
         },
         {
           "t2Us": 300,
-          "sensitivity": 0.8927
+          "sensitivity": 0.9546,
+          "std": 0.006
         },
         {
           "t2Us": 500,
-          "sensitivity": 0.893
+          "sensitivity": 0.955,
+          "std": 0.006
         }
       ]
     },
@@ -61,14 +70,14 @@
       "experimentId": "EXP-2041",
       "model": "qsvm",
       "reference": {
-        "sensitivity": 0.8936,
-        "specificity": 0.7649,
-        "auc": 0.918
+        "sensitivity": 0.9556,
+        "specificity": 0.9283,
+        "auc": 0.987
       },
       "result": {
-        "sensitivity": 0.8418,
-        "specificity": 0.7468,
-        "auc": 0.881
+        "sensitivity": 0.8263,
+        "specificity": 0.8831,
+        "auc": 0.934
       },
       "sensitivityStd": 0.0183,
       "threshold": 0.85,
@@ -76,39 +85,48 @@
       "sensitivityVsT2": [
         {
           "t2Us": 20,
-          "sensitivity": 0.8313
+          "sensitivity": 0.8158,
+          "std": 0.0183
         },
         {
           "t2Us": 40,
-          "sensitivity": 0.8382
+          "sensitivity": 0.8227,
+          "std": 0.0183
         },
         {
           "t2Us": 60,
-          "sensitivity": 0.8404
+          "sensitivity": 0.8249,
+          "std": 0.0183
         },
         {
           "t2Us": 80,
-          "sensitivity": 0.8416
+          "sensitivity": 0.8261,
+          "std": 0.0183
         },
         {
           "t2Us": 100,
-          "sensitivity": 0.8423
+          "sensitivity": 0.8268,
+          "std": 0.0183
         },
         {
           "t2Us": 150,
-          "sensitivity": 0.8432
+          "sensitivity": 0.8277,
+          "std": 0.0183
         },
         {
           "t2Us": 200,
-          "sensitivity": 0.8437
+          "sensitivity": 0.8282,
+          "std": 0.0183
         },
         {
           "t2Us": 300,
-          "sensitivity": 0.8441
+          "sensitivity": 0.8286,
+          "std": 0.0183
         },
         {
           "t2Us": 500,
-          "sensitivity": 0.8445
+          "sensitivity": 0.829,
+          "std": 0.0183
         }
       ]
     },
@@ -117,14 +135,14 @@
       "experimentId": "EXP-2041",
       "model": "qsvm",
       "reference": {
-        "sensitivity": 0.8936,
-        "specificity": 0.7649,
-        "auc": 0.918
+        "sensitivity": 0.9556,
+        "specificity": 0.9283,
+        "auc": 0.987
       },
       "result": {
-        "sensitivity": 0.8657,
-        "specificity": 0.7551,
-        "auc": 0.898
+        "sensitivity": 0.8863,
+        "specificity": 0.9041,
+        "auc": 0.962
       },
       "sensitivityStd": 0.0155,
       "threshold": 0.85,
@@ -132,39 +150,48 @@
       "sensitivityVsT2": [
         {
           "t2Us": 20,
-          "sensitivity": 0.8538
+          "sensitivity": 0.8745,
+          "std": 0.0155
         },
         {
           "t2Us": 40,
-          "sensitivity": 0.8607
+          "sensitivity": 0.8814,
+          "std": 0.0155
         },
         {
           "t2Us": 60,
-          "sensitivity": 0.863
+          "sensitivity": 0.8837,
+          "std": 0.0155
         },
         {
           "t2Us": 80,
-          "sensitivity": 0.8642
+          "sensitivity": 0.8848,
+          "std": 0.0155
         },
         {
           "t2Us": 100,
-          "sensitivity": 0.8648
+          "sensitivity": 0.8855,
+          "std": 0.0155
         },
         {
           "t2Us": 150,
-          "sensitivity": 0.8658
+          "sensitivity": 0.8864,
+          "std": 0.0155
         },
         {
           "t2Us": 200,
-          "sensitivity": 0.8662
+          "sensitivity": 0.8869,
+          "std": 0.0155
         },
         {
           "t2Us": 300,
-          "sensitivity": 0.8667
+          "sensitivity": 0.8873,
+          "std": 0.0155
         },
         {
           "t2Us": 500,
-          "sensitivity": 0.867
+          "sensitivity": 0.8877,
+          "std": 0.0155
         }
       ]
     },
@@ -173,14 +200,14 @@
       "experimentId": "EXP-2041",
       "model": "qsvm",
       "reference": {
-        "sensitivity": 0.8936,
-        "specificity": 0.7649,
-        "auc": 0.918
+        "sensitivity": 0.9556,
+        "specificity": 0.9283,
+        "auc": 0.987
       },
       "result": {
-        "sensitivity": 0.8657,
-        "specificity": 0.7551,
-        "auc": 0.898
+        "sensitivity": 0.8863,
+        "specificity": 0.9041,
+        "auc": 0.962
       },
       "sensitivityStd": 0.0155,
       "threshold": 0.85,
@@ -188,39 +215,48 @@
       "sensitivityVsT2": [
         {
           "t2Us": 20,
-          "sensitivity": 0.8538
+          "sensitivity": 0.8745,
+          "std": 0.0155
         },
         {
           "t2Us": 40,
-          "sensitivity": 0.8607
+          "sensitivity": 0.8814,
+          "std": 0.0155
         },
         {
           "t2Us": 60,
-          "sensitivity": 0.863
+          "sensitivity": 0.8837,
+          "std": 0.0155
         },
         {
           "t2Us": 80,
-          "sensitivity": 0.8642
+          "sensitivity": 0.8848,
+          "std": 0.0155
         },
         {
           "t2Us": 100,
-          "sensitivity": 0.8648
+          "sensitivity": 0.8855,
+          "std": 0.0155
         },
         {
           "t2Us": 150,
-          "sensitivity": 0.8658
+          "sensitivity": 0.8864,
+          "std": 0.0155
         },
         {
           "t2Us": 200,
-          "sensitivity": 0.8662
+          "sensitivity": 0.8869,
+          "std": 0.0155
         },
         {
           "t2Us": 300,
-          "sensitivity": 0.8667
+          "sensitivity": 0.8873,
+          "std": 0.0155
         },
         {
           "t2Us": 500,
-          "sensitivity": 0.867
+          "sensitivity": 0.8877,
+          "std": 0.0155
         }
       ]
     }
@@ -231,14 +267,14 @@
       "experimentId": "EXP-2035",
       "model": "qsvm",
       "reference": {
-        "sensitivity": 0.8785,
-        "specificity": 0.741,
-        "auc": 0.9
+        "sensitivity": 0.8837,
+        "specificity": 0.7428,
+        "auc": 0.904
       },
       "result": {
-        "sensitivity": 0.8785,
-        "specificity": 0.741,
-        "auc": 0.9
+        "sensitivity": 0.8837,
+        "specificity": 0.7428,
+        "auc": 0.904
       },
       "sensitivityStd": 0.006,
       "threshold": 0.85,
@@ -246,39 +282,48 @@
       "sensitivityVsT2": [
         {
           "t2Us": 20,
-          "sensitivity": 0.8648
+          "sensitivity": 0.8699,
+          "std": 0.006
         },
         {
           "t2Us": 40,
-          "sensitivity": 0.8717
+          "sensitivity": 0.8768,
+          "std": 0.006
         },
         {
           "t2Us": 60,
-          "sensitivity": 0.8739
+          "sensitivity": 0.8791,
+          "std": 0.006
         },
         {
           "t2Us": 80,
-          "sensitivity": 0.8751
+          "sensitivity": 0.8803,
+          "std": 0.006
         },
         {
           "t2Us": 100,
-          "sensitivity": 0.8758
+          "sensitivity": 0.8809,
+          "std": 0.006
         },
         {
           "t2Us": 150,
-          "sensitivity": 0.8767
+          "sensitivity": 0.8819,
+          "std": 0.006
         },
         {
           "t2Us": 200,
-          "sensitivity": 0.8772
+          "sensitivity": 0.8823,
+          "std": 0.006
         },
         {
           "t2Us": 300,
-          "sensitivity": 0.8776
+          "sensitivity": 0.8828,
+          "std": 0.006
         },
         {
           "t2Us": 500,
-          "sensitivity": 0.878
+          "sensitivity": 0.8831,
+          "std": 0.006
         }
       ]
     },
@@ -287,14 +332,14 @@
       "experimentId": "EXP-2035",
       "model": "qsvm",
       "reference": {
-        "sensitivity": 0.8785,
-        "specificity": 0.741,
-        "auc": 0.9
+        "sensitivity": 0.8837,
+        "specificity": 0.7428,
+        "auc": 0.904
       },
       "result": {
-        "sensitivity": 0.8268,
-        "specificity": 0.7229,
-        "auc": 0.861
+        "sensitivity": 0.7545,
+        "specificity": 0.6976,
+        "auc": 0.803
       },
       "sensitivityStd": 0.0183,
       "threshold": 0.85,
@@ -302,39 +347,48 @@
       "sensitivityVsT2": [
         {
           "t2Us": 20,
-          "sensitivity": 0.8162
+          "sensitivity": 0.7439,
+          "std": 0.0183
         },
         {
           "t2Us": 40,
-          "sensitivity": 0.8231
+          "sensitivity": 0.7508,
+          "std": 0.0183
         },
         {
           "t2Us": 60,
-          "sensitivity": 0.8254
+          "sensitivity": 0.7531,
+          "std": 0.0183
         },
         {
           "t2Us": 80,
-          "sensitivity": 0.8265
+          "sensitivity": 0.7542,
+          "std": 0.0183
         },
         {
           "t2Us": 100,
-          "sensitivity": 0.8272
+          "sensitivity": 0.7549,
+          "std": 0.0183
         },
         {
           "t2Us": 150,
-          "sensitivity": 0.8282
+          "sensitivity": 0.7558,
+          "std": 0.0183
         },
         {
           "t2Us": 200,
-          "sensitivity": 0.8286
+          "sensitivity": 0.7563,
+          "std": 0.0183
         },
         {
           "t2Us": 300,
-          "sensitivity": 0.8291
+          "sensitivity": 0.7567,
+          "std": 0.0183
         },
         {
           "t2Us": 500,
-          "sensitivity": 0.8294
+          "sensitivity": 0.7571,
+          "std": 0.0183
         }
       ]
     },
@@ -343,54 +397,63 @@
       "experimentId": "EXP-2035",
       "model": "qsvm",
       "reference": {
-        "sensitivity": 0.8785,
-        "specificity": 0.741,
-        "auc": 0.9
+        "sensitivity": 0.8837,
+        "specificity": 0.7428,
+        "auc": 0.904
       },
       "result": {
-        "sensitivity": 0.8506,
-        "specificity": 0.7312,
-        "auc": 0.879
+        "sensitivity": 0.8145,
+        "specificity": 0.7185,
+        "auc": 0.851
       },
       "sensitivityStd": 0.0155,
       "threshold": 0.85,
-      "safe": true,
+      "safe": false,
       "sensitivityVsT2": [
         {
           "t2Us": 20,
-          "sensitivity": 0.8388
+          "sensitivity": 0.8026,
+          "std": 0.0155
         },
         {
           "t2Us": 40,
-          "sensitivity": 0.8457
+          "sensitivity": 0.8095,
+          "std": 0.0155
         },
         {
           "t2Us": 60,
-          "sensitivity": 0.848
+          "sensitivity": 0.8118,
+          "std": 0.0155
         },
         {
           "t2Us": 80,
-          "sensitivity": 0.8491
+          "sensitivity": 0.813,
+          "std": 0.0155
         },
         {
           "t2Us": 100,
-          "sensitivity": 0.8498
+          "sensitivity": 0.8136,
+          "std": 0.0155
         },
         {
           "t2Us": 150,
-          "sensitivity": 0.8507
+          "sensitivity": 0.8146,
+          "std": 0.0155
         },
         {
           "t2Us": 200,
-          "sensitivity": 0.8512
+          "sensitivity": 0.815,
+          "std": 0.0155
         },
         {
           "t2Us": 300,
-          "sensitivity": 0.8516
+          "sensitivity": 0.8155,
+          "std": 0.0155
         },
         {
           "t2Us": 500,
-          "sensitivity": 0.852
+          "sensitivity": 0.8158,
+          "std": 0.0155
         }
       ]
     },
@@ -399,54 +462,63 @@
       "experimentId": "EXP-2035",
       "model": "qsvm",
       "reference": {
-        "sensitivity": 0.8785,
-        "specificity": 0.741,
-        "auc": 0.9
+        "sensitivity": 0.8837,
+        "specificity": 0.7428,
+        "auc": 0.904
       },
       "result": {
-        "sensitivity": 0.8506,
-        "specificity": 0.7312,
-        "auc": 0.879
+        "sensitivity": 0.8145,
+        "specificity": 0.7185,
+        "auc": 0.851
       },
       "sensitivityStd": 0.0155,
       "threshold": 0.85,
-      "safe": true,
+      "safe": false,
       "sensitivityVsT2": [
         {
           "t2Us": 20,
-          "sensitivity": 0.8388
+          "sensitivity": 0.8026,
+          "std": 0.0155
         },
         {
           "t2Us": 40,
-          "sensitivity": 0.8457
+          "sensitivity": 0.8095,
+          "std": 0.0155
         },
         {
           "t2Us": 60,
-          "sensitivity": 0.848
+          "sensitivity": 0.8118,
+          "std": 0.0155
         },
         {
           "t2Us": 80,
-          "sensitivity": 0.8491
+          "sensitivity": 0.813,
+          "std": 0.0155
         },
         {
           "t2Us": 100,
-          "sensitivity": 0.8498
+          "sensitivity": 0.8136,
+          "std": 0.0155
         },
         {
           "t2Us": 150,
-          "sensitivity": 0.8507
+          "sensitivity": 0.8146,
+          "std": 0.0155
         },
         {
           "t2Us": 200,
-          "sensitivity": 0.8512
+          "sensitivity": 0.815,
+          "std": 0.0155
         },
         {
           "t2Us": 300,
-          "sensitivity": 0.8516
+          "sensitivity": 0.8155,
+          "std": 0.0155
         },
         {
           "t2Us": 500,
-          "sensitivity": 0.852
+          "sensitivity": 0.8158,
+          "std": 0.0155
         }
       ]
     }

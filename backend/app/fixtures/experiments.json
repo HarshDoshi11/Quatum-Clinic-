@@ -2,13 +2,14 @@
   {
     "id": "EXP-2048",
     "kind": "run",
+    "configKey": "wdbc|vqc|4q|angle|d3|linear|fake-backend-1",
     "title": "VQC · 4q",
     "dataset": "wdbc",
     "model": "vqc",
     "family": "quantum",
     "backend": "fake-backend-1",
     "qubits": 4,
-    "auc": 0.902,
+    "auc": 0.919,
     "timestamp": "2026-09-27T14:32:00+05:30",
     "status": "complete",
     "config": {
@@ -36,28 +37,28 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.796,
-        "std": 0.018
+        "mean": 0.833,
+        "std": 0.009
       },
       "sensitivity": {
-        "mean": 0.878,
-        "std": 0.027
+        "mean": 0.857,
+        "std": 0.013
       },
       "specificity": {
-        "mean": 0.747,
-        "std": 0.023
+        "mean": 0.818,
+        "std": 0.011
       },
       "auc": {
-        "mean": 0.902,
-        "std": 0.015
+        "mean": 0.919,
+        "std": 0.0072
       },
       "trainTimeS": {
-        "mean": 412,
-        "std": 24.7
+        "mean": 48,
+        "std": 2.9
       },
       "inferenceMs": {
-        "mean": 12,
-        "std": 1
+        "mean": 6,
+        "std": 0.48
       }
     },
     "notes": "Hardware-noise check on FakeBackend-1 calibration data."
@@ -65,13 +66,14 @@
   {
     "id": "EXP-2047",
     "kind": "run",
+    "configKey": "wdbc|qsvm|4q|angle|d2|full|noisy-sim",
     "title": "QSVM · 4q",
     "dataset": "wdbc",
     "model": "qsvm",
     "family": "quantum",
     "backend": "noisy-sim",
     "qubits": 4,
-    "auc": 0.914,
+    "auc": 0.984,
     "timestamp": "2026-09-27T13:48:00+05:30",
     "status": "complete",
     "config": {
@@ -99,20 +101,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.81,
-        "std": 0.014
+        "mean": 0.932,
+        "std": 0.007
       },
       "sensitivity": {
-        "mean": 0.888,
-        "std": 0.022
+        "mean": 0.945,
+        "std": 0.011
       },
       "specificity": {
-        "mean": 0.763,
-        "std": 0.018
+        "mean": 0.925,
+        "std": 0.009
       },
       "auc": {
-        "mean": 0.914,
-        "std": 0.012
+        "mean": 0.984,
+        "std": 0.006
       },
       "trainTimeS": {
         "mean": 184,
@@ -120,21 +122,22 @@
       },
       "inferenceMs": {
         "mean": 38,
-        "std": 3
+        "std": 3.04
       }
     },
-    "notes": "ZZ feature-map kernel; best quantum model."
+    "notes": "Two-repetition ZZ feature-map kernel, 4 qubits."
   },
   {
     "id": "EXP-2046",
     "kind": "run",
+    "configKey": "wdbc|xgboost|cpu",
     "title": "XGBoost",
     "dataset": "wdbc",
     "model": "xgboost",
     "family": "classical",
     "backend": "cpu",
     "qubits": null,
-    "auc": 0.921,
+    "auc": 0.993,
     "timestamp": "2026-09-27T12:16:00+05:30",
     "status": "complete",
     "config": {
@@ -155,20 +158,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.818,
-        "std": 0.011
+        "mean": 0.957,
+        "std": 0.005
       },
       "sensitivity": {
-        "mean": 0.894,
-        "std": 0.016
+        "mean": 0.965,
+        "std": 0.007
       },
       "specificity": {
-        "mean": 0.773,
-        "std": 0.013
+        "mean": 0.951,
+        "std": 0.006
       },
       "auc": {
-        "mean": 0.921,
-        "std": 0.009
+        "mean": 0.993,
+        "std": 0.004
       },
       "trainTimeS": {
         "mean": 2.6,
@@ -179,18 +182,19 @@
         "std": 0.072
       }
     },
-    "notes": "Best overall model."
+    "notes": "Gradient-boosted trees, 300 rounds, early stopping."
   },
   {
     "id": "EXP-2045",
     "kind": "run",
+    "configKey": "wdbc|vqc|8q|angle|d3|linear|ideal-sim",
     "title": "VQC · 8q",
     "dataset": "wdbc",
     "model": "vqc",
     "family": "quantum",
     "backend": "ideal-sim",
     "qubits": 8,
-    "auc": 0.909,
+    "auc": 0.972,
     "timestamp": "2026-09-27T11:02:00+05:30",
     "status": "complete",
     "config": {
@@ -218,20 +222,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.804,
-        "std": 0.018
+        "mean": 0.908,
+        "std": 0.011
       },
       "sensitivity": {
-        "mean": 0.884,
-        "std": 0.027
+        "mean": 0.924,
+        "std": 0.016
       },
       "specificity": {
-        "mean": 0.756,
-        "std": 0.023
+        "mean": 0.898,
+        "std": 0.013
       },
       "auc": {
-        "mean": 0.909,
-        "std": 0.015
+        "mean": 0.972,
+        "std": 0.009
       },
       "trainTimeS": {
         "mean": 412,
@@ -239,7 +243,7 @@
       },
       "inferenceMs": {
         "mean": 12,
-        "std": 1
+        "std": 0.96
       }
     },
     "notes": "Best VQC configuration from the circuit search."
@@ -247,13 +251,14 @@
   {
     "id": "EXP-2044",
     "kind": "run",
+    "configKey": "wdbc|logreg|cpu",
     "title": "LogReg",
     "dataset": "wdbc",
     "model": "logreg",
     "family": "classical",
     "backend": "cpu",
     "qubits": null,
-    "auc": 0.907,
+    "auc": 0.992,
     "timestamp": "2026-09-27T09:41:00+05:30",
     "status": "complete",
     "config": {
@@ -274,20 +279,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.801,
-        "std": 0.012
+        "mean": 0.953,
+        "std": 0.005
       },
       "sensitivity": {
-        "mean": 0.882,
-        "std": 0.018
+        "mean": 0.963,
+        "std": 0.007
       },
       "specificity": {
-        "mean": 0.753,
-        "std": 0.015
+        "mean": 0.948,
+        "std": 0.006
       },
       "auc": {
-        "mean": 0.907,
-        "std": 0.01
+        "mean": 0.992,
+        "std": 0.004
       },
       "trainTimeS": {
         "mean": 0.04,
@@ -295,7 +300,7 @@
       },
       "inferenceMs": {
         "mean": 0.02,
-        "std": 0.002
+        "std": 0.0016
       }
     },
     "notes": "L2-regularised baseline."
@@ -303,13 +308,14 @@
   {
     "id": "EXP-2043",
     "kind": "run",
+    "configKey": "wdbc|rf|cpu",
     "title": "Random Forest",
     "dataset": "wdbc",
     "model": "rf",
     "family": "classical",
     "backend": "cpu",
     "qubits": null,
-    "auc": 0.916,
+    "auc": 0.991,
     "timestamp": "2026-09-26T17:40:00+05:30",
     "status": "complete",
     "config": {
@@ -330,20 +336,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.812,
-        "std": 0.012
+        "mean": 0.95,
+        "std": 0.006
       },
       "sensitivity": {
-        "mean": 0.89,
-        "std": 0.018
+        "mean": 0.96,
+        "std": 0.009
       },
       "specificity": {
-        "mean": 0.766,
-        "std": 0.015
+        "mean": 0.944,
+        "std": 0.008
       },
       "auc": {
-        "mean": 0.916,
-        "std": 0.01
+        "mean": 0.991,
+        "std": 0.005
       },
       "trainTimeS": {
         "mean": 1.8,
@@ -351,7 +357,7 @@
       },
       "inferenceMs": {
         "mean": 1.1,
-        "std": 0.1
+        "std": 0.09
       }
     },
     "notes": "500 trees, balanced class weights."
@@ -359,13 +365,14 @@
   {
     "id": "EXP-2042",
     "kind": "run",
+    "configKey": "wdbc|svm|cpu",
     "title": "SVM",
     "dataset": "wdbc",
     "model": "svm",
     "family": "classical",
     "backend": "cpu",
     "qubits": null,
-    "auc": 0.911,
+    "auc": 0.994,
     "timestamp": "2026-09-26T17:05:00+05:30",
     "status": "complete",
     "config": {
@@ -386,20 +393,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.806,
-        "std": 0.013
+        "mean": 0.96,
+        "std": 0.004
       },
       "sensitivity": {
-        "mean": 0.885,
-        "std": 0.02
+        "mean": 0.968,
+        "std": 0.005
       },
       "specificity": {
-        "mean": 0.759,
-        "std": 0.017
+        "mean": 0.955,
+        "std": 0.005
       },
       "auc": {
-        "mean": 0.911,
-        "std": 0.011
+        "mean": 0.994,
+        "std": 0.003
       },
       "trainTimeS": {
         "mean": 0.21,
@@ -415,13 +422,14 @@
   {
     "id": "EXP-2041",
     "kind": "sweep",
+    "configKey": null,
     "title": "Noise robustness sweep · QSVM",
     "dataset": "wdbc",
     "model": "qsvm",
     "family": "quantum",
     "backend": "fake-backend-1",
     "qubits": 4,
-    "auc": 0.914,
+    "auc": 0.984,
     "timestamp": "2026-09-26T16:20:00+05:30",
     "status": "complete",
     "config": {
@@ -449,20 +457,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.81,
-        "std": 0.014
+        "mean": 0.932,
+        "std": 0.007
       },
       "sensitivity": {
-        "mean": 0.888,
-        "std": 0.022
+        "mean": 0.945,
+        "std": 0.011
       },
       "specificity": {
-        "mean": 0.763,
-        "std": 0.018
+        "mean": 0.925,
+        "std": 0.009
       },
       "auc": {
-        "mean": 0.914,
-        "std": 0.012
+        "mean": 0.984,
+        "std": 0.006
       },
       "trainTimeS": {
         "mean": 184,
@@ -470,7 +478,7 @@
       },
       "inferenceMs": {
         "mean": 38,
-        "std": 3
+        "std": 3.04
       }
     },
     "notes": "Gate error, T1/T2, readout and data corruption sweeps."
@@ -478,13 +486,14 @@
   {
     "id": "EXP-2040",
     "kind": "sweep",
+    "configKey": null,
     "title": "Circuit search · 20 configs",
     "dataset": "wdbc",
     "model": "vqc",
     "family": "quantum",
     "backend": "ideal-sim",
     "qubits": 8,
-    "auc": 0.909,
+    "auc": 0.972,
     "timestamp": "2026-09-26T14:40:00+05:30",
     "status": "complete",
     "config": {
@@ -512,20 +521,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.804,
-        "std": 0.018
+        "mean": 0.908,
+        "std": 0.011
       },
       "sensitivity": {
-        "mean": 0.884,
-        "std": 0.027
+        "mean": 0.924,
+        "std": 0.016
       },
       "specificity": {
-        "mean": 0.756,
-        "std": 0.023
+        "mean": 0.898,
+        "std": 0.013
       },
       "auc": {
-        "mean": 0.909,
-        "std": 0.015
+        "mean": 0.972,
+        "std": 0.009
       },
       "trainTimeS": {
         "mean": 412,
@@ -533,7 +542,7 @@
       },
       "inferenceMs": {
         "mean": 12,
-        "std": 1
+        "std": 0.96
       }
     },
     "notes": "Encoding × qubits × depth × entanglement."
@@ -541,13 +550,14 @@
   {
     "id": "EXP-2039",
     "kind": "sweep",
+    "configKey": null,
     "title": "Scalability sweep · VQC 4→12q",
     "dataset": "wdbc",
     "model": "vqc",
     "family": "quantum",
     "backend": "ideal-sim",
     "qubits": 12,
-    "auc": 0.909,
+    "auc": 0.972,
     "timestamp": "2026-09-26T13:05:00+05:30",
     "status": "complete",
     "config": {
@@ -575,20 +585,20 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.804,
-        "std": 0.018
+        "mean": 0.908,
+        "std": 0.011
       },
       "sensitivity": {
-        "mean": 0.884,
-        "std": 0.027
+        "mean": 0.924,
+        "std": 0.016
       },
       "specificity": {
-        "mean": 0.756,
-        "std": 0.023
+        "mean": 0.898,
+        "std": 0.013
       },
       "auc": {
-        "mean": 0.909,
-        "std": 0.015
+        "mean": 0.972,
+        "std": 0.009
       },
       "trainTimeS": {
         "mean": 412,
@@ -596,7 +606,7 @@
       },
       "inferenceMs": {
         "mean": 12,
-        "std": 1
+        "std": 0.96
       }
     },
     "notes": "Transpiled depth, gate count, runtime and AUC vs qubits."
@@ -604,11 +614,12 @@
   {
     "id": "EXP-2038",
     "kind": "sweep",
+    "configKey": null,
     "title": "Small-data sweep",
     "dataset": "wdbc",
     "model": null,
     "family": null,
-    "backend": "ideal-sim",
+    "backend": "noisy-sim",
     "qubits": 4,
     "auc": null,
     "timestamp": "2026-09-26T11:30:00+05:30",
@@ -618,6 +629,7 @@
       "models": [
         "qsvm",
         "vqc",
+        "svm",
         "xgboost",
         "logreg"
       ],
@@ -627,14 +639,14 @@
       "qubits": 4,
       "circuitDepth": 2,
       "entanglement": "linear",
-      "backend": "ideal-sim",
+      "backend": "noisy-sim",
       "noise": {
-        "t1Us": null,
-        "t2Us": null,
-        "gateError1q": 0,
-        "gateError2q": 0,
-        "readoutError": 0,
-        "shots": null
+        "t1Us": 300,
+        "t2Us": 250,
+        "gateError1q": 0.01,
+        "gateError2q": 0.1,
+        "readoutError": 0.5,
+        "shots": 4096
       },
       "seed": 42,
       "seeds": 5
@@ -645,6 +657,7 @@
   {
     "id": "EXP-2037",
     "kind": "benchmark",
+    "configKey": null,
     "title": "Benchmark · WDBC · 6 models",
     "dataset": "wdbc",
     "model": null,
@@ -688,6 +701,7 @@
   {
     "id": "EXP-2036",
     "kind": "sweep",
+    "configKey": null,
     "title": "Cross-modality study · 5 signals",
     "dataset": "heart",
     "model": "qsvm",
@@ -743,7 +757,7 @@
       },
       "inferenceMs": {
         "mean": 31,
-        "std": 2.5
+        "std": 2.48
       }
     },
     "notes": "Each modality alone vs all combined."
@@ -751,6 +765,7 @@
   {
     "id": "EXP-2035",
     "kind": "sweep",
+    "configKey": null,
     "title": "Noise robustness sweep · QSVM",
     "dataset": "heart",
     "model": "qsvm",
@@ -806,7 +821,7 @@
       },
       "inferenceMs": {
         "mean": 31,
-        "std": 2.5
+        "std": 2.48
       }
     },
     "notes": "Gate error, T1/T2, readout and data corruption sweeps."
@@ -814,6 +829,7 @@
   {
     "id": "EXP-2034",
     "kind": "sweep",
+    "configKey": null,
     "title": "Circuit search · 20 configs",
     "dataset": "heart",
     "model": "vqc",
@@ -877,6 +893,7 @@
   {
     "id": "EXP-2033",
     "kind": "sweep",
+    "configKey": null,
     "title": "Scalability sweep · VQC 4→12q",
     "dataset": "heart",
     "model": "vqc",
@@ -940,11 +957,12 @@
   {
     "id": "EXP-2032",
     "kind": "sweep",
+    "configKey": null,
     "title": "Small-data sweep",
     "dataset": "heart",
     "model": null,
     "family": null,
-    "backend": "ideal-sim",
+    "backend": "noisy-sim",
     "qubits": 4,
     "auc": null,
     "timestamp": "2026-09-25T15:00:00+05:30",
@@ -954,6 +972,7 @@
       "models": [
         "qsvm",
         "vqc",
+        "svm",
         "xgboost",
         "logreg"
       ],
@@ -963,14 +982,14 @@
       "qubits": 4,
       "circuitDepth": 2,
       "entanglement": "linear",
-      "backend": "ideal-sim",
+      "backend": "noisy-sim",
       "noise": {
-        "t1Us": null,
-        "t2Us": null,
-        "gateError1q": 0,
-        "gateError2q": 0,
-        "readoutError": 0,
-        "shots": null
+        "t1Us": 300,
+        "t2Us": 250,
+        "gateError1q": 0.01,
+        "gateError2q": 0.1,
+        "readoutError": 0.5,
+        "shots": 4096
       },
       "seed": 42,
       "seeds": 5
@@ -981,6 +1000,7 @@
   {
     "id": "EXP-2031",
     "kind": "benchmark",
+    "configKey": null,
     "title": "Benchmark · UCI · 6 models",
     "dataset": "heart",
     "model": null,
@@ -1024,13 +1044,14 @@
   {
     "id": "EXP-2030",
     "kind": "run",
+    "configKey": "heart|vqc|4q|angle|d3|linear|fake-backend-1",
     "title": "VQC · 4q",
     "dataset": "heart",
     "model": "vqc",
     "family": "quantum",
     "backend": "fake-backend-1",
     "qubits": 4,
-    "auc": 0.881,
+    "auc": 0.837,
     "timestamp": "2026-09-25T12:20:00+05:30",
     "status": "complete",
     "config": {
@@ -1058,28 +1079,28 @@
     },
     "metrics": {
       "accuracy": {
-        "mean": 0.785,
-        "std": 0.022
+        "mean": 0.743,
+        "std": 0.017
       },
       "sensitivity": {
-        "mean": 0.861,
-        "std": 0.032
+        "mean": 0.828,
+        "std": 0.026
       },
       "specificity": {
-        "mean": 0.721,
-        "std": 0.027
+        "mean": 0.672,
+        "std": 0.022
       },
       "auc": {
-        "mean": 0.881,
-        "std": 0.018
+        "mean": 0.837,
+        "std": 0.0144
       },
       "trainTimeS": {
-        "mean": 238,
-        "std": 14.3
+        "mean": 28,
+        "std": 1.7
       },
       "inferenceMs": {
-        "mean": 10,
-        "std": 0.8
+        "mean": 5,
+        "std": 0.4
       }
     },
     "notes": "Hardware-noise check on FakeBackend-1 calibration data."
@@ -1087,6 +1108,7 @@
   {
     "id": "EXP-2029",
     "kind": "run",
+    "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim",
     "title": "QSVM · 4q",
     "dataset": "heart",
     "model": "qsvm",
@@ -1142,14 +1164,15 @@
       },
       "inferenceMs": {
         "mean": 31,
-        "std": 2.5
+        "std": 2.48
       }
     },
-    "notes": "ZZ feature-map kernel; best quantum model."
+    "notes": "Two-repetition ZZ feature-map kernel, 4 qubits."
   },
   {
     "id": "EXP-2028",
     "kind": "run",
+    "configKey": "heart|vqc|8q|angle|d3|linear|ideal-sim",
     "title": "VQC · 8q",
     "dataset": "heart",
     "model": "vqc",
@@ -1213,6 +1236,7 @@
   {
     "id": "EXP-2027",
     "kind": "run",
+    "configKey": "heart|xgboost|cpu",
     "title": "XGBoost",
     "dataset": "heart",
     "model": "xgboost",
@@ -1264,11 +1288,12 @@
         "std": 0.056
       }
     },
-    "notes": "Best overall model."
+    "notes": "Gradient-boosted trees, 300 rounds, early stopping."
   },
   {
     "id": "EXP-2026",
     "kind": "run",
+    "configKey": "heart|logreg|cpu",
     "title": "LogReg",
     "dataset": "heart",
     "model": "logreg",
@@ -1317,7 +1342,7 @@
       },
       "inferenceMs": {
         "mean": 0.02,
-        "std": 0.002
+        "std": 0.0016
       }
     },
     "notes": "L2-regularised baseline."
@@ -1325,6 +1350,7 @@
   {
     "id": "EXP-2025",
     "kind": "run",
+    "configKey": "heart|rf|cpu",
     "title": "Random Forest",
     "dataset": "heart",
     "model": "rf",
@@ -1381,6 +1407,7 @@
   {
     "id": "EXP-2024",
     "kind": "run",
+    "configKey": "heart|svm|cpu",
     "title": "SVM",
     "dataset": "heart",
     "model": "svm",

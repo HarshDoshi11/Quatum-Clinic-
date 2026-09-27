@@ -1,6 +1,6 @@
 import { useReducedMotion } from 'motion/react'
 import type { ReactNode } from 'react'
-import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, CartesianGrid, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { api, useResource } from '@/api'
 import { ChartFigure } from '@/components/charts/ChartFigure'
 import { ChartTooltipCard } from '@/components/charts/ChartTooltip'
@@ -14,7 +14,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { Term } from '@/components/ui/Term'
 import { MODELS } from '@/lib/domain'
-import { formatAuc, formatDuration } from '@/lib/format'
+import { durationColumn, formatAuc, formatDuration, formatStd } from '@/lib/format'
 import type { RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import type { ScalabilityPoint, ScalabilitySweep } from '@/types'
@@ -38,11 +38,13 @@ const PANELS: Panel[] = [
 function SmallMultiple({ sweep, panel }: { sweep: ScalabilitySweep; panel: Panel }) {
   const reduced = useReducedMotion() ?? false
   const values = sweep.points.map((p) => p[panel.key])
+  // The AUC panel shows a ±1 std band, so its axis must contain the band.
+  const data = sweep.points.map((p) => ({ ...p, band: [p.auc - p.aucStd, p.auc + p.aucStd] as [number, number] }))
   const { domain, ticks } =
     panel.key === 'runtimeS'
       ? niceTimeScale(Math.max(...values), 4)
       : panel.benefit
-        ? niceScale(Math.min(...values) - 0.001, Math.max(...values) + 0.001, 4)
+        ? niceScale(Math.min(...data.map((d) => d.band[0])), Math.min(1, Math.max(...data.map((d) => d.band[1]))), 4)
         : niceScale(0, Math.max(...values), 4, true)
   const last = sweep.points[sweep.points.length - 1]
   const first = sweep.points[0]
@@ -58,7 +60,7 @@ function SmallMultiple({ sweep, panel }: { sweep: ScalabilitySweep; panel: Panel
       <p className="type-label mt-1 text-muted">{panel.unit}</p>
       <div className="mt-3 h-[13rem]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={sweep.points} margin={{ top: 20, right: 16, bottom: 4, left: 4 }}>
+          <ComposedChart data={data} margin={{ top: 20, right: 16, bottom: 4, left: 4 }}>
             <CartesianGrid vertical={false} stroke={C.rule} />
             <XAxis {...AXIS} dataKey="qubits" type="number" domain={[4, 12]} ticks={[4, 6, 8, 10, 12]} tickFormatter={(v: number) => `${v}q`} height={30} />
             <YAxis
@@ -75,7 +77,12 @@ function SmallMultiple({ sweep, panel }: { sweep: ScalabilitySweep; panel: Panel
               content={({ active, payload }) => {
                 const p = active ? (payload?.[0]?.payload as ScalabilityPoint | undefined) : undefined
                 if (!p) return null
-                return <ChartTooltipCard title={`${p.qubits} qubits`} rows={[{ key: 'v', color: C.accent, label: panel.unit, value: panel.format(p[panel.key]) }]} />
+                return (
+                  <ChartTooltipCard
+                    title={`${p.qubits} qubits`}
+                    rows={[{ key: 'v', color: C.accent, label: panel.unit, value: panel.benefit ? `${formatAuc(p.auc)} ${formatStd(p.aucStd)}` : panel.format(p[panel.key]) }]}
+                  />
+                )
               }}
             />
             {sweep.bottleneck && (
@@ -86,6 +93,9 @@ function SmallMultiple({ sweep, panel }: { sweep: ScalabilitySweep; panel: Panel
                 strokeDasharray="4 3"
                 label={{ value: 'Bottleneck', position: 'top', ...TICK, fill: C.ink }}
               />
+            )}
+            {panel.benefit && (
+              <Area dataKey="band" type="monotone" stroke="none" fill={C.accent} fillOpacity={0.12} isAnimationActive={false} activeDot={false} tooltipType="none" />
             )}
             <Line
               dataKey={panel.key}
@@ -98,7 +108,7 @@ function SmallMultiple({ sweep, panel }: { sweep: ScalabilitySweep; panel: Panel
               animationDuration={DRAW_MS}
               animationEasing="ease-out"
             />
-          </LineChart>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
     </div>
@@ -109,14 +119,15 @@ export function Scalability({ route }: { route: RouteMeta }) {
   const { datasetId } = useDataset()
   const sweep = useResource((signal) => api.getSweep('scalability', datasetId, { signal }), [datasetId])
   const data = sweep.data
+  const runtimeFmt = durationColumn(data?.points.map((p) => p.runtimeS) ?? [])
 
   const columns: Column<ScalabilityPoint>[] = [
     { key: 'q', header: 'Qubits', mono: true, render: (p) => p.qubits },
     { key: 'd', header: 'Depth', align: 'right', mono: true, render: (p) => p.circuitDepth },
     { key: 'g', header: 'Gates', align: 'right', mono: true, render: (p) => p.gateCount },
     { key: 'g2', header: '2-qubit gates', align: 'right', mono: true, render: (p) => p.twoQubitGates },
-    { key: 'r', header: 'Runtime', align: 'right', mono: true, render: (p) => formatDuration(p.runtimeS) },
-    { key: 'a', header: 'AUC', align: 'right', mono: true, render: (p) => formatAuc(p.auc) },
+    { key: 'r', header: 'Runtime', align: 'right', mono: true, render: (p) => runtimeFmt(p.runtimeS) },
+    { key: 'a', header: 'AUC', align: 'right', mono: true, render: (p) => `${formatAuc(p.auc)} ${formatStd(p.aucStd)}` },
   ]
 
   return (
@@ -139,7 +150,10 @@ export function Scalability({ route }: { route: RouteMeta }) {
           ) : (
             <ChartFigure<ScalabilityPoint>
               label={`Fig. 01 — ${data ? MODELS[data.model].name : 'VQC'} from 4 to 12 qubits`}
+              subtitle={data?.evaluation}
               takeaway={data?.takeaway}
+              caption="The shaded band on the AUC panel is ±1 standard deviation across the 5 seeds."
+              note={data?.rule.text}
               loading={!data}
               height="auto"
               table={{ columns, rows: data?.points, rowKey: (p) => String(p.qubits), caption: 'Scalability sweep by qubit count' }}

@@ -7,23 +7,25 @@
       {
         "model": "vqc",
         "family": "quantum",
+        "configKey": "wdbc|vqc|8q|angle|d3|linear|ideal-sim",
+        "backend": "ideal-sim",
         "experimentId": "EXP-2045",
         "metrics": {
           "accuracy": {
-            "mean": 0.804,
-            "std": 0.018
+            "mean": 0.908,
+            "std": 0.011
           },
           "sensitivity": {
-            "mean": 0.884,
-            "std": 0.027
+            "mean": 0.924,
+            "std": 0.016
           },
           "specificity": {
-            "mean": 0.756,
-            "std": 0.023
+            "mean": 0.898,
+            "std": 0.013
           },
           "auc": {
-            "mean": 0.909,
-            "std": 0.015
+            "mean": 0.972,
+            "std": 0.009
           },
           "trainTimeS": {
             "mean": 412,
@@ -31,7 +33,7 @@
           },
           "inferenceMs": {
             "mean": 12,
-            "std": 1
+            "std": 0.96
           }
         },
         "qubits": 8,
@@ -40,23 +42,25 @@
       {
         "model": "qsvm",
         "family": "quantum",
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|noisy-sim",
+        "backend": "noisy-sim",
         "experimentId": "EXP-2047",
         "metrics": {
           "accuracy": {
-            "mean": 0.81,
-            "std": 0.014
+            "mean": 0.932,
+            "std": 0.007
           },
           "sensitivity": {
-            "mean": 0.888,
-            "std": 0.022
+            "mean": 0.945,
+            "std": 0.011
           },
           "specificity": {
-            "mean": 0.763,
-            "std": 0.018
+            "mean": 0.925,
+            "std": 0.009
           },
           "auc": {
-            "mean": 0.914,
-            "std": 0.012
+            "mean": 0.984,
+            "std": 0.006
           },
           "trainTimeS": {
             "mean": 184,
@@ -64,7 +68,7 @@
           },
           "inferenceMs": {
             "mean": 38,
-            "std": 3
+            "std": 3.04
           }
         },
         "qubits": 4,
@@ -73,23 +77,25 @@
       {
         "model": "logreg",
         "family": "classical",
+        "configKey": "wdbc|logreg|cpu",
+        "backend": "cpu",
         "experimentId": "EXP-2044",
         "metrics": {
           "accuracy": {
-            "mean": 0.801,
-            "std": 0.012
+            "mean": 0.953,
+            "std": 0.005
           },
           "sensitivity": {
-            "mean": 0.882,
-            "std": 0.018
+            "mean": 0.963,
+            "std": 0.007
           },
           "specificity": {
-            "mean": 0.753,
-            "std": 0.015
+            "mean": 0.948,
+            "std": 0.006
           },
           "auc": {
-            "mean": 0.907,
-            "std": 0.01
+            "mean": 0.992,
+            "std": 0.004
           },
           "trainTimeS": {
             "mean": 0.04,
@@ -97,7 +103,7 @@
           },
           "inferenceMs": {
             "mean": 0.02,
-            "std": 0.002
+            "std": 0.0016
           }
         },
         "qubits": null,
@@ -106,23 +112,25 @@
       {
         "model": "svm",
         "family": "classical",
+        "configKey": "wdbc|svm|cpu",
+        "backend": "cpu",
         "experimentId": "EXP-2042",
         "metrics": {
           "accuracy": {
-            "mean": 0.806,
-            "std": 0.013
+            "mean": 0.96,
+            "std": 0.004
           },
           "sensitivity": {
-            "mean": 0.885,
-            "std": 0.02
+            "mean": 0.968,
+            "std": 0.005
           },
           "specificity": {
-            "mean": 0.759,
-            "std": 0.017
+            "mean": 0.955,
+            "std": 0.005
           },
           "auc": {
-            "mean": 0.911,
-            "std": 0.011
+            "mean": 0.994,
+            "std": 0.003
           },
           "trainTimeS": {
             "mean": 0.21,
@@ -139,23 +147,25 @@
       {
         "model": "rf",
         "family": "classical",
+        "configKey": "wdbc|rf|cpu",
+        "backend": "cpu",
         "experimentId": "EXP-2043",
         "metrics": {
           "accuracy": {
-            "mean": 0.812,
-            "std": 0.012
+            "mean": 0.95,
+            "std": 0.006
           },
           "sensitivity": {
-            "mean": 0.89,
-            "std": 0.018
+            "mean": 0.96,
+            "std": 0.009
           },
           "specificity": {
-            "mean": 0.766,
-            "std": 0.015
+            "mean": 0.944,
+            "std": 0.008
           },
           "auc": {
-            "mean": 0.916,
-            "std": 0.01
+            "mean": 0.991,
+            "std": 0.005
           },
           "trainTimeS": {
             "mean": 1.8,
@@ -163,7 +173,7 @@
           },
           "inferenceMs": {
             "mean": 1.1,
-            "std": 0.1
+            "std": 0.09
           }
         },
         "qubits": null,
@@ -172,23 +182,25 @@
       {
         "model": "xgboost",
         "family": "classical",
+        "configKey": "wdbc|xgboost|cpu",
+        "backend": "cpu",
         "experimentId": "EXP-2046",
         "metrics": {
           "accuracy": {
-            "mean": 0.818,
-            "std": 0.011
+            "mean": 0.957,
+            "std": 0.005
           },
           "sensitivity": {
-            "mean": 0.894,
-            "std": 0.016
+            "mean": 0.965,
+            "std": 0.007
           },
           "specificity": {
-            "mean": 0.773,
-            "std": 0.013
+            "mean": 0.951,
+            "std": 0.006
           },
           "auc": {
-            "mean": 0.921,
-            "std": 0.009
+            "mean": 0.993,
+            "std": 0.004
           },
           "trainTimeS": {
             "mean": 2.6,
@@ -206,288 +218,323 @@
     "resources": [
       {
         "id": "C01",
+        "configKey": "wdbc|vqc|4q|angle|d1|linear|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 1,
-        "auc": 0.884
+        "auc": 0.949,
+        "aucStd": 0.0058
       },
       {
         "id": "C02",
+        "configKey": "wdbc|vqc|4q|angle|d2|linear|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 2,
-        "auc": 0.893
+        "auc": 0.96,
+        "aucStd": 0.0065
       },
       {
         "id": "C03",
+        "configKey": "wdbc|vqc|4q|angle|d2|circular|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 2,
-        "auc": 0.896
+        "auc": 0.961,
+        "aucStd": 0.0065
       },
       {
         "id": "C04",
+        "configKey": "wdbc|vqc|4q|angle|d3|full|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 3,
-        "auc": 0.899
+        "auc": 0.966,
+        "aucStd": 0.0072
       },
       {
         "id": "C05",
+        "configKey": "wdbc|vqc|4q|angle|d4|linear|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 4,
-        "auc": 0.897
+        "auc": 0.963,
+        "aucStd": 0.0079
       },
       {
         "id": "C09",
+        "configKey": "wdbc|vqc|6q|angle|d1|circular|ideal-sim",
         "model": "vqc",
         "qubits": 6,
         "circuitDepth": 1,
-        "auc": 0.89
+        "auc": 0.951,
+        "aucStd": 0.0067
       },
       {
         "id": "C10",
+        "configKey": "wdbc|vqc|6q|angle|d2|linear|ideal-sim",
         "model": "vqc",
         "qubits": 6,
         "circuitDepth": 2,
-        "auc": 0.899
+        "auc": 0.96,
+        "aucStd": 0.0074
       },
       {
         "id": "C11",
+        "configKey": "wdbc|vqc|6q|angle|d3|linear|ideal-sim",
         "model": "vqc",
         "qubits": 6,
         "circuitDepth": 3,
-        "auc": 0.906
+        "auc": 0.97,
+        "aucStd": 0.0081
       },
       {
         "id": "C12",
+        "configKey": "wdbc|vqc|6q|angle|d4|full|ideal-sim",
         "model": "vqc",
         "qubits": 6,
         "circuitDepth": 4,
-        "auc": 0.896
+        "auc": 0.957,
+        "aucStd": 0.0088
       },
       {
         "id": "C15",
+        "configKey": "wdbc|vqc|8q|angle|d1|linear|ideal-sim",
         "model": "vqc",
         "qubits": 8,
         "circuitDepth": 1,
-        "auc": 0.89
+        "auc": 0.956,
+        "aucStd": 0.0076
       },
       {
         "id": "C16",
+        "configKey": "wdbc|vqc|8q|angle|d2|circular|ideal-sim",
         "model": "vqc",
         "qubits": 8,
         "circuitDepth": 2,
-        "auc": 0.903
+        "auc": 0.966,
+        "aucStd": 0.0083
       },
       {
         "id": "C17",
+        "configKey": "wdbc|vqc|8q|angle|d3|linear|ideal-sim",
         "model": "vqc",
         "qubits": 8,
         "circuitDepth": 3,
-        "auc": 0.909
+        "auc": 0.972,
+        "aucStd": 0.009
       },
       {
         "id": "C18",
+        "configKey": "wdbc|vqc|8q|angle|d4|full|ideal-sim",
         "model": "vqc",
         "qubits": 8,
         "circuitDepth": 4,
-        "auc": 0.899
+        "auc": 0.963,
+        "aucStd": 0.0097
       },
       {
         "id": "QSVM-4",
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|noisy-sim",
         "model": "qsvm",
         "qubits": 4,
         "circuitDepth": 2,
-        "auc": 0.914
+        "auc": 0.984,
+        "aucStd": 0.006
       },
       {
         "id": "QSVM-6",
+        "configKey": "wdbc|qsvm|6q|angle|d2|full|noisy-sim",
         "model": "qsvm",
         "qubits": 6,
         "circuitDepth": 2,
-        "auc": 0.911
+        "auc": 0.981,
+        "aucStd": 0.0066
       },
       {
         "id": "QSVM-8",
+        "configKey": "wdbc|qsvm|8q|angle|d2|full|noisy-sim",
         "model": "qsvm",
         "qubits": 8,
         "circuitDepth": 2,
-        "auc": 0.906
+        "auc": 0.976,
+        "aucStd": 0.0072
       }
     ],
     "baselines": [
       {
         "model": "logreg",
-        "auc": 0.907
+        "auc": 0.992
       },
       {
         "model": "svm",
-        "auc": 0.911
+        "auc": 0.994
       },
       {
         "model": "rf",
-        "auc": 0.916
+        "auc": 0.991
       },
       {
         "model": "xgboost",
-        "auc": 0.921
+        "auc": 0.993
       }
     ],
     "stability": [
       {
         "model": "vqc",
         "seed": 1,
-        "auc": 0.9031
+        "auc": 0.9775
       },
       {
         "model": "vqc",
         "seed": 2,
-        "auc": 0.9017
+        "auc": 0.9705
       },
       {
         "model": "vqc",
         "seed": 3,
-        "auc": 0.8938
+        "auc": 0.9581
       },
       {
         "model": "vqc",
         "seed": 4,
-        "auc": 0.9326
+        "auc": 0.9721
       },
       {
         "model": "vqc",
         "seed": 5,
-        "auc": 0.9137
+        "auc": 0.9819
       },
       {
         "model": "qsvm",
         "seed": 1,
-        "auc": 0.9015
+        "auc": 0.9749
       },
       {
         "model": "qsvm",
         "seed": 2,
-        "auc": 0.9016
+        "auc": 0.9817
       },
       {
         "model": "qsvm",
         "seed": 3,
-        "auc": 0.9194
+        "auc": 0.9865
       },
       {
         "model": "qsvm",
         "seed": 4,
-        "auc": 0.9285
+        "auc": 0.9864
       },
       {
         "model": "qsvm",
         "seed": 5,
-        "auc": 0.919
+        "auc": 0.9906
       },
       {
         "model": "logreg",
         "seed": 1,
-        "auc": 0.921
+        "auc": 0.9874
       },
       {
         "model": "logreg",
         "seed": 2,
-        "auc": 0.9108
+        "auc": 0.9959
       },
       {
         "model": "logreg",
         "seed": 3,
-        "auc": 0.8958
+        "auc": 0.993
       },
       {
         "model": "logreg",
         "seed": 4,
-        "auc": 0.9083
+        "auc": 0.9955
       },
       {
         "model": "logreg",
         "seed": 5,
-        "auc": 0.8991
+        "auc": 0.9882
       },
       {
         "model": "svm",
         "seed": 1,
-        "auc": 0.9063
+        "auc": 0.9915
       },
       {
         "model": "svm",
         "seed": 2,
-        "auc": 0.9091
+        "auc": 0.9909
       },
       {
         "model": "svm",
         "seed": 3,
-        "auc": 0.9035
+        "auc": 0.9962
       },
       {
         "model": "svm",
         "seed": 4,
-        "auc": 0.9304
+        "auc": 0.9935
       },
       {
         "model": "svm",
         "seed": 5,
-        "auc": 0.9057
+        "auc": 0.9979
       },
       {
         "model": "rf",
         "seed": 1,
-        "auc": 0.9177
+        "auc": 0.9895
       },
       {
         "model": "rf",
         "seed": 2,
-        "auc": 0.919
+        "auc": 0.9929
       },
       {
         "model": "rf",
         "seed": 3,
-        "auc": 0.9118
+        "auc": 0.9988
       },
       {
         "model": "rf",
         "seed": 4,
-        "auc": 0.9294
+        "auc": 0.9865
       },
       {
         "model": "rf",
         "seed": 5,
-        "auc": 0.9022
+        "auc": 0.9873
       },
       {
         "model": "xgboost",
         "seed": 1,
-        "auc": 0.9143
+        "auc": 0.9887
       },
       {
         "model": "xgboost",
         "seed": 2,
-        "auc": 0.9126
+        "auc": 0.9953
       },
       {
         "model": "xgboost",
         "seed": 3,
-        "auc": 0.9353
+        "auc": 0.9885
       },
       {
         "model": "xgboost",
         "seed": 4,
-        "auc": 0.9227
+        "auc": 0.9966
       },
       {
         "model": "xgboost",
         "seed": 5,
-        "auc": 0.9202
+        "auc": 0.9958
       }
     ],
-    "takeaway": "QSVM trails XGBoost by 0.007 AUC — within seed noise (±0.015)."
+    "takeaway": "QSVM trails SVM by 0.010 AUC — more than the combined seed noise (±0.007), so the classical lead is real on WDBC.",
+    "resourcesTakeaway": "The best quantum design (QSVM, 4 qubits × 2 layers) reaches 0.984 AUC; the best larger circuit (QSVM, 6 qubits × 2 layers) scores within seed noise of it, so extra size buys nothing measurable.",
+    "stabilityTakeaway": "SVM is the most stable (±0.003); VQC varies most between seeds (±0.009).",
+    "evaluation": "5 seeds · held-out 30% · WDBC"
   },
   "heart": {
     "dataset": "heart",
@@ -497,6 +544,8 @@
       {
         "model": "vqc",
         "family": "quantum",
+        "configKey": "heart|vqc|8q|angle|d3|linear|ideal-sim",
+        "backend": "ideal-sim",
         "experimentId": "EXP-2028",
         "metrics": {
           "accuracy": {
@@ -530,6 +579,8 @@
       {
         "model": "qsvm",
         "family": "quantum",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim",
+        "backend": "noisy-sim",
         "experimentId": "EXP-2029",
         "metrics": {
           "accuracy": {
@@ -554,7 +605,7 @@
           },
           "inferenceMs": {
             "mean": 31,
-            "std": 2.5
+            "std": 2.48
           }
         },
         "qubits": 4,
@@ -563,6 +614,8 @@
       {
         "model": "logreg",
         "family": "classical",
+        "configKey": "heart|logreg|cpu",
+        "backend": "cpu",
         "experimentId": "EXP-2026",
         "metrics": {
           "accuracy": {
@@ -587,7 +640,7 @@
           },
           "inferenceMs": {
             "mean": 0.02,
-            "std": 0.002
+            "std": 0.0016
           }
         },
         "qubits": null,
@@ -596,6 +649,8 @@
       {
         "model": "svm",
         "family": "classical",
+        "configKey": "heart|svm|cpu",
+        "backend": "cpu",
         "experimentId": "EXP-2024",
         "metrics": {
           "accuracy": {
@@ -629,6 +684,8 @@
       {
         "model": "rf",
         "family": "classical",
+        "configKey": "heart|rf|cpu",
+        "backend": "cpu",
         "experimentId": "EXP-2025",
         "metrics": {
           "accuracy": {
@@ -662,6 +719,8 @@
       {
         "model": "xgboost",
         "family": "classical",
+        "configKey": "heart|xgboost|cpu",
+        "backend": "cpu",
         "experimentId": "EXP-2027",
         "metrics": {
           "accuracy": {
@@ -696,115 +755,147 @@
     "resources": [
       {
         "id": "C01",
+        "configKey": "heart|vqc|4q|angle|d1|linear|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 1,
-        "auc": 0.865
+        "auc": 0.868,
+        "aucStd": 0.0115
       },
       {
         "id": "C02",
+        "configKey": "heart|vqc|4q|angle|d2|linear|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 2,
-        "auc": 0.872
+        "auc": 0.876,
+        "aucStd": 0.013
       },
       {
         "id": "C03",
+        "configKey": "heart|vqc|4q|angle|d2|circular|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 2,
-        "auc": 0.877
+        "auc": 0.878,
+        "aucStd": 0.013
       },
       {
         "id": "C04",
+        "configKey": "heart|vqc|4q|angle|d3|full|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 3,
-        "auc": 0.878
+        "auc": 0.881,
+        "aucStd": 0.0144
       },
       {
         "id": "C05",
+        "configKey": "heart|vqc|4q|angle|d4|linear|ideal-sim",
         "model": "vqc",
         "qubits": 4,
         "circuitDepth": 4,
-        "auc": 0.877
+        "auc": 0.88,
+        "aucStd": 0.0158
       },
       {
         "id": "C09",
+        "configKey": "heart|vqc|6q|angle|d1|circular|ideal-sim",
         "model": "vqc",
         "qubits": 6,
         "circuitDepth": 1,
-        "auc": 0.868
+        "auc": 0.87,
+        "aucStd": 0.0133
       },
       {
         "id": "C10",
+        "configKey": "heart|vqc|6q|angle|d2|linear|ideal-sim",
         "model": "vqc",
         "qubits": 6,
         "circuitDepth": 2,
-        "auc": 0.876
+        "auc": 0.878,
+        "aucStd": 0.0148
       },
       {
         "id": "C11",
+        "configKey": "heart|vqc|6q|angle|d3|linear|ideal-sim",
         "model": "vqc",
         "qubits": 6,
         "circuitDepth": 3,
-        "auc": 0.884
+        "auc": 0.887,
+        "aucStd": 0.0162
       },
       {
         "id": "C12",
+        "configKey": "heart|vqc|6q|angle|d4|full|ideal-sim",
         "model": "vqc",
         "qubits": 6,
         "circuitDepth": 4,
-        "auc": 0.876
+        "auc": 0.876,
+        "aucStd": 0.0176
       },
       {
         "id": "C15",
+        "configKey": "heart|vqc|8q|angle|d1|linear|ideal-sim",
         "model": "vqc",
         "qubits": 8,
         "circuitDepth": 1,
-        "auc": 0.869
+        "auc": 0.87,
+        "aucStd": 0.0151
       },
       {
         "id": "C16",
+        "configKey": "heart|vqc|8q|angle|d2|circular|ideal-sim",
         "model": "vqc",
         "qubits": 8,
         "circuitDepth": 2,
-        "auc": 0.882
+        "auc": 0.884,
+        "aucStd": 0.0166
       },
       {
         "id": "C17",
+        "configKey": "heart|vqc|8q|angle|d3|linear|ideal-sim",
         "model": "vqc",
         "qubits": 8,
         "circuitDepth": 3,
-        "auc": 0.889
+        "auc": 0.889,
+        "aucStd": 0.018
       },
       {
         "id": "C18",
+        "configKey": "heart|vqc|8q|angle|d4|full|ideal-sim",
         "model": "vqc",
         "qubits": 8,
         "circuitDepth": 4,
-        "auc": 0.878
+        "auc": 0.878,
+        "aucStd": 0.0194
       },
       {
         "id": "QSVM-4",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim",
         "model": "qsvm",
         "qubits": 4,
         "circuitDepth": 2,
-        "auc": 0.896
+        "auc": 0.896,
+        "aucStd": 0.015
       },
       {
         "id": "QSVM-6",
+        "configKey": "heart|qsvm|6q|angle|d2|full|noisy-sim",
         "model": "qsvm",
         "qubits": 6,
         "circuitDepth": 2,
-        "auc": 0.893
+        "auc": 0.893,
+        "aucStd": 0.0165
       },
       {
         "id": "QSVM-8",
+        "configKey": "heart|qsvm|8q|angle|d2|full|noisy-sim",
         "model": "qsvm",
         "qubits": 8,
         "circuitDepth": 2,
-        "auc": 0.888
+        "auc": 0.888,
+        "aucStd": 0.018
       }
     ],
     "baselines": [
@@ -829,154 +920,157 @@
       {
         "model": "vqc",
         "seed": 1,
-        "auc": 0.8855
+        "auc": 0.8939
       },
       {
         "model": "vqc",
         "seed": 2,
-        "auc": 0.8686
+        "auc": 0.8673
       },
       {
         "model": "vqc",
         "seed": 3,
-        "auc": 0.8912
+        "auc": 0.9024
       },
       {
         "model": "vqc",
         "seed": 4,
-        "auc": 0.8821
+        "auc": 0.8731
       },
       {
         "model": "vqc",
         "seed": 5,
-        "auc": 0.9175
+        "auc": 0.9082
       },
       {
         "model": "qsvm",
         "seed": 1,
-        "auc": 0.892
+        "auc": 0.9053
       },
       {
         "model": "qsvm",
         "seed": 2,
-        "auc": 0.8734
+        "auc": 0.8723
       },
       {
         "model": "qsvm",
         "seed": 3,
-        "auc": 0.9136
+        "auc": 0.8956
       },
       {
         "model": "qsvm",
         "seed": 4,
-        "auc": 0.904
+        "auc": 0.8949
       },
       {
         "model": "qsvm",
         "seed": 5,
+        "auc": 0.9119
+      },
+      {
+        "model": "logreg",
+        "seed": 1,
+        "auc": 0.8781
+      },
+      {
+        "model": "logreg",
+        "seed": 2,
+        "auc": 0.858
+      },
+      {
+        "model": "logreg",
+        "seed": 3,
+        "auc": 0.9018
+      },
+      {
+        "model": "logreg",
+        "seed": 4,
+        "auc": 0.8947
+      },
+      {
+        "model": "logreg",
+        "seed": 5,
+        "auc": 0.8875
+      },
+      {
+        "model": "svm",
+        "seed": 1,
+        "auc": 0.8754
+      },
+      {
+        "model": "svm",
+        "seed": 2,
+        "auc": 0.9012
+      },
+      {
+        "model": "svm",
+        "seed": 3,
+        "auc": 0.8874
+      },
+      {
+        "model": "svm",
+        "seed": 4,
+        "auc": 0.9149
+      },
+      {
+        "model": "svm",
+        "seed": 5,
+        "auc": 0.8811
+      },
+      {
+        "model": "rf",
+        "seed": 1,
+        "auc": 0.9241
+      },
+      {
+        "model": "rf",
+        "seed": 2,
         "auc": 0.897
       },
       {
-        "model": "logreg",
-        "seed": 1,
-        "auc": 0.9091
-      },
-      {
-        "model": "logreg",
-        "seed": 2,
-        "auc": 0.8727
-      },
-      {
-        "model": "logreg",
-        "seed": 3,
-        "auc": 0.8919
-      },
-      {
-        "model": "logreg",
-        "seed": 4,
-        "auc": 0.8661
-      },
-      {
-        "model": "logreg",
-        "seed": 5,
-        "auc": 0.8802
-      },
-      {
-        "model": "svm",
-        "seed": 1,
-        "auc": 0.8848
-      },
-      {
-        "model": "svm",
-        "seed": 2,
-        "auc": 0.9033
-      },
-      {
-        "model": "svm",
-        "seed": 3,
-        "auc": 0.9134
-      },
-      {
-        "model": "svm",
-        "seed": 4,
-        "auc": 0.8738
-      },
-      {
-        "model": "svm",
-        "seed": 5,
-        "auc": 0.8847
-      },
-      {
-        "model": "rf",
-        "seed": 1,
-        "auc": 0.9061
-      },
-      {
-        "model": "rf",
-        "seed": 2,
-        "auc": 0.9025
-      },
-      {
         "model": "rf",
         "seed": 3,
-        "auc": 0.9153
+        "auc": 0.8875
       },
       {
         "model": "rf",
         "seed": 4,
-        "auc": 0.8887
+        "auc": 0.8913
       },
       {
         "model": "rf",
         "seed": 5,
-        "auc": 0.8773
+        "auc": 0.8901
       },
       {
         "model": "xgboost",
         "seed": 1,
-        "auc": 0.9162
+        "auc": 0.8872
       },
       {
         "model": "xgboost",
         "seed": 2,
-        "auc": 0.9044
+        "auc": 0.9041
       },
       {
         "model": "xgboost",
         "seed": 3,
-        "auc": 0.9151
+        "auc": 0.8999
       },
       {
         "model": "xgboost",
         "seed": 4,
-        "auc": 0.8823
+        "auc": 0.8983
       },
       {
         "model": "xgboost",
         "seed": 5,
-        "auc": 0.897
+        "auc": 0.9254
       }
     ],
-    "takeaway": "QSVM trails XGBoost by 0.007 AUC — within seed noise (±0.021)."
+    "takeaway": "QSVM and XGBoost differ by 0.007 AUC — within seed noise (±0.021), so neither is clearly better.",
+    "resourcesTakeaway": "The best quantum design (QSVM, 4 qubits × 2 layers) reaches 0.896 AUC; the best larger circuit (QSVM, 6 qubits × 2 layers) scores within seed noise of it, so extra size buys nothing measurable.",
+    "stabilityTakeaway": "All models vary similarly between seeds (±0.014–0.018 AUC).",
+    "evaluation": "5 seeds · held-out 30% · UCI"
   }
 }

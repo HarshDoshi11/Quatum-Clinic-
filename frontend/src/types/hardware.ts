@@ -35,5 +35,6 @@ export interface NoiseRunResponse {
   /** Sensitivity threshold considered safe (fraction). */
   threshold: number
   safe: boolean
-  sensitivityVsT2: { t2Us: number; sensitivity: number }[]
+  /** Sensitivity (and seed/shot std) as T2 varies, other noise held fixed. */
+  sensitivityVsT2: { t2Us: number; sensitivity: number; std: number }[]
 }

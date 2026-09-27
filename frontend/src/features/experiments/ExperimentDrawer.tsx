@@ -6,7 +6,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Term } from '@/components/ui/Term'
 import { BACKENDS, DATASETS, MODELS } from '@/lib/domain'
-import { formatDateTime, formatDuration, formatMs, formatStd } from '@/lib/format'
+import { durationColumn, formatDateTime, formatMs, formatStd } from '@/lib/format'
 import type { GlossaryKey } from '@/lib/glossary'
 import { useAppActions } from '@/features/actions'
 import { useDataVersion } from '@/state/dataVersion'
@@ -48,7 +48,8 @@ const METRIC_ROWS: { key: keyof ExperimentMetrics; label: ReactNode; format: (m:
   { key: 'accuracy', label: 'Accuracy', format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
   { key: 'sensitivity', label: <Term>Sensitivity</Term>, format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
   { key: 'specificity', label: <Term>Specificity</Term>, format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
-  { key: 'trainTimeS', label: 'Train time', format: (m) => [formatDuration(m.mean), `±${formatDuration(m.std)}`] },
+  // One unit for the cell: mean and spread share the formatter chosen for the mean.
+  { key: 'trainTimeS', label: 'Train time', format: (m) => ((f) => [f(m.mean), `±${f(m.std)}`] as [string, string])(durationColumn([m.mean])) },
   { key: 'inferenceMs', label: 'Inference', format: (m) => [formatMs(m.mean), `±${formatMs(m.std)}`] },
 ]
 

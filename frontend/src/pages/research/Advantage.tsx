@@ -15,7 +15,9 @@ import { SectionHeader } from '@/components/ui/SectionHeader'
 import { Term } from '@/components/ui/Term'
 import { useExperimentDrawer } from '@/features/experiments/ExperimentDrawer'
 import { MODEL_ORDER, MODELS } from '@/lib/domain'
-import { formatAuc, formatDuration, formatMs, formatPercent, formatStd } from '@/lib/format'
+import { durationColumn, formatAuc, formatMs, formatPercent, formatStd } from '@/lib/format'
+import { useElementSize } from '@/lib/useElementSize'
+import { resolveLabelOffsets } from '@/components/charts/directLabels'
 import type { RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import type { CompareResponse, ComparisonRow, MeanStd, MetricKey, ModelId, ResourcePoint, SeedPoint } from '@/types'
@@ -26,7 +28,8 @@ interface MetricSpec {
   key: MetricKey
   header: ReactNode
   better: 'high' | 'low'
-  format: (m: MeanStd) => [string, string]
+  /** `time` formats a duration with the unit chosen for the whole column. */
+  format: (m: MeanStd, time: (s: number) => string) => [string, string]
 }
 
 const pct = (m: MeanStd): [string, string] => [formatPercent(m.mean), `±${(m.std * 100).toFixed(1)}`]
@@ -36,7 +39,7 @@ const METRICS: MetricSpec[] = [
   { key: 'sensitivity', header: <Term>Sensitivity</Term>, better: 'high', format: pct },
   { key: 'specificity', header: <Term>Specificity</Term>, better: 'high', format: pct },
   { key: 'auc', header: <Term term="auc">ROC-AUC</Term>, better: 'high', format: (m) => [formatAuc(m.mean), formatStd(m.std)] },
-  { key: 'trainTimeS', header: 'Train time', better: 'low', format: (m) => [formatDuration(m.mean), `±${formatDuration(m.std)}`] },
+  { key: 'trainTimeS', header: 'Train time', better: 'low', format: (m, time) => [time(m.mean), `±${time(m.std)}`] },
   { key: 'inferenceMs', header: 'Inference', better: 'low', format: (m) => [formatMs(m.mean), `±${formatMs(m.std)}`] },
 ]
 
@@ -63,6 +66,8 @@ function ModelCell({ row }: { row: ComparisonRow }) {
 function ResultsTable({ data }: { data: CompareResponse | undefined }) {
   const { openExperiment } = useExperimentDrawer()
   const best = data ? bestByMetric(data.rows) : null
+  // One unit for the whole train-time column.
+  const time = durationColumn(data?.rows.map((r) => r.metrics.trainTimeS.mean) ?? [])
   const columns: Column<ComparisonRow>[] = [
     { key: 'model', header: 'Model', width: '19%', render: (r) => <ModelCell row={r} /> },
     ...METRICS.map<Column<ComparisonRow>>((m) => ({
@@ -71,7 +76,7 @@ function ResultsTable({ data }: { data: CompareResponse | undefined }) {
       align: 'right',
       mono: true,
       render: (r) => {
-        const [mean, std] = m.format(r.metrics[m.key])
+        const [mean, std] = m.format(r.metrics[m.key], time)
         const isBest = best !== null && r.metrics[m.key].mean === best[m.key]
         return (
           // Mean and spread sit on one line when there's room and stack when there isn't.
@@ -115,16 +120,38 @@ const shapeCircle = (props: unknown): ReactElement => {
   return <circle cx={cx} cy={cy} r={5.5} fill={C.accent} stroke={C.bg} strokeWidth={2} />
 }
 
+const SCATTER_MARGIN_TOP = 16
+const SCATTER_X_AXIS = 44
+
 function ResourceScatter({ data }: { data: CompareResponse }) {
   const reduced = useReducedMotion() ?? false
-  const { labelGutter } = useChartUnits()
+  const { labelGutter, labelGap } = useChartUnits()
+  const [ref, size] = useElementSize<HTMLDivElement>()
   const points: ResourceDatum[] = data.resources.map((p) => ({ ...p, size: p.qubits * p.circuitDepth }))
   const aucs = [...points.map((p) => p.auc), ...data.baselines.map((b) => b.auc)]
   const { domain, ticks } = niceScale(Math.min(...aucs) - 0.002, Math.max(...aucs) + 0.002, 5)
+  // Baselines can sit a few thousandths apart (WDBC): space their labels so none overlap.
+  const offsets = resolveLabelOffsets(
+    data.baselines.map((b) => ({ key: b.model, value: b.auc })),
+    domain,
+    size.height - SCATTER_MARGIN_TOP - 8 - SCATTER_X_AXIS,
+    labelGap,
+  )
+  const baselineLabel = (model: ModelId, text: string) =>
+    function BaselineLabel(raw: unknown): ReactElement {
+      const vb = (raw as { viewBox?: { x: number; y: number; width: number } }).viewBox
+      if (!vb) return <g />
+      return (
+        <text x={vb.x + vb.width + 8} y={vb.y + (offsets[model] ?? 0)} dy="0.35em" fill={C.ink} fontFamily="var(--font-mono)" fontSize="0.8125rem">
+          {text}
+        </text>
+      )
+    }
 
   return (
+    <div ref={ref} className="h-full w-full">
     <ResponsiveContainer width="100%" height="100%">
-      <ScatterChart margin={{ top: 16, right: labelGutter + 8, bottom: 8, left: 8 }}>
+      <ScatterChart margin={{ top: SCATTER_MARGIN_TOP, right: labelGutter + 8, bottom: 8, left: 8 }}>
         <CartesianGrid vertical={false} stroke={C.rule} />
         <XAxis
           {...AXIS}
@@ -132,7 +159,7 @@ function ResourceScatter({ data }: { data: CompareResponse }) {
           dataKey="size"
           domain={[0, 36]}
           ticks={[4, 8, 12, 16, 20, 24, 28, 32]}
-          height={44}
+          height={SCATTER_X_AXIS}
           label={{ value: 'Quantum resources · qubits × circuit layers', position: 'insideBottom', offset: -2, fill: C.muted, fontSize: '0.8125rem', fontFamily: 'var(--font-mono)' }}
         />
         <YAxis {...AXIS} type="number" dataKey="auc" domain={domain} ticks={ticks} tickFormatter={(v: number) => v.toFixed(3)} width={64} />
@@ -160,22 +187,27 @@ function ResourceScatter({ data }: { data: CompareResponse }) {
             stroke={C.classical}
             strokeWidth={1.5}
             strokeDasharray="6 4"
-            label={{ value: `${MODELS[b.model].name} ${formatAuc(b.auc)}`, position: 'right', ...TICK, fill: C.ink }}
+            label={baselineLabel(b.model, `${MODELS[b.model].name} ${formatAuc(b.auc)}`)}
           />
         ))}
         <Scatter name="VQC" data={points.filter((p) => p.model === 'vqc')} shape={shapeCircle} isAnimationActive={!reduced} animationDuration={DRAW_MS} />
         <Scatter name="QSVM" data={points.filter((p) => p.model === 'qsvm')} shape={shapeSquare} isAnimationActive={!reduced} animationDuration={DRAW_MS} />
       </ScatterChart>
     </ResponsiveContainer>
+    </div>
   )
 }
 
 // ─── Seed stability strip plot ──────────────────────────────
 
 interface StripDatum extends SeedPoint {
-  name: string
+  /** Row index + a small deterministic jitter so overlapping seeds stay visible. */
+  y: number
   family: 'quantum' | 'classical'
 }
+
+/** Seeds 1–5 spread symmetrically around the row: −0.2, −0.1, 0, +0.1, +0.2. */
+const seedJitter = (seed: number) => (seed - 3) * 0.1
 
 function StabilityStrip({ data }: { data: CompareResponse }) {
   const reduced = useReducedMotion() ?? false
@@ -184,19 +216,20 @@ function StabilityStrip({ data }: { data: CompareResponse }) {
     const r = rowOf(m)
     return r ? `${MODELS[m].name}  ${formatAuc(r.metrics.auc.mean)} ${formatStd(r.metrics.auc.std)}` : MODELS[m].name
   }
-  const points: StripDatum[] = data.stability.map((s) => ({ ...s, name: label(s.model), family: MODELS[s.model].family }))
-  const means = MODEL_ORDER.map((m) => ({ name: label(m), auc: rowOf(m)?.metrics.auc.mean ?? 0, model: m }))
+  const rowIndex = (m: ModelId) => MODEL_ORDER.indexOf(m)
+  const points: StripDatum[] = data.stability.map((s) => ({ ...s, y: rowIndex(s.model) + seedJitter(s.seed), family: MODELS[s.model].family }))
+  const means = MODEL_ORDER.map((m) => ({ model: m, y: rowIndex(m), auc: rowOf(m)?.metrics.auc.mean ?? 0 }))
   const aucs = points.map((p) => p.auc)
   const { domain, ticks } = niceScale(Math.min(...aucs) - 0.002, Math.max(...aucs) + 0.002, 6)
 
   const dot = (fill: string) =>
     function Dot(props: unknown): ReactElement {
       const { cx, cy } = props as { cx: number; cy: number }
-      return <circle cx={cx} cy={cy} r={5} fill={fill} stroke={C.bg} strokeWidth={2} />
+      return <circle cx={cx} cy={cy} r={5} fill={fill} stroke={C.bg} strokeWidth={1.5} />
     }
   const meanTick = (props: unknown): ReactElement => {
     const { cx, cy } = props as { cx: number; cy: number }
-    return <line x1={cx} x2={cx} y1={cy - 11} y2={cy + 11} stroke={C.ink} strokeWidth={2} />
+    return <line x1={cx} x2={cx} y1={cy - 14} y2={cy + 14} stroke={C.ink} strokeWidth={2} />
   }
 
   return (
@@ -204,16 +237,27 @@ function StabilityStrip({ data }: { data: CompareResponse }) {
       <ScatterChart margin={{ top: 8, right: 24, bottom: 8, left: 8 }}>
         <CartesianGrid horizontal={false} stroke={C.rule} />
         <XAxis {...AXIS} type="number" dataKey="auc" domain={domain} ticks={ticks} tickFormatter={(v: number) => v.toFixed(3)} height={36} />
-        <YAxis {...AXIS} type="category" dataKey="name" allowDuplicatedCategory={false} width={236} axisLine={false} tick={{ ...TICK, fill: C.ink }} />
+        <YAxis
+          {...AXIS}
+          type="number"
+          dataKey="y"
+          domain={[-0.5, MODEL_ORDER.length - 0.5]}
+          ticks={MODEL_ORDER.map((_, i) => i)}
+          reversed
+          tickFormatter={(i: number) => label(MODEL_ORDER[i])}
+          width={236}
+          axisLine={false}
+          tick={{ ...TICK, fill: C.ink }}
+        />
         <Tooltip
           cursor={false}
           content={({ active, payload }) => {
-            const p = active ? (payload?.[0]?.payload as (StripDatum & { seed?: number }) | undefined) : undefined
-            if (!p || p.seed === undefined) return null
+            const p = active ? (payload?.[0]?.payload as Partial<StripDatum> | undefined) : undefined
+            if (!p || p.seed === undefined || !p.model || p.auc === undefined) return null
             return (
               <ChartTooltipCard
                 title={`${MODELS[p.model].name} · seed ${p.seed}`}
-                rows={[{ key: 'auc', color: familyColor(p.family), label: 'AUC', value: formatAuc(p.auc) }]}
+                rows={[{ key: 'auc', color: familyColor(MODELS[p.model].family), label: 'AUC', value: formatAuc(p.auc) }]}
               />
             )
           }}
@@ -256,7 +300,6 @@ export function Advantage({ route }: { route: RouteMeta }) {
   }
 
   const best = data ? bestByMetric(data.rows) : null
-  const bestQuantum = data?.resources.reduce((a, b) => (b.auc > a.auc ? b : a), data.resources[0])
 
   return (
     <Page label={route.label}>
@@ -295,11 +338,8 @@ export function Advantage({ route }: { route: RouteMeta }) {
         <div className="mt-8">
           <ChartFigure<ResourcePoint>
             label="Fig. 01 — AUC vs circuit size"
-            takeaway={
-              data && bestQuantum
-                ? `The best quantum design (${MODELS[bestQuantum.model].name}, ${bestQuantum.qubits} qubits × ${bestQuantum.circuitDepth} layers) reaches ${formatAuc(bestQuantum.auc)} AUC; bigger circuits do not add accuracy.`
-                : undefined
-            }
+            subtitle={data?.evaluation}
+            takeaway={data?.resourcesTakeaway}
             legend={[
               { key: 'vqc', label: 'VQC designs', color: C.accent, shape: 'dot' },
               { key: 'qsvm', label: 'QSVM designs', color: C.accent, shape: 'square' },
@@ -323,15 +363,9 @@ export function Advantage({ route }: { route: RouteMeta }) {
         <div className="mt-8">
           <ChartFigure<SeedPoint>
             label="Fig. 02 — AUC per seed"
-            takeaway={
-              data
-                ? (() => {
-                    const spread = (m: ModelId) => data.rows.find((r) => r.model === m)?.metrics.auc.std ?? 0
-                    const steadiest = [...data.rows].sort((a, b) => a.metrics.auc.std - b.metrics.auc.std)[0]
-                    return `${MODELS[steadiest.model].name} is the most stable (±${steadiest.metrics.auc.std.toFixed(3)}); QSVM varies ±${spread('qsvm').toFixed(3)} and VQC ±${spread('vqc').toFixed(3)} between seeds.`
-                  })()
-                : undefined
-            }
+            subtitle={data?.evaluation}
+            takeaway={data?.stabilityTakeaway}
+            caption="Each dot is one seed; dots are nudged up or down so identical scores never hide each other."
             legend={[
               { key: 'q', label: 'Quantum seed', color: C.accent, shape: 'dot' },
               { key: 'c', label: 'Classical seed', color: C.classical, shape: 'dot' },

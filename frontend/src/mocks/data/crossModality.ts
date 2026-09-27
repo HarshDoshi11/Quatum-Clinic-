@@ -1,6 +1,6 @@
 /** Cross-modality study (Heart Disease only — WDBC has a single modality). */
 import type { CrossModalityResponse, DatasetId, Modality, ModalityId } from '../../types'
-import { ANCHORS } from './canon'
+import { referenceResult } from './results'
 import { MODEL_FEATURES } from './features'
 import { EXPERIMENT_IDS } from './ids'
 import { round } from './math'
@@ -31,7 +31,7 @@ export function crossModality(dataset: DatasetId): CrossModalityResponse {
     auc: { mean: m.auc, std: m.std },
   }))
   // All modalities together = the full-feature QSVM model.
-  const combined = { mean: ANCHORS.heart.qsvm.auc, std: ANCHORS.heart.qsvm.aucStd }
+  const combined = referenceResult('heart', 'qsvm').auc
   const best = modalities.reduce((a, b) => (b.auc.mean > a.auc.mean ? b : a))
   const gainPct = round(((combined.mean - best.auc.mean) / best.auc.mean) * 100, 1)
 

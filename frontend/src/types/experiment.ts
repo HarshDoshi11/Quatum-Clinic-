@@ -43,6 +43,8 @@ export interface ExperimentMetrics {
 export interface ExperimentSummary {
   id: ExperimentId
   kind: ExperimentKind
+  /** Results-store key for single-configuration runs; null for studies spanning many configs. */
+  configKey: string | null
   title: string
   dataset: DatasetId
   /** Null for benchmarks/sweeps spanning several models. */
@@ -91,6 +93,11 @@ export interface LossPoint {
 export interface TrainModelResult {
   model: ModelId
   family: ModelFamily
+  configKey: string
+  backend: BackendId
+  qubits: number | null
+  circuitDepth: number | null
+  encoding: Encoding | null
   auc: MeanStd
 }
 

@@ -1,0 +1,2562 @@
+[
+  {
+    "id": "EXP-2040.C01",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|angle|d1|linear|ideal-sim",
+    "title": "VQC · 4q · C01",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.949,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 1,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.871,
+        "std": 0.007
+      },
+      "sensitivity": {
+        "mean": 0.892,
+        "std": 0.01
+      },
+      "specificity": {
+        "mean": 0.859,
+        "std": 0.009
+      },
+      "auc": {
+        "mean": 0.949,
+        "std": 0.0058
+      },
+      "trainTimeS": {
+        "mean": 16,
+        "std": 1
+      },
+      "inferenceMs": {
+        "mean": 2,
+        "std": 0.16
+      }
+    },
+    "notes": "Design C01 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C02",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|angle|d2|linear|ideal-sim",
+    "title": "VQC · 4q · C02",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.96,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.888,
+        "std": 0.008
+      },
+      "sensitivity": {
+        "mean": 0.906,
+        "std": 0.012
+      },
+      "specificity": {
+        "mean": 0.877,
+        "std": 0.01
+      },
+      "auc": {
+        "mean": 0.96,
+        "std": 0.0065
+      },
+      "trainTimeS": {
+        "mean": 32,
+        "std": 1.9
+      },
+      "inferenceMs": {
+        "mean": 4,
+        "std": 0.32
+      }
+    },
+    "notes": "Design C02 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C03",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|angle|d2|circular|ideal-sim",
+    "title": "VQC · 4q · C03",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.961,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.889,
+        "std": 0.008
+      },
+      "sensitivity": {
+        "mean": 0.908,
+        "std": 0.012
+      },
+      "specificity": {
+        "mean": 0.878,
+        "std": 0.01
+      },
+      "auc": {
+        "mean": 0.961,
+        "std": 0.0065
+      },
+      "trainTimeS": {
+        "mean": 32,
+        "std": 1.9
+      },
+      "inferenceMs": {
+        "mean": 4,
+        "std": 0.32
+      }
+    },
+    "notes": "Design C03 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C04",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|angle|d3|full|ideal-sim",
+    "title": "VQC · 4q · C04",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.966,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 3,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.897,
+        "std": 0.009
+      },
+      "sensitivity": {
+        "mean": 0.915,
+        "std": 0.013
+      },
+      "specificity": {
+        "mean": 0.887,
+        "std": 0.011
+      },
+      "auc": {
+        "mean": 0.966,
+        "std": 0.0072
+      },
+      "trainTimeS": {
+        "mean": 48,
+        "std": 2.9
+      },
+      "inferenceMs": {
+        "mean": 6,
+        "std": 0.48
+      }
+    },
+    "notes": "Design C04 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C05",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|angle|d4|linear|ideal-sim",
+    "title": "VQC · 4q · C05",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.963,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 4,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.892,
+        "std": 0.009
+      },
+      "sensitivity": {
+        "mean": 0.91,
+        "std": 0.014
+      },
+      "specificity": {
+        "mean": 0.882,
+        "std": 0.012
+      },
+      "auc": {
+        "mean": 0.963,
+        "std": 0.0079
+      },
+      "trainTimeS": {
+        "mean": 64,
+        "std": 3.8
+      },
+      "inferenceMs": {
+        "mean": 8,
+        "std": 0.64
+      }
+    },
+    "notes": "Design C05 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C06",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|amplitude|d1|linear|ideal-sim",
+    "title": "VQC · 4q · C06",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.942,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 4,
+      "encoding": "amplitude",
+      "qubits": 4,
+      "circuitDepth": 1,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.862,
+        "std": 0.007
+      },
+      "sensitivity": {
+        "mean": 0.883,
+        "std": 0.01
+      },
+      "specificity": {
+        "mean": 0.849,
+        "std": 0.009
+      },
+      "auc": {
+        "mean": 0.942,
+        "std": 0.0058
+      },
+      "trainTimeS": {
+        "mean": 16,
+        "std": 1
+      },
+      "inferenceMs": {
+        "mean": 2,
+        "std": 0.16
+      }
+    },
+    "notes": "Design C06 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C07",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|amplitude|d2|full|ideal-sim",
+    "title": "VQC · 4q · C07",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.949,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 4,
+      "encoding": "amplitude",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.871,
+        "std": 0.008
+      },
+      "sensitivity": {
+        "mean": 0.892,
+        "std": 0.012
+      },
+      "specificity": {
+        "mean": 0.859,
+        "std": 0.01
+      },
+      "auc": {
+        "mean": 0.949,
+        "std": 0.0065
+      },
+      "trainTimeS": {
+        "mean": 32,
+        "std": 1.9
+      },
+      "inferenceMs": {
+        "mean": 4,
+        "std": 0.32
+      }
+    },
+    "notes": "Design C07 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C08",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|amplitude|d3|circular|ideal-sim",
+    "title": "VQC · 4q · C08",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.958,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 4,
+      "encoding": "amplitude",
+      "qubits": 4,
+      "circuitDepth": 3,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.885,
+        "std": 0.009
+      },
+      "sensitivity": {
+        "mean": 0.904,
+        "std": 0.013
+      },
+      "specificity": {
+        "mean": 0.873,
+        "std": 0.011
+      },
+      "auc": {
+        "mean": 0.958,
+        "std": 0.0072
+      },
+      "trainTimeS": {
+        "mean": 48,
+        "std": 2.9
+      },
+      "inferenceMs": {
+        "mean": 6,
+        "std": 0.48
+      }
+    },
+    "notes": "Design C08 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C09",
+    "kind": "run",
+    "configKey": "wdbc|vqc|6q|angle|d1|circular|ideal-sim",
+    "title": "VQC · 6q · C09",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.951,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 6,
+      "encoding": "angle",
+      "qubits": 6,
+      "circuitDepth": 1,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.874,
+        "std": 0.008
+      },
+      "sensitivity": {
+        "mean": 0.894,
+        "std": 0.012
+      },
+      "specificity": {
+        "mean": 0.862,
+        "std": 0.01
+      },
+      "auc": {
+        "mean": 0.951,
+        "std": 0.0067
+      },
+      "trainTimeS": {
+        "mean": 56,
+        "std": 3.4
+      },
+      "inferenceMs": {
+        "mean": 3,
+        "std": 0.24
+      }
+    },
+    "notes": "Design C09 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C10",
+    "kind": "run",
+    "configKey": "wdbc|vqc|6q|angle|d2|linear|ideal-sim",
+    "title": "VQC · 6q · C10",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.96,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 6,
+      "encoding": "angle",
+      "qubits": 6,
+      "circuitDepth": 2,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.888,
+        "std": 0.009
+      },
+      "sensitivity": {
+        "mean": 0.906,
+        "std": 0.013
+      },
+      "specificity": {
+        "mean": 0.877,
+        "std": 0.011
+      },
+      "auc": {
+        "mean": 0.96,
+        "std": 0.0074
+      },
+      "trainTimeS": {
+        "mean": 113,
+        "std": 6.8
+      },
+      "inferenceMs": {
+        "mean": 6,
+        "std": 0.48
+      }
+    },
+    "notes": "Design C10 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C11",
+    "kind": "run",
+    "configKey": "wdbc|vqc|6q|angle|d3|linear|ideal-sim",
+    "title": "VQC · 6q · C11",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.97,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 6,
+      "encoding": "angle",
+      "qubits": 6,
+      "circuitDepth": 3,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.904,
+        "std": 0.01
+      },
+      "sensitivity": {
+        "mean": 0.921,
+        "std": 0.015
+      },
+      "specificity": {
+        "mean": 0.894,
+        "std": 0.012
+      },
+      "auc": {
+        "mean": 0.97,
+        "std": 0.0081
+      },
+      "trainTimeS": {
+        "mean": 169,
+        "std": 10.1
+      },
+      "inferenceMs": {
+        "mean": 9,
+        "std": 0.72
+      }
+    },
+    "notes": "Design C11 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C12",
+    "kind": "run",
+    "configKey": "wdbc|vqc|6q|angle|d4|full|ideal-sim",
+    "title": "VQC · 6q · C12",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.957,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 6,
+      "encoding": "angle",
+      "qubits": 6,
+      "circuitDepth": 4,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.883,
+        "std": 0.011
+      },
+      "sensitivity": {
+        "mean": 0.902,
+        "std": 0.016
+      },
+      "specificity": {
+        "mean": 0.872,
+        "std": 0.013
+      },
+      "auc": {
+        "mean": 0.957,
+        "std": 0.0088
+      },
+      "trainTimeS": {
+        "mean": 225,
+        "std": 13.5
+      },
+      "inferenceMs": {
+        "mean": 12,
+        "std": 0.96
+      }
+    },
+    "notes": "Design C12 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C13",
+    "kind": "run",
+    "configKey": "wdbc|vqc|6q|amplitude|d2|linear|ideal-sim",
+    "title": "VQC · 6q · C13",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.955,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 6,
+      "encoding": "amplitude",
+      "qubits": 6,
+      "circuitDepth": 2,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.88,
+        "std": 0.009
+      },
+      "sensitivity": {
+        "mean": 0.9,
+        "std": 0.013
+      },
+      "specificity": {
+        "mean": 0.868,
+        "std": 0.011
+      },
+      "auc": {
+        "mean": 0.955,
+        "std": 0.0074
+      },
+      "trainTimeS": {
+        "mean": 113,
+        "std": 6.8
+      },
+      "inferenceMs": {
+        "mean": 6,
+        "std": 0.48
+      }
+    },
+    "notes": "Design C13 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C14",
+    "kind": "run",
+    "configKey": "wdbc|vqc|6q|amplitude|d4|circular|ideal-sim",
+    "title": "VQC · 6q · C14",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.961,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 6,
+      "encoding": "amplitude",
+      "qubits": 6,
+      "circuitDepth": 4,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.889,
+        "std": 0.011
+      },
+      "sensitivity": {
+        "mean": 0.908,
+        "std": 0.016
+      },
+      "specificity": {
+        "mean": 0.878,
+        "std": 0.013
+      },
+      "auc": {
+        "mean": 0.961,
+        "std": 0.0088
+      },
+      "trainTimeS": {
+        "mean": 225,
+        "std": 13.5
+      },
+      "inferenceMs": {
+        "mean": 12,
+        "std": 0.96
+      }
+    },
+    "notes": "Design C14 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C15",
+    "kind": "run",
+    "configKey": "wdbc|vqc|8q|angle|d1|linear|ideal-sim",
+    "title": "VQC · 8q · C15",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.956,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 8,
+      "encoding": "angle",
+      "qubits": 8,
+      "circuitDepth": 1,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.881,
+        "std": 0.009
+      },
+      "sensitivity": {
+        "mean": 0.901,
+        "std": 0.014
+      },
+      "specificity": {
+        "mean": 0.87,
+        "std": 0.011
+      },
+      "auc": {
+        "mean": 0.956,
+        "std": 0.0076
+      },
+      "trainTimeS": {
+        "mean": 137,
+        "std": 8.2
+      },
+      "inferenceMs": {
+        "mean": 4,
+        "std": 0.32
+      }
+    },
+    "notes": "Design C15 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C16",
+    "kind": "run",
+    "configKey": "wdbc|vqc|8q|angle|d2|circular|ideal-sim",
+    "title": "VQC · 8q · C16",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.966,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 8,
+      "encoding": "angle",
+      "qubits": 8,
+      "circuitDepth": 2,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.897,
+        "std": 0.01
+      },
+      "sensitivity": {
+        "mean": 0.915,
+        "std": 0.015
+      },
+      "specificity": {
+        "mean": 0.887,
+        "std": 0.012
+      },
+      "auc": {
+        "mean": 0.966,
+        "std": 0.0083
+      },
+      "trainTimeS": {
+        "mean": 275,
+        "std": 16.5
+      },
+      "inferenceMs": {
+        "mean": 8,
+        "std": 0.64
+      }
+    },
+    "notes": "Design C16 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C17",
+    "kind": "run",
+    "configKey": "wdbc|vqc|8q|angle|d3|linear|ideal-sim",
+    "title": "VQC · 8q · C17",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.972,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 8,
+      "encoding": "angle",
+      "qubits": 8,
+      "circuitDepth": 3,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.908,
+        "std": 0.011
+      },
+      "sensitivity": {
+        "mean": 0.924,
+        "std": 0.016
+      },
+      "specificity": {
+        "mean": 0.898,
+        "std": 0.013
+      },
+      "auc": {
+        "mean": 0.972,
+        "std": 0.009
+      },
+      "trainTimeS": {
+        "mean": 412,
+        "std": 24.7
+      },
+      "inferenceMs": {
+        "mean": 12,
+        "std": 0.96
+      }
+    },
+    "notes": "Design C17 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C18",
+    "kind": "run",
+    "configKey": "wdbc|vqc|8q|angle|d4|full|ideal-sim",
+    "title": "VQC · 8q · C18",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.963,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 8,
+      "encoding": "angle",
+      "qubits": 8,
+      "circuitDepth": 4,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.892,
+        "std": 0.012
+      },
+      "sensitivity": {
+        "mean": 0.91,
+        "std": 0.017
+      },
+      "specificity": {
+        "mean": 0.882,
+        "std": 0.015
+      },
+      "auc": {
+        "mean": 0.963,
+        "std": 0.0097
+      },
+      "trainTimeS": {
+        "mean": 549,
+        "std": 32.9
+      },
+      "inferenceMs": {
+        "mean": 16,
+        "std": 1.28
+      }
+    },
+    "notes": "Design C18 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C19",
+    "kind": "run",
+    "configKey": "wdbc|vqc|8q|amplitude|d3|linear|ideal-sim",
+    "title": "VQC · 8q · C19",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.963,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 8,
+      "encoding": "amplitude",
+      "qubits": 8,
+      "circuitDepth": 3,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.892,
+        "std": 0.011
+      },
+      "sensitivity": {
+        "mean": 0.91,
+        "std": 0.016
+      },
+      "specificity": {
+        "mean": 0.882,
+        "std": 0.013
+      },
+      "auc": {
+        "mean": 0.963,
+        "std": 0.009
+      },
+      "trainTimeS": {
+        "mean": 412,
+        "std": 24.7
+      },
+      "inferenceMs": {
+        "mean": 12,
+        "std": 0.96
+      }
+    },
+    "notes": "Design C19 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2040.C20",
+    "kind": "run",
+    "configKey": "wdbc|vqc|8q|amplitude|d4|full|ideal-sim",
+    "title": "VQC · 8q · C20",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.953,
+    "timestamp": "2026-09-26T14:40:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 16,
+      "pcaDims": 8,
+      "encoding": "amplitude",
+      "qubits": 8,
+      "circuitDepth": 4,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.877,
+        "std": 0.012
+      },
+      "sensitivity": {
+        "mean": 0.897,
+        "std": 0.017
+      },
+      "specificity": {
+        "mean": 0.865,
+        "std": 0.015
+      },
+      "auc": {
+        "mean": 0.953,
+        "std": 0.0097
+      },
+      "trainTimeS": {
+        "mean": 549,
+        "std": 32.9
+      },
+      "inferenceMs": {
+        "mean": 16,
+        "std": 1.28
+      }
+    },
+    "notes": "Design C20 of the circuit search EXP-2040."
+  },
+  {
+    "id": "EXP-2034.C01",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|angle|d1|linear|ideal-sim",
+    "title": "VQC · 4q · C01",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.868,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 1,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.772,
+        "std": 0.014
+      },
+      "sensitivity": {
+        "mean": 0.851,
+        "std": 0.021
+      },
+      "specificity": {
+        "mean": 0.705,
+        "std": 0.017
+      },
+      "auc": {
+        "mean": 0.868,
+        "std": 0.0115
+      },
+      "trainTimeS": {
+        "mean": 9.25,
+        "std": 0.6
+      },
+      "inferenceMs": {
+        "mean": 1.667,
+        "std": 0.13
+      }
+    },
+    "notes": "Design C01 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C02",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|angle|d2|linear|ideal-sim",
+    "title": "VQC · 4q · C02",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.876,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.78,
+        "std": 0.016
+      },
+      "sensitivity": {
+        "mean": 0.857,
+        "std": 0.023
+      },
+      "specificity": {
+        "mean": 0.715,
+        "std": 0.02
+      },
+      "auc": {
+        "mean": 0.876,
+        "std": 0.013
+      },
+      "trainTimeS": {
+        "mean": 19,
+        "std": 1.1
+      },
+      "inferenceMs": {
+        "mean": 3.333,
+        "std": 0.27
+      }
+    },
+    "notes": "Design C02 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C03",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|angle|d2|circular|ideal-sim",
+    "title": "VQC · 4q · C03",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.878,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.782,
+        "std": 0.016
+      },
+      "sensitivity": {
+        "mean": 0.859,
+        "std": 0.023
+      },
+      "specificity": {
+        "mean": 0.717,
+        "std": 0.02
+      },
+      "auc": {
+        "mean": 0.878,
+        "std": 0.013
+      },
+      "trainTimeS": {
+        "mean": 19,
+        "std": 1.1
+      },
+      "inferenceMs": {
+        "mean": 3.333,
+        "std": 0.27
+      }
+    },
+    "notes": "Design C03 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C04",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|angle|d3|full|ideal-sim",
+    "title": "VQC · 4q · C04",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.881,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 3,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.785,
+        "std": 0.017
+      },
+      "sensitivity": {
+        "mean": 0.861,
+        "std": 0.026
+      },
+      "specificity": {
+        "mean": 0.721,
+        "std": 0.022
+      },
+      "auc": {
+        "mean": 0.881,
+        "std": 0.0144
+      },
+      "trainTimeS": {
+        "mean": 28,
+        "std": 1.7
+      },
+      "inferenceMs": {
+        "mean": 5,
+        "std": 0.4
+      }
+    },
+    "notes": "Design C04 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C05",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|angle|d4|linear|ideal-sim",
+    "title": "VQC · 4q · C05",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.88,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 4,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.784,
+        "std": 0.019
+      },
+      "sensitivity": {
+        "mean": 0.86,
+        "std": 0.028
+      },
+      "specificity": {
+        "mean": 0.719,
+        "std": 0.024
+      },
+      "auc": {
+        "mean": 0.88,
+        "std": 0.0158
+      },
+      "trainTimeS": {
+        "mean": 37,
+        "std": 2.2
+      },
+      "inferenceMs": {
+        "mean": 6.667,
+        "std": 0.53
+      }
+    },
+    "notes": "Design C05 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C06",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|amplitude|d1|linear|ideal-sim",
+    "title": "VQC · 4q · C06",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.858,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "amplitude",
+      "qubits": 4,
+      "circuitDepth": 1,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.762,
+        "std": 0.014
+      },
+      "sensitivity": {
+        "mean": 0.843,
+        "std": 0.021
+      },
+      "specificity": {
+        "mean": 0.694,
+        "std": 0.017
+      },
+      "auc": {
+        "mean": 0.858,
+        "std": 0.0115
+      },
+      "trainTimeS": {
+        "mean": 9.25,
+        "std": 0.6
+      },
+      "inferenceMs": {
+        "mean": 1.667,
+        "std": 0.13
+      }
+    },
+    "notes": "Design C06 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C07",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|amplitude|d2|full|ideal-sim",
+    "title": "VQC · 4q · C07",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.864,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "amplitude",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.768,
+        "std": 0.016
+      },
+      "sensitivity": {
+        "mean": 0.848,
+        "std": 0.023
+      },
+      "specificity": {
+        "mean": 0.701,
+        "std": 0.02
+      },
+      "auc": {
+        "mean": 0.864,
+        "std": 0.013
+      },
+      "trainTimeS": {
+        "mean": 19,
+        "std": 1.1
+      },
+      "inferenceMs": {
+        "mean": 3.333,
+        "std": 0.27
+      }
+    },
+    "notes": "Design C07 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C08",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|amplitude|d3|circular|ideal-sim",
+    "title": "VQC · 4q · C08",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.877,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "amplitude",
+      "qubits": 4,
+      "circuitDepth": 3,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.781,
+        "std": 0.017
+      },
+      "sensitivity": {
+        "mean": 0.858,
+        "std": 0.026
+      },
+      "specificity": {
+        "mean": 0.716,
+        "std": 0.022
+      },
+      "auc": {
+        "mean": 0.877,
+        "std": 0.0144
+      },
+      "trainTimeS": {
+        "mean": 28,
+        "std": 1.7
+      },
+      "inferenceMs": {
+        "mean": 5,
+        "std": 0.4
+      }
+    },
+    "notes": "Design C08 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C09",
+    "kind": "run",
+    "configKey": "heart|vqc|6q|angle|d1|circular|ideal-sim",
+    "title": "VQC · 6q · C09",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.87,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 6,
+      "encoding": "angle",
+      "qubits": 6,
+      "circuitDepth": 1,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.774,
+        "std": 0.016
+      },
+      "sensitivity": {
+        "mean": 0.852,
+        "std": 0.024
+      },
+      "specificity": {
+        "mean": 0.708,
+        "std": 0.02
+      },
+      "auc": {
+        "mean": 0.87,
+        "std": 0.0133
+      },
+      "trainTimeS": {
+        "mean": 33,
+        "std": 2
+      },
+      "inferenceMs": {
+        "mean": 2.5,
+        "std": 0.2
+      }
+    },
+    "notes": "Design C09 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C10",
+    "kind": "run",
+    "configKey": "heart|vqc|6q|angle|d2|linear|ideal-sim",
+    "title": "VQC · 6q · C10",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.878,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 6,
+      "encoding": "angle",
+      "qubits": 6,
+      "circuitDepth": 2,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.782,
+        "std": 0.018
+      },
+      "sensitivity": {
+        "mean": 0.859,
+        "std": 0.027
+      },
+      "specificity": {
+        "mean": 0.717,
+        "std": 0.022
+      },
+      "auc": {
+        "mean": 0.878,
+        "std": 0.0148
+      },
+      "trainTimeS": {
+        "mean": 65,
+        "std": 3.9
+      },
+      "inferenceMs": {
+        "mean": 5,
+        "std": 0.4
+      }
+    },
+    "notes": "Design C10 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C11",
+    "kind": "run",
+    "configKey": "heart|vqc|6q|angle|d3|linear|ideal-sim",
+    "title": "VQC · 6q · C11",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.887,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 6,
+      "encoding": "angle",
+      "qubits": 6,
+      "circuitDepth": 3,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.791,
+        "std": 0.019
+      },
+      "sensitivity": {
+        "mean": 0.866,
+        "std": 0.029
+      },
+      "specificity": {
+        "mean": 0.728,
+        "std": 0.024
+      },
+      "auc": {
+        "mean": 0.887,
+        "std": 0.0162
+      },
+      "trainTimeS": {
+        "mean": 98,
+        "std": 5.9
+      },
+      "inferenceMs": {
+        "mean": 7.5,
+        "std": 0.6
+      }
+    },
+    "notes": "Design C11 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C12",
+    "kind": "run",
+    "configKey": "heart|vqc|6q|angle|d4|full|ideal-sim",
+    "title": "VQC · 6q · C12",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.876,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 6,
+      "encoding": "angle",
+      "qubits": 6,
+      "circuitDepth": 4,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.78,
+        "std": 0.021
+      },
+      "sensitivity": {
+        "mean": 0.857,
+        "std": 0.032
+      },
+      "specificity": {
+        "mean": 0.715,
+        "std": 0.026
+      },
+      "auc": {
+        "mean": 0.876,
+        "std": 0.0176
+      },
+      "trainTimeS": {
+        "mean": 130,
+        "std": 7.8
+      },
+      "inferenceMs": {
+        "mean": 10,
+        "std": 0.8
+      }
+    },
+    "notes": "Design C12 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C13",
+    "kind": "run",
+    "configKey": "heart|vqc|6q|amplitude|d2|linear|ideal-sim",
+    "title": "VQC · 6q · C13",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.872,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 6,
+      "encoding": "amplitude",
+      "qubits": 6,
+      "circuitDepth": 2,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.776,
+        "std": 0.018
+      },
+      "sensitivity": {
+        "mean": 0.854,
+        "std": 0.027
+      },
+      "specificity": {
+        "mean": 0.71,
+        "std": 0.022
+      },
+      "auc": {
+        "mean": 0.872,
+        "std": 0.0148
+      },
+      "trainTimeS": {
+        "mean": 65,
+        "std": 3.9
+      },
+      "inferenceMs": {
+        "mean": 5,
+        "std": 0.4
+      }
+    },
+    "notes": "Design C13 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C14",
+    "kind": "run",
+    "configKey": "heart|vqc|6q|amplitude|d4|circular|ideal-sim",
+    "title": "VQC · 6q · C14",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 6,
+    "auc": 0.875,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 6,
+      "encoding": "amplitude",
+      "qubits": 6,
+      "circuitDepth": 4,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.779,
+        "std": 0.021
+      },
+      "sensitivity": {
+        "mean": 0.856,
+        "std": 0.032
+      },
+      "specificity": {
+        "mean": 0.713,
+        "std": 0.026
+      },
+      "auc": {
+        "mean": 0.875,
+        "std": 0.0176
+      },
+      "trainTimeS": {
+        "mean": 130,
+        "std": 7.8
+      },
+      "inferenceMs": {
+        "mean": 10,
+        "std": 0.8
+      }
+    },
+    "notes": "Design C14 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C15",
+    "kind": "run",
+    "configKey": "heart|vqc|8q|angle|d1|linear|ideal-sim",
+    "title": "VQC · 8q · C15",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.87,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 8,
+      "encoding": "angle",
+      "qubits": 8,
+      "circuitDepth": 1,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.774,
+        "std": 0.018
+      },
+      "sensitivity": {
+        "mean": 0.852,
+        "std": 0.027
+      },
+      "specificity": {
+        "mean": 0.708,
+        "std": 0.023
+      },
+      "auc": {
+        "mean": 0.87,
+        "std": 0.0151
+      },
+      "trainTimeS": {
+        "mean": 79,
+        "std": 4.7
+      },
+      "inferenceMs": {
+        "mean": 3.333,
+        "std": 0.27
+      }
+    },
+    "notes": "Design C15 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C16",
+    "kind": "run",
+    "configKey": "heart|vqc|8q|angle|d2|circular|ideal-sim",
+    "title": "VQC · 8q · C16",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.884,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 8,
+      "encoding": "angle",
+      "qubits": 8,
+      "circuitDepth": 2,
+      "entanglement": "circular",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.788,
+        "std": 0.02
+      },
+      "sensitivity": {
+        "mean": 0.863,
+        "std": 0.03
+      },
+      "specificity": {
+        "mean": 0.724,
+        "std": 0.025
+      },
+      "auc": {
+        "mean": 0.884,
+        "std": 0.0166
+      },
+      "trainTimeS": {
+        "mean": 159,
+        "std": 9.5
+      },
+      "inferenceMs": {
+        "mean": 6.667,
+        "std": 0.53
+      }
+    },
+    "notes": "Design C16 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C17",
+    "kind": "run",
+    "configKey": "heart|vqc|8q|angle|d3|linear|ideal-sim",
+    "title": "VQC · 8q · C17",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.889,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 8,
+      "encoding": "angle",
+      "qubits": 8,
+      "circuitDepth": 3,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.793,
+        "std": 0.022
+      },
+      "sensitivity": {
+        "mean": 0.867,
+        "std": 0.032
+      },
+      "specificity": {
+        "mean": 0.73,
+        "std": 0.027
+      },
+      "auc": {
+        "mean": 0.889,
+        "std": 0.018
+      },
+      "trainTimeS": {
+        "mean": 238,
+        "std": 14.3
+      },
+      "inferenceMs": {
+        "mean": 10,
+        "std": 0.8
+      }
+    },
+    "notes": "Design C17 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C18",
+    "kind": "run",
+    "configKey": "heart|vqc|8q|angle|d4|full|ideal-sim",
+    "title": "VQC · 8q · C18",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.878,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 8,
+      "encoding": "angle",
+      "qubits": 8,
+      "circuitDepth": 4,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.782,
+        "std": 0.023
+      },
+      "sensitivity": {
+        "mean": 0.859,
+        "std": 0.035
+      },
+      "specificity": {
+        "mean": 0.717,
+        "std": 0.029
+      },
+      "auc": {
+        "mean": 0.878,
+        "std": 0.0194
+      },
+      "trainTimeS": {
+        "mean": 317,
+        "std": 19
+      },
+      "inferenceMs": {
+        "mean": 13.333,
+        "std": 1.07
+      }
+    },
+    "notes": "Design C18 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C19",
+    "kind": "run",
+    "configKey": "heart|vqc|8q|amplitude|d3|linear|ideal-sim",
+    "title": "VQC · 8q · C19",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.881,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 8,
+      "encoding": "amplitude",
+      "qubits": 8,
+      "circuitDepth": 3,
+      "entanglement": "linear",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.785,
+        "std": 0.022
+      },
+      "sensitivity": {
+        "mean": 0.861,
+        "std": 0.032
+      },
+      "specificity": {
+        "mean": 0.721,
+        "std": 0.027
+      },
+      "auc": {
+        "mean": 0.881,
+        "std": 0.018
+      },
+      "trainTimeS": {
+        "mean": 238,
+        "std": 14.3
+      },
+      "inferenceMs": {
+        "mean": 10,
+        "std": 0.8
+      }
+    },
+    "notes": "Design C19 of the circuit search EXP-2034."
+  },
+  {
+    "id": "EXP-2034.C20",
+    "kind": "run",
+    "configKey": "heart|vqc|8q|amplitude|d4|full|ideal-sim",
+    "title": "VQC · 8q · C20",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 8,
+    "auc": 0.87,
+    "timestamp": "2026-09-25T16:30:00+05:30",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 8,
+      "encoding": "amplitude",
+      "qubits": 8,
+      "circuitDepth": 4,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": {
+        "t1Us": null,
+        "t2Us": null,
+        "gateError1q": 0,
+        "gateError2q": 0,
+        "readoutError": 0,
+        "shots": null
+      },
+      "seed": 42,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.774,
+        "std": 0.023
+      },
+      "sensitivity": {
+        "mean": 0.852,
+        "std": 0.035
+      },
+      "specificity": {
+        "mean": 0.708,
+        "std": 0.029
+      },
+      "auc": {
+        "mean": 0.87,
+        "std": 0.0194
+      },
+      "trainTimeS": {
+        "mean": 317,
+        "std": 19
+      },
+      "inferenceMs": {
+        "mean": 13.333,
+        "std": 1.07
+      }
+    },
+    "notes": "Design C20 of the circuit search EXP-2034."
+  }
+]

@@ -5,13 +5,13 @@
       "dataset": "wdbc",
       "model": "qsvm",
       "experimentId": "EXP-2047",
-      "threshold": 0.27,
+      "threshold": 0.32,
       "trust": [
         {
           "id": "stability",
           "label": "Prediction stability",
           "level": "strong",
-          "reason": "5 seeds agree within ±2.8 points."
+          "reason": "5 seeds agree within ±1.4 points."
         },
         {
           "id": "data-quality",
@@ -29,7 +29,7 @@
           "id": "calibration",
           "label": "Calibration",
           "level": "strong",
-          "reason": "At ~84% predicted, 82% of similar test patients were positive."
+          "reason": "At ~86% predicted, 84% of similar test patients were positive."
         },
         {
           "id": "input-sensitivity",
@@ -47,8 +47,8 @@
       "decision": "predict",
       "probability": 0.82,
       "interval": [
-        0.791,
-        0.846
+        0.806,
+        0.833
       ],
       "riskBand": "high",
       "flagged": true,
@@ -59,7 +59,7 @@
       "dataset": "wdbc",
       "model": "qsvm",
       "experimentId": "EXP-2047",
-      "threshold": 0.27,
+      "threshold": 0.32,
       "trust": [
         {
           "id": "stability",

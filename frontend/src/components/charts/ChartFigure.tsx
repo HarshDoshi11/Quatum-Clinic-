@@ -21,8 +21,14 @@ const VIEW_OPTIONS: readonly SegmentOption<View>[] = [
 interface ChartFigureProps<Row> {
   /** Mono label, e.g. "Fig. 02 — Learning curves". */
   label: string
+  /** Mono evaluation setting under the label, e.g. "5 SEEDS · HELD-OUT 30% · WDBC". */
+  subtitle?: string
   /** One-sentence takeaway shown above the chart (usually from the API). */
   takeaway: string | undefined
+  /** Always-visible plain explanation of how to read the chart. */
+  caption?: ReactNode
+  /** Small mono note beside the legend, e.g. "AXIS ZOOMED · 0.94–0.98". */
+  note?: ReactNode
   /** Right-aligned extra (e.g. an ExperimentTag). */
   aside?: ReactNode
   legend?: LegendItem[]
@@ -49,16 +55,19 @@ function Swatch({ item }: { item: LegendItem }) {
  * Figure shell for every chart: label, takeaway above the plot, legend,
  * and a Chart / Table toggle so the data is never colour- or vision-only.
  */
-export function ChartFigure<Row>({ label, takeaway, aside, legend, height = '22rem', loading, table, children }: ChartFigureProps<Row>) {
+export function ChartFigure<Row>({ label, subtitle, takeaway, caption, note, aside, legend, height = '22rem', loading, table, children }: ChartFigureProps<Row>) {
   const [view, setView] = useState<View>('chart')
   const id = useId()
 
   return (
     <figure aria-labelledby={`${id}-label`} className="flex flex-col">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <p id={`${id}-label`} className="type-label text-ink">
-          {label}
-        </p>
+        <div>
+          <p id={`${id}-label`} className="type-label text-ink">
+            {label}
+          </p>
+          {subtitle && <p className="type-label mt-1 text-muted">{subtitle}</p>}
+        </div>
         <div className="flex items-center gap-3">
           {aside}
           {table && <SegmentedToggle<View> options={VIEW_OPTIONS} value={view} onChange={setView} layoutId={`${id}-view`} ariaLabel={`${label}: view`} size="sm" />}
@@ -68,16 +77,20 @@ export function ChartFigure<Row>({ label, takeaway, aside, legend, height = '22r
       <p className="measure mt-3 type-body-lg text-ink">
         {takeaway ? <Glossed text={takeaway} /> : <Skeleton width="60%" height="1.2em" />}
       </p>
+      {caption && <p className="measure mt-2 type-small text-muted">{caption}</p>}
 
-      {legend && legend.length > 0 && view === 'chart' && (
-        <ul className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2" aria-label="Legend">
-          {legend.map((item) => (
-            <li key={item.key} className="flex items-center gap-2 type-small text-ink">
-              <Swatch item={item} />
-              {item.label}
-            </li>
-          ))}
-        </ul>
+      {((legend && legend.length > 0) || note) && view === 'chart' && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2" aria-label="Legend">
+            {legend?.map((item) => (
+              <li key={item.key} className="flex items-center gap-2 type-small text-ink">
+                <Swatch item={item} />
+                {item.label}
+              </li>
+            ))}
+          </ul>
+          {note && <p className="type-label text-muted">{note}</p>}
+        </div>
       )}
 
       <div className="mt-5">

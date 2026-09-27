@@ -6,302 +6,332 @@
     "lossCurve": [
       {
         "epoch": 1,
-        "loss": 0.6419,
-        "valLoss": 0.6882
+        "loss": 0.5219,
+        "valLoss": 0.5682
       },
       {
         "epoch": 2,
-        "loss": 0.6111,
-        "valLoss": 0.6518
+        "loss": 0.4911,
+        "valLoss": 0.5318
       },
       {
         "epoch": 3,
-        "loss": 0.5831,
-        "valLoss": 0.6401
+        "loss": 0.4631,
+        "valLoss": 0.5201
       },
       {
         "epoch": 4,
-        "loss": 0.542,
-        "valLoss": 0.6016
+        "loss": 0.422,
+        "valLoss": 0.4816
       },
       {
         "epoch": 5,
-        "loss": 0.5325,
-        "valLoss": 0.5804
+        "loss": 0.4125,
+        "valLoss": 0.4604
       },
       {
         "epoch": 6,
-        "loss": 0.5182,
-        "valLoss": 0.5642
+        "loss": 0.3982,
+        "valLoss": 0.4442
       },
       {
         "epoch": 7,
-        "loss": 0.491,
-        "valLoss": 0.5487
+        "loss": 0.371,
+        "valLoss": 0.4287
       },
       {
         "epoch": 8,
-        "loss": 0.4661,
-        "valLoss": 0.5363
+        "loss": 0.3461,
+        "valLoss": 0.4163
       },
       {
         "epoch": 9,
-        "loss": 0.4566,
-        "valLoss": 0.5089
+        "loss": 0.3366,
+        "valLoss": 0.3889
       },
       {
         "epoch": 10,
-        "loss": 0.4414,
-        "valLoss": 0.4836
+        "loss": 0.3214,
+        "valLoss": 0.3636
       },
       {
         "epoch": 11,
-        "loss": 0.4435,
-        "valLoss": 0.4794
-      },
-      {
-        "epoch": 12,
-        "loss": 0.4067,
-        "valLoss": 0.4674
-      },
-      {
-        "epoch": 13,
-        "loss": 0.401,
-        "valLoss": 0.4509
-      },
-      {
-        "epoch": 14,
-        "loss": 0.3726,
-        "valLoss": 0.4324
-      },
-      {
-        "epoch": 15,
-        "loss": 0.3693,
-        "valLoss": 0.4369
-      },
-      {
-        "epoch": 16,
-        "loss": 0.3669,
-        "valLoss": 0.4156
-      },
-      {
-        "epoch": 17,
-        "loss": 0.3461,
-        "valLoss": 0.3999
-      },
-      {
-        "epoch": 18,
-        "loss": 0.3513,
-        "valLoss": 0.3911
-      },
-      {
-        "epoch": 19,
-        "loss": 0.332,
-        "valLoss": 0.3772
-      },
-      {
-        "epoch": 20,
-        "loss": 0.3375,
-        "valLoss": 0.3985
-      },
-      {
-        "epoch": 21,
-        "loss": 0.3334,
-        "valLoss": 0.3722
-      },
-      {
-        "epoch": 22,
-        "loss": 0.3278,
-        "valLoss": 0.3632
-      },
-      {
-        "epoch": 23,
-        "loss": 0.3199,
-        "valLoss": 0.3554
-      },
-      {
-        "epoch": 24,
-        "loss": 0.3254,
-        "valLoss": 0.352
-      },
-      {
-        "epoch": 25,
-        "loss": 0.3171,
-        "valLoss": 0.3558
-      },
-      {
-        "epoch": 26,
-        "loss": 0.2988,
+        "loss": 0.3235,
         "valLoss": 0.3594
       },
       {
-        "epoch": 27,
-        "loss": 0.2899,
-        "valLoss": 0.353
+        "epoch": 12,
+        "loss": 0.2867,
+        "valLoss": 0.3474
       },
       {
-        "epoch": 28,
-        "loss": 0.2991,
-        "valLoss": 0.3381
+        "epoch": 13,
+        "loss": 0.281,
+        "valLoss": 0.3309
       },
       {
-        "epoch": 29,
-        "loss": 0.2938,
-        "valLoss": 0.3421
+        "epoch": 14,
+        "loss": 0.2526,
+        "valLoss": 0.3124
       },
       {
-        "epoch": 30,
-        "loss": 0.2776,
-        "valLoss": 0.3516
+        "epoch": 15,
+        "loss": 0.2493,
+        "valLoss": 0.3169
       },
       {
-        "epoch": 31,
-        "loss": 0.2718,
-        "valLoss": 0.3411
+        "epoch": 16,
+        "loss": 0.2469,
+        "valLoss": 0.2956
       },
       {
-        "epoch": 32,
-        "loss": 0.276,
-        "valLoss": 0.3122
+        "epoch": 17,
+        "loss": 0.2261,
+        "valLoss": 0.2799
       },
       {
-        "epoch": 33,
-        "loss": 0.2755,
-        "valLoss": 0.321
+        "epoch": 18,
+        "loss": 0.2313,
+        "valLoss": 0.2711
       },
       {
-        "epoch": 34,
-        "loss": 0.2778,
-        "valLoss": 0.3182
+        "epoch": 19,
+        "loss": 0.212,
+        "valLoss": 0.2572
       },
       {
-        "epoch": 35,
-        "loss": 0.2746,
-        "valLoss": 0.3417
-      },
-      {
-        "epoch": 36,
-        "loss": 0.2805,
-        "valLoss": 0.328
-      },
-      {
-        "epoch": 37,
-        "loss": 0.2796,
-        "valLoss": 0.3213
-      },
-      {
-        "epoch": 38,
-        "loss": 0.2784,
-        "valLoss": 0.2941
-      },
-      {
-        "epoch": 39,
-        "loss": 0.2791,
-        "valLoss": 0.3019
-      },
-      {
-        "epoch": 40,
-        "loss": 0.2765,
-        "valLoss": 0.3253
-      },
-      {
-        "epoch": 41,
-        "loss": 0.2626,
+        "epoch": 20,
+        "loss": 0.2175,
         "valLoss": 0.2785
       },
       {
+        "epoch": 21,
+        "loss": 0.2134,
+        "valLoss": 0.2522
+      },
+      {
+        "epoch": 22,
+        "loss": 0.2078,
+        "valLoss": 0.2432
+      },
+      {
+        "epoch": 23,
+        "loss": 0.1999,
+        "valLoss": 0.2354
+      },
+      {
+        "epoch": 24,
+        "loss": 0.2054,
+        "valLoss": 0.232
+      },
+      {
+        "epoch": 25,
+        "loss": 0.1971,
+        "valLoss": 0.2358
+      },
+      {
+        "epoch": 26,
+        "loss": 0.1788,
+        "valLoss": 0.2394
+      },
+      {
+        "epoch": 27,
+        "loss": 0.1699,
+        "valLoss": 0.233
+      },
+      {
+        "epoch": 28,
+        "loss": 0.1791,
+        "valLoss": 0.2181
+      },
+      {
+        "epoch": 29,
+        "loss": 0.1738,
+        "valLoss": 0.2221
+      },
+      {
+        "epoch": 30,
+        "loss": 0.1576,
+        "valLoss": 0.2316
+      },
+      {
+        "epoch": 31,
+        "loss": 0.1518,
+        "valLoss": 0.2211
+      },
+      {
+        "epoch": 32,
+        "loss": 0.156,
+        "valLoss": 0.1922
+      },
+      {
+        "epoch": 33,
+        "loss": 0.1555,
+        "valLoss": 0.201
+      },
+      {
+        "epoch": 34,
+        "loss": 0.1578,
+        "valLoss": 0.1982
+      },
+      {
+        "epoch": 35,
+        "loss": 0.1546,
+        "valLoss": 0.2217
+      },
+      {
+        "epoch": 36,
+        "loss": 0.1605,
+        "valLoss": 0.208
+      },
+      {
+        "epoch": 37,
+        "loss": 0.1596,
+        "valLoss": 0.2013
+      },
+      {
+        "epoch": 38,
+        "loss": 0.1584,
+        "valLoss": 0.1741
+      },
+      {
+        "epoch": 39,
+        "loss": 0.1591,
+        "valLoss": 0.1819
+      },
+      {
+        "epoch": 40,
+        "loss": 0.1565,
+        "valLoss": 0.2053
+      },
+      {
+        "epoch": 41,
+        "loss": 0.1426,
+        "valLoss": 0.1585
+      },
+      {
         "epoch": 42,
-        "loss": 0.2487,
-        "valLoss": 0.3048
+        "loss": 0.1287,
+        "valLoss": 0.1848
       },
       {
         "epoch": 43,
-        "loss": 0.2639,
-        "valLoss": 0.3145
+        "loss": 0.1439,
+        "valLoss": 0.1945
       },
       {
         "epoch": 44,
-        "loss": 0.2613,
-        "valLoss": 0.3074
+        "loss": 0.1413,
+        "valLoss": 0.1874
       },
       {
         "epoch": 45,
-        "loss": 0.2469,
-        "valLoss": 0.295
+        "loss": 0.1269,
+        "valLoss": 0.175
       },
       {
         "epoch": 46,
-        "loss": 0.252,
-        "valLoss": 0.2976
+        "loss": 0.132,
+        "valLoss": 0.1776
       },
       {
         "epoch": 47,
-        "loss": 0.2687,
-        "valLoss": 0.2946
+        "loss": 0.1487,
+        "valLoss": 0.1746
       },
       {
         "epoch": 48,
-        "loss": 0.2758,
-        "valLoss": 0.3035
+        "loss": 0.1558,
+        "valLoss": 0.1835
       },
       {
         "epoch": 49,
-        "loss": 0.263,
-        "valLoss": 0.3125
+        "loss": 0.143,
+        "valLoss": 0.1925
       },
       {
         "epoch": 50,
-        "loss": 0.2504,
-        "valLoss": 0.2926
+        "loss": 0.1304,
+        "valLoss": 0.1726
       }
     ],
     "results": [
       {
         "model": "vqc",
         "family": "quantum",
+        "configKey": "wdbc|vqc|4q|angle|d2|linear|ideal-sim",
+        "backend": "ideal-sim",
+        "qubits": 4,
+        "circuitDepth": 2,
+        "encoding": "angle",
         "auc": {
-          "mean": 0.893,
-          "std": 0.015
+          "mean": 0.96,
+          "std": 0.0065
         }
       },
       {
         "model": "qsvm",
         "family": "quantum",
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|noisy-sim",
+        "backend": "noisy-sim",
+        "qubits": 4,
+        "circuitDepth": 2,
+        "encoding": "angle",
         "auc": {
-          "mean": 0.914,
-          "std": 0.012
+          "mean": 0.984,
+          "std": 0.006
         }
       },
       {
         "model": "logreg",
         "family": "classical",
+        "configKey": "wdbc|logreg|cpu",
+        "backend": "cpu",
+        "qubits": null,
+        "circuitDepth": null,
+        "encoding": null,
         "auc": {
-          "mean": 0.907,
-          "std": 0.01
+          "mean": 0.992,
+          "std": 0.004
         }
       },
       {
         "model": "svm",
         "family": "classical",
+        "configKey": "wdbc|svm|cpu",
+        "backend": "cpu",
+        "qubits": null,
+        "circuitDepth": null,
+        "encoding": null,
         "auc": {
-          "mean": 0.911,
-          "std": 0.011
+          "mean": 0.994,
+          "std": 0.003
         }
       },
       {
         "model": "rf",
         "family": "classical",
+        "configKey": "wdbc|rf|cpu",
+        "backend": "cpu",
+        "qubits": null,
+        "circuitDepth": null,
+        "encoding": null,
         "auc": {
-          "mean": 0.916,
-          "std": 0.01
+          "mean": 0.991,
+          "std": 0.005
         }
       },
       {
         "model": "xgboost",
         "family": "classical",
+        "configKey": "wdbc|xgboost|cpu",
+        "backend": "cpu",
+        "qubits": null,
+        "circuitDepth": null,
+        "encoding": null,
         "auc": {
-          "mean": 0.921,
-          "std": 0.009
+          "mean": 0.993,
+          "std": 0.004
         }
       }
     ],
@@ -567,14 +597,24 @@
       {
         "model": "vqc",
         "family": "quantum",
+        "configKey": "heart|vqc|4q|angle|d2|linear|ideal-sim",
+        "backend": "ideal-sim",
+        "qubits": 4,
+        "circuitDepth": 2,
+        "encoding": "angle",
         "auc": {
-          "mean": 0.872,
-          "std": 0.018
+          "mean": 0.876,
+          "std": 0.013
         }
       },
       {
         "model": "qsvm",
         "family": "quantum",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim",
+        "backend": "noisy-sim",
+        "qubits": 4,
+        "circuitDepth": 2,
+        "encoding": "angle",
         "auc": {
           "mean": 0.896,
           "std": 0.015
@@ -583,6 +623,11 @@
       {
         "model": "logreg",
         "family": "classical",
+        "configKey": "heart|logreg|cpu",
+        "backend": "cpu",
+        "qubits": null,
+        "circuitDepth": null,
+        "encoding": null,
         "auc": {
           "mean": 0.884,
           "std": 0.017
@@ -591,6 +636,11 @@
       {
         "model": "svm",
         "family": "classical",
+        "configKey": "heart|svm|cpu",
+        "backend": "cpu",
+        "qubits": null,
+        "circuitDepth": null,
+        "encoding": null,
         "auc": {
           "mean": 0.892,
           "std": 0.016
@@ -599,6 +649,11 @@
       {
         "model": "rf",
         "family": "classical",
+        "configKey": "heart|rf|cpu",
+        "backend": "cpu",
+        "qubits": null,
+        "circuitDepth": null,
+        "encoding": null,
         "auc": {
           "mean": 0.898,
           "std": 0.015
@@ -607,6 +662,11 @@
       {
         "model": "xgboost",
         "family": "classical",
+        "configKey": "heart|xgboost|cpu",
+        "backend": "cpu",
+        "qubits": null,
+        "circuitDepth": null,
+        "encoding": null,
         "auc": {
           "mean": 0.903,
           "std": 0.014
