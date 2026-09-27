@@ -3,7 +3,9 @@ import type { GlossaryKey } from '@/lib/glossary'
 import { Term } from './Term'
 
 /**
- * Surface forms → glossary keys. Acronyms match case-sensitively; words match
+ * Surface forms → glossary keys. Ambiguous words are deliberately absent:
+ * "noise" often means statistical noise ("within noise across 5 seeds"), so
+ * hardware noise is linked explicitly with <Term term="noise">. Acronyms match case-sensitively; words match
  * whole-word, any case. Longest phrases first so "gate error" wins over "gate".
  */
 const PHRASES: [string, GlossaryKey][] = [
@@ -30,7 +32,6 @@ const PHRASES: [string, GlossaryKey][] = [
   ['seeds', 'seed'],
   ['seed', 'seed'],
   ['shots', 'shots'],
-  ['noise', 'noise'],
   ['QSVM', 'qsvm'],
   ['VQC', 'vqc'],
   ['AUC', 'auc'],

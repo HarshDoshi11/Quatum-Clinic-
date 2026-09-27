@@ -20,12 +20,23 @@ export const formatPoints = (fraction: number, dp = 1): string => (fraction * 10
 /** Negative numbers with a true minus sign. */
 export const formatNumber = (x: number, dp = 0): string => (x < 0 ? `${MINUS}${Math.abs(x).toFixed(dp)}` : x.toFixed(dp))
 
-/** Seconds → "412 s", "2.6 s", "17 min", "1.2 h" */
+/**
+ * Durations: under 10 s in milliseconds ("40 ms", "2,600 ms"), otherwise mm:ss
+ * ("03:04", "68:32"). Rule: times are always mm:ss or ms.
+ */
 export function formatDuration(seconds: number): string {
-  if (seconds < 10) return `${seconds.toFixed(seconds < 1 ? 2 : 1)} s`
-  if (seconds < 120) return `${Math.round(seconds)} s`
-  if (seconds < 7200) return `${Math.round(seconds / 60)} min`
-  return `${(seconds / 3600).toFixed(1)} h`
+  if (seconds < 10) return formatMs(seconds * 1000)
+  const total = Math.round(seconds)
+  const m = Math.floor(total / 60)
+  const s = total % 60
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+/** Milliseconds with thousands separators; sub-millisecond values keep 2 decimals. */
+export function formatMs(ms: number): string {
+  if (ms < 1) return `${ms.toFixed(2)} ms`
+  if (ms < 10) return `${ms.toFixed(1)} ms`
+  return `${Math.round(ms).toLocaleString('en-US')} ms`
 }
 
 // Timestamps are displayed in IST, the lab's timezone, regardless of the viewer's locale.

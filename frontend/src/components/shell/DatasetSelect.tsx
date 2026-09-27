@@ -14,9 +14,9 @@ function DatasetLabel({ meta, compact = false }: { meta: DatasetMeta; compact?: 
       <span className="text-ink">
         {compact ? (
           <>
-            <span className="hidden xl:inline">{meta.name} (</span>
+            <span className="hidden @min-[68rem]:inline">{meta.name} (</span>
             {meta.code}
-            <span className="hidden xl:inline">)</span>
+            <span className="hidden @min-[68rem]:inline">)</span>
           </>
         ) : (
           <>
@@ -108,9 +108,9 @@ export function DatasetSelect() {
             openList()
           }
         }}
-        className="flex h-8 items-center gap-2 rounded-[2px] px-2 text-[13px] hover:bg-surface"
+        className="flex h-9 items-center gap-2 rounded-[2px] px-2 type-small hover:bg-surface"
       >
-        <span className="label-mono hidden text-muted xl:inline">Dataset</span>
+        <span className="type-label hidden text-muted @min-[68rem]:inline">Dataset</span>
         <span className="whitespace-nowrap">
           <DatasetLabel meta={dataset} compact />
         </span>
@@ -133,7 +133,7 @@ export function DatasetSelect() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={tQuick}
-            className="absolute top-[calc(100%+6px)] left-0 z-40 min-w-[320px] rounded-[2px] border border-rule-strong bg-bg py-1"
+            className="absolute top-[calc(100%+6px)] left-0 z-40 min-w-[22rem] rounded-[2px] border border-rule-strong bg-bg py-1"
           >
             {OPTIONS.map((option, i) => {
               const selected = option.id === dataset.id
@@ -145,7 +145,7 @@ export function DatasetSelect() {
                   aria-selected={selected}
                   onPointerEnter={() => setHighlight(i)}
                   onClick={() => choose(option.id)}
-                  className={`flex cursor-pointer items-center gap-3 px-3 py-2 text-[13px] ${
+                  className={`flex cursor-pointer items-center gap-3 px-3 py-2.5 type-ui ${
                     i === highlight ? 'bg-surface' : ''
                   }`}
                 >
@@ -155,7 +155,7 @@ export function DatasetSelect() {
                   <span className="flex-1 whitespace-nowrap">
                     <DatasetLabel meta={option} />
                   </span>
-                  <span className="label-mono text-muted">{option.features} feat</span>
+                  <span className="type-label text-muted">{option.features} feat</span>
                 </li>
               )
             })}

@@ -22,7 +22,7 @@ export function TopBar() {
   const { mode, setMode } = useMode()
 
   return (
-    <header className="flex h-full items-center gap-4 px-6">
+    <header className="@container flex h-full items-center gap-4 px-6">
       <div className="flex min-w-0 flex-1 items-center">{mode === 'research' && <DatasetSelect />}</div>
 
       <div data-tour="mode">
@@ -38,7 +38,7 @@ export function TopBar() {
       <div className="flex flex-1 items-center justify-end gap-3">
         {mode === 'research' && (
           <span
-            className="label-mono hidden whitespace-nowrap text-muted xl:inline"
+            className="type-label hidden whitespace-nowrap text-muted @min-[74rem]:inline"
             title="Active backend: ideal simulator, 4 qubits"
           >
             <span className="text-ink">SIM</span> · IDEAL · <span className="text-accent">4Q</span>
@@ -52,7 +52,7 @@ export function TopBar() {
           data-tour="palette"
           aria-label="Open command palette"
           aria-keyshortcuts={isMac ? 'Meta+K' : 'Control+K'}
-          className="label-mono flex h-8 items-center gap-2 rounded-[2px] border border-rule px-2.5 whitespace-nowrap text-muted hover:border-rule-strong hover:text-ink"
+          className="type-label flex h-8 items-center gap-2 rounded-[2px] border border-rule px-2.5 whitespace-nowrap text-muted hover:border-rule-strong hover:text-ink"
         >
           <span>Search</span>
           <kbd className="text-ink">{isMac ? `${modKeyLabel}K` : `${modKeyLabel} K`}</kbd>

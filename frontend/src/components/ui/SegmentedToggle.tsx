@@ -43,7 +43,7 @@ export function SegmentedToggle<T extends string>({
     refs.current[next]?.focus()
   }
 
-  const pad = size === 'sm' ? 'h-7 px-2' : 'h-7 px-3'
+  const pad = size === 'sm' ? 'h-8 px-2' : 'h-8 px-3'
 
   return (
     <div
@@ -66,7 +66,7 @@ export function SegmentedToggle<T extends string>({
             aria-label={option.ariaLabel}
             tabIndex={active ? 0 : -1}
             onClick={() => onChange(option.value)}
-            className={`relative inline-flex items-center justify-center ${pad} label-mono transition-colors duration-200 ${
+            className={`relative inline-flex items-center justify-center ${pad} type-label transition-colors duration-200 ${
               active ? 'text-bg' : 'text-muted hover:text-ink'
             }`}
           >

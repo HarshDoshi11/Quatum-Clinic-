@@ -95,16 +95,16 @@ function Axes({ ink, muted }: { ink: RGBA; muted: RGBA }) {
     <group>
       <Polyline points={points} color={ink.hex} opacity={0.55} />
       <Html position={[0, 1.2, 0]} center zIndexRange={[10, 0]}>
-        <span className={`${labelClass} block translate-x-4 -translate-y-3 text-[13px]`} style={{ color: ink.hex }}>|0⟩</span>
+        <span className={`${labelClass} block translate-x-4 -translate-y-3 type-small`} style={{ color: ink.hex }}>|0⟩</span>
       </Html>
       <Html position={[0, -1.2, 0]} center zIndexRange={[10, 0]}>
-        <span className={`${labelClass} block translate-x-4 translate-y-3 text-[13px]`} style={{ color: ink.hex }}>|1⟩</span>
+        <span className={`${labelClass} block translate-x-4 translate-y-3 type-small`} style={{ color: ink.hex }}>|1⟩</span>
       </Html>
       <Html position={[0, 0, AXIS_LEN + 0.1]} center zIndexRange={[10, 0]}>
-        <span className={`${labelClass} text-[10px]`} style={{ color: muted.hex }}>X</span>
+        <span className={`${labelClass} type-label`} style={{ color: muted.hex }}>X</span>
       </Html>
       <Html position={[AXIS_LEN + 0.1, 0, 0]} center zIndexRange={[10, 0]}>
-        <span className={`${labelClass} text-[10px]`} style={{ color: muted.hex }}>Y</span>
+        <span className={`${labelClass} type-label`} style={{ color: muted.hex }}>Y</span>
       </Html>
     </group>
   )

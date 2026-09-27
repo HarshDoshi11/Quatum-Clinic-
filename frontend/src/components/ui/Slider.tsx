@@ -24,10 +24,10 @@ export function Slider({ label, value, min, max, step, onChange, format = String
   return (
     <div className={disabled ? 'opacity-40' : ''}>
       <div className="flex items-baseline justify-between gap-4">
-        <label htmlFor={id} className="label-mono text-muted">
+        <label htmlFor={id} className="type-label text-muted">
           {label}
         </label>
-        <output htmlFor={id} className="num text-[13px] text-ink">
+        <output htmlFor={id} className="num type-small text-ink">
           {format(value)}
         </output>
       </div>
@@ -45,7 +45,7 @@ export function Slider({ label, value, min, max, step, onChange, format = String
         className="qc-range mt-1.5"
         style={{ '--fill': `${fill}%` } as CSSProperties}
       />
-      {hint && <div className="mt-1 text-[12.5px] leading-5 text-muted">{hint}</div>}
+      {hint && <div className="mt-1 type-small text-muted">{hint}</div>}
     </div>
   )
 }

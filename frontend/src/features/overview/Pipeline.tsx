@@ -77,15 +77,15 @@ export function Pipeline({ dataset }: { dataset: DatasetMeta }) {
   const lastQ = list.length - 1 - [...list].reverse().findIndex((s) => s.quantum)
 
   return (
-    <div className="px-[60px] pt-10" data-tour="pipeline">
-      <div className="relative h-[132px]">
+    <div className="px-[4.75rem] pt-10" data-tour="pipeline">
+      <div className="relative h-[9.5rem]">
         {/* Quantum bracket */}
         <div
           className="absolute top-0 h-3 border-x border-t border-accent"
           style={{ left: pct(firstQ, n), width: `calc(${pct(lastQ, n)} - ${pct(firstQ, n)})` }}
           aria-hidden="true"
         >
-          <span className="label-mono absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-accent">
+          <span className="type-label absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-accent">
             Quantum · simulator / QPU
           </span>
         </div>
@@ -106,7 +106,7 @@ export function Pipeline({ dataset }: { dataset: DatasetMeta }) {
 
         <ol className="absolute inset-0" aria-label="Hybrid pipeline stages">
           {list.map((stage, i) => (
-            <li key={stage.label} className="absolute top-[18px] w-[120px] -translate-x-1/2" style={{ left: pct(i, n) }}>
+            <li key={stage.label} className="absolute top-[18px] w-[9.5rem] -translate-x-1/2" style={{ left: pct(i, n) }}>
               <Tooltip label={<StageTag quantum={stage.quantum} />} content={stage.explain} width={240}>
                 <span
                   tabIndex={0}
@@ -118,10 +118,10 @@ export function Pipeline({ dataset }: { dataset: DatasetMeta }) {
                     }`}
                     aria-hidden="true"
                   />
-                  <span className="mt-4 text-[13.5px] text-ink underline decoration-transparent decoration-dotted underline-offset-[3px] group-hover:decoration-muted">
+                  <span className="mt-4 type-ui text-ink underline decoration-transparent decoration-dotted underline-offset-[3px] group-hover:decoration-muted">
                     {stage.label}
                   </span>
-                  <span className="label-mono mt-1 text-[10px] text-muted">{stage.detail}</span>
+                  <span className="type-label mt-1 hidden whitespace-nowrap text-muted xl:block">{stage.detail}</span>
                   <span className="sr-only">
                     ({stage.quantum ? 'quantum' : 'classical'} stage) {stage.explain}
                   </span>
@@ -131,7 +131,7 @@ export function Pipeline({ dataset }: { dataset: DatasetMeta }) {
           ))}
         </ol>
       </div>
-      <p className="label-mono -mx-[60px] mt-2 flex items-center gap-5 text-muted">
+      <p className="type-label -mx-[4.75rem] mt-2 flex items-center gap-5 text-muted">
         <span className="flex items-center gap-2">
           <span className="block h-2 w-2 bg-classical" aria-hidden="true" /> Classical · CPU
         </span>

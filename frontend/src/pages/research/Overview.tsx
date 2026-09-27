@@ -34,15 +34,15 @@ function ModelName({ model }: { model: ModelId }) {
 function FindingColumn({ finding, first }: { finding: Finding; first: boolean }) {
   return (
     <article className={`flex flex-col pt-6 pb-2 ${first ? 'pr-8' : 'border-l border-rule px-8'}`}>
-      <p className="label-mono text-muted">{finding.label}</p>
-      <p className="num mt-5 text-[clamp(26px,2.6vw,40px)] leading-none tracking-[-0.02em] whitespace-nowrap text-accent">
+      <p className="type-label text-muted">{finding.label}</p>
+      <p className="mt-5 type-metric whitespace-nowrap text-accent">
         {finding.value}
       </p>
-      <p className="mt-5 max-w-[34ch] text-[14.5px] leading-6 text-ink">
+      <p className="mt-5 max-w-[36ch] type-body text-ink">
         <Glossed text={finding.summary} />
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-        <Link to={finding.link.path} className="label-mono text-ink underline-offset-4 hover:underline">
+        <Link to={finding.link.path} className="type-label text-ink underline-offset-4 hover:underline">
           {finding.link.label} ↗
         </Link>
         <ExperimentTag id={finding.experimentId} />
@@ -106,15 +106,15 @@ function BackendColumn({ backend, first }: { backend: BackendStatus; first: bool
   const live = backend.status === 'live'
   return (
     <div className={`pt-6 ${first ? 'pr-6' : 'border-l border-rule px-6'}`}>
-      <p className={`label-mono flex items-center gap-2 ${live ? 'text-ink' : 'text-muted'}`}>
+      <p className={`type-label flex items-center gap-2 ${live ? 'text-ink' : 'text-muted'}`}>
         <span className={`block h-[6px] w-[6px] ${live ? 'bg-ink' : 'border border-muted'}`} aria-hidden="true" />
         {live ? 'Live' : 'Offline'}
       </p>
-      <p className={`mt-4 text-[17px] ${live ? 'text-ink' : 'text-muted'}`}>{backend.name}</p>
-      <p className="label-mono mt-2 text-muted">
+      <p className={`mt-4 type-body-lg ${live ? 'text-ink' : 'text-muted'}`}>{backend.name}</p>
+      <p className="type-label mt-2 text-muted">
         {KIND_LABEL[backend.kind]} · {backend.qubits}q
       </p>
-      <p className="mt-1 text-[13px] text-muted">{backend.note}</p>
+      <p className="mt-1 type-small text-muted">{backend.note}</p>
     </div>
   )
 }
@@ -135,14 +135,15 @@ export function Overview({ route }: { route: RouteMeta }) {
     <Page label={route.label}>
       {/* Hero */}
       <div className="grid-12 gap-y-16">
-        <PageItem as="header" className="col-span-12 flex flex-col xl:col-span-7">
-          <PageHeader route={route} headlineClassName="text-[clamp(44px,6vw,80px)] xl:text-[clamp(56px,4.45vw,112px)]" />
+        <PageItem as="header" className="@container col-span-12 flex flex-col xl:col-span-7">
+          {/* Fits the three forced lines to the column (container units), within the display range. */}
+          <PageHeader route={route} headlineClassName="[font-size:clamp(56px,10cqi,96px)]" />
           <div className="mt-16">
             {overview.status === 'error' ? (
               <EmptyState tone="error" title="Couldn't load results." body={overview.error.message} />
             ) : best ? (
               <Metric
-                size="hero"
+                size="xl"
                 tone="accent"
                 value={best.auc.mean}
                 format={formatAuc}
@@ -154,7 +155,7 @@ export function Overview({ route }: { route: RouteMeta }) {
               />
             ) : (
               <div aria-hidden="true">
-                <Skeleton width="3.2em" height="0.9em" className="font-mono text-[clamp(72px,7vw,112px)]" />
+                <Skeleton width="3.2em" height="0.9em" className="type-metric-xl" />
                 <div className="mt-3">
                   <Skeleton width={28} />
                 </div>
@@ -197,7 +198,7 @@ export function Overview({ route }: { route: RouteMeta }) {
           title="Hybrid pipeline"
           plain="A normal computer cleans and shrinks the patient data, a quantum circuit turns it into qubit states and reads them, then a normal computer scores the result."
         />
-        <p className="mt-5 max-w-[60ch] text-[14.5px] leading-6 text-muted">
+        <p className="measure mt-5 type-body text-muted">
           Classical stages prepare and score the data; the quantum stages <Term term="encoding">encode</Term> each patient
           into a 4-<Term term="qubit">qubit</Term> state and take a <Term term="measurement">measurement</Term>.
         </p>
@@ -211,7 +212,7 @@ export function Overview({ route }: { route: RouteMeta }) {
             index="03"
             title="Recent experiments"
             plain="Every run is saved with an ID. Click one to see exactly which data, model and settings produced its score, or run it again."
-            aside={<span className="label-mono text-muted">Click a row for details</span>}
+            aside={<span className="type-label text-muted">Click a row for details</span>}
           />
           <div className="mt-4">
             <HairlineTable

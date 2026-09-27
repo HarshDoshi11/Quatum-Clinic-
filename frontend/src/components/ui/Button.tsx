@@ -11,8 +11,8 @@ const VARIANT: Record<Variant, string> = {
 }
 
 const SIZE: Record<Size, string> = {
-  md: 'h-11 px-5 text-[14px]',
-  sm: 'h-8 px-3 text-[13px]',
+  md: 'h-12 px-5 type-body',
+  sm: 'h-9 px-3 type-small',
 }
 
 const base =

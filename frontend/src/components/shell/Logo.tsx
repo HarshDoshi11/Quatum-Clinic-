@@ -8,10 +8,10 @@ export function Logo({ mode }: { mode: Mode }) {
       className="flex h-full flex-col justify-center px-5"
       aria-label="Q/Clinical home"
     >
-      <span className="font-serif text-[26px] leading-none text-ink">
+      <span className="type-h2 text-ink">
         Q<span className="text-muted">/</span>Clinical
       </span>
-      <span className="label-mono mt-1 text-[10px] text-muted">Early Signal Lab</span>
+      <span className="type-label mt-0.5 text-muted">Early Signal Lab</span>
     </Link>
   )
 }

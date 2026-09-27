@@ -1,7 +1,12 @@
 /*
  * Q/Clinical design tokens — "Lab Instrument".
- * All colors live here as CSS variables; Tailwind utilities map onto them
+ * All colours live here as CSS variables; Tailwind utilities map onto them
  * (see index.css @theme), so components never branch on theme.
+ *
+ * Contrast (WCAG, text on --bg / --surface):
+ *   light --muted #5E5E5E  5.7 : 1 / 5.4 : 1
+ *   dark  --muted #9C9C9C  7.1 : 1 / 6.7 : 1
+ *   dark  --accent #5F73FF 5.0 : 1 / 4.7 : 1   (spec #4D63FF was 4.2 : 1)
  */
 
 :root,
@@ -9,7 +14,7 @@
   --bg: #f3f1ec;
   --surface: #ece9e2;
   --ink: #0d0d0d;
-  --muted: #6b6b6b;
+  --muted: #5e5e5e;
   --rule: rgba(13, 13, 13, 0.15);
   --rule-strong: rgba(13, 13, 13, 0.32);
 
@@ -31,11 +36,11 @@
   --bg: #0d0d0d;
   --surface: #151515;
   --ink: #f3f1ec;
-  --muted: #8a8a8a;
+  --muted: #9c9c9c;
   --rule: rgba(243, 241, 236, 0.14);
   --rule-strong: rgba(243, 241, 236, 0.3);
 
-  --accent: #4d63ff;
+  --accent: #5f73ff;
   --accent-ink: #0d0d0d;
   --classical: #7a7a7a;
 
@@ -49,27 +54,60 @@
   color-scheme: dark;
 }
 
+/*
+ * Projector mode: everything scales 115% (all sizes are rem) and contrast is
+ * boosted — muted text moves toward ink, hairlines get stronger.
+ */
+:root[data-projector='on'] {
+  font-size: 115%;
+}
+:root[data-projector='on'][data-theme='light'],
+:root[data-projector='on']:not([data-theme]) {
+  --muted: #404040; /* 9.2 : 1 */
+  --rule: rgba(13, 13, 13, 0.26);
+  --rule-strong: rgba(13, 13, 13, 0.48);
+}
+:root[data-projector='on'][data-theme='dark'] {
+  --muted: #c4c4c4; /* 11.1 : 1 */
+  --rule: rgba(243, 241, 236, 0.24);
+  --rule-strong: rgba(243, 241, 236, 0.44);
+}
+
 :root {
-  /* Type */
+  /* Families */
   --font-serif: 'Instrument Serif', 'Times New Roman', serif;
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
-  --text-display-xl: clamp(64px, 7.2vw, 120px);
-  --text-display-lg: clamp(56px, 5.6vw, 88px);
-  --text-display-md: clamp(44px, 4.4vw, 64px);
+  /*
+   * Type scale — the ONLY font sizes allowed (see CLAUDE.md). rem-based so
+   * projector mode scales them. Nothing renders below 12px.
+   */
+  --type-display: clamp(3.5rem, 6vw, 6rem); /* 56–96px · serif · page headlines */
+  --type-h2: 2.25rem; /* 36px · serif */
+  --type-metric-xl: 4.5rem; /* 72px · mono */
+  --type-metric: 2rem; /* 32px · mono */
+  --type-body-lg: 1.125rem; /* 18px · sans */
+  --type-body: 1rem; /* 16px · sans (default) */
+  --type-ui: 0.9375rem; /* 15px · sans · navigation, table rows */
+  --type-small: 0.875rem; /* 14px · sans */
+  --type-label: 0.8125rem; /* 13px · mono, uppercase */
+  --type-micro: 0.75rem; /* 12px · mono · status strip only */
 
   /* Shape */
   --radius: 2px;
   --radius-max: 4px;
   --hairline: 1px;
 
-  /* Shell */
-  --sidebar-w: 248px;
-  --topbar-h: 56px;
-  --strip-h: 28px;
-  --gutter: 24px;
-  --page-pad-x: 56px;
+  /* Shell (rem, so projector mode scales the chrome with the text) */
+  --sidebar-w: 16.5rem;
+  --topbar-h: 4rem;
+  --strip-h: 2rem;
+  --gutter: 1.5rem;
+  --page-pad-x: 3.5rem;
+
+  /* Readability */
+  --measure: 70ch;
 
   /* Motion */
   --dur-fast: 200ms;
@@ -77,9 +115,9 @@
   --ease-precise: cubic-bezier(0.2, 0, 0, 1);
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1400px) {
   :root {
-    --sidebar-w: 232px;
-    --page-pad-x: 40px;
+    --sidebar-w: 16rem;
+    --page-pad-x: 2.5rem;
   }
 }

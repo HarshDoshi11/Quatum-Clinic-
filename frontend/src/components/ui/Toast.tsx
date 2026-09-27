@@ -60,12 +60,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               className="pointer-events-auto flex items-center gap-3 rounded-[2px] border border-rule-strong bg-bg px-3 py-2"
             >
               <span className={`block h-[6px] w-[6px] shrink-0 ${MARK[t.tone]}`} aria-hidden="true" />
-              <span className="label-mono text-ink">{t.message}</span>
+              <span className="type-label text-ink">{t.message}</span>
               <button
                 type="button"
                 onClick={() => dismiss(t.id)}
                 aria-label="Dismiss notification"
-                className="label-mono ml-2 text-muted hover:text-ink"
+                className="type-label ml-2 text-muted hover:text-ink"
               >
                 ×
               </button>

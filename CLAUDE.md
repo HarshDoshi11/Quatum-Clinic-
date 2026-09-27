@@ -47,6 +47,49 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 5. **Experiment tags.** Each research page shows an `ExperimentTag` (e.g. "EXP-2037 · 5 SEEDS"). It opens the experiment drawer.
 6. **Tour anchors.** Mark key regions with `data-tour="…"` if they may join a guided tour.
 
+## Typography & readability (required everywhere)
+
+**Type scale.** These are the only font sizes allowed. Use the `type-*` utilities from `src/styles/index.css`
+(tokens are in `tokens.css`). Never write `text-[NNpx]`, Tailwind `text-sm` and similar, or inline font sizes.
+
+| Utility | Size | Face | Use |
+| --- | --- | --- | --- |
+| `type-display` | clamp(56px, 6vw, 96px), lh 1.0 | Instrument Serif | Page headlines only |
+| `type-h2` | 36px, lh 1.1 | Instrument Serif | Panel / drawer / card titles |
+| `type-metric-xl` | 72px | IBM Plex Mono | Hero metrics |
+| `type-metric` | 32px | IBM Plex Mono | Metrics, finding values |
+| `type-body-lg` | 18px, lh 1.6 | IBM Plex Sans | Lead text, plain-English readouts |
+| `type-body` | 16px, lh 1.6 | IBM Plex Sans | Default running text |
+| `type-ui` | 15px, lh 1.5 | IBM Plex Sans | Sidebar navigation, table rows, definition lists |
+| `type-small` | 14px, lh 1.5 | IBM Plex Sans | Secondary text, hints, tooltips |
+| `type-label` | 13px, uppercase, 0.06em | IBM Plex Mono | Section labels, table headers, tags, kbd |
+| `type-micro` | 12px, uppercase, 0.06em | IBM Plex Mono | **Status strip only** |
+
+- Nothing may render below 12px. Uppercase tracking is at most 0.06em. Don't add `leading-*` overrides to text that
+  uses a `type-*` utility, because the token already sets line-height.
+- For mono numbers at a sans size, combine the classes: `num type-small`.
+- All sizes are rem, so **projector mode** (Shift+P: 115% root size, stronger contrast) scales everything. Size
+  chrome in rem too.
+- **Contrast.** `--muted` must be at least 4.5:1 on `--bg` and `--surface` in both themes. Hairlines can stay
+  subtle, but text never can. Don't lower contrast with opacity on text.
+- **Measure.** Running text is capped at about 70ch (the `measure` utility).
+- **Tables.** Use `HairlineTable`: 15px rows (`type-ui`), 13px mono headers (`type-label`), rows at least 44px tall
+  (`h-11`), tabular numerals.
+- **Charts.** Axis and tick labels are at least 12px. Label lines directly instead of using legends where possible.
+  Quantum is accent and classical is grey.
+- **Numbers.** Always format through `src/lib/format.ts`. AUC has 3 decimals (`formatAuc`), percentages have 1
+  decimal (`formatPercent`), and durations are mm:ss or ms (`formatDuration`, `formatMs`). Use a true minus sign
+  (`formatDelta`).
+- **Fit.** Test at 1366×768, 1440×900, 1920×1080 and 125% browser zoom, with projector mode both off and on.
+  Nothing may overlap, clip or scroll horizontally. Chrome that competes for space (the top bar and status strip)
+  compacts with rem-based container queries (`@container`, `@min-[68rem]:…`), not viewport breakpoints.
+- **3D.** Every React Three Fiber scene is code-split with `lazyScene(() => import(...))` and rendered inside
+  `<SceneFrame>` (`src/components/three/LazyScene.tsx`), so pages paint instantly.
+- **Titles.** `document.title` is set per route ("Hardware Reality Lab — Q/Clinical") from `routes.ts`, so new
+  routes get it automatically.
+- **Shortcuts.** Global shortcuts live in `SHORTCUTS` (`src/features/shortcuts/Shortcuts.tsx`), which drives both
+  the handler and the sheet. Add new ones there, and never trigger them while the user is typing in a field.
+
 ## Design system — "Lab Instrument"
 
 - Colours come from CSS variables only (`bg-bg`, `text-ink`, `text-muted`, `border-rule`, `text-accent`, `bg-classical`,

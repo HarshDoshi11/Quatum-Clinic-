@@ -31,13 +31,12 @@ export function AnimatedNumber({ value, format, from = 0, className = '' }: Anim
   )
 }
 
-type MetricSize = 'hero' | 'xl' | 'lg' | 'md'
+/** 'xl' = metric-xl token (72px), 'md' = metric token (32px). */
+type MetricSize = 'xl' | 'md'
 
 const SIZE: Record<MetricSize, string> = {
-  hero: 'text-[clamp(72px,7vw,112px)] leading-[0.9] tracking-[-0.04em]',
-  xl: 'text-[56px] leading-none tracking-[-0.03em]',
-  lg: 'text-[40px] leading-none tracking-[-0.02em]',
-  md: 'text-[24px] leading-none tracking-[-0.01em]',
+  xl: 'type-metric-xl',
+  md: 'type-metric',
 }
 
 interface MetricProps {
@@ -51,14 +50,14 @@ interface MetricProps {
 }
 
 /** Oversized mono numeral with an optional uppercase caption below. */
-export function Metric({ value, format, size = 'lg', tone = 'ink', caption, className = '' }: MetricProps) {
+export function Metric({ value, format, size = 'md', tone = 'ink', caption, className = '' }: MetricProps) {
   const color = tone === 'accent' ? 'text-accent' : tone === 'muted' ? 'text-muted' : 'text-ink'
   return (
     <div className={className}>
-      <p className={`font-mono font-normal ${SIZE[size]} ${color}`}>
+      <p className={`${SIZE[size]} ${color}`}>
         <AnimatedNumber value={value} format={format} />
       </p>
-      {caption && <div className="label-mono mt-3 text-muted">{caption}</div>}
+      {caption && <div className="type-label mt-3 text-muted">{caption}</div>}
     </div>
   )
 }

@@ -36,35 +36,32 @@ export function PageHeader({ route, headlineClassName, children }: PageHeaderPro
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="label-mono text-muted underline-offset-4 hover:text-ink hover:underline"
+            className="type-label text-muted underline-offset-4 hover:text-ink hover:underline"
             aria-haspopup="dialog"
           >
             What is this? ↗
           </button>
         )}
       </div>
-      <Headline
-        size={headlineClassName ? 'custom' : 'lg'}
-        className={`mt-6 ${headlineClassName ?? ''}`}
-      >
+      <Headline size={headlineClassName ? 'custom' : 'display'} className={`mt-6 ${headlineClassName ?? ''}`}>
         {route.headline}
       </Headline>
       {guide && <PlainLine className="mt-2">{guide.plain}</PlainLine>}
       {children}
 
       {guide && (
-        <Drawer open={open} onClose={() => setOpen(false)} label={`What is this? ${route.label}`} width={460}>
+        <Drawer open={open} onClose={() => setOpen(false)} label={`What is this? ${route.label}`} width={500}>
           <div className="px-8 pt-8 pb-12">
-            <p className="label-mono text-muted">What is this? · {route.section}</p>
-            <p className="mt-4 font-serif text-[36px] leading-[1.05] text-ink">{route.label}</p>
-            <p className="mt-4 text-[15px] leading-6 text-muted">{guide.plain}</p>
+            <p className="type-label text-muted">What is this? · {route.section}</p>
+            <p className="mt-4 type-h2 text-ink">{route.label}</p>
+            <p className="mt-4 type-body text-muted">{guide.plain}</p>
             <ol className="mt-10 border-t border-rule">
               {PARTS.map((part, i) => (
                 <li key={part.key} className="border-b border-rule py-6">
-                  <p className="label-mono text-muted">
+                  <p className="type-label text-muted">
                     <span className="text-ink">{String(i + 1).padStart(2, '0')}</span> — {part.title}
                   </p>
-                  <p className="mt-3 text-[15px] leading-6 text-ink">{guide[part.key]}</p>
+                  <p className="mt-3 type-body text-ink">{guide[part.key]}</p>
                 </li>
               ))}
             </ol>

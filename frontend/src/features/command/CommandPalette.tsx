@@ -7,6 +7,7 @@ import { api } from '@/api'
 import { COMMAND_PALETTE_EVENT } from '@/components/shell/TopBar'
 import { useAppActions } from '@/features/actions'
 import { useExperimentDrawer } from '@/features/experiments/ExperimentDrawer'
+import { useShortcuts } from '@/features/shortcuts/Shortcuts'
 import { DATASETS, MODELS } from '@/lib/domain'
 import { formatTime } from '@/lib/format'
 import { easePrecise } from '@/lib/motion'
@@ -14,6 +15,8 @@ import { isMac } from '@/lib/platform'
 import { PATIENT_ROUTES, RESEARCH_GROUPS } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import { useMode } from '@/state/mode'
+import { usePlainLanguage } from '@/state/plainLanguage'
+import { useProjector } from '@/state/projector'
 import { useTheme } from '@/state/theme'
 import type { ExperimentSummary } from '@/types'
 
@@ -23,17 +26,17 @@ function Item({ value, keywords, onSelect, children, hint }: { value: string; ke
       value={value}
       keywords={keywords}
       onSelect={onSelect}
-      className="group flex cursor-pointer items-center gap-3 rounded-[2px] px-3 py-2.5 text-[14px] text-muted data-[selected=true]:bg-surface data-[selected=true]:text-ink"
+      className="group flex cursor-pointer items-center gap-3 rounded-[2px] px-3 py-2.5 type-body text-muted data-[selected=true]:bg-surface data-[selected=true]:text-ink"
     >
       <span className="block h-[6px] w-[6px] shrink-0 bg-transparent group-data-[selected=true]:bg-accent" aria-hidden="true" />
       <span className="flex-1 truncate">{children}</span>
-      {hint && <span className="label-mono shrink-0 text-muted">{hint}</span>}
+      {hint && <span className="type-label shrink-0 text-muted">{hint}</span>}
     </Command.Item>
   )
 }
 
 const groupClass =
-  '[&_[cmdk-group-heading]]:label-mono [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:pt-4 [&_[cmdk-group-heading]]:pb-2 [&_[cmdk-group-heading]]:text-muted'
+  '[&_[cmdk-group-heading]]:type-label [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:pt-4 [&_[cmdk-group-heading]]:pb-2 [&_[cmdk-group-heading]]:text-muted'
 
 /** ⌘K / Ctrl+K: jump anywhere, switch dataset, theme or mode, open experiments. */
 export function CommandPalette() {
@@ -49,6 +52,9 @@ export function CommandPalette() {
   const { datasetId } = useDataset()
   const { openExperiment } = useExperimentDrawer()
   const { switchDataset, toggleTheme, runPrediction, newExperiment } = useAppActions()
+  const { projector, toggleProjector } = useProjector()
+  const { plain, togglePlain } = usePlainLanguage()
+  const { openShortcuts } = useShortcuts()
 
   const show = useCallback(() => {
     returnFocus.current = document.activeElement as HTMLElement | null
@@ -118,7 +124,7 @@ export function CommandPalette() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.18, ease: easePrecise }}
-            className="shadow-float relative w-[min(640px,calc(100vw-32px))] overflow-hidden rounded-[4px] bg-bg"
+            className="shadow-float relative w-[min(44rem,calc(100vw-32px))] overflow-hidden rounded-[4px] bg-bg"
           >
             <Command
               label="Command palette"
@@ -131,7 +137,7 @@ export function CommandPalette() {
               }}
             >
               <div className="flex items-center gap-3 border-b border-rule px-5">
-                <span className="label-mono text-accent" aria-hidden="true">
+                <span className="type-label text-accent" aria-hidden="true">
                   →
                 </span>
                 <Command.Input
@@ -140,13 +146,13 @@ export function CommandPalette() {
                   value={search}
                   onValueChange={setSearch}
                   placeholder="Jump to a page, switch dataset, open an experiment…"
-                  className="h-14 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-muted focus-visible:outline-none"
+                  className="h-14 flex-1 bg-transparent type-body-lg text-ink outline-none placeholder:text-muted focus-visible:outline-none"
                 />
-                <kbd className="label-mono rounded-[2px] border border-rule px-1.5 py-0.5 text-muted">Esc</kbd>
+                <kbd className="type-label rounded-[2px] border border-rule px-1.5 py-0.5 text-muted">Esc</kbd>
               </div>
 
               <Command.List className="max-h-[min(460px,60vh)] overflow-y-auto px-2 pb-2">
-                <Command.Empty className="px-3 py-8 text-center text-[14px] text-muted">No matches.</Command.Empty>
+                <Command.Empty className="px-3 py-8 text-center type-body text-muted">No matches.</Command.Empty>
 
                 <Command.Group heading="Actions" className={groupClass}>
                   {mode === 'research' && (
@@ -171,8 +177,28 @@ export function CommandPalette() {
                     value={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
                     keywords={['theme', 'dark', 'light', 'appearance']}
                     onSelect={() => run(toggleTheme)}
+                    hint="Shift T"
                   >
                     Switch to {theme === 'light' ? 'dark' : 'light'} theme
+                  </Item>
+                  <Item
+                    value={`Projector mode ${projector ? 'off' : 'on'}`}
+                    keywords={['projector', 'present', 'large', 'contrast', 'zoom']}
+                    onSelect={() => run(toggleProjector)}
+                    hint="Shift P"
+                  >
+                    Turn projector mode {projector ? 'off' : 'on'}
+                  </Item>
+                  <Item
+                    value={`Plain language ${plain ? 'off' : 'on'}`}
+                    keywords={['plain', 'simple', 'explain', 'beginner']}
+                    onSelect={() => run(togglePlain)}
+                    hint="Shift L"
+                  >
+                    Turn plain language {plain ? 'off' : 'on'}
+                  </Item>
+                  <Item value="Keyboard shortcuts" keywords={['keys', 'help', 'hotkeys']} onSelect={() => run(openShortcuts)} hint="?">
+                    Keyboard shortcuts
                   </Item>
                   <Item
                     value={`Switch to ${mode === 'research' ? 'Patient' : 'Research'} mode`}
@@ -213,7 +239,7 @@ export function CommandPalette() {
                   <Command.Group heading={`Recent experiments · ${DATASETS[datasetId].code}`} className={groupClass}>
                     {recent === null ? (
                       <Command.Loading>
-                        <p className="label-mono px-3 py-2.5 text-muted">Loading…</p>
+                        <p className="type-label px-3 py-2.5 text-muted">Loading…</p>
                       </Command.Loading>
                     ) : (
                       recent.map((e) => (
@@ -233,7 +259,7 @@ export function CommandPalette() {
                 )}
               </Command.List>
 
-              <div className="label-mono flex items-center gap-5 border-t border-rule px-5 py-2.5 text-muted">
+              <div className="type-label flex items-center gap-5 border-t border-rule px-5 py-2.5 text-muted">
                 <span>↑↓ Navigate</span>
                 <span>↵ Select</span>
                 <span className="ml-auto">{isMac ? '⌘K' : 'Ctrl K'} Toggle</span>

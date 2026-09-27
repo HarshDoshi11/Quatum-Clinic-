@@ -97,6 +97,9 @@ EXP-2044…2048, Δ −0.007, 1.2%, 4.1%, +6.2%) and that every experiment ID re
 - **Beginner layer:** a *Plain language* toggle in the top bar adds an "In simple words:" line under every section;
   every page has a *What is this? ↗* panel; `?` → *Take the guided tour* walks through the Overview in 8 steps.
   Standing rules for new pages are in [CLAUDE.md](CLAUDE.md).
+- **Readability:** one rem-based type scale (`type-*` utilities, nothing under 12px), muted text ≥ 4.5:1 in both
+  themes. **Projector mode** (`Shift P`, or the palette) scales the UI 115% and boosts contrast.
+- **Keyboard:** `Ctrl K` palette · `Shift T` theme · `Shift L` plain language · `Shift P` projector · `?` all shortcuts.
 
 ## Backend
 

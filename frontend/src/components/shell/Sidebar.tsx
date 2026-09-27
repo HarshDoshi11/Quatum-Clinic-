@@ -17,11 +17,11 @@ function NavItem({ route, active, markerId }: { route: RouteMeta; active: boolea
       <Link
         to={route.path}
         aria-current={active ? 'page' : undefined}
-        className={`group relative flex items-center gap-2 py-[5px] pr-3 text-[13.5px] leading-5 transition-colors duration-200 ${
+        className={`group relative flex items-center gap-2 py-1.5 pr-3 type-ui transition-colors duration-200 ${
           active ? 'text-ink' : 'text-muted hover:text-ink'
         }`}
       >
-        <span className="relative flex h-5 w-6 shrink-0 items-center justify-start" aria-hidden="true">
+        <span className="relative flex h-6 w-6 shrink-0 items-center justify-start self-start" aria-hidden="true">
           {active && (
             <motion.span
               layoutId={markerId}
@@ -30,7 +30,7 @@ function NavItem({ route, active, markerId }: { route: RouteMeta; active: boolea
             />
           )}
         </span>
-        <span className="truncate">{route.label}</span>
+        <span className="min-w-0">{route.label}</span>
       </Link>
     </li>
   )
@@ -78,7 +78,7 @@ export function Sidebar({ mode }: { mode: Mode }) {
               return (
                 <div key={group.numeral} className={i > 0 ? 'border-t border-rule pt-5' : ''}>
                   {/* Numeral sits in the marker column so the title aligns with item labels. */}
-                  <p className="label-mono mb-2 flex gap-2 text-[10.5px] font-medium tracking-[0.08em] text-ink">
+                  <p className="type-label mb-2 flex gap-2 font-medium text-ink">
                     <GroupNumeral numeral={group.numeral} active={groupActive} />
                     <span>{group.title}</span>
                   </p>
@@ -103,14 +103,14 @@ export function Sidebar({ mode }: { mode: Mode }) {
       <div className="border-t border-rule px-5 py-4">
         {mode === 'research' ? (
           <div className="flex items-center justify-between">
-            <span className="label-mono flex items-center gap-2 text-ink">
+            <span className="type-label flex items-center gap-2 text-ink">
               <span className="block h-[6px] w-[6px] bg-ink" aria-hidden="true" />
               System nominal
             </span>
-            <span className="label-mono text-muted">v{APP_VERSION}</span>
+            <span className="type-label text-muted">v{APP_VERSION}</span>
           </div>
         ) : (
-          <p className="text-[13px] leading-5 text-muted">Decision support, not a diagnosis.</p>
+          <p className="type-small text-muted">Decision support, not a diagnosis.</p>
         )}
       </div>
     </nav>

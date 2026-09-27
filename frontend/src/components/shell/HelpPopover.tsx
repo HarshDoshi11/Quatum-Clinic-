@@ -2,8 +2,8 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Term } from '@/components/ui/Term'
+import { SHORTCUTS, useShortcuts } from '@/features/shortcuts/Shortcuts'
 import { useTour } from '@/features/tour/Tour'
-import { modKeyLabel } from '@/lib/platform'
 import { tQuick } from '@/lib/motion'
 import { useDismiss } from '@/lib/useDismiss'
 
@@ -15,11 +15,6 @@ const LEGEND: readonly { swatch: string; label: ReactNode }[] = [
   { swatch: 'bg-risk-high', label: 'Higher risk' },
 ]
 
-const SHORTCUTS: readonly { keys: string; label: string }[] = [
-  { keys: `${modKeyLabel} K`, label: 'Command palette' },
-  { keys: 'Tab', label: 'Move between controls' },
-  { keys: 'Esc', label: 'Close panels' },
-]
 
 /** The app's single help affordance. */
 export function HelpPopover() {
@@ -31,6 +26,7 @@ export function HelpPopover() {
   const dismissRefs = useMemo(() => [buttonRef, panelRef], [])
   useDismiss(dismissRefs, open, close)
   const { startTour } = useTour()
+  const { openShortcuts } = useShortcuts()
 
   return (
     <div className="relative">
@@ -41,7 +37,7 @@ export function HelpPopover() {
         aria-expanded={open}
         aria-controls={open ? panelId : undefined}
         onClick={() => setOpen((o) => !o)}
-        className={`num flex h-8 w-8 items-center justify-center rounded-[2px] border text-[13px] ${
+        className={`num flex h-9 w-9 items-center justify-center rounded-[2px] border type-small ${
           open ? 'border-ink text-ink' : 'border-rule text-muted hover:border-rule-strong hover:text-ink'
         }`}
       >
@@ -58,10 +54,10 @@ export function HelpPopover() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={tQuick}
-            className="absolute top-[calc(100%+6px)] right-0 z-40 w-[320px] rounded-[2px] border border-rule-strong bg-bg p-5"
+            className="absolute top-[calc(100%+6px)] right-0 z-40 w-[23rem] rounded-[2px] border border-rule-strong bg-bg p-5"
           >
-            <p className="font-serif text-[26px] leading-tight">How to read this lab</p>
-            <p className="mt-2 text-[13px] leading-5 text-muted">
+            <p className="type-h2">How to read this lab</p>
+            <p className="mt-2 type-small text-muted">
               Each page answers one question. Read the one-line takeaway above a chart first, then the chart. Dotted
               underlines explain jargon on hover, like <Term>AUC</Term>.
             </p>
@@ -76,27 +72,37 @@ export function HelpPopover() {
               Take the 8-step guided tour →
             </Button>
 
-            <p className="label-mono mt-5 mb-2 text-muted">Colour key</p>
+            <p className="type-label mt-5 mb-2 text-muted">Colour key</p>
             <ul className="flex flex-col gap-1.5">
               {LEGEND.map((item) => (
-                <li key={item.swatch} className="flex items-center gap-3 text-[13px]">
+                <li key={item.swatch} className="flex items-center gap-3 type-small">
                   <span className={`block h-2 w-2 ${item.swatch}`} aria-hidden="true" />
                   {item.label}
                 </li>
               ))}
             </ul>
 
-            <p className="label-mono mt-5 mb-2 text-muted">Keyboard</p>
+            <p className="type-label mt-5 mb-2 text-muted">Keyboard</p>
             <ul className="flex flex-col gap-1.5">
-              {SHORTCUTS.map((s) => (
-                <li key={s.keys} className="flex items-center justify-between text-[13px]">
+              {SHORTCUTS.slice(0, 4).map((s) => (
+                <li key={s.label} className="flex items-center justify-between gap-4 type-small">
                   <span>{s.label}</span>
-                  <kbd className="label-mono rounded-[2px] border border-rule px-1.5 py-0.5 text-muted">{s.keys}</kbd>
+                  <kbd className="type-label shrink-0 rounded-[2px] border border-rule px-1.5 py-0.5 text-muted">{s.keys.join(' ')}</kbd>
                 </li>
               ))}
             </ul>
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false)
+                openShortcuts()
+              }}
+              className="type-label mt-3 text-ink underline-offset-4 hover:underline"
+            >
+              All shortcuts ↗
+            </button>
 
-            <p className="label-mono mt-5 border-t border-rule pt-3 text-muted">Decision support · not a diagnosis</p>
+            <p className="type-label mt-5 border-t border-rule pt-3 text-muted">Decision support · not a diagnosis</p>
           </motion.div>
         )}
       </AnimatePresence>

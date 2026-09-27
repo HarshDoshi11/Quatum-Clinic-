@@ -12,7 +12,7 @@ export function PlainToggle() {
       aria-checked={plain}
       onClick={togglePlain}
       title="Show a plain-language line under every section"
-      className={`label-mono flex h-8 items-center gap-2 rounded-[2px] border px-2.5 whitespace-nowrap ${
+      className={`type-label flex h-8 items-center gap-2 rounded-[2px] border px-2.5 whitespace-nowrap ${
         plain ? 'border-ink text-ink' : 'border-rule text-muted hover:border-rule-strong hover:text-ink'
       }`}
     >
@@ -25,7 +25,7 @@ export function PlainToggle() {
         />
       </span>
       <span>
-        Plain<span className="hidden xl:inline"> language</span>
+        Plain<span className="hidden @min-[70rem]:inline"> language</span>
       </span>
     </button>
   )

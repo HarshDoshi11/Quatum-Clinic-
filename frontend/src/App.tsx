@@ -4,6 +4,7 @@ import { AppShell } from '@/components/shell/AppShell'
 import { ToastProvider } from '@/components/ui/Toast'
 import { CommandPalette } from '@/features/command/CommandPalette'
 import { ExperimentDrawerProvider } from '@/features/experiments/ExperimentDrawer'
+import { ShortcutsProvider } from '@/features/shortcuts/Shortcuts'
 import { TourProvider } from '@/features/tour/Tour'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { Overview } from '@/pages/research/Overview'
@@ -47,10 +48,12 @@ export function App() {
           <ToastProvider>
             <ExperimentDrawerProvider>
               <TourProvider>
-                <AppShell>
-                  <AnimatedRoutes />
-                </AppShell>
-                <CommandPalette />
+                <ShortcutsProvider>
+                  <AppShell>
+                    <AnimatedRoutes />
+                  </AppShell>
+                  <CommandPalette />
+                </ShortcutsProvider>
               </TourProvider>
             </ExperimentDrawerProvider>
           </ToastProvider>

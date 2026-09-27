@@ -11,7 +11,7 @@ interface SectionLabelProps {
 /** Uppercase mono section label: "01 — LATEST FINDINGS". */
 export function SectionLabel({ index, children, className = '', as: Tag = 'p' }: SectionLabelProps) {
   return (
-    <Tag className={`label-mono text-muted ${className}`}>
+    <Tag className={`type-label text-muted ${className}`}>
       {index !== undefined && (
         <>
           <span className="text-ink">{index}</span>

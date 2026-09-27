@@ -6,7 +6,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Term } from '@/components/ui/Term'
 import { BACKENDS, DATASETS, MODELS } from '@/lib/domain'
-import { formatDateTime, formatStd } from '@/lib/format'
+import { formatDateTime, formatDuration, formatMs, formatStd } from '@/lib/format'
 import type { GlossaryKey } from '@/lib/glossary'
 import { useAppActions } from '@/features/actions'
 import { useDataVersion } from '@/state/dataVersion'
@@ -48,15 +48,15 @@ const METRIC_ROWS: { key: keyof ExperimentMetrics; label: ReactNode; format: (m:
   { key: 'accuracy', label: 'Accuracy', format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
   { key: 'sensitivity', label: <Term>Sensitivity</Term>, format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
   { key: 'specificity', label: <Term>Specificity</Term>, format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
-  { key: 'trainTimeS', label: 'Train time', format: (m) => [`${m.mean} s`, `±${m.std} s`] },
-  { key: 'inferenceMs', label: 'Inference', format: (m) => [`${m.mean} ms`, `±${m.std} ms`] },
+  { key: 'trainTimeS', label: 'Train time', format: (m) => [formatDuration(m.mean), `±${formatDuration(m.std)}`] },
+  { key: 'inferenceMs', label: 'Inference', format: (m) => [formatMs(m.mean), `±${formatMs(m.std)}`] },
 ]
 
 function Row({ label, value, term }: { label: string; value: ReactNode; term?: GlossaryKey }) {
   return (
     <div className="flex items-baseline justify-between gap-6 border-b border-rule py-2.5">
-      <dt className="text-[13px] text-muted">{term ? <Term term={term}>{label}</Term> : label}</dt>
-      <dd className="num text-right text-[13px] text-ink">{value}</dd>
+      <dt className="type-ui text-muted">{term ? <Term term={term}>{label}</Term> : label}</dt>
+      <dd className="num text-right type-ui text-ink">{value}</dd>
     </div>
   )
 }
@@ -71,27 +71,27 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
 
   return (
     <div className="px-8 pt-8 pb-10">
-      <p className="label-mono text-muted">
+      <p className="type-label text-muted">
         {exp.kind} · {exp.status} · {DATASETS[exp.dataset].code}
       </p>
       <div className="mt-4 flex items-end gap-4">
-        <h2 className="num text-[44px] leading-none tracking-[-0.02em] text-ink">{exp.id}</h2>
+        <h2 className="type-metric text-ink">{exp.id}</h2>
         <button
           type="button"
           onClick={() => copyExperimentId(exp.id)}
           aria-label={`Copy ${exp.id}`}
-          className="label-mono mb-1 rounded-[2px] border border-rule px-2 py-1 text-muted hover:border-ink hover:text-ink"
+          className="type-label mb-1 rounded-[2px] border border-rule px-2 py-1 text-muted hover:border-ink hover:text-ink"
         >
           Copy ID
         </button>
       </div>
-      <p className="mt-3 font-serif text-[28px] leading-tight text-ink">{exp.title}</p>
-      <p className="label-mono mt-3 text-muted">{formatDateTime(exp.timestamp)} IST</p>
-      {exp.notes && <p className="mt-5 max-w-[46ch] text-[14px] leading-6 text-muted">{exp.notes}</p>}
+      <p className="mt-3 type-h2 text-ink">{exp.title}</p>
+      <p className="type-label mt-3 text-muted">{formatDateTime(exp.timestamp)} IST</p>
+      {exp.notes && <p className="measure mt-5 type-body text-muted">{exp.notes}</p>}
 
       {exp.metrics && (
         <section className="mt-10" aria-label="Metrics">
-          <p className="label-mono mb-3 text-muted">
+          <p className="type-label mb-3 text-muted">
             Metrics · mean ± std over {c.seeds} <Term term="seed">seed{c.seeds > 1 ? 's' : ''}</Term>
           </p>
           <div className="grid grid-cols-2 border-t border-rule">
@@ -99,10 +99,10 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
               const [mean, std] = m.format(exp.metrics![m.key])
               return (
                 <div key={m.key} className={`border-b border-rule py-4 ${i % 2 === 0 ? 'pr-4' : 'border-l pl-4'}`}>
-                  <p className="text-[12.5px] text-muted">{m.label}</p>
-                  <p className="num mt-1.5 text-[26px] leading-none text-ink">
+                  <p className="type-small text-muted">{m.label}</p>
+                  <p className="mt-1.5 type-metric text-ink">
                     {mean}
-                    <span className="ml-2 text-[12px] text-muted">{std}</span>
+                    <span className="ml-2 type-small text-muted">{std}</span>
                   </p>
                 </div>
               )
@@ -112,7 +112,7 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
       )}
 
       <section className="mt-10" aria-label="Configuration">
-        <p className="label-mono mb-1 text-muted">Configuration</p>
+        <p className="type-label mb-1 text-muted">Configuration</p>
         <dl className="border-t border-rule">
           <Row label="Dataset" value={`${DATASETS[c.dataset].name} (${DATASETS[c.dataset].code})`} />
           <Row label="Models" value={c.models.map((m) => MODELS[m].name).join(', ')} />
@@ -129,7 +129,7 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
 
       {quantum && (
         <section className="mt-10" aria-label="Noise parameters">
-          <p className="label-mono mb-1 text-muted">
+          <p className="type-label mb-1 text-muted">
             <Term term="noise">Noise</Term> parameters
           </p>
           {n && (n.gateError2q > 0 || n.t1Us !== null) ? (
@@ -142,7 +142,7 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
               <Row label="Shots" term="shots" value={n.shots?.toLocaleString('en-US') ?? dash} />
             </dl>
           ) : (
-            <p className="border-t border-rule py-3 text-[13px] text-muted">
+            <p className="border-t border-rule py-3 type-ui text-muted">
               Noiseless <Term term="simulator">simulation</Term>.
             </p>
           )}
@@ -204,7 +204,7 @@ function ExperimentDetail({ id, onOpen }: { id: string; onOpen: (id: string) => 
         <Button onClick={rerun} disabled={exp.status !== 'success' || rerunning}>
           {rerunning ? 'Re-running…' : 'Re-run experiment'}
         </Button>
-        <span className="label-mono text-muted">Same config · new ID</span>
+        <span className="type-label text-muted">Same config · new ID</span>
       </div>
     </div>
   )

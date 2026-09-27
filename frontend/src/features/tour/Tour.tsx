@@ -74,8 +74,8 @@ interface Rect {
 }
 
 const PAD = 8
-const CARD_W = 340
-const CARD_H = 210
+const CARD_W = 400
+const CARD_H = 280
 const EDGE = 16
 
 // ─── Context ────────────────────────────────────────────────
@@ -245,14 +245,14 @@ function TourOverlay({ step, setStep, onEnd }: TourOverlayProps) {
               transition={reduced ? { duration: 0 } : { duration: 0.2, ease: easePrecise }}
               aria-live="polite"
             >
-              <p className="label-mono text-muted">
+              <p className="type-label text-muted">
                 <span className="text-accent">
                   Step {step + 1} / {STEPS.length}
                 </span>{' '}
                 — {current.label}
               </p>
-              <p className="mt-3 font-serif text-[24px] leading-tight text-ink">{current.title}</p>
-              <p className="mt-2 text-[14px] leading-6 text-muted">{current.body}</p>
+              <p className="mt-3 type-h2 text-ink">{current.title}</p>
+              <p className="mt-2 type-body text-muted">{current.body}</p>
             </motion.div>
           </AnimatePresence>
           <div className="mt-5 flex items-center gap-2">

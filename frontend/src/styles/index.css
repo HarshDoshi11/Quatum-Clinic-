@@ -39,8 +39,8 @@
     background: var(--bg);
     color: var(--ink);
     font-family: var(--font-sans);
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: var(--type-body);
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -87,15 +87,74 @@
   }
 }
 
-/* Custom utilities (usable with variants, e.g. [&_x]:label-mono). */
-
-/* Uppercase mono label used for section numbers, captions, table heads. */
-@utility label-mono {
+/*
+ * ─── Type scale ───────────────────────────────────────────────
+ * The only font sizes allowed in components (see CLAUDE.md). Serif and mono
+ * roles set their family; sans roles inherit it, so `num type-small` gives
+ * small tabular mono numbers. Uppercase tracking never exceeds 0.06em.
+ */
+@utility type-display {
+  font-family: var(--font-serif);
+  font-size: var(--type-display);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+@utility type-h2 {
+  font-family: var(--font-serif);
+  font-size: var(--type-h2);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+}
+@utility type-metric-xl {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--type-metric-xl);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+@utility type-metric {
+  font-family: var(--font-mono);
+  font-size: var(--type-metric);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+@utility type-body-lg {
+  font-size: var(--type-body-lg);
+  line-height: 1.6;
+}
+@utility type-body {
+  font-size: var(--type-body);
+  line-height: 1.6;
+}
+@utility type-ui {
+  font-size: var(--type-ui);
+  line-height: 1.5;
+}
+@utility type-small {
+  font-size: var(--type-small);
+  line-height: 1.5;
+}
+@utility type-label {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
   line-height: 1.4;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+@utility type-micro {
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Readable line length for running text. */
+@utility measure {
+  max-width: var(--measure);
 }
 
 @utility num {

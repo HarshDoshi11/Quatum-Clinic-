@@ -1,30 +1,22 @@
-/** 'custom' applies no size class — pass one via className. */
-type HeadlineSize = 'xl' | 'lg' | 'md' | 'custom'
-
 interface HeadlineProps {
   /** A string, or an array of lines for forced breaks. */
   children: string | readonly string[]
-  size?: HeadlineSize
+  /**
+   * 'display' uses the display token (clamp 56–96px).
+   * 'custom' keeps the display face but takes its size from className.
+   */
+  size?: 'display' | 'custom'
   as?: 'h1' | 'h2'
   className?: string
   id?: string
 }
 
-const SIZE: Record<HeadlineSize, string> = {
-  xl: 'text-[length:var(--text-display-xl)]',
-  lg: 'text-[length:var(--text-display-lg)]',
-  md: 'text-[length:var(--text-display-md)]',
-  custom: '',
-}
-
-/** Instrument Serif display headline. Always a single ink color. */
-export function Headline({ children, size = 'lg', as: Tag = 'h1', className = '', id }: HeadlineProps) {
+/** Instrument Serif page headline. Always a single ink colour. */
+export function Headline({ children, size = 'display', as: Tag = 'h1', className = '', id }: HeadlineProps) {
   const lines = typeof children === 'string' ? [children] : children
+  const sizeClass = size === 'display' ? 'type-display' : 'font-serif font-normal leading-none tracking-[-0.015em]'
   return (
-    <Tag
-      id={id}
-      className={`font-serif font-normal text-ink leading-[0.95] tracking-[-0.015em] text-balance ${SIZE[size]} ${className}`}
-    >
+    <Tag id={id} className={`${sizeClass} text-balance text-ink ${className}`}>
       {lines.length === 1
         ? lines[0]
         : lines.map((line) => (

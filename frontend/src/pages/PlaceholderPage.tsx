@@ -22,14 +22,14 @@ export function PlaceholderPage({ route, variant = 'research' }: PlaceholderPage
         </PageItem>
 
         <PageItem className="col-span-12 mt-6 grid grid-cols-subgrid">
-          <p className="label-mono col-span-3 text-muted">Status</p>
+          <p className="type-label col-span-3 text-muted">Status</p>
           <div className="col-span-9 flex min-h-[280px] flex-col justify-between border border-dashed border-rule-strong p-6">
-            <p className="max-w-[52ch] text-[15px] leading-6 text-muted">
+            <p className="measure type-body text-muted">
               {variant === 'patient'
                 ? 'This part of the patient view is being prepared.'
                 : 'Layout, data and charts for this page arrive in a later build phase.'}
             </p>
-            <p className="label-mono text-muted">
+            <p className="type-label text-muted">
               Built in phase <span className="num text-ink">{String(route.phase).padStart(2, '0')}</span>
             </p>
           </div>

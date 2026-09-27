@@ -15,7 +15,7 @@ export function ExperimentTag({ id, detail, className = '' }: ExperimentTagProps
       type="button"
       onClick={() => openExperiment(id)}
       aria-label={`Open experiment ${id}${detail ? `, ${detail}` : ''}`}
-      className={`label-mono inline-flex items-center gap-1.5 rounded-[2px] border border-rule px-2 py-1 text-muted hover:border-ink hover:text-ink ${className}`}
+      className={`type-label inline-flex items-center gap-1.5 rounded-[2px] border border-rule px-2 py-1 text-muted hover:border-ink hover:text-ink ${className}`}
     >
       <span className="text-ink">{id}</span>
       {detail && (

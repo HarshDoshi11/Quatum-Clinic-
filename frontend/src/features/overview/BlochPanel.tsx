@@ -1,16 +1,18 @@
 import { motion } from 'motion/react'
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { lazyScene, SceneFrame } from '@/components/three/LazyScene'
 import { AnimatedNumber } from '@/components/ui/Metric'
 import { SegmentedToggle, type SegmentOption } from '@/components/ui/SegmentedToggle'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Slider } from '@/components/ui/Slider'
 import { Term } from '@/components/ui/Term'
+import { formatPercent } from '@/lib/format'
 import { springPrecise } from '@/lib/motion'
 import type { PcaComponent } from '@/types'
 
 // three.js is large; load it only when the Overview renders.
-const BlochSphere = lazy(() => import('./BlochSphere'))
+const BlochSphere = lazyScene(() => import('./BlochSphere'))
 
 const QUBITS = 4
 type QubitId = 'q0' | 'q1' | 'q2' | 'q3'
@@ -35,18 +37,10 @@ function readout(p1: number, noise: number): string {
   return 'This qubit sits near the equator — on its own, this feature doesn’t tip the result either way.'
 }
 
-function SphereFallback() {
-  return (
-    <div className="flex h-full w-full items-center justify-center" aria-hidden="true">
-      <div className="aspect-square w-[62%] rounded-full border border-dashed border-rule-strong motion-safe:animate-pulse" />
-    </div>
-  )
-}
-
 function ProbabilityBar({ label, value }: { label: string; value: number }) {
   return (
-    <div className="grid grid-cols-[64px_1fr_44px] items-center gap-3">
-      <span className="num text-[12px] text-muted">{label}</span>
+    <div className="grid grid-cols-[4.5rem_1fr_4.5rem] items-center gap-3">
+      <span className="num type-small text-muted">{label}</span>
       <span className="relative h-[6px] bg-rule" aria-hidden="true">
         <motion.span
           className="absolute inset-y-0 left-0 block bg-accent"
@@ -55,8 +49,8 @@ function ProbabilityBar({ label, value }: { label: string; value: number }) {
           transition={springPrecise}
         />
       </span>
-      <span className="text-right text-[13px] text-ink">
-        <AnimatedNumber value={value} format={(n) => n.toFixed(2)} from={value} />
+      <span className="text-right type-small text-ink">
+        <AnimatedNumber value={value} format={(n) => formatPercent(n)} from={value} />
       </span>
     </div>
   )
@@ -103,12 +97,12 @@ export function BlochPanel({ pca, sampleEncoding }: BlochPanelProps) {
   return (
     <figure className="flex flex-col" data-tour="bloch" aria-labelledby="fig01-title">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p id="fig01-title" className="label-mono text-ink">
+        <p id="fig01-title" className="type-label text-ink">
           Fig. 01 — One qubit, one patient feature
         </p>
         <SegmentedToggle<QubitId> options={QUBIT_OPTIONS} value={qubit} onChange={setQubit} layoutId="fig01-qubit" ariaLabel="Qubit" size="sm" />
       </div>
-      <p className="label-mono mt-2 min-h-[16px] text-muted" aria-live="polite">
+      <p className="type-label mt-2 min-h-[16px] text-muted" aria-live="polite">
         {component ? (
           <>
             <span className="text-accent">Q{index}</span> · {component.label} · <Term term="pca">PCA</Term> component {component.component} ·{' '}
@@ -120,16 +114,16 @@ export function BlochPanel({ pca, sampleEncoding }: BlochPanelProps) {
       </p>
 
       <div className="relative mx-auto mt-1 aspect-square w-[88%] cursor-grab active:cursor-grabbing">
-        <Suspense fallback={<SphereFallback />}>
+        <SceneFrame label="Loading Bloch sphere">
           <BlochSphere theta={theta} noise={noise} onAngles={onAngles} />
-        </Suspense>
+        </SceneFrame>
       </div>
-      <figcaption className="label-mono text-center text-muted">
+      <figcaption className="type-label text-center text-muted">
         Drag to inspect · θ = <span ref={thetaRef} className="text-ink">{theta.toFixed(2)}</span> · φ ={' '}
         <span ref={phiRef} className="text-ink">0.48</span>
       </figcaption>
 
-      <p className="mt-4 min-h-[48px] text-[15px] leading-6 text-ink" aria-live="polite">
+      <p className="mt-4 min-h-[3.4em] type-body-lg text-ink" aria-live="polite">
         {readout(p1, noise)}
       </p>
 
@@ -149,14 +143,14 @@ export function BlochPanel({ pca, sampleEncoding }: BlochPanelProps) {
           tone="accent"
           disabled={!ready}
           hint={
-            <span className="num text-[12px]">
+            <span className="num type-small">
               <Term term="encoding">Angle encoding</Term> · θ = x · π = {x.toFixed(2)} · π = {theta.toFixed(2)} rad
             </span>
           }
         />
 
         <div>
-          <p className="label-mono mb-2.5 text-muted">
+          <p className="type-label mb-2.5 text-muted">
             <Term term="measurement">Measurement</Term> · {noise === 0 ? 'P(|0⟩) = cos²(θ/2)' : 'P(|0⟩) = (1 + r·cos θ) / 2'}
           </p>
           <div className="flex flex-col gap-2">
@@ -172,17 +166,17 @@ export function BlochPanel({ pca, sampleEncoding }: BlochPanelProps) {
           max={1}
           step={0.01}
           onChange={setNoise}
-          format={(v) => `${Math.round(v * 100)}%`}
-          valueText={(v) => `${Math.round(v * 100)} percent`}
+          format={(v) => formatPercent(v)}
+          valueText={(v) => `${(v * 100).toFixed(1)} percent`}
           disabled={!ready}
           hint={
             <>
               <span className="block">Noise pulls the qubit toward pure randomness.</span>
               <span className="mt-1 flex flex-wrap items-baseline justify-between gap-x-4">
-                <span className="num text-[12px]">
+                <span className="num type-small">
                   Vector length r = 1 − noise = <span className="text-ink">{(1 - noise).toFixed(2)}</span>
                 </span>
-                <Link to="/hardware" className="label-mono text-ink underline-offset-4 hover:underline">
+                <Link to="/hardware" className="type-label text-ink underline-offset-4 hover:underline">
                   Explore in Hardware Reality Lab ↗
                 </Link>
               </span>

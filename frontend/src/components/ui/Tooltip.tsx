@@ -94,9 +94,9 @@ export function Tooltip({ label, content, children, width = 260 }: TooltipProps)
               exit={{ opacity: 0 }}
               transition={tQuick}
               style={{ left: pos.left, top: pos.top, width, translate: pos.above ? '0 -100%' : undefined }}
-              className="pointer-events-none fixed z-[90] block rounded-[2px] bg-ink px-3 py-2 font-sans text-[12.5px] leading-[1.45] font-normal tracking-normal text-bg normal-case"
+              className="pointer-events-none fixed z-[90] block rounded-[2px] bg-ink px-3 py-2 font-sans type-small font-normal tracking-normal text-bg normal-case"
             >
-              {label && <span className="label-mono mb-1 block text-[10px] opacity-60">{label}</span>}
+              {label && <span className="type-label mb-1 block opacity-80">{label}</span>}
               {content}
             </motion.span>
           )}

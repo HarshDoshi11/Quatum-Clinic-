@@ -45,7 +45,7 @@ export function HairlineTable<T>({
   }
 
   return (
-    <table className="w-full border-collapse text-[13px]">
+    <table className="w-full border-collapse type-ui tabular-nums">
       <caption className="sr-only">{caption}</caption>
       <thead>
         <tr className="border-b border-rule-strong">
@@ -54,7 +54,7 @@ export function HairlineTable<T>({
               key={c.key}
               scope="col"
               style={{ width: c.width }}
-              className={`label-mono py-3 pr-4 font-normal text-muted last:pr-0 ${align(c)}`}
+              className={`type-label py-3 pr-4 font-normal text-muted last:pr-0 ${align(c)}`}
             >
               {c.header}
             </th>
@@ -64,9 +64,9 @@ export function HairlineTable<T>({
       <tbody>
         {loading || !rows
           ? Array.from({ length: skeletonRows }, (_, i) => (
-              <tr key={i} className="border-b border-rule">
+              <tr key={i} className="h-11 border-b border-rule">
                 {columns.map((c) => (
-                  <td key={c.key} className={`py-3.5 pr-4 last:pr-0 ${align(c)}`}>
+                  <td key={c.key} className={`py-3 pr-4 last:pr-0 ${align(c)}`}>
                     <Skeleton width={c.align === 'right' ? 5 : 9} />
                   </td>
                 ))}
@@ -88,10 +88,10 @@ export function HairlineTable<T>({
                   aria-label={onRowClick && rowLabel ? rowLabel(row) : undefined}
                   onClick={onRowClick ? () => onRowClick(row) : undefined}
                   onKeyDown={onRowClick ? (e) => onKey(e, row) : undefined}
-                  className={`border-b border-rule ${onRowClick ? 'cursor-pointer hover:bg-surface focus-visible:bg-surface' : ''}`}
+                  className={`h-11 border-b border-rule ${onRowClick ? 'cursor-pointer hover:bg-surface focus-visible:bg-surface' : ''}`}
                 >
                   {columns.map((c) => (
-                    <td key={c.key} className={`py-3.5 pr-4 last:pr-0 ${align(c)} ${c.mono ? 'num' : ''}`}>
+                    <td key={c.key} className={`py-3 pr-4 last:pr-0 ${align(c)} ${c.mono ? 'num' : ''}`}>
                       {c.render(row)}
                     </td>
                   ))}

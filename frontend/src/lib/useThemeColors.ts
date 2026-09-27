@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useProjector } from '@/state/projector'
 import { useTheme } from '@/state/theme'
 
 export interface RGBA {
@@ -34,8 +35,10 @@ function parse(value: string): RGBA {
 /** Resolved design-token colours for canvas/WebGL, recomputed on theme change. */
 export function useThemeColors(): ThemeColors {
   const { theme } = useTheme()
+  const { projector } = useProjector()
   return useMemo(() => {
-    void theme // recompute when the theme (and therefore the CSS variables) changes
+    void theme // recompute when the theme or projector mode (and so the CSS variables) change
+    void projector
     const style = getComputedStyle(document.documentElement)
     const read = (name: string) => parse(style.getPropertyValue(name))
     return {
@@ -46,5 +49,5 @@ export function useThemeColors(): ThemeColors {
       rule: read('--rule'),
       bg: read('--bg'),
     }
-  }, [theme])
+  }, [theme, projector])
 }

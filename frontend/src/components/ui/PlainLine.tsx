@@ -19,8 +19,8 @@ export function PlainLine({ children, className = '' }: { children: ReactNode; c
           transition={{ duration: 0.25, ease: easePrecise }}
           className={`overflow-hidden ${className}`}
         >
-          <span className="block max-w-[72ch] pt-3 text-[14px] leading-6 text-muted">
-            <span className="label-mono mr-2 text-ink">In simple words:</span>
+          <span className="measure block pt-3 type-body text-muted">
+            <span className="type-label mr-2 text-ink">In simple words:</span>
             {children}
           </span>
         </motion.p>

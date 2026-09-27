@@ -22,6 +22,9 @@
           theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
         document.documentElement.dataset.theme = theme;
+        try {
+          if (localStorage.getItem('qc.projector') === 'on') document.documentElement.dataset.projector = 'on';
+        } catch (e) {}
       })();
     </script>
   </head>
