@@ -163,6 +163,31 @@ const SLOPE_2Q: number = (() => {
 const idealSensPct = (dataset: DatasetId): number =>
   noisySimSensPct(dataset) + SLOPE_2Q * NOISE_PROFILES.noisySim.gateError2q + otherNoiseDrop(NOISE_PROFILES.noisySim)
 
+/**
+ * Metrics from an explicit operating point (sensitivity/specificity with their std),
+ * used for QSVM on a hardware backend where the noise model — not the AUC alone —
+ * decides the operating point.
+ */
+export function metricsFromPoint(
+  dataset: DatasetId,
+  auc: number,
+  aucStd: number,
+  point: { sensitivity: number; sensitivityStd: number; specificity: number; specificityStd: number },
+  trainTimeS: number,
+  inferenceMs: number,
+): ExperimentMetrics {
+  const pi = prevalence(dataset)
+  const acc = point.sensitivity * pi + point.specificity * (1 - pi)
+  return {
+    accuracy: { mean: round(acc), std: round(aucStd * 1.2) },
+    sensitivity: { mean: round(point.sensitivity), std: round(point.sensitivityStd, 4) },
+    specificity: { mean: round(point.specificity), std: round(point.specificityStd, 4) },
+    auc: { mean: auc, std: aucStd },
+    trainTimeS: { mean: trainTimeS, std: round(trainTimeS * 0.06, trainTimeS < 1 ? 3 : 1) },
+    inferenceMs: { mean: inferenceMs, std: round(inferenceMs * 0.08, inferenceMs < 1 ? 4 : 2) },
+  }
+}
+
 /** Sensitivity lost (percentage points) to hardware noise, relative to the noiseless circuit. */
 export function noiseDropPct(noise: NoiseParams): number {
   return SLOPE_2Q * noise.gateError2q + otherNoiseDrop(noise)

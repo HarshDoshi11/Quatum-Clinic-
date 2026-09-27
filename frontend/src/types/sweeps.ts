@@ -1,4 +1,5 @@
 import type { Ansatz, ConfigKey, DatasetId, Encoding, Entanglement, ExperimentId, MeanStd, ModelFamily, ModelId } from './common'
+import type { HardwareProfileId } from './hardware'
 
 export type SweepType = 'small-data' | 'scalability' | 'evolution' | 'failure-envelope'
 
@@ -113,17 +114,38 @@ export interface EnvelopeAxis {
   values: number[]
 }
 
+/** A backend's own point at 0% corruption, read from the results store. */
+export interface EnvelopePoint {
+  configKey: ConfigKey
+  noise: number
+  corruption: number
+  sensitivity: number
+  std: number
+  specificity: number
+  auc: number
+  profileName: string
+}
+
+/** One envelope per backend: the 2Q-error axis varies, the backend's other noise stays fixed. */
+export interface EnvelopeProfile {
+  profileId: HardwareProfileId
+  profileName: string
+  /** sensitivity[corruptionIndex][noiseIndex], fraction 0-1. */
+  sensitivity: number[][]
+  /** Seed/shot std for each cell, same shape. */
+  sensitivityStd: number[][]
+  current: EnvelopePoint
+  takeaway: string
+}
+
 export interface FailureEnvelopeSweep extends SweepBase {
   type: 'failure-envelope'
   model: ModelId
   noiseAxis: EnvelopeAxis
   corruptionAxis: EnvelopeAxis
-  /** sensitivity[corruptionIndex][noiseIndex], fraction 0–1. */
-  sensitivity: number[][]
-  /** Seed/shot std for each cell, same shape. */
-  sensitivityStd: number[][]
   threshold: number
-  current: { noise: number; corruption: number; sensitivity: number; std: number; profileName: string }
+  profiles: EnvelopeProfile[]
+  defaultProfileId: HardwareProfileId
 }
 
 export interface SweepResponseMap {

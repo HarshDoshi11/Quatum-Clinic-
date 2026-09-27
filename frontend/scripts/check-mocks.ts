@@ -118,7 +118,20 @@ for (const d of ['wdbc', 'heart'] as const) {
   const custom = noiseRun({ dataset: d, profileId: 'fake-backend-1', noise: { ...NOISE_PROFILES.fakeBackend1, gateError2q: 0.7 } })
   eq(`${d}: edited preset has no store key`, custom.result.configKey, null)
   const env = failureEnvelopeSweep(d)
-  eq(`${d}: envelope "you are here" = FakeBackend-1 run`, [env.current.sensitivity, env.current.std], [fb1.result.sensitivity, fb1.sensitivityStd])
+  const custom2 = noiseRun({ dataset: d, profileId: 'custom', basedOn: 'fake-backend-1', noise: { ...NOISE_PROFILES.fakeBackend1, gateError2q: 0.7 } })
+  check(`${d}: custom run names its origin`, custom2.takeaway.includes('based on FakeBackend-1'), custom2.takeaway)
+  // 15. Every preset: Hardware Lab = Failure Envelope "you are here" = results store.
+  for (const [k, p] of HARDWARE_PROFILES.entries()) {
+    if (p.id === 'custom') continue
+    const ep = env.profiles.find((x) => x.profileId === p.id)
+    const lab = hw[k]
+    const cur = ep?.current
+    eq(`${d}: ${p.name} — Lab = Envelope (sens, std, spec, AUC)`, cur ? [cur.sensitivity, cur.std, cur.specificity, cur.auc] : null, [lab.result.sensitivity, lab.sensitivityStd, lab.result.specificity, lab.result.auc])
+    const stored = result(d, { model: 'qsvm', qubits: 4, encoding: 'angle', circuitDepth: 2, entanglement: 'full', backend: p.id as 'ideal-sim' | 'fake-backend-1' | 'fake-backend-2' })
+    eq(`${d}: ${p.name} — Envelope = store`, cur ? [cur.configKey, cur.sensitivity, cur.auc] : null, [stored.key, stored.metrics.sensitivity.mean, stored.auc.mean])
+    const i = env.noiseAxis.values.indexOf(p.noise.gateError2q)
+    if (i >= 0 && ep) eq(`${d}: ${p.name} — grid cell at (${p.noise.gateError2q}%, 0%) = marker`, ep.sensitivity[0][i], cur?.sensitivity)
+  }
   check(`${d}: T2 sweep carries ±std`, fb1.sensitivityVsT2.every((p) => p.std > 0))
 }
 
@@ -136,7 +149,9 @@ check('recent-run AUCs come from the store', ov.recentExperiments.every((e) => e
 eq('WDBC findings: noise tolerance and abstain rate', [ov.findings[1].value, ov.findings[2].value], ['1.2%', '4.1%'])
 const at12 = noiseRun({ dataset: 'wdbc', profileId: 'custom', noise: { ...NOISE_PROFILES.fakeBackend1, gateError2q: 1.2 } })
 eq('WDBC sensitivity at 1.2% 2Q error = 85.0%', (at12.result.sensitivity * 100).toFixed(1), '85.0')
-eq('failure envelope "you are here" = FakeBackend-1', failureEnvelopeSweep('wdbc').current.sensitivity, noiseRun({ dataset: 'wdbc', profileId: 'fake-backend-1', noise: NOISE_PROFILES.fakeBackend1 }).result.sensitivity)
+const fb1Env = failureEnvelopeSweep('wdbc').profiles.find((x) => x.profileId === 'fake-backend-1')?.current
+const fb1Lab = noiseRun({ dataset: 'wdbc', profileId: 'fake-backend-1', noise: NOISE_PROFILES.fakeBackend1 })
+eq('WDBC FakeBackend-1 = 82.6% ±1.8 in Lab and Envelope', [fb1Lab.result.sensitivity, fb1Lab.sensitivityStd, fb1Env?.sensitivity, fb1Env?.std].map((v) => ((v ?? 0) * 100).toFixed(1)), ['82.6', '1.8', '82.6', '1.8'])
 const tr = trust('wdbc')
 eq('trust: 7 of 171 abstained, 0 high-confidence misses', [tr.abstained, tr.testPatients, tr.highConfidenceMisses], [7, 171, 0])
 const schema = featureSchema('wdbc')

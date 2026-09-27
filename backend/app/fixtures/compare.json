@@ -52,11 +52,11 @@
           },
           "sensitivity": {
             "mean": 0.945,
-            "std": 0.011
+            "std": 0.0127
           },
           "specificity": {
             "mean": 0.925,
-            "std": 0.009
+            "std": 0.0101
           },
           "auc": {
             "mean": 0.984,
@@ -589,11 +589,11 @@
           },
           "sensitivity": {
             "mean": 0.873,
-            "std": 0.027
+            "std": 0.0127
           },
           "specificity": {
             "mean": 0.739,
-            "std": 0.023
+            "std": 0.0101
           },
           "auc": {
             "mean": 0.896,

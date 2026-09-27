@@ -37,27 +37,31 @@ export function noiseRun(req: NoiseRunRequest): NoiseRunResponse {
   const code = DATASETS[dataset].code
   const qsvm = referenceConfig(dataset, 'qsvm')
 
-  const point = (backend: BackendId | null, n: NoiseParams): OperatingPoint => {
-    const op = noisyOperatingPoint(dataset, n)
-    // Preset backends read the store, so the Hardware Lab and every other page agree on the AUC.
-    const stored = backend ? result(dataset, { ...qsvm, backend }) : null
-    return {
-      configKey: stored?.key ?? null,
-      sensitivity: round(op.sensitivity, 4),
-      specificity: round(op.specificity, 4),
-      auc: stored ? stored.auc.mean : round(op.auc),
+  /** Preset backends read the results store verbatim, the same entry the Failure Envelope reads. */
+  const point = (backend: BackendId | null, n: NoiseParams): OperatingPoint & { std: number } => {
+    if (backend) {
+      const r = result(dataset, { ...qsvm, backend })
+      return {
+        configKey: r.key,
+        sensitivity: r.metrics.sensitivity.mean,
+        specificity: r.metrics.specificity.mean,
+        auc: r.auc.mean,
+        std: r.metrics.sensitivity.std,
+      }
     }
+    const op = noisyOperatingPoint(dataset, n)
+    return { configKey: null, sensitivity: round(op.sensitivity), specificity: round(op.specificity), auc: round(op.auc), std: round(noisySensitivityStd(n), 4) }
   }
 
   const preset = PRESET_BACKEND[req.profileId]
   const profile = HARDWARE_PROFILES.find((p) => p.id === req.profileId)
   // A preset only counts as that backend if its parameters were not edited.
   const backend = preset && profile && sameNoise(profile.noise, noise) ? preset : null
-  const reference = point('ideal-sim', NOISE_PROFILES.ideal)
-  const res = point(backend, noise)
-  const std = round(noisySensitivityStd(noise), 4)
+  const { std: _refStd, ...reference } = point('ideal-sim', NOISE_PROFILES.ideal)
+  const { std, ...res } = point(backend, noise)
   const status = safetyStatus(res.sensitivity, std, SAFE_SENSITIVITY)
-  const where = backend && profile ? profile.name : 'these custom settings'
+  const base = HARDWARE_PROFILES.find((p) => p.id === req.basedOn)
+  const where = backend && profile ? profile.name : base && base.id !== 'custom' ? `custom settings based on ${base.name}` : 'these custom settings'
 
   const sweep = T2_SWEEP.map((t2Us) => {
     const n = { ...noise, t2Us }

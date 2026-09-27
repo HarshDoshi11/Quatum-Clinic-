@@ -9,7 +9,7 @@
  */
 import { MODELS } from '../../lib/domain'
 import type { Ansatz, BackendId, ConfigKey, DatasetId, Encoding, Entanglement, ExperimentMetrics, MeanStd, ModelId, NoiseParams } from '../../types'
-import { ANCHORS, NOISE_PROFILES, SEEDS, metricsFor, noiseDropPct, noisyOperatingPoint } from './canon'
+import { ANCHORS, NOISE_PROFILES, SEEDS, metricsFor, metricsFromPoint, noiseDropPct, noisyOperatingPoint, noisySensitivityStd } from './canon'
 import { hashSeed, round, samplesWithStats } from './math'
 
 export interface ModelConfig {
@@ -166,6 +166,24 @@ function aucStd(dataset: DatasetId, c: ModelConfig): number {
   return round(a.aucStd * (1 + (q - 8) * 0.05 + (d - 3) * 0.08), 4)
 }
 
+/**
+ * QSVM on a backend: sensitivity and specificity come from the hardware noise
+ * model, so the Hardware Lab and the Failure Envelope read these exact values.
+ */
+function qsvmMetrics(dataset: DatasetId, c: ModelConfig, auc: number, std: number, trainTimeS: number, inferenceMs: number): ExperimentMetrics {
+  const noise = NOISE_BY_BACKEND[c.backend]
+  const op = noisyOperatingPoint(dataset, noise)
+  const sensStd = noisySensitivityStd(noise)
+  return metricsFromPoint(
+    dataset,
+    auc,
+    std,
+    { sensitivity: op.sensitivity, sensitivityStd: sensStd, specificity: op.specificity, specificityStd: sensStd * 0.8 },
+    trainTimeS,
+    inferenceMs,
+  )
+}
+
 // ─── Store + consistency registry ───────────────────────────
 
 const cache = new Map<ConfigKey, ConfigResult>()
@@ -196,7 +214,10 @@ export function result(dataset: DatasetId, raw: ModelConfig): ConfigResult {
     seeds: samplesWithStats(SEEDS, auc, std, hashSeed(key)).map((v) => round(v, 4)),
     trainTimeS,
     inferenceMs,
-    metrics: metricsFor(dataset, auc, std, trainTimeS, inferenceMs),
+    metrics:
+      config.model === 'qsvm'
+        ? qsvmMetrics(dataset, config, auc, std, trainTimeS, inferenceMs)
+        : metricsFor(dataset, auc, std, trainTimeS, inferenceMs),
   }
   cache.set(key, out)
   return out
@@ -214,14 +235,15 @@ export function bestModel(dataset: DatasetId, family?: 'quantum' | 'classical'):
  * Consistency guard: every (config key → AUC) pair that leaves the mock layer is
  * recorded; a second, different value for the same key is reported.
  */
-const seen = new Map<ConfigKey, number>()
-export function recordConsistency(key: ConfigKey, auc: number, where: string): string | null {
-  const prev = seen.get(key)
+const seen = new Map<string, number>()
+export function recordConsistency(key: ConfigKey, field: string, value: number, where: string): string | null {
+  const id = `${key}#${field}`
+  const prev = seen.get(id)
   if (prev === undefined) {
-    seen.set(key, auc)
+    seen.set(id, value)
     return null
   }
-  return Math.abs(prev - auc) > 1e-9 ? `${key}: ${prev} vs ${auc} (${where})` : null
+  return Math.abs(prev - value) > 1e-9 ? `${key} ${field}: ${prev} vs ${value} (${where})` : null
 }
 
 /** Walks any response object and checks every `{ configKey, auc }` pair it contains. */
@@ -235,9 +257,13 @@ export function checkResponseConsistency(value: unknown, where: string): string[
     if (v && typeof v === 'object') {
       const o = v as Record<string, unknown>
       if (typeof o.configKey === 'string') {
-        const auc = typeof o.auc === 'number' ? o.auc : o.auc && typeof o.auc === 'object' ? (o.auc as MeanStd).mean : undefined
-        if (typeof auc === 'number') {
-          const p = recordConsistency(o.configKey, auc, where)
+        const num = (x: unknown) => (typeof x === 'number' ? x : x && typeof x === 'object' && typeof (x as MeanStd).mean === 'number' ? (x as MeanStd).mean : undefined)
+        const metrics = o.metrics && typeof o.metrics === 'object' ? (o.metrics as Record<string, unknown>) : undefined
+        // AUC and sensitivity must agree wherever a config appears: flat (noise runs, envelope) or nested (experiments, compare rows).
+        for (const field of ['auc', 'sensitivity'] as const) {
+          const value = num(o[field]) ?? num(metrics?.[field])
+          if (value === undefined) continue
+          const p = recordConsistency(o.configKey, field, value, where)
           if (p) problems.push(p)
         }
       }

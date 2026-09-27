@@ -1,6 +1,8 @@
 /**
- * 3D view of the QSVM's circuit: the 4-qubit ZZ feature map, two repetitions,
- * then measurement. Qubits are thin rods, single-qubit gates flat accent
+ * 3D view of the QSVM's kernel circuit: the 4-qubit ZZ feature map U for
+ * patient A (two repetitions), then its inverse U† for patient B (the same
+ * gates in reverse order), then measurement. The probability of reading all
+ * zeros is the kernel value — how similar the two patients are. Qubits are thin rods, single-qubit gates flat accent
  * blocks, CNOTs a control dot + target ring joined by a connector.
  * Noise shows up two ways: gates jitter in proportion to their own error rate
  * (skipped under reduced motion) and fade toward grey; rods fade as T2 shortens.
@@ -15,16 +17,21 @@ import type { NoiseParams } from '@/types'
 
 const QUBITS = 4
 const REPS = 2
-const COL = 0.34
-const ROW = 0.62
+const COL = 0.3
+/** Empty column between U(A) and U†(B), where the divider sits. */
+const GAP = 1
+const ROW = 0.9
 
 type Op =
   | { kind: '1q'; q: number; col: number }
   | { kind: 'cx'; control: number; target: number; col: number }
   | { kind: 'measure'; q: number; col: number }
 
-/** ZZ feature map: H, RZ(x), then CX · RZ · CX on each neighbouring pair; repeated; then measure. */
-function buildOps(): { ops: Op[]; cols: number } {
+/**
+ * ZZ feature map: H, RZ(x), then CX · RZ · CX on each neighbouring pair, repeated.
+ * Disjoint pairs (q0–q1 and q2–q3) share a column, then q1–q2 follows.
+ */
+function featureMap(): { ops: Op[]; cols: number } {
   const ops: Op[] = []
   let col = 0
   for (let r = 0; r < REPS; r++) {
@@ -32,15 +39,37 @@ function buildOps(): { ops: Op[]; cols: number } {
       for (let q = 0; q < QUBITS; q++) ops.push({ kind: '1q', q, col })
       col++
     }
-    for (let i = 0; i < QUBITS - 1; i++) {
-      ops.push({ kind: 'cx', control: i, target: i + 1, col: col++ })
-      ops.push({ kind: '1q', q: i + 1, col: col++ })
-      ops.push({ kind: 'cx', control: i, target: i + 1, col: col++ })
+    for (const starts of [[0, 2], [1]]) {
+      for (const i of starts) ops.push({ kind: 'cx', control: i, target: i + 1, col })
+      col++
+      for (const i of starts) ops.push({ kind: '1q', q: i + 1, col })
+      col++
+      for (const i of starts) ops.push({ kind: 'cx', control: i, target: i + 1, col })
+      col++
     }
   }
-  for (let q = 0; q < QUBITS; q++) ops.push({ kind: 'measure', q, col })
-  return { ops, cols: col + 1 }
+  return { ops, cols: col }
 }
+
+/** U(A), a gap, U†(B) (same gates, reverse order), then measure every qubit. */
+function buildOps() {
+  const u = featureMap()
+  const inverseStart = u.cols + GAP
+  const inverse = u.ops.map((op): Op => ({ ...op, col: inverseStart + (u.cols - 1 - op.col) }))
+  const measureCol = inverseStart + u.cols
+  const ops: Op[] = [...u.ops, ...inverse]
+  for (let q = 0; q < QUBITS; q++) ops.push({ kind: 'measure', q, col: measureCol })
+  return {
+    ops,
+    cols: measureCol + 1,
+    dividerCol: u.cols + (GAP - 1) / 2,
+    halves: [
+      { label: 'U(A) · patient A', col: (u.cols - 1) / 2 },
+      { label: 'U†(B) · patient B', col: inverseStart + (u.cols - 1) / 2 },
+    ],
+  }
+}
+const LAYOUT = buildOps()
 
 const MEASURE_BOX = new THREE.BoxGeometry(0.24, 0.24, 0.06)
 
@@ -66,7 +95,7 @@ function levels(noise: NoiseParams): Levels {
 
 function Circuit({ noise, animate }: { noise: NoiseParams; animate: boolean }) {
   const colors = useThemeColors()
-  const { ops, cols } = useMemo(buildOps, [])
+  const { ops, cols, dividerCol, halves } = LAYOUT
   const lv = levels(noise)
   const xOf = (col: number) => (col - (cols - 1) / 2) * COL
   const length = cols * COL + 0.5
@@ -91,9 +120,26 @@ function Circuit({ noise, animate }: { noise: NoiseParams; animate: boolean }) {
 
   const ink = colors.ink.hex
   const rodOpacity = 0.2 + 0.5 * lv.coherence
+  const top = yOf(0) + 0.42
+  const divider = useMemo(
+    () => new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(xOf(dividerCol), top, 0), new THREE.Vector3(xOf(dividerCol), yOf(QUBITS - 1) - 0.3, 0)]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
 
   return (
     <group>
+      {/* Divider between patient A's encoding and patient B's reversed encoding */}
+      <lineSegments geometry={divider}>
+        <lineBasicMaterial color={ink} transparent opacity={0.45} />
+      </lineSegments>
+      {halves.map((h) => (
+        <Html key={h.label} position={[xOf(h.col), top + 0.18, 0]} center zIndexRange={[10, 0]}>
+          <span className="pointer-events-none block whitespace-nowrap type-label" style={{ color: colors.ink.hex }}>
+            {h.label}
+          </span>
+        </Html>
+      ))}
       {Array.from({ length: QUBITS }, (_, q) => (
         <group key={q} position={[0, yOf(q), 0]}>
           <mesh rotation={[0, 0, Math.PI / 2]}>
@@ -153,7 +199,7 @@ function Circuit({ noise, animate }: { noise: NoiseParams; animate: boolean }) {
 
 const FOV = 34
 /** Half the circuit's width plus room for the qubit labels, in scene units. */
-const HALF_WIDTH = 4.75
+const HALF_WIDTH = (LAYOUT.cols * COL + 0.5) / 2 + 0.7
 
 /** Keeps the whole circuit in frame at any container aspect (narrow columns, projector mode). */
 function FitCamera() {
@@ -176,7 +222,7 @@ export default function CircuitScene({ noise }: { noise: NoiseParams }) {
       camera={{ position: [0.8, 1.4, 10.8], fov: FOV, near: 0.1, far: 60 }}
       gl={{ antialias: true, alpha: true }}
       role="img"
-      aria-label="3D view of the 4-qubit ZZ feature-map circuit; gates shake as hardware noise increases"
+      aria-label="3D view of the 4-qubit QSVM kernel circuit: the ZZ feature map for patient A, then the same gates in reverse for patient B, then measurement; gates shake as hardware noise increases"
       style={{ touchAction: 'none' }}
     >
       <FitCamera />

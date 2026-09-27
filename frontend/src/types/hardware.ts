@@ -17,6 +17,8 @@ export interface NoiseRunRequest {
   dataset: DatasetId
   profileId: HardwareProfileId
   noise: NoiseParams
+  /** For custom settings: the preset they were edited from (used in the wording). */
+  basedOn?: HardwareProfileId
 }
 
 /** All values are fractions (0–1). */

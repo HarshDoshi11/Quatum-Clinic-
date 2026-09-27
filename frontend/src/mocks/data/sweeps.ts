@@ -4,15 +4,20 @@
  */
 import { DATASETS, MODELS, trainSize } from '../../lib/domain'
 import type {
+  BackendId,
   CircuitConfig,
   Crossover,
   DatasetId,
   Encoding,
   Entanglement,
+  EnvelopePoint,
+  EnvelopeProfile,
   EvolutionSweep,
   FailureEnvelopeSweep,
+  HardwareProfileId,
   LearningSeries,
   ModelId,
+  NoiseParams,
   ScalabilityPoint,
   ScalabilitySweep,
   SmallDataSweep,
@@ -21,7 +26,7 @@ import { envelopeSentence } from '../../lib/safety'
 import { NOISE_PROFILES, SAFE_SENSITIVITY, SEEDS, noisyOperatingPoint, noisySensitivityStd } from './canon'
 import { EXPERIMENT_IDS } from './ids'
 import { round } from './math'
-import { bestModel, referenceResult, result } from './results'
+import { bestModel, referenceConfig, referenceResult, result } from './results'
 
 const pooled = (a: number, b: number) => Math.sqrt(a ** 2 + b ** 2)
 
@@ -260,36 +265,58 @@ export function evolutionSweep(dataset: DatasetId): EvolutionSweep {
 
 // ─── Failure envelope ───────────────────────────────────────
 
+/** Backends with an envelope: the 2Q-error axis varies, each backend's other noise stays fixed. */
+const ENVELOPE_PROFILES: { id: HardwareProfileId; name: string; backend: BackendId; noise: NoiseParams }[] = [
+  { id: 'ideal-sim', name: 'Ideal Sim', backend: 'ideal-sim', noise: NOISE_PROFILES.ideal },
+  { id: 'fake-backend-1', name: 'FakeBackend-1', backend: 'fake-backend-1', noise: NOISE_PROFILES.fakeBackend1 },
+  { id: 'fake-backend-2', name: 'FakeBackend-2', backend: 'fake-backend-2', noise: NOISE_PROFILES.fakeBackend2 },
+]
+
 export function failureEnvelopeSweep(dataset: DatasetId): FailureEnvelopeSweep {
-  const noiseValues = Array.from({ length: 13 }, (_, i) => round(i * 0.25, 2)) // 0–3% two-qubit error
-  const corruptionValues = Array.from({ length: 13 }, (_, i) => round(i * 2.5, 1)) // 0–30% corrupted values
-  const fb1 = NOISE_PROFILES.fakeBackend1
-  const sensitivity = corruptionValues.map((corr) =>
-    noiseValues.map((e2) => round(noisyOperatingPoint(dataset, { ...fb1, gateError2q: e2 }, corr).sensitivity, 4)),
-  )
-  // Shot/seed noise depends on the hardware noise, not on data corruption.
-  const sensitivityStd = corruptionValues.map(() => noiseValues.map((e2) => round(noisySensitivityStd({ ...fb1, gateError2q: e2 }), 4)))
-  const currentOp = noisyOperatingPoint(dataset, fb1, 0)
-  const current = {
-    noise: fb1.gateError2q,
-    corruption: 0,
-    sensitivity: round(currentOp.sensitivity, 4),
-    std: round(noisySensitivityStd(fb1), 4),
-    profileName: 'FakeBackend-1',
-  }
+  const noiseValues = Array.from({ length: 13 }, (_, i) => round(i * 0.25, 2)) // 0-3% two-qubit error
+  const corruptionValues = Array.from({ length: 13 }, (_, i) => round(i * 2.5, 1)) // 0-30% corrupted values
+  const qsvm = referenceConfig(dataset, 'qsvm')
+
+  const profiles: EnvelopeProfile[] = ENVELOPE_PROFILES.map((p) => {
+    // Same rounding as the results store (3 decimals), so the grid cell at the backend's own
+    // 2Q error and 0% corruption equals its store entry exactly.
+    const sensitivity = corruptionValues.map((corr) =>
+      noiseValues.map((e2) => round(noisyOperatingPoint(dataset, { ...p.noise, gateError2q: e2 }, corr).sensitivity)),
+    )
+    const sensitivityStd = corruptionValues.map(() => noiseValues.map((e2) => round(noisySensitivityStd({ ...p.noise, gateError2q: e2 }), 4)))
+    const stored = result(dataset, { ...qsvm, backend: p.backend })
+    const current: EnvelopePoint = {
+      configKey: stored.key,
+      noise: p.noise.gateError2q,
+      corruption: 0,
+      sensitivity: stored.metrics.sensitivity.mean,
+      std: stored.metrics.sensitivity.std,
+      specificity: stored.metrics.specificity.mean,
+      auc: stored.auc.mean,
+      profileName: p.name,
+    }
+    return {
+      profileId: p.id,
+      profileName: p.name,
+      sensitivity,
+      sensitivityStd,
+      current,
+      takeaway: envelopeSentence(sensitivity, sensitivityStd, SAFE_SENSITIVITY, current),
+    }
+  })
+  const defaultProfile = profiles.find((p) => p.profileId === 'fake-backend-1') ?? profiles[0]
 
   return {
     type: 'failure-envelope',
     dataset,
     experimentId: EXPERIMENT_IDS[dataset].noiseSweep,
-    evaluation: `${SEEDS} seeds · held-out 30% · FakeBackend-1 noise · ${DATASETS[dataset].code}`,
+    evaluation: `${SEEDS} seeds · held-out 30% · QSVM 4q · ${DATASETS[dataset].code}`,
     model: 'qsvm',
     noiseAxis: { label: 'Two-qubit gate error', unit: '%', values: noiseValues },
-    corruptionAxis: { label: 'Data corruption', unit: '%', values: corruptionValues },
-    sensitivity,
-    sensitivityStd,
+    corruptionAxis: { label: 'Corrupted patient values', unit: '%', values: corruptionValues },
     threshold: SAFE_SENSITIVITY,
-    current,
-    takeaway: envelopeSentence(sensitivity, sensitivityStd, SAFE_SENSITIVITY, current),
+    profiles,
+    defaultProfileId: defaultProfile.profileId,
+    takeaway: defaultProfile.takeaway,
   }
 }

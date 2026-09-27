@@ -1,5 +1,6 @@
 import { useReducedMotion } from 'motion/react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Area, CartesianGrid, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { api, useResource } from '@/api'
 import { ChartFigure } from '@/components/charts/ChartFigure'
@@ -29,7 +30,19 @@ const CircuitScene = lazyScene(() => import('@/features/hardware/CircuitScene'))
 
 const SHOTS = [256, 512, 1024, 2048, 4096, 8192, 16384]
 const T_MAX = 400
-const DEFAULT_PROFILE: HardwareProfileId = 'fake-backend-1'
+type PresetId = Exclude<HardwareProfileId, 'custom'>
+const isPreset = (v: string | null): v is PresetId => v === 'ideal-sim' || v === 'fake-backend-1' || v === 'fake-backend-2'
+
+/** Short names for the "EDITED: …" line under Custom. */
+const PARAM_LABEL: Record<keyof NoiseParams, string> = {
+  t1Us: 'T1',
+  t2Us: 'T2',
+  gateError1q: '1Q error',
+  gateError2q: '2Q error',
+  readoutError: 'readout',
+  shots: 'shots',
+}
+const PARAM_ORDER: (keyof NoiseParams)[] = ['gateError2q', 'gateError1q', 't1Us', 't2Us', 'readoutError', 'shots']
 
 const STATUS_MARK: Record<SafetyStatus, string> = { safe: 'bg-risk-low', borderline: 'bg-risk-mid', unsafe: 'bg-risk-high' }
 
@@ -138,7 +151,13 @@ export function Hardware({ route }: { route: RouteMeta }) {
   const { datasetId } = useDataset()
   const { toast } = useToast()
   const profiles = useResource((signal) => api.getHardwareProfiles({ signal }), [])
-  const [profileId, setProfileId] = useState<HardwareProfileId>(DEFAULT_PROFILE)
+  // ?profile= lets the Failure Envelope deep-link to the same backend.
+  const [params, setParams] = useSearchParams()
+  const requested = params.get('profile')
+  const initialProfile: PresetId = isPreset(requested) ? requested : 'fake-backend-1'
+  const [profileId, setProfileId] = useState<HardwareProfileId>(initialProfile)
+  /** The preset the current settings started from; Custom always has one. */
+  const [baseId, setBaseId] = useState<PresetId>(initialProfile)
   const [noise, setNoise] = useState<NoiseParams | null>(null)
   const [run, setRun] = useState<NoiseRunResponse | null>(null)
   const [ranWith, setRanWith] = useState<string>('')
@@ -147,13 +166,16 @@ export function Hardware({ route }: { route: RouteMeta }) {
 
   const list = profiles.data
   const selected = list?.find((p) => p.id === profileId)
+  const base = list?.find((p) => p.id === baseId)
+  // Edits are derived from the base preset, so moving a slider back removes it from the list.
+  const edits = base && noise ? PARAM_ORDER.filter((k) => noise[k] !== base.noise[k]) : []
 
   const simulate = async (id: HardwareProfileId, params: NoiseParams, quiet = false) => {
     setRunning(true)
     try {
-      const res = await api.runNoise({ dataset: datasetId, profileId: id, noise: params })
+      const res = await api.runNoise({ dataset: datasetId, profileId: id, noise: params, basedOn: id === 'custom' ? baseId : undefined })
       setRun(res)
-      setRanWith(JSON.stringify([datasetId, id, params]))
+      setRanWith(JSON.stringify([datasetId, id, params, baseId]))
       if (!quiet) toast(`Simulation complete · sensitivity ${formatPercent(res.result.sensitivity)} · ${SAFETY_LABEL[res.status]}`, res.status === 'unsafe' ? 'error' : 'accent')
     } catch (error) {
       toast(error instanceof Error ? error.message : 'Simulation failed', 'error')
@@ -165,17 +187,30 @@ export function Hardware({ route }: { route: RouteMeta }) {
   // Load the default profile's noise and show its result straight away (and again on dataset change).
   useEffect(() => {
     if (!list) return
-    const p = list.find((x) => x.id === (firstRun.current ? DEFAULT_PROFILE : profileId)) ?? list[0]
+    // On first load start from ?profile= (or the default); later keep the user's choice.
+    const p = list.find((x) => x.id === (firstRun.current ? initialProfile : profileId)) ?? list[0]
+    const start = firstRun.current || p.id !== 'custom' ? p.noise : (noise ?? p.noise)
     firstRun.current = false
     setProfileId(p.id)
-    setNoise(p.noise)
-    void simulate(p.id, p.noise, true)
+    if (isPreset(p.id)) setBaseId(p.id)
+    setNoise(start)
+    void simulate(p.id, start, true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list, datasetId])
 
   const choose = (p: HardwareProfile) => {
     setProfileId(p.id)
+    if (!isPreset(p.id)) return // Custom keeps the current slider values
+    setBaseId(p.id)
     setNoise(p.noise)
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.set('profile', p.id)
+        return next
+      },
+      { replace: true },
+    )
   }
 
   /** Any slider move makes the settings "Custom", keeping the other values. */
@@ -187,7 +222,7 @@ export function Hardware({ route }: { route: RouteMeta }) {
     setProfileId('custom')
   }
 
-  const dirty = noise !== null && JSON.stringify([datasetId, profileId, noise]) !== ranWith
+  const dirty = noise !== null && JSON.stringify([datasetId, profileId, noise, baseId]) !== ranWith
   const shotsIndex = noise?.shots ? Math.max(0, SHOTS.indexOf(noise.shots)) : SHOTS.length - 1
 
   const t2Columns: Column<NoiseRunResponse['sensitivityVsT2'][number]>[] = [
@@ -243,7 +278,17 @@ export function Hardware({ route }: { route: RouteMeta }) {
                         </span>
                         <span className="min-w-0">
                           <span className="type-ui text-ink">{p.name}</span>
-                          {p.id === 'custom' ? <span className="mt-1 block type-small text-muted">Your slider settings</span> : <ProfileSpecs p={p} />}
+                          {p.id !== 'custom' ? (
+                            <ProfileSpecs p={p} />
+                          ) : on && base ? (
+                            <span className="num mt-1 block type-label text-muted">
+                              Based on {base.name}
+                              {' · '}
+                              {edits.length ? `Edited: ${edits.map((k) => PARAM_LABEL[k]).join(', ')}` : 'No edits yet'}
+                            </span>
+                          ) : (
+                            <span className="mt-1 block type-small text-muted">Your slider settings</span>
+                          )}
                         </span>
                       </button>
                     )
@@ -259,7 +304,7 @@ export function Hardware({ route }: { route: RouteMeta }) {
 
           {/* Circuit + sliders */}
           <div className="col-span-12 lg:col-span-8 xl:col-span-5">
-            <p className="type-label mb-3 text-muted">Fig. 01 — QSVM circuit · ZZ feature map · 4 qubits · 2 reps</p>
+            <p className="type-label mb-3 text-muted">Fig. 01 — QSVM kernel circuit · U(A) then U†(B) · 4 qubits · 2 reps</p>
             <div className="h-[18rem] border border-rule" data-tour="circuit">
               {noise ? (
                 <SceneFrame label="Loading circuit" shape="rect">
@@ -269,7 +314,11 @@ export function Hardware({ route }: { route: RouteMeta }) {
                 <Skeleton width="100%" height="100%" />
               )}
             </div>
-            <p className="mt-2 type-small text-muted">
+            <p className="measure mt-3 type-body text-ink">
+              <Term term="qsvm">QSVM</Term> compares two patients: the circuit encodes patient A, then runs in reverse for patient B. The closer the
+              result is to all-zeros, the more similar they are.
+            </p>
+            <p className="measure mt-2 type-small text-muted">
               Drag to rotate. Blocks are single-qubit gates, dot-and-ring pairs are two-qubit gates, outlined boxes are{' '}
               <Term term="measurement">measurements</Term>. More <Term term="noise">noise</Term> makes gates shake and fade.
             </p>
@@ -337,6 +386,9 @@ export function Hardware({ route }: { route: RouteMeta }) {
                 <p className="measure mt-3 type-body text-ink">
                   <Glossed text={run.takeaway} />
                 </p>
+                <Link to={`/failure?profile=${baseId}`} className="mt-4 inline-block type-label text-ink underline-offset-4 hover:underline">
+                  {profileId === 'custom' ? `${base?.name ?? 'Base'} in` : 'See it in'} the Failure Envelope →
+                </Link>
                 <div className="mt-5">
                   <DeltaMetric label={<Term>Sensitivity</Term>} before={run.reference.sensitivity} after={run.result.sensitivity} kind="pct" />
                   <DeltaMetric label={<Term>Specificity</Term>} before={run.reference.specificity} after={run.result.specificity} kind="pct" />

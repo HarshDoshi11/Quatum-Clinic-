@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { api, useResource } from '@/api'
 import { ChartFigure, type LegendItem } from '@/components/charts/ChartFigure'
 import { C } from '@/components/charts/chartTheme'
@@ -13,10 +14,12 @@ import { SegmentedToggle, type SegmentOption } from '@/components/ui/SegmentedTo
 import { Slider } from '@/components/ui/Slider'
 import { Term } from '@/components/ui/Term'
 import { Heatmap } from '@/features/failure/Heatmap'
-import { formatPercent } from '@/lib/format'
+import { formatAuc, formatPercent } from '@/lib/format'
 import { envelopeCounts, envelopeSentence, safetyStatus, SAFETY_LABEL } from '@/lib/safety'
 import type { RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
+import { useDataVersion } from '@/state/dataVersion'
+import type { HardwareProfileId } from '@/types'
 
 const SurfaceScene = lazyScene(() => import('@/features/failure/SurfaceScene'))
 
@@ -26,6 +29,14 @@ const VIEW_OPTIONS: readonly SegmentOption<View>[] = [
   { value: '2d', label: '2D map' },
 ]
 
+type EnvelopeProfileId = Exclude<HardwareProfileId, 'custom'>
+const PROFILE_OPTIONS: readonly SegmentOption<EnvelopeProfileId>[] = [
+  { value: 'ideal-sim', label: 'Ideal Sim' },
+  { value: 'fake-backend-1', label: 'FakeBackend-1' },
+  { value: 'fake-backend-2', label: 'FakeBackend-2' },
+]
+const isEnvelopeProfile = (v: string | null): v is EnvelopeProfileId => PROFILE_OPTIONS.some((o) => o.value === v)
+
 interface Row {
   corruption: number
   j: number
@@ -33,8 +44,24 @@ interface Row {
 
 export function Failure({ route }: { route: RouteMeta }) {
   const { datasetId } = useDataset()
-  const sweep = useResource((signal) => api.getSweep('failure-envelope', datasetId, { signal }), [datasetId])
+  const { version } = useDataVersion()
+  const sweep = useResource((signal) => api.getSweep('failure-envelope', datasetId, { signal }), [datasetId, version])
   const data = sweep.data
+  // Backend profile: from ?profile= (so the Hardware Lab can deep-link), else the sweep's default.
+  const [params, setParams] = useSearchParams()
+  const requested = params.get('profile')
+  const fallback = data && isEnvelopeProfile(data.defaultProfileId) ? data.defaultProfileId : 'fake-backend-1'
+  const profileId: EnvelopeProfileId = isEnvelopeProfile(requested) ? requested : fallback
+  const profile = data?.profiles.find((p) => p.profileId === profileId) ?? data?.profiles[0]
+  const setProfile = (id: EnvelopeProfileId) =>
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.set('profile', id)
+        return next
+      },
+      { replace: true },
+    )
   const [view, setView] = useState<View>('3d')
   const [threshold, setThreshold] = useState(0.85)
 
@@ -44,13 +71,15 @@ export function Failure({ route }: { route: RouteMeta }) {
   }, [data])
 
   // Default threshold → the API's sentence; any other value → the same shared rule, computed here.
-  const takeaway = data
-    ? Math.abs(threshold - data.threshold) < 1e-9
-      ? data.takeaway
-      : envelopeSentence(data.sensitivity, data.sensitivityStd, threshold, data.current)
-    : undefined
-  const counts = data ? envelopeCounts(data.sensitivity, data.sensitivityStd, threshold) : null
-  const hereStatus = data ? safetyStatus(data.current.sensitivity, data.current.std, threshold) : null
+  const takeaway =
+    data && profile
+      ? Math.abs(threshold - data.threshold) < 1e-9
+        ? profile.takeaway
+        : envelopeSentence(profile.sensitivity, profile.sensitivityStd, threshold, profile.current)
+      : undefined
+  const counts = profile ? envelopeCounts(profile.sensitivity, profile.sensitivityStd, threshold) : null
+  const here = profile?.current
+  const hereStatus = here ? safetyStatus(here.sensitivity, here.std, threshold) : null
 
   const legend: LegendItem[] = [
     { key: 's', label: 'Safe beyond seed noise', color: 'var(--risk-low)', shape: 'square' },
@@ -72,7 +101,7 @@ export function Failure({ route }: { route: RouteMeta }) {
         header: `${x}%`,
         align: 'right',
         mono: true,
-        render: (r) => (data ? (data.sensitivity[r.j][i] * 100).toFixed(1) : ''),
+        render: (r) => (profile ? (profile.sensitivity[r.j][i] * 100).toFixed(1) : ''),
       })),
   ]
 
@@ -97,17 +126,17 @@ export function Failure({ route }: { route: RouteMeta }) {
               <EmptyState tone="error" title="Couldn't load the envelope." body={sweep.error.message} />
             ) : (
               <ChartFigure<Row>
-                label="Fig. 01 — Sensitivity across hardware noise and data corruption"
+                label={`Fig. 01 — Sensitivity across hardware noise and data corruption${profile ? ` · ${profile.profileName}` : ''}`}
                 subtitle={data?.evaluation}
                 takeaway={takeaway}
                 caption={
                   view === '3d'
-                    ? 'Left → right: two-qubit gate error (0–3%). Front → back: share of corrupted patient values (0–30%). Height: sensitivity. Each tile takes the worst status of its four corners, so the map errs on the side of caution. Drag to rotate.'
-                    : 'Each cell is one tested condition. The ink outline traces where sensitivity crosses the threshold.'
+                    ? 'Left → right: two-qubit gate error (0–3%). Back → front: share of corrupted patient values (30% → 0%). Height: sensitivity. The stem marks this backend at its real gate error with clean data. Each tile takes the worst status of its four corners, so the map errs on the side of caution. Drag to rotate.'
+                    : 'Each cell is one tested condition. The ink outline traces where sensitivity crosses the threshold. The ring marks this backend at its real gate error with clean data.'
                 }
                 legend={legend}
                 aside={<SegmentedToggle<View> options={VIEW_OPTIONS} value={view} onChange={setView} layoutId="failure-view" ariaLabel="Envelope view" size="sm" />}
-                loading={!data}
+                loading={!data || !profile}
                 height={view === '3d' ? '30rem' : 'auto'}
                 table={{
                   columns,
@@ -117,21 +146,47 @@ export function Failure({ route }: { route: RouteMeta }) {
                 }}
               >
                 {data &&
+                  profile &&
                   (view === '3d' ? (
-                    <div className="h-full border border-rule">
+                    <div className="h-full border border-rule select-none">
                       <SceneFrame label="Loading 3D envelope" shape="rect">
-                        <SurfaceScene sweep={data} threshold={threshold} />
+                        <SurfaceScene sweep={data} profile={profile} threshold={threshold} />
                       </SceneFrame>
                     </div>
                   ) : (
-                    <Heatmap sweep={data} threshold={threshold} />
+                    <Heatmap sweep={data} profile={profile} threshold={threshold} />
                   ))}
               </ChartFigure>
             )}
           </div>
 
           {/* Controls + readout */}
-          <aside className="flex flex-col gap-8 xl:pt-24" aria-label="Threshold and summary">
+          <aside className="flex flex-col gap-8 xl:pt-24" aria-label="Backend, threshold and summary">
+            <div>
+              <p className="type-label text-muted">
+                <Term term="backend">Backend</Term>
+              </p>
+              <div role="radiogroup" aria-label="Backend profile" className="mt-3 border-t border-rule">
+                {PROFILE_OPTIONS.map((o) => {
+                  const on = o.value === profileId
+                  return (
+                    <button
+                      key={o.value}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      onClick={() => setProfile(o.value)}
+                      className="flex h-11 w-full items-center gap-3 border-b border-rule text-left type-ui text-ink hover:bg-surface"
+                    >
+                      <span className="flex h-[10px] w-[10px] shrink-0 items-center justify-center border border-ink" aria-hidden="true">
+                        {on && <span className="block h-[6px] w-[6px] bg-accent" />}
+                      </span>
+                      {o.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
             <Slider
               label={
                 <>
@@ -147,7 +202,7 @@ export function Failure({ route }: { route: RouteMeta }) {
               valueText={(v) => `${v.toFixed(1)} percent`}
               hint="The lowest share of sick patients the model must catch. Clinics set this; 85% is our default."
             />
-            {data && counts && hereStatus && (
+            {here && counts && hereStatus && (
               <dl className="border-t border-rule">
                 {(['safe', 'borderline', 'unsafe'] as const).map((k) => (
                   <div key={k} className="flex min-h-11 items-center justify-between border-b border-rule py-2">
@@ -158,18 +213,43 @@ export function Failure({ route }: { route: RouteMeta }) {
                     <dd className="num type-ui text-ink">{formatPercent(counts[k] / counts.total)}</dd>
                   </div>
                 ))}
-                <div className="flex min-h-11 items-center justify-between border-b border-rule py-2">
-                  <dt className="type-ui text-ink">You are here · {data.current.profileName}</dt>
-                  <dd className="num type-ui text-ink">
-                    {formatPercent(data.current.sensitivity)}
-                    <span className="ml-1.5 type-small text-muted">±{(data.current.std * 100).toFixed(1)}</span>
+                <div className="border-b border-rule py-3">
+                  <dt className="type-ui text-ink">You are here · {here.profileName}</dt>
+                  <dd className="num mt-1 type-small text-muted">
+                    {here.noise}% 2Q error · {here.corruption}% corrupted
                   </dd>
+                </div>
+                <div className="flex min-h-11 items-center justify-between border-b border-rule py-2">
+                  <dt className="type-ui text-muted">
+                    <Term>Sensitivity</Term>
+                  </dt>
+                  <dd className="num type-ui text-ink">
+                    {formatPercent(here.sensitivity)}
+                    <span className="ml-1.5 type-small text-muted">±{(here.std * 100).toFixed(1)}</span>
+                  </dd>
+                </div>
+                <div className="flex min-h-11 items-center justify-between border-b border-rule py-2">
+                  <dt className="type-ui text-muted">
+                    <Term>Specificity</Term>
+                  </dt>
+                  <dd className="num type-ui text-ink">{formatPercent(here.specificity)}</dd>
+                </div>
+                <div className="flex min-h-11 items-center justify-between border-b border-rule py-2">
+                  <dt className="type-ui text-muted">
+                    <Term>AUC</Term>
+                  </dt>
+                  <dd className="num type-ui text-ink">{formatAuc(here.auc)}</dd>
                 </div>
                 <div className="flex min-h-11 items-center justify-between py-2">
                   <dt className="type-ui text-muted">Status at this threshold</dt>
                   <dd className="type-ui text-ink">{SAFETY_LABEL[hereStatus]}</dd>
                 </div>
               </dl>
+            )}
+            {here && (
+              <Link to={`/hardware?profile=${profileId}`} className="type-label text-ink underline-offset-4 hover:underline">
+                Same run in the Hardware Lab →
+              </Link>
             )}
           </aside>
         </div>
