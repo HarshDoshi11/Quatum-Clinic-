@@ -3,6 +3,7 @@
  * statistics and weights of the mock scoring model.
  * Means / SDs / ranges are the real dataset statistics.
  */
+import { DATASETS } from '../../lib/domain'
 import type { DatasetId, FeatureSchema, FeatureSpec, PatientInput } from '../../types'
 
 export interface ModelFeature extends FeatureSpec {
@@ -12,13 +13,13 @@ export interface ModelFeature extends FeatureSpec {
   weight: number
 }
 
-type Def = Omit<ModelFeature, 'options' | 'modality' | 'immutable' | 'group' | 'plainLabel'> &
-  Partial<Pick<ModelFeature, 'options' | 'modality' | 'immutable' | 'group' | 'plainLabel'>>
+type Def = Omit<ModelFeature, 'options' | 'modality' | 'locked' | 'group' | 'plainLabel'> &
+  Partial<Pick<ModelFeature, 'options' | 'modality' | 'group' | 'plainLabel'>>
 
-const feature = (d: Def): ModelFeature => ({
+/** Locked is never set per feature: it comes from DATASETS[dataset].lockedFeatures. */
+const feature = (d: Def): Omit<ModelFeature, 'locked'> => ({
   options: null,
   modality: null,
-  immutable: false,
   group: 'Measurements',
   plainLabel: d.label,
   ...d,
@@ -26,7 +27,7 @@ const feature = (d: Def): ModelFeature => ({
 
 // ─── WDBC: the ten "mean" cell-nucleus measurements ─────────
 
-const WDBC_FEATURES: ModelFeature[] = [
+const WDBC_FEATURES: Omit<ModelFeature, 'locked'>[] = [
   feature({ key: 'radius_mean', label: 'Radius', plainLabel: 'Cell size (radius)', unit: 'µm', kind: 'continuous', min: 6.98, max: 28.11, step: 0.01, mean: 14.13, sd: 3.52, weight: 0.9, group: 'Size' }),
   feature({ key: 'texture_mean', label: 'Texture', plainLabel: 'Texture variation', unit: null, kind: 'continuous', min: 9.71, max: 39.28, step: 0.01, mean: 19.29, sd: 4.3, weight: 0.45, group: 'Shape & texture' }),
   feature({ key: 'perimeter_mean', label: 'Perimeter', plainLabel: 'Cell outline length', unit: 'µm', kind: 'continuous', min: 43.79, max: 188.5, step: 0.1, mean: 91.97, sd: 24.3, weight: 0.8, group: 'Size' }),
@@ -41,9 +42,9 @@ const WDBC_FEATURES: ModelFeature[] = [
 
 // ─── Heart: the 13 Cleveland attributes ─────────────────────
 
-const HEART_FEATURES: ModelFeature[] = [
-  feature({ key: 'age', label: 'Age', plainLabel: 'Age', unit: 'years', kind: 'integer', min: 29, max: 77, step: 1, mean: 54.4, sd: 9.0, weight: 0.25, immutable: true, group: 'About you', modality: 'demographics' }),
-  feature({ key: 'sex', label: 'Sex', plainLabel: 'Sex', unit: null, kind: 'binary', options: [{ value: 0, label: 'Female' }, { value: 1, label: 'Male' }], min: 0, max: 1, step: 1, mean: 0.68, sd: 0.47, weight: 0.35, immutable: true, group: 'About you', modality: 'demographics' }),
+const HEART_FEATURES: Omit<ModelFeature, 'locked'>[] = [
+  feature({ key: 'age', label: 'Age', plainLabel: 'Age', unit: 'years', kind: 'integer', min: 29, max: 77, step: 1, mean: 54.4, sd: 9.0, weight: 0.25, group: 'About you', modality: 'demographics' }),
+  feature({ key: 'sex', label: 'Sex', plainLabel: 'Sex', unit: null, kind: 'binary', options: [{ value: 0, label: 'Female' }, { value: 1, label: 'Male' }], min: 0, max: 1, step: 1, mean: 0.68, sd: 0.47, weight: 0.35, group: 'About you', modality: 'demographics' }),
   feature({ key: 'trestbps', label: 'Resting BP', plainLabel: 'Resting blood pressure', unit: 'mmHg', kind: 'integer', min: 94, max: 200, step: 1, mean: 131.7, sd: 17.6, weight: 0.2, group: 'About you', modality: 'demographics' }),
   feature({ key: 'cp', label: 'Chest pain type', plainLabel: 'Type of chest pain', unit: null, kind: 'categorical', options: [{ value: 0, label: 'Typical angina' }, { value: 1, label: 'Atypical angina' }, { value: 2, label: 'Non-anginal' }, { value: 3, label: 'Asymptomatic' }], min: 0, max: 3, step: 1, mean: 2.16, sd: 0.96, weight: 0.5, group: 'Symptoms', modality: 'symptoms' }),
   feature({ key: 'restecg', label: 'Resting ECG', plainLabel: 'Resting heart tracing (ECG)', unit: null, kind: 'categorical', options: [{ value: 0, label: 'Normal' }, { value: 1, label: 'ST-T abnormality' }, { value: 2, label: 'LV hypertrophy' }], min: 0, max: 2, step: 1, mean: 0.99, sd: 0.99, weight: 0.15, group: 'Heart tests', modality: 'ecg' }),
@@ -57,7 +58,10 @@ const HEART_FEATURES: ModelFeature[] = [
   feature({ key: 'fbs', label: 'Fasting sugar > 120', plainLabel: 'High fasting blood sugar', unit: null, kind: 'binary', options: [{ value: 0, label: 'No' }, { value: 1, label: 'Yes' }], min: 0, max: 1, step: 1, mean: 0.15, sd: 0.36, weight: 0.05, group: 'Blood tests', modality: 'labs' }),
 ]
 
-export const MODEL_FEATURES: Record<DatasetId, ModelFeature[]> = { wdbc: WDBC_FEATURES, heart: HEART_FEATURES }
+const withLocks = (dataset: DatasetId, defs: Omit<ModelFeature, 'locked'>[]): ModelFeature[] =>
+  defs.map((f) => ({ ...f, locked: DATASETS[dataset].lockedFeatures.includes(f.key) }))
+
+export const MODEL_FEATURES: Record<DatasetId, ModelFeature[]> = { wdbc: withLocks('wdbc', WDBC_FEATURES), heart: withLocks('heart', HEART_FEATURES) }
 
 /** Demo patient; the scoring model is calibrated so this patient scores SAMPLE_PROBABILITY. */
 export const SAMPLE_PATIENTS: Record<DatasetId, PatientInput> = {

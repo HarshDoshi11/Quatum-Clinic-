@@ -29,6 +29,7 @@ const PHRASES: [string, GlossaryKey][] = [
   ['baseline', 'baseline'],
   ['simulator', 'simulator'],
   ['encoding', 'encoding'],
+  ['log-odds', 'log-odds'],
   ['qubits', 'qubit'],
   ['qubit', 'qubit'],
   ['seeds', 'seed'],

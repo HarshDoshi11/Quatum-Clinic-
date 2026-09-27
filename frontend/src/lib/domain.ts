@@ -37,6 +37,10 @@ export interface DatasetMeta {
   positiveLabel: string
   negativeLabel: string
   source: string
+  /** Feature keys a patient can't change (e.g. age, sex); locked in what-if analysis. */
+  lockedFeatures: string[]
+  /** Caption above the what-if sliders on Explain; null for none. */
+  explainCaption: string | null
 }
 
 export const DATASETS: Record<DatasetId, DatasetMeta> = {
@@ -52,6 +56,8 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     positiveLabel: 'Malignant',
     negativeLabel: 'Benign',
     source: 'Wisconsin Diagnostic Breast Cancer, UCI ML Repository',
+    lockedFeatures: [],
+    explainCaption: 'These are measurements of the tumor sample, not things a patient can change. Use this to see what the model pays attention to.',
   },
   heart: {
     id: 'heart',
@@ -65,6 +71,8 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     positiveLabel: 'Disease',
     negativeLabel: 'No disease',
     source: 'Cleveland Heart Disease, UCI ML Repository',
+    lockedFeatures: ['age', 'sex'],
+    explainCaption: 'Age and sex are locked because they can’t be changed. Move the other sliders to see which factors shift the estimate. This is a simulation, not medical advice.',
   },
 }
 

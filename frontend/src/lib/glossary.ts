@@ -50,6 +50,7 @@ export const GLOSSARY = {
   simulator: entry('Simulator', 'Ordinary software that imitates a quantum computer, with or without noise.'),
   'fake backend': entry('Fake backend', 'A simulator loaded with the measured noise of a real quantum chip.'),
   threshold: entry('Safety threshold', 'The lowest sensitivity we accept before calling a setup unsafe for patients.'),
+  'log-odds': entry('Log-odds', 'The model’s internal risk scale: positive pushes toward the disease, negative away from it; +1 roughly triples the odds.'),
   qpu: entry('QPU', 'Quantum Processing Unit: a real quantum chip.'),
 } as const satisfies Record<string, Entry>
 

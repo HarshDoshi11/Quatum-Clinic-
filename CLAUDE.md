@@ -30,6 +30,12 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   Never hard-code a result number in UI copy or in `src/content/`.
 - User actions that other parts of the UI can also trigger go through `useAppActions()` (`src/features/actions.ts`),
   so each action shows the same toast wherever it's triggered.
+- Per-dataset behaviour is declared on the dataset config (`DATASETS` in `src/lib/domain.ts`, e.g. `lockedFeatures`,
+  `explainCaption`) and reaches pages through the API. Never special-case a dataset ID in a page or mock; a new
+  dataset defines its own behaviour by adding a config entry.
+- Every patient input, including what-if changes, goes through the one training pipeline
+  (`src/mocks/data/pipeline.ts`: impute → clip → standardise → PCA → angle encoding) before the model sees it.
+  What-if controls always edit the original features, never PCA components.
 
 ## Results data (required everywhere)
 

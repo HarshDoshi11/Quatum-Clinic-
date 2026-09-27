@@ -3,7 +3,7 @@
  * endpoint (one result per config key), and that every claim respects seed noise.
  * Run: npm run check:mocks
  */
-import { MODEL_ORDER, MODELS } from '../src/lib/domain'
+import { DATASETS, MODEL_ORDER, MODELS } from '../src/lib/domain'
 import type { DatasetId, TrainRequest } from '../src/types'
 import { NOISE_PROFILES } from '../src/mocks/data/canon'
 import { compare } from '../src/mocks/data/compare'
@@ -12,7 +12,8 @@ import { EXPERIMENTS, circuitSearchChild } from '../src/mocks/data/experiments'
 import { featureSchema } from '../src/mocks/data/features'
 import { HARDWARE_PROFILES, noiseRun } from '../src/mocks/data/hardware'
 import { safetyStatus } from '../src/lib/safety'
-import { predict, trust } from '../src/mocks/data/model'
+import { datasetDetail, datasetSummary } from '../src/mocks/data/datasets'
+import { explain, predict, trust } from '../src/mocks/data/model'
 import { overview } from '../src/mocks/data/overview'
 import { patientReport } from '../src/mocks/data/report'
 import { bestModel, checkResponseConsistency, referenceResult, result, trainableParameters } from '../src/mocks/data/results'
@@ -133,6 +134,30 @@ for (const d of ['wdbc', 'heart'] as const) {
     if (i >= 0 && ep) eq(`${d}: ${p.name} — grid cell at (${p.noise.gateError2q}%, 0%) = marker`, ep.sensitivity[0][i], cur?.sensitivity)
   }
   check(`${d}: T2 sweep carries ±std`, fb1.sensitivityVsT2.every((p) => p.std > 0))
+}
+
+// ─── Explain: dataset config + one pipeline ─────────────────
+console.log('\nExplain')
+eq('locked features come from the config (Heart: age, sex; WDBC: none)', { wdbc: DATASETS.wdbc.lockedFeatures, heart: DATASETS.heart.lockedFeatures }, { wdbc: [], heart: ['age', 'sex'] })
+eq('WDBC explain caption', DATASETS.wdbc.explainCaption, 'These are measurements of the tumor sample, not things a patient can change. Use this to see what the model pays attention to.')
+const logit = (p: number) => Math.log(p / (1 - p))
+for (const d of ['wdbc', 'heart'] as const) {
+  const sc = featureSchema(d)
+  const summary = datasetSummary(d)
+  eq(`${d}: schema locks = summary locks = config`, [sc.features.filter((f) => f.locked).map((f) => f.key), summary.lockedFeatures], [DATASETS[d].lockedFeatures, DATASETS[d].lockedFeatures])
+  const ex = explain(d, sc.samplePatient)
+  check(`${d}: locked contributions follow the config`, ex.contributions.every((c) => c.locked === DATASETS[d].lockedFeatures.includes(c.feature)))
+  const sum = ex.contributions.reduce((a, c) => a + c.contribution, 0)
+  check(`${d}: contributions sum to logit(p) − logit(base) (${sum.toFixed(3)})`, Math.abs(sum - (logit(ex.probability) - logit(ex.baseProbability))) < 0.01)
+  eq(`${d}: Explain probability = Predict probability`, ex.probability, predict(d, sc.samplePatient).probability)
+  eq(`${d}: encoding = Data page demo encoding`, ex.encoding.map((c) => c.value), datasetDetail(d).preprocessing.sampleEncoding)
+  // A what-if value beyond the training range is clipped by the pipeline, exactly like training data.
+  const f = sc.features.find((x) => x.kind === 'continuous' && !x.locked)
+  if (f) {
+    const atMax = explain(d, { ...sc.samplePatient, [f.key]: f.max })
+    const beyond = explain(d, { ...sc.samplePatient, [f.key]: f.max * 2 })
+    check(`${d}: what-if ${f.label} beyond range is clipped, not extrapolated`, beyond.probability === atMax.probability && beyond.contributions.find((c) => c.feature === f.key)?.adjustment === 'clipped')
+  }
 }
 
 // ─── Unchanged anchors ──────────────────────────────────────

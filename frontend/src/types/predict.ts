@@ -20,8 +20,8 @@ export interface FeatureSpec {
   min: number
   max: number
   step: number
-  /** Can't be changed in what-if analysis (e.g. age, sex). */
-  immutable: boolean
+  /** Can't be changed in what-if analysis; derived from the dataset config's lockedFeatures. */
+  locked: boolean
   /** Step group for the patient assessment form. */
   group: string
   modality: ModalityId | null
@@ -123,19 +123,44 @@ export interface ExplainRequest {
 export interface FeatureContribution {
   feature: string
   label: string
+  unit: string | null
+  /** Value as entered (null = missing). */
   value: number | null
-  /** Contribution to the log-odds of the positive class. */
+  /** Value the model used after preprocessing (missing → training mean, clipped to the training range). */
+  used: number
+  adjustment: 'imputed' | 'clipped' | null
+  /**
+   * Contribution to the log-odds of the positive class. The model sees only the
+   * PCA components; each component's effect is attributed back to the original
+   * features through the loadings, so contributions sum exactly to
+   * logit(probability) − logit(baseProbability).
+   */
   contribution: number
   direction: 'increases' | 'decreases'
-  immutable: boolean
+  locked: boolean
+}
+
+export interface EncodedComponent {
+  /** 1-based PCA component = qubit index + 1. */
+  component: number
+  label: string
+  /** Angle-encoding input in [0, 1]; higher reads as higher risk. */
+  value: number
 }
 
 export interface ExplainResponse {
   dataset: DatasetId
   model: ModelId
+  experimentId: ExperimentId
+  /** e.g. "QSVM 4Q · IDEAL SIM · WDBC". */
+  evaluation: string
   /** Probability for an average patient. */
   baseProbability: number
   probability: number
   /** Sorted by |contribution|, descending. */
   contributions: FeatureContribution[]
+  /** The patient after the training pipeline: what the circuit actually receives. */
+  encoding: EncodedComponent[]
+  /** Computed one-sentence reading of the contributions. */
+  takeaway: string
 }

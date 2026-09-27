@@ -1,11 +1,14 @@
 /**
- * Mock scoring model: a calibrated linear model over standardised features.
+ * Mock scoring model: a calibrated linear model over the PCA components that
+ * the training pipeline produces (see pipeline.ts). Every input — a new
+ * patient or a what-if change — goes through the same preprocessing and PCA.
  * Deterministic, so Predict, Explain, Trust and the Report always agree.
  */
-import { testSize } from '../../lib/domain'
+import { DATASETS, MODELS, testSize } from '../../lib/domain'
 import type {
   CalibrationBin,
   DatasetId,
+  EncodedComponent,
   ExplainResponse,
   FeatureContribution,
   PatientInput,
@@ -21,13 +24,15 @@ import { EXPERIMENT_IDS } from './ids'
 import { referenceResult } from './results'
 import { MODEL_FEATURES, SAMPLE_PATIENTS, SAMPLE_PROBABILITY, type ModelFeature } from './features'
 import { gaussian, logit, rng, round, sigmoid } from './math'
+import { PCA, PCA_MEANING, preprocess } from './pipeline'
 
 const MODEL = BEST_QUANTUM
 
 const zScore = (f: ModelFeature, x: number | null): number => (x === null ? 0 : (x - f.mean) / f.sd)
 
+/** Model score before calibration: the component weights applied to the patient's PCA components. */
 const rawScore = (dataset: DatasetId, input: PatientInput): number =>
-  MODEL_FEATURES[dataset].reduce((sum, f) => sum + f.weight * zScore(f, input[f.key] ?? null), 0)
+  preprocess(dataset, input).components.reduce((sum, c, k) => sum + PCA[dataset].componentWeights[k] * c, 0)
 
 /** Scale weights so the average patient scores the base rate and the sample patient SAMPLE_PROBABILITY. */
 const calibration = (dataset: DatasetId) => {
@@ -236,28 +241,51 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
   }
 }
 
+/** "Concave points" → "concave points"; acronyms such as "ST depression" keep their capitals. */
+const inSentence = (label: string) => (/^[A-Z][a-z]/.test(label) ? label[0].toLowerCase() + label.slice(1) : label)
+const listOf = (labels: string[]) => (labels.length < 2 ? labels.join('') : `${labels.slice(0, -1).join(', ')} and ${labels[labels.length - 1]}`)
+
+/** Computed reading of the contributions: the strongest pushes up and the strongest pull down. */
+function explainTakeaway(contributions: FeatureContribution[]): string {
+  const ups = contributions.filter((c) => c.contribution > 0).slice(0, 2)
+  const downs = contributions.filter((c) => c.contribution < 0).slice(0, 1)
+  const name = (c: FeatureContribution, i: number) => (i === 0 ? c.label : inSentence(c.label))
+  if (ups.length === 0) return `Every input pulls the estimate down; ${inSentence(downs[0]?.label ?? 'none')} the most.`
+  const up = `${listOf(ups.map(name))} push${ups.length === 1 ? 'es' : ''} the estimate up the most`
+  return downs.length ? `${up}; ${inSentence(downs[0].label)} pulls it down the most.` : `${up}; nothing pulls it down.`
+}
+
 export function explain(dataset: DatasetId, input: PatientInput): ExplainResponse {
   const { bias, scale } = CALIBRATION[dataset]
-  const contributions: FeatureContribution[] = MODEL_FEATURES[dataset]
-    .map((f) => {
-      const value = input[f.key] ?? null
-      const contribution = round(scale * f.weight * zScore(f, value), 4)
+  const pre = preprocess(dataset, input)
+  const weights = PCA[dataset].featureWeights
+  const contributions: FeatureContribution[] = pre.features
+    .map(({ feature: f, raw, used, z, adjustment }, j) => {
+      const contribution = round(scale * weights[j] * z, 4)
       return {
         feature: f.key,
         label: f.label,
-        value,
+        unit: f.unit,
+        value: raw,
+        used: round(used, 4),
+        adjustment,
         contribution,
         direction: contribution >= 0 ? ('increases' as const) : ('decreases' as const),
-        immutable: f.immutable,
+        locked: f.locked,
       }
     })
     .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
+  const encoding: EncodedComponent[] = pre.encoding.map((value, k) => ({ component: k + 1, label: PCA_MEANING[dataset][k].label, value }))
   return {
     dataset,
     model: MODEL,
+    experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
+    evaluation: `${MODELS[MODEL].name} 4q · angle encoding · same pipeline as training · ${DATASETS[dataset].code}`,
     baseProbability: round(sigmoid(bias)),
     probability: round(probability(dataset, input)),
     contributions,
+    encoding,
+    takeaway: explainTakeaway(contributions),
   }
 }
 

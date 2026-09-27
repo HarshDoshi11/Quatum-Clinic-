@@ -5,7 +5,6 @@
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Size",
         "plainLabel": "Cell size (radius)",
         "key": "radius_mean",
@@ -14,12 +13,12 @@
         "kind": "continuous",
         "min": 6.98,
         "max": 28.11,
-        "step": 0.01
+        "step": 0.01,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Shape & texture",
         "plainLabel": "Texture variation",
         "key": "texture_mean",
@@ -28,12 +27,12 @@
         "kind": "continuous",
         "min": 9.71,
         "max": 39.28,
-        "step": 0.01
+        "step": 0.01,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Size",
         "plainLabel": "Cell outline length",
         "key": "perimeter_mean",
@@ -42,12 +41,12 @@
         "kind": "continuous",
         "min": 43.79,
         "max": 188.5,
-        "step": 0.1
+        "step": 0.1,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Size",
         "plainLabel": "Cell area",
         "key": "area_mean",
@@ -56,12 +55,12 @@
         "kind": "continuous",
         "min": 143.5,
         "max": 2501,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Shape & texture",
         "plainLabel": "Edge smoothness",
         "key": "smoothness_mean",
@@ -70,12 +69,12 @@
         "kind": "continuous",
         "min": 0.0526,
         "max": 0.1634,
-        "step": 0.0001
+        "step": 0.0001,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Shape & texture",
         "plainLabel": "Compactness",
         "key": "compactness_mean",
@@ -84,12 +83,12 @@
         "kind": "continuous",
         "min": 0.0194,
         "max": 0.3454,
-        "step": 0.0001
+        "step": 0.0001,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Shape & texture",
         "plainLabel": "Depth of indentations",
         "key": "concavity_mean",
@@ -98,12 +97,12 @@
         "kind": "continuous",
         "min": 0,
         "max": 0.4268,
-        "step": 0.0001
+        "step": 0.0001,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Shape & texture",
         "plainLabel": "Number of indentations",
         "key": "concave_points_mean",
@@ -112,12 +111,12 @@
         "kind": "continuous",
         "min": 0,
         "max": 0.2012,
-        "step": 0.0001
+        "step": 0.0001,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Shape & texture",
         "plainLabel": "Symmetry",
         "key": "symmetry_mean",
@@ -126,12 +125,12 @@
         "kind": "continuous",
         "min": 0.106,
         "max": 0.304,
-        "step": 0.0001
+        "step": 0.0001,
+        "locked": false
       },
       {
         "options": null,
         "modality": null,
-        "immutable": false,
         "group": "Shape & texture",
         "plainLabel": "Edge complexity",
         "key": "fractal_dimension_mean",
@@ -140,7 +139,8 @@
         "kind": "continuous",
         "min": 0.05,
         "max": 0.0974,
-        "step": 0.0001
+        "step": 0.0001,
+        "locked": false
       }
     ],
     "samplePatient": {
@@ -174,7 +174,6 @@
       {
         "options": null,
         "modality": "demographics",
-        "immutable": true,
         "group": "About you",
         "plainLabel": "Age",
         "key": "age",
@@ -183,7 +182,8 @@
         "kind": "integer",
         "min": 29,
         "max": 77,
-        "step": 1
+        "step": 1,
+        "locked": true
       },
       {
         "options": [
@@ -197,7 +197,6 @@
           }
         ],
         "modality": "demographics",
-        "immutable": true,
         "group": "About you",
         "plainLabel": "Sex",
         "key": "sex",
@@ -206,12 +205,12 @@
         "kind": "binary",
         "min": 0,
         "max": 1,
-        "step": 1
+        "step": 1,
+        "locked": true
       },
       {
         "options": null,
         "modality": "demographics",
-        "immutable": false,
         "group": "About you",
         "plainLabel": "Resting blood pressure",
         "key": "trestbps",
@@ -220,7 +219,8 @@
         "kind": "integer",
         "min": 94,
         "max": 200,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": [
@@ -242,7 +242,6 @@
           }
         ],
         "modality": "symptoms",
-        "immutable": false,
         "group": "Symptoms",
         "plainLabel": "Type of chest pain",
         "key": "cp",
@@ -251,7 +250,8 @@
         "kind": "categorical",
         "min": 0,
         "max": 3,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": [
@@ -269,7 +269,6 @@
           }
         ],
         "modality": "ecg",
-        "immutable": false,
         "group": "Heart tests",
         "plainLabel": "Resting heart tracing (ECG)",
         "key": "restecg",
@@ -278,12 +277,12 @@
         "kind": "categorical",
         "min": 0,
         "max": 2,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": null,
         "modality": "ecg",
-        "immutable": false,
         "group": "Heart tests",
         "plainLabel": "ECG change during exercise",
         "key": "oldpeak",
@@ -292,7 +291,8 @@
         "kind": "continuous",
         "min": 0,
         "max": 6.2,
-        "step": 0.1
+        "step": 0.1,
+        "locked": false
       },
       {
         "options": [
@@ -310,7 +310,6 @@
           }
         ],
         "modality": "ecg",
-        "immutable": false,
         "group": "Heart tests",
         "plainLabel": "ECG slope at peak exercise",
         "key": "slope",
@@ -319,12 +318,12 @@
         "kind": "categorical",
         "min": 0,
         "max": 2,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": null,
         "modality": "exercise",
-        "immutable": false,
         "group": "Heart tests",
         "plainLabel": "Highest heart rate in exercise test",
         "key": "thalach",
@@ -333,7 +332,8 @@
         "kind": "integer",
         "min": 71,
         "max": 202,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": [
@@ -347,7 +347,6 @@
           }
         ],
         "modality": "exercise",
-        "immutable": false,
         "group": "Symptoms",
         "plainLabel": "Chest pain during exercise",
         "key": "exang",
@@ -356,7 +355,8 @@
         "kind": "binary",
         "min": 0,
         "max": 1,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": [
@@ -374,7 +374,6 @@
           }
         ],
         "modality": "exercise",
-        "immutable": false,
         "group": "Heart tests",
         "plainLabel": "Heart scan result",
         "key": "thal",
@@ -383,12 +382,12 @@
         "kind": "categorical",
         "min": 0,
         "max": 2,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": null,
         "modality": "exercise",
-        "immutable": false,
         "group": "Heart tests",
         "plainLabel": "Narrowed vessels seen on scan",
         "key": "ca",
@@ -397,12 +396,12 @@
         "kind": "integer",
         "min": 0,
         "max": 3,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": null,
         "modality": "labs",
-        "immutable": false,
         "group": "Blood tests",
         "plainLabel": "Cholesterol",
         "key": "chol",
@@ -411,7 +410,8 @@
         "kind": "integer",
         "min": 126,
         "max": 564,
-        "step": 1
+        "step": 1,
+        "locked": false
       },
       {
         "options": [
@@ -425,7 +425,6 @@
           }
         ],
         "modality": "labs",
-        "immutable": false,
         "group": "Blood tests",
         "plainLabel": "High fasting blood sugar",
         "key": "fbs",
@@ -434,7 +433,8 @@
         "kind": "binary",
         "min": 0,
         "max": 1,
-        "step": 1
+        "step": 1,
+        "locked": false
       }
     ],
     "samplePatient": {

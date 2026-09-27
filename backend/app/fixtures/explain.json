@@ -2,201 +2,320 @@
   "wdbc": {
     "dataset": "wdbc",
     "model": "qsvm",
+    "experimentId": "EXP-2047",
+    "evaluation": "QSVM 4q · angle encoding · same pipeline as training · WDBC",
     "baseProbability": 0.373,
     "probability": 0.82,
     "contributions": [
       {
-        "feature": "concave_points_mean",
-        "label": "Concave points",
-        "value": 0.083,
-        "contribution": 0.5082,
-        "direction": "increases",
-        "immutable": false
-      },
-      {
         "feature": "radius_mean",
         "label": "Radius",
+        "unit": "µm",
         "value": 17.2,
-        "contribution": 0.4126,
+        "used": 17.2,
+        "adjustment": null,
+        "contribution": 0.4334,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "perimeter_mean",
         "label": "Perimeter",
+        "unit": "µm",
         "value": 113,
-        "contribution": 0.3639,
+        "used": 113,
+        "adjustment": null,
+        "contribution": 0.4297,
         "direction": "increases",
-        "immutable": false
+        "locked": false
+      },
+      {
+        "feature": "concave_points_mean",
+        "label": "Concave points",
+        "unit": null,
+        "value": 0.083,
+        "used": 0.083,
+        "adjustment": null,
+        "contribution": 0.4285,
+        "direction": "increases",
+        "locked": false
       },
       {
         "feature": "area_mean",
         "label": "Area",
+        "unit": "µm²",
         "value": 920,
-        "contribution": 0.2772,
+        "used": 920,
+        "adjustment": null,
+        "contribution": 0.3579,
         "direction": "increases",
-        "immutable": false
-      },
-      {
-        "feature": "concavity_mean",
-        "label": "Concavity",
-        "value": 0.142,
-        "contribution": 0.2105,
-        "direction": "increases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "texture_mean",
         "label": "Texture",
+        "unit": null,
         "value": 21.4,
-        "contribution": 0.1161,
+        "used": 21.4,
+        "adjustment": null,
+        "contribution": 0.1338,
         "direction": "increases",
-        "immutable": false
+        "locked": false
+      },
+      {
+        "feature": "concavity_mean",
+        "label": "Concavity",
+        "unit": null,
+        "value": 0.142,
+        "used": 0.142,
+        "adjustment": null,
+        "contribution": 0.0839,
+        "direction": "increases",
+        "locked": false
       },
       {
         "feature": "compactness_mean",
         "label": "Compactness",
+        "unit": null,
         "value": 0.128,
-        "contribution": 0.059,
+        "used": 0.128,
+        "adjustment": null,
+        "contribution": 0.0564,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "smoothness_mean",
         "label": "Smoothness",
+        "unit": null,
         "value": 0.101,
-        "contribution": 0.0514,
+        "used": 0.101,
+        "adjustment": null,
+        "contribution": 0.045,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "symmetry_mean",
         "label": "Symmetry",
+        "unit": null,
         "value": 0.19,
-        "contribution": 0.0253,
+        "used": 0.19,
+        "adjustment": null,
+        "contribution": 0.0362,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "fractal_dimension_mean",
         "label": "Fractal dimension",
+        "unit": null,
         "value": 0.061,
-        "contribution": 0.0133,
+        "used": 0.061,
+        "adjustment": null,
+        "contribution": 0.0327,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       }
-    ]
+    ],
+    "encoding": [
+      {
+        "component": 1,
+        "label": "mostly tumor size",
+        "value": 0.82
+      },
+      {
+        "component": 2,
+        "label": "mostly edge smoothness",
+        "value": 0.54
+      },
+      {
+        "component": 3,
+        "label": "mostly cell texture",
+        "value": 0.56
+      },
+      {
+        "component": 4,
+        "label": "mostly shape symmetry",
+        "value": 0.46
+      }
+    ],
+    "takeaway": "Radius and perimeter push the estimate up the most; nothing pulls it down."
   },
   "heart": {
     "dataset": "heart",
     "model": "qsvm",
+    "experimentId": "EXP-2029",
+    "evaluation": "QSVM 4q · angle encoding · same pipeline as training · UCI",
     "baseProbability": 0.459,
     "probability": 0.82,
     "contributions": [
       {
-        "feature": "thal",
-        "label": "Thallium scan",
-        "value": 2,
-        "contribution": 0.3394,
-        "direction": "increases",
-        "immutable": false
-      },
-      {
         "feature": "exang",
         "label": "Exercise angina",
+        "unit": null,
         "value": 1,
-        "contribution": 0.2947,
+        "used": 1,
+        "adjustment": null,
+        "contribution": 0.4068,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "thalach",
         "label": "Max heart rate",
+        "unit": "bpm",
         "value": 128,
-        "contribution": 0.2383,
+        "used": 128,
+        "adjustment": null,
+        "contribution": 0.2691,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "cp",
         "label": "Chest pain type",
+        "unit": null,
         "value": 3,
-        "contribution": 0.201,
+        "used": 3,
+        "adjustment": null,
+        "contribution": 0.2331,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "oldpeak",
         "label": "ST depression",
+        "unit": "mm",
         "value": 1.8,
-        "contribution": 0.1655,
+        "used": 1.8,
+        "adjustment": null,
+        "contribution": 0.2039,
         "direction": "increases",
-        "immutable": false
-      },
-      {
-        "feature": "ca",
-        "label": "Major vessels",
-        "value": 1,
-        "contribution": 0.1209,
-        "direction": "increases",
-        "immutable": false
-      },
-      {
-        "feature": "sex",
-        "label": "Sex",
-        "value": 1,
-        "contribution": 0.1095,
-        "direction": "increases",
-        "immutable": true
+        "locked": false
       },
       {
         "feature": "slope",
         "label": "ST slope",
+        "unit": null,
         "value": 1,
-        "contribution": 0.1037,
+        "used": 1,
+        "adjustment": null,
+        "contribution": 0.173,
         "direction": "increases",
-        "immutable": false
+        "locked": false
+      },
+      {
+        "feature": "thal",
+        "label": "Thallium scan",
+        "unit": null,
+        "value": 2,
+        "used": 2,
+        "adjustment": null,
+        "contribution": 0.1371,
+        "direction": "increases",
+        "locked": false
       },
       {
         "feature": "age",
         "label": "Age",
+        "unit": "years",
         "value": 58,
-        "contribution": 0.0459,
+        "used": 58,
+        "adjustment": null,
+        "contribution": 0.0811,
         "direction": "increases",
-        "immutable": true
+        "locked": true
       },
       {
         "feature": "trestbps",
         "label": "Resting BP",
+        "unit": "mmHg",
         "value": 140,
-        "contribution": 0.0433,
+        "used": 140,
+        "adjustment": null,
+        "contribution": 0.073,
         "direction": "increases",
-        "immutable": false
+        "locked": false
+      },
+      {
+        "feature": "sex",
+        "label": "Sex",
+        "unit": null,
+        "value": 1,
+        "used": 1,
+        "adjustment": null,
+        "contribution": 0.0546,
+        "direction": "increases",
+        "locked": true
       },
       {
         "feature": "chol",
         "label": "Cholesterol",
+        "unit": "mg/dL",
         "value": 268,
-        "contribution": 0.0283,
+        "used": 268,
+        "adjustment": null,
+        "contribution": 0.0392,
         "direction": "increases",
-        "immutable": false
+        "locked": false
+      },
+      {
+        "feature": "ca",
+        "label": "Major vessels",
+        "unit": "count",
+        "value": 1,
+        "used": 1,
+        "adjustment": null,
+        "contribution": 0.0381,
+        "direction": "increases",
+        "locked": false
       },
       {
         "feature": "fbs",
         "label": "Fasting sugar > 120",
+        "unit": null,
         "value": 0,
-        "contribution": -0.0096,
+        "used": 0,
+        "adjustment": null,
+        "contribution": -0.0281,
         "direction": "decreases",
-        "immutable": false
+        "locked": false
       },
       {
         "feature": "restecg",
         "label": "Resting ECG",
+        "unit": null,
         "value": 1,
-        "contribution": 0.0007,
+        "used": 1,
+        "adjustment": null,
+        "contribution": 0.0008,
         "direction": "increases",
-        "immutable": false
+        "locked": false
       }
-    ]
+    ],
+    "encoding": [
+      {
+        "component": 1,
+        "label": "mostly exercise response",
+        "value": 0.86
+      },
+      {
+        "component": 2,
+        "label": "mostly age and blood pressure",
+        "value": 0.58
+      },
+      {
+        "component": 3,
+        "label": "mostly chest pain type",
+        "value": 0.62
+      },
+      {
+        "component": 4,
+        "label": "mostly cholesterol and blood sugar",
+        "value": 0.57
+      }
+    ],
+    "takeaway": "Exercise angina and max heart rate push the estimate up the most; fasting sugar > 120 pulls it down the most."
   }
 }

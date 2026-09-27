@@ -13,7 +13,9 @@
       "negativeLabel": "Benign",
       "positive": 212,
       "negative": 357
-    }
+    },
+    "lockedFeatures": [],
+    "explainCaption": "These are measurements of the tumor sample, not things a patient can change. Use this to see what the model pays attention to."
   },
   {
     "id": "heart",
@@ -29,6 +31,11 @@
       "negativeLabel": "No disease",
       "positive": 139,
       "negative": 164
-    }
+    },
+    "lockedFeatures": [
+      "age",
+      "sex"
+    ],
+    "explainCaption": "Age and sex are locked because they can’t be changed. Move the other sliders to see which factors shift the estimate. This is a simulation, not medical advice."
   }
 ]

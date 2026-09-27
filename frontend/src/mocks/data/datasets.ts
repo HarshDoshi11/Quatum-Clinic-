@@ -13,10 +13,9 @@ import type {
 } from '../../types'
 import { SELECTED_FEATURES } from './experiments'
 import { EXPERIMENT_IDS } from './ids'
-import { MODEL_FEATURES } from './features'
+import { MODEL_FEATURES, SAMPLE_PATIENTS } from './features'
+import { PCA_DIMS, PCA_MEANING, preprocess } from './pipeline'
 import { gaussian, hashSeed, rng, round } from './math'
-
-const PCA_DIMS = 4
 
 /** Explained-variance ratios of the first 8 components (standardised, selected features). */
 const PCA_EXPLAINED: Record<DatasetId, number[]> = {
@@ -30,36 +29,6 @@ const MISSING: Record<DatasetId, Record<string, number>> = {
 }
 
 const OUTLIERS_CLIPPED: Record<DatasetId, number> = { wdbc: 142, heart: 21 }
-
-/** What each principal component mostly captures (from its loadings), in plain words. */
-const PCA_MEANING: Record<DatasetId, { label: string; drivers: string[] }[]> = {
-  wdbc: [
-    { label: 'mostly tumor size', drivers: ['radius', 'perimeter', 'area', 'concave points'] },
-    { label: 'mostly edge smoothness', drivers: ['smoothness', 'fractal dimension'] },
-    { label: 'mostly cell texture', drivers: ['texture'] },
-    { label: 'mostly shape symmetry', drivers: ['symmetry', 'compactness'] },
-    { label: 'mixed shape detail', drivers: ['concavity', 'compactness'] },
-    { label: 'mixed texture detail', drivers: ['texture', 'smoothness'] },
-    { label: 'residual variation', drivers: [] },
-    { label: 'residual variation', drivers: [] },
-  ],
-  heart: [
-    { label: 'mostly exercise response', drivers: ['max heart rate', 'ST depression', 'exercise angina'] },
-    { label: 'mostly age and blood pressure', drivers: ['age', 'resting BP'] },
-    { label: 'mostly chest pain type', drivers: ['chest pain type', 'ST slope'] },
-    { label: 'mostly cholesterol and blood sugar', drivers: ['cholesterol', 'fasting sugar'] },
-    { label: 'mostly scan findings', drivers: ['thallium scan', 'major vessels'] },
-    { label: 'mostly resting ECG', drivers: ['resting ECG'] },
-    { label: 'mostly sex', drivers: ['sex'] },
-    { label: 'residual variation', drivers: [] },
-  ],
-}
-
-/** Demo patient after PCA, scaled to [0, 1] per qubit (angle encoding input). */
-const SAMPLE_ENCODING: Record<DatasetId, number[]> = {
-  wdbc: [0.68, 0.41, 0.57, 0.52],
-  heart: [0.66, 0.58, 0.72, 0.55],
-}
 
 // ─── Columns ────────────────────────────────────────────────
 
@@ -194,6 +163,8 @@ export function datasetSummary(dataset: DatasetId): DatasetSummary {
       positive: meta.positive,
       negative: meta.negative,
     },
+    lockedFeatures: meta.lockedFeatures,
+    explainCaption: meta.explainCaption,
   }
 }
 
@@ -211,7 +182,7 @@ export function datasetDetail(dataset: DatasetId): DatasetDetail {
       selectedFeatures: SELECTED_NAMES[dataset],
       pcaDims: PCA_DIMS,
       pca: pca(dataset),
-      sampleEncoding: SAMPLE_ENCODING[dataset],
+      sampleEncoding: preprocess(dataset, SAMPLE_PATIENTS[dataset]).encoding,
       experimentId: EXPERIMENT_IDS[dataset].benchmark,
     },
   }
@@ -262,6 +233,9 @@ export function profileCsv(fileName: string, text: string): UploadResponse {
       features: header.length - 1,
       target: target?.name ?? '',
       missingValues: cols.reduce((s, c) => s + c.missing, 0),
+      // An uploaded dataset has no config yet: nothing locked, no caption.
+      lockedFeatures: [],
+      explainCaption: null,
       classBalance: {
         positiveLabel,
         negativeLabel,

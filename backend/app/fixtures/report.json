@@ -21,16 +21,11 @@
           "Data quality: All 10 inputs present and within valid ranges.",
           "Distribution shift (OOD): Patient resembles the training population.",
           "Calibration: At ~86% predicted, 84% of similar test patients were positive.",
-          "Input sensitivity: Small measurement errors move the result by at most 0.9 points.",
+          "Input sensitivity: Small measurement errors move the result by at most 0.7 points.",
           "Hardware sensitivity: On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
         ]
       },
       "influences": [
-        {
-          "label": "Number of indentations",
-          "direction": "increases",
-          "plain": "Your number of indentations pushed the estimate up."
-        },
         {
           "label": "Cell size (radius)",
           "direction": "increases",
@@ -40,6 +35,11 @@
           "label": "Cell outline length",
           "direction": "increases",
           "plain": "Your cell outline length pushed the estimate up."
+        },
+        {
+          "label": "Number of indentations",
+          "direction": "increases",
+          "plain": "Your number of indentations pushed the estimate up."
         },
         {
           "label": "Cell area",
@@ -98,14 +98,14 @@
           "plain": "Your edge smoothness pushed the estimate up."
         },
         {
-          "label": "Number of indentations",
-          "direction": "increases",
-          "plain": "Your number of indentations pushed the estimate up."
-        },
-        {
           "label": "Cell size (radius)",
           "direction": "increases",
           "plain": "Your cell size (radius) pushed the estimate up."
+        },
+        {
+          "label": "Cell outline length",
+          "direction": "increases",
+          "plain": "Your cell outline length pushed the estimate up."
         }
       ],
       "nextSteps": [
@@ -144,16 +144,11 @@
           "Data quality: All 13 inputs present and within valid ranges.",
           "Distribution shift (OOD): Patient resembles the training population.",
           "Calibration: At ~86% predicted, 84% of similar test patients were positive.",
-          "Input sensitivity: Small measurement errors move the result by at most 0.4 points.",
+          "Input sensitivity: Small measurement errors move the result by at most 0.5 points.",
           "Hardware sensitivity: On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
         ]
       },
       "influences": [
-        {
-          "label": "Heart scan result",
-          "direction": "increases",
-          "plain": "Your heart scan result pushed the estimate up."
-        },
         {
           "label": "Chest pain during exercise",
           "direction": "increases",
@@ -168,6 +163,11 @@
           "label": "Type of chest pain",
           "direction": "increases",
           "plain": "Your type of chest pain pushed the estimate up."
+        },
+        {
+          "label": "ECG change during exercise",
+          "direction": "increases",
+          "plain": "Your ecg change during exercise pushed the estimate up."
         }
       ],
       "nextSteps": [
@@ -211,24 +211,24 @@
       },
       "influences": [
         {
-          "label": "Cholesterol",
-          "direction": "increases",
-          "plain": "Your cholesterol pushed the estimate up."
-        },
-        {
           "label": "Resting blood pressure",
           "direction": "increases",
           "plain": "Your resting blood pressure pushed the estimate up."
         },
         {
-          "label": "Heart scan result",
+          "label": "Cholesterol",
           "direction": "increases",
-          "plain": "Your heart scan result pushed the estimate up."
+          "plain": "Your cholesterol pushed the estimate up."
         },
         {
           "label": "Chest pain during exercise",
           "direction": "increases",
           "plain": "Your chest pain during exercise pushed the estimate up."
+        },
+        {
+          "label": "Type of chest pain",
+          "direction": "increases",
+          "plain": "Your type of chest pain pushed the estimate up."
         }
       ],
       "nextSteps": [

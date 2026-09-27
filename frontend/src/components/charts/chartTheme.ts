@@ -16,6 +16,7 @@ export const C = {
   ruleStrong: 'var(--rule-strong)',
   bg: 'var(--bg)',
   riskHigh: 'var(--risk-high)',
+  riskLow: 'var(--risk-low)',
 } as const
 
 export const familyColor = (family: ModelFamily | null): string => (family === 'quantum' ? C.accent : C.classical)

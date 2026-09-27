@@ -35,7 +35,7 @@
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "strong",
-          "reason": "Small measurement errors move the result by at most 0.9 points."
+          "reason": "Small measurement errors move the result by at most 0.7 points."
         },
         {
           "id": "hardware-sensitivity",
@@ -146,7 +146,7 @@
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "strong",
-          "reason": "Small measurement errors move the result by at most 0.4 points."
+          "reason": "Small measurement errors move the result by at most 0.5 points."
         },
         {
           "id": "hardware-sensitivity",

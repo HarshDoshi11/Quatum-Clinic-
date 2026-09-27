@@ -60,6 +60,10 @@ export interface DatasetSummary {
   target: string
   missingValues: number
   classBalance: ClassBalance
+  /** Feature keys a patient can't change; locked in what-if analysis (from the dataset config). */
+  lockedFeatures: string[]
+  /** Caption above the what-if sliders on Explain (from the dataset config); null for none. */
+  explainCaption: string | null
 }
 
 export interface PreprocessingReport {

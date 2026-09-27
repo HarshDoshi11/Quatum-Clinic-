@@ -14,6 +14,8 @@
       "positive": 212,
       "negative": 357
     },
+    "lockedFeatures": [],
+    "explainCaption": "These are measurements of the tumor sample, not things a patient can change. Use this to see what the model pays attention to.",
     "columns": [
       {
         "name": "diagnosis",
@@ -689,10 +691,10 @@
         }
       ],
       "sampleEncoding": [
-        0.68,
-        0.41,
-        0.57,
-        0.52
+        0.82,
+        0.54,
+        0.56,
+        0.46
       ],
       "experimentId": "EXP-2037"
     }
@@ -712,6 +714,11 @@
       "positive": 139,
       "negative": 164
     },
+    "lockedFeatures": [
+      "age",
+      "sex"
+    ],
+    "explainCaption": "Age and sex are locked because they can’t be changed. Move the other sliders to see which factors shift the estimate. This is a simulation, not medical advice.",
     "columns": [
       {
         "name": "age",
@@ -1042,7 +1049,7 @@
           "label": "mostly exercise response",
           "drivers": [
             "max heart rate",
-            "ST depression",
+            "st depression",
             "exercise angina"
           ]
         },
@@ -1053,7 +1060,7 @@
           "label": "mostly age and blood pressure",
           "drivers": [
             "age",
-            "resting BP"
+            "resting bp"
           ]
         },
         {
@@ -1063,7 +1070,7 @@
           "label": "mostly chest pain type",
           "drivers": [
             "chest pain type",
-            "ST slope"
+            "st slope"
           ]
         },
         {
@@ -1092,7 +1099,7 @@
           "cumulative": 0.671,
           "label": "mostly resting ECG",
           "drivers": [
-            "resting ECG"
+            "resting ecg"
           ]
         },
         {
@@ -1113,10 +1120,10 @@
         }
       ],
       "sampleEncoding": [
-        0.66,
+        0.86,
         0.58,
-        0.72,
-        0.55
+        0.62,
+        0.57
       ],
       "experimentId": "EXP-2031"
     }

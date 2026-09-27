@@ -22,7 +22,8 @@ export function Slider({ label, value, min, max, step, onChange, format = String
   const id = useId()
   const fill = ((value - min) / (max - min)) * 100
   return (
-    <div className={disabled ? 'opacity-40' : ''}>
+    // Disabled dims only the track: text keeps full contrast (readability rule).
+    <div>
       <div className="flex items-baseline justify-between gap-4">
         <label htmlFor={id} className="type-label text-muted">
           {label}
@@ -42,7 +43,7 @@ export function Slider({ label, value, min, max, step, onChange, format = String
         onChange={(e) => onChange(Number(e.target.value))}
         aria-valuetext={(valueText ?? format)(value)}
         data-tone={tone}
-        className="qc-range mt-1.5"
+        className="qc-range mt-1.5 disabled:cursor-not-allowed disabled:opacity-40"
         style={{ '--fill': `${fill}%` } as CSSProperties}
       />
       {hint && <div className="mt-1 type-small text-muted">{hint}</div>}

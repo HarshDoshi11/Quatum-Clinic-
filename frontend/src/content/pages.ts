@@ -79,7 +79,7 @@ export const PAGE_CONTENT: Record<ResearchRouteId | PatientRouteId, PageGuide> =
     plain: 'Which of this patient’s results pushed the estimate up, and which pulled it down?',
     shows: 'How much each input moved the prediction, and what-if sliders to explore changes.',
     matters: 'Doctors need to check the model’s reasoning against their own. What-ifs show which factors could change the outlook.',
-    read: 'Bars to the right raise risk, bars to the left lower it. Locked inputs like age cannot be changed. This is a simulation, not advice.',
+    read: 'Bars to the right raise risk, bars to the left lower it. The sliders change the original results; each change goes through the same cleaning and PCA as training. Inputs a patient can’t change are locked. This is a simulation, not advice.',
   },
   'cross-modality': {
     plain: 'Do different kinds of tests (ECG, blood work, symptoms) predict better together than alone?',
