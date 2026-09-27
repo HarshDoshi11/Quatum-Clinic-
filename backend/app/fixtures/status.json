@@ -1,0 +1,64 @@
+{
+  "wdbc": {
+    "dataset": "wdbc",
+    "activeBackend": {
+      "id": "ideal-sim",
+      "kind": "SIM",
+      "mode": "IDEAL",
+      "qubits": 4
+    },
+    "bestQuantum": {
+      "model": "qsvm",
+      "auc": {
+        "mean": 0.914,
+        "std": 0.012
+      },
+      "experimentId": "EXP-2047",
+      "qubits": 4
+    },
+    "bestOverall": {
+      "model": "xgboost",
+      "auc": {
+        "mean": 0.921,
+        "std": 0.009
+      },
+      "experimentId": "EXP-2046"
+    },
+    "lastExperiment": {
+      "id": "EXP-2048",
+      "timestamp": "2026-09-27T14:32:00+05:30"
+    },
+    "updatedAt": "2026-09-27T14:32:00+05:30"
+  },
+  "heart": {
+    "dataset": "heart",
+    "activeBackend": {
+      "id": "ideal-sim",
+      "kind": "SIM",
+      "mode": "IDEAL",
+      "qubits": 4
+    },
+    "bestQuantum": {
+      "model": "qsvm",
+      "auc": {
+        "mean": 0.896,
+        "std": 0.015
+      },
+      "experimentId": "EXP-2029",
+      "qubits": 4
+    },
+    "bestOverall": {
+      "model": "xgboost",
+      "auc": {
+        "mean": 0.903,
+        "std": 0.014
+      },
+      "experimentId": "EXP-2027"
+    },
+    "lastExperiment": {
+      "id": "EXP-2036",
+      "timestamp": "2026-09-25T18:05:00+05:30"
+    },
+    "updatedAt": "2026-09-27T14:32:00+05:30"
+  }
+}

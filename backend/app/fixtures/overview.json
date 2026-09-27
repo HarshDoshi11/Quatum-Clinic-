@@ -1,0 +1,342 @@
+{
+  "wdbc": {
+    "dataset": "wdbc",
+    "status": {
+      "dataset": "wdbc",
+      "activeBackend": {
+        "id": "ideal-sim",
+        "kind": "SIM",
+        "mode": "IDEAL",
+        "qubits": 4
+      },
+      "bestQuantum": {
+        "model": "qsvm",
+        "auc": {
+          "mean": 0.914,
+          "std": 0.012
+        },
+        "experimentId": "EXP-2047",
+        "qubits": 4
+      },
+      "bestOverall": {
+        "model": "xgboost",
+        "auc": {
+          "mean": 0.921,
+          "std": 0.009
+        },
+        "experimentId": "EXP-2046"
+      },
+      "lastExperiment": {
+        "id": "EXP-2048",
+        "timestamp": "2026-09-27T14:32:00+05:30"
+      },
+      "updatedAt": "2026-09-27T14:32:00+05:30"
+    },
+    "findings": [
+      {
+        "id": "advantage",
+        "label": "Quantum vs classical",
+        "value": "Δ −0.007 AUC",
+        "summary": "QSVM 0.914 vs XGBoost 0.921 — within noise across 5 seeds.",
+        "link": {
+          "label": "View advantage",
+          "path": "/advantage"
+        },
+        "experimentId": "EXP-2037"
+      },
+      {
+        "id": "noise",
+        "label": "Noise tolerance",
+        "value": "1.2%",
+        "summary": "Sensitivity holds ≥ 85% up to this two-qubit gate error.",
+        "link": {
+          "label": "View hardware lab",
+          "path": "/hardware"
+        },
+        "experimentId": "EXP-2041"
+      },
+      {
+        "id": "trust",
+        "label": "Trust",
+        "value": "4.1%",
+        "summary": "Of test patients abstained on. Zero high-confidence misses.",
+        "link": {
+          "label": "View trust",
+          "path": "/predict"
+        },
+        "experimentId": "EXP-2047"
+      }
+    ],
+    "backends": [
+      {
+        "id": "ideal-sim",
+        "name": "Ideal Sim",
+        "kind": "simulator",
+        "qubits": 32,
+        "status": "live",
+        "note": "Statevector"
+      },
+      {
+        "id": "noisy-sim",
+        "name": "Noisy Sim",
+        "kind": "simulator",
+        "qubits": 32,
+        "status": "live",
+        "note": "Generic noise model"
+      },
+      {
+        "id": "fake-backend-1",
+        "name": "FakeBackend-1",
+        "kind": "fake-hardware",
+        "qubits": 27,
+        "status": "live",
+        "note": "Device calibration snapshot"
+      },
+      {
+        "id": "ibm-qpu",
+        "name": "IBM QPU",
+        "kind": "hardware",
+        "qubits": 127,
+        "status": "offline",
+        "note": "Awaiting access token"
+      }
+    ],
+    "recentExperiments": [
+      {
+        "id": "EXP-2048",
+        "kind": "run",
+        "title": "VQC · 4q",
+        "dataset": "wdbc",
+        "model": "vqc",
+        "family": "quantum",
+        "backend": "fake-backend-1",
+        "qubits": 4,
+        "auc": 0.902,
+        "timestamp": "2026-09-27T14:32:00+05:30",
+        "status": "complete"
+      },
+      {
+        "id": "EXP-2047",
+        "kind": "run",
+        "title": "QSVM · 4q",
+        "dataset": "wdbc",
+        "model": "qsvm",
+        "family": "quantum",
+        "backend": "noisy-sim",
+        "qubits": 4,
+        "auc": 0.914,
+        "timestamp": "2026-09-27T13:48:00+05:30",
+        "status": "complete"
+      },
+      {
+        "id": "EXP-2046",
+        "kind": "run",
+        "title": "XGBoost",
+        "dataset": "wdbc",
+        "model": "xgboost",
+        "family": "classical",
+        "backend": "cpu",
+        "qubits": null,
+        "auc": 0.921,
+        "timestamp": "2026-09-27T12:16:00+05:30",
+        "status": "complete"
+      },
+      {
+        "id": "EXP-2045",
+        "kind": "run",
+        "title": "VQC · 8q",
+        "dataset": "wdbc",
+        "model": "vqc",
+        "family": "quantum",
+        "backend": "ideal-sim",
+        "qubits": 8,
+        "auc": 0.909,
+        "timestamp": "2026-09-27T11:02:00+05:30",
+        "status": "complete"
+      },
+      {
+        "id": "EXP-2044",
+        "kind": "run",
+        "title": "LogReg",
+        "dataset": "wdbc",
+        "model": "logreg",
+        "family": "classical",
+        "backend": "cpu",
+        "qubits": null,
+        "auc": 0.907,
+        "timestamp": "2026-09-27T09:41:00+05:30",
+        "status": "complete"
+      }
+    ]
+  },
+  "heart": {
+    "dataset": "heart",
+    "status": {
+      "dataset": "heart",
+      "activeBackend": {
+        "id": "ideal-sim",
+        "kind": "SIM",
+        "mode": "IDEAL",
+        "qubits": 4
+      },
+      "bestQuantum": {
+        "model": "qsvm",
+        "auc": {
+          "mean": 0.896,
+          "std": 0.015
+        },
+        "experimentId": "EXP-2029",
+        "qubits": 4
+      },
+      "bestOverall": {
+        "model": "xgboost",
+        "auc": {
+          "mean": 0.903,
+          "std": 0.014
+        },
+        "experimentId": "EXP-2027"
+      },
+      "lastExperiment": {
+        "id": "EXP-2036",
+        "timestamp": "2026-09-25T18:05:00+05:30"
+      },
+      "updatedAt": "2026-09-27T14:32:00+05:30"
+    },
+    "findings": [
+      {
+        "id": "advantage",
+        "label": "Quantum vs classical",
+        "value": "Δ −0.007 AUC",
+        "summary": "QSVM 0.896 vs XGBoost 0.903 — within noise across 5 seeds.",
+        "link": {
+          "label": "View advantage",
+          "path": "/advantage"
+        },
+        "experimentId": "EXP-2031"
+      },
+      {
+        "id": "noise",
+        "label": "Noise tolerance",
+        "value": "0.6%",
+        "summary": "Sensitivity holds ≥ 85% up to this two-qubit gate error.",
+        "link": {
+          "label": "View hardware lab",
+          "path": "/hardware"
+        },
+        "experimentId": "EXP-2035"
+      },
+      {
+        "id": "trust",
+        "label": "Trust",
+        "value": "4.4%",
+        "summary": "Of test patients abstained on. Zero high-confidence misses.",
+        "link": {
+          "label": "View trust",
+          "path": "/predict"
+        },
+        "experimentId": "EXP-2029"
+      }
+    ],
+    "backends": [
+      {
+        "id": "ideal-sim",
+        "name": "Ideal Sim",
+        "kind": "simulator",
+        "qubits": 32,
+        "status": "live",
+        "note": "Statevector"
+      },
+      {
+        "id": "noisy-sim",
+        "name": "Noisy Sim",
+        "kind": "simulator",
+        "qubits": 32,
+        "status": "live",
+        "note": "Generic noise model"
+      },
+      {
+        "id": "fake-backend-1",
+        "name": "FakeBackend-1",
+        "kind": "fake-hardware",
+        "qubits": 27,
+        "status": "live",
+        "note": "Device calibration snapshot"
+      },
+      {
+        "id": "ibm-qpu",
+        "name": "IBM QPU",
+        "kind": "hardware",
+        "qubits": 127,
+        "status": "offline",
+        "note": "Awaiting access token"
+      }
+    ],
+    "recentExperiments": [
+      {
+        "id": "EXP-2030",
+        "kind": "run",
+        "title": "VQC · 4q",
+        "dataset": "heart",
+        "model": "vqc",
+        "family": "quantum",
+        "backend": "fake-backend-1",
+        "qubits": 4,
+        "auc": 0.881,
+        "timestamp": "2026-09-25T12:20:00+05:30",
+        "status": "complete"
+      },
+      {
+        "id": "EXP-2029",
+        "kind": "run",
+        "title": "QSVM · 4q",
+        "dataset": "heart",
+        "model": "qsvm",
+        "family": "quantum",
+        "backend": "noisy-sim",
+        "qubits": 4,
+        "auc": 0.896,
+        "timestamp": "2026-09-25T11:35:00+05:30",
+        "status": "complete"
+      },
+      {
+        "id": "EXP-2028",
+        "kind": "run",
+        "title": "VQC · 8q",
+        "dataset": "heart",
+        "model": "vqc",
+        "family": "quantum",
+        "backend": "ideal-sim",
+        "qubits": 8,
+        "auc": 0.889,
+        "timestamp": "2026-09-25T10:50:00+05:30",
+        "status": "complete"
+      },
+      {
+        "id": "EXP-2027",
+        "kind": "run",
+        "title": "XGBoost",
+        "dataset": "heart",
+        "model": "xgboost",
+        "family": "classical",
+        "backend": "cpu",
+        "qubits": null,
+        "auc": 0.903,
+        "timestamp": "2026-09-25T10:05:00+05:30",
+        "status": "complete"
+      },
+      {
+        "id": "EXP-2026",
+        "kind": "run",
+        "title": "LogReg",
+        "dataset": "heart",
+        "model": "logreg",
+        "family": "classical",
+        "backend": "cpu",
+        "qubits": null,
+        "auc": 0.884,
+        "timestamp": "2026-09-25T09:40:00+05:30",
+        "status": "complete"
+      }
+    ]
+  }
+}

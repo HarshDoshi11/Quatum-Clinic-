@@ -1,0 +1,248 @@
+{
+  "wdbc": {
+    "sample": {
+      "reportId": "RPT-WDBC-0001",
+      "dataset": "wdbc",
+      "condition": "breast cancer",
+      "generatedAt": "2026-09-27T14:40:00+05:30",
+      "experimentId": "EXP-2047",
+      "result": {
+        "decision": "predict",
+        "riskBand": "high",
+        "probability": 0.82,
+        "headline": "Higher likelihood"
+      },
+      "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of breast cancer. This is a screening signal, not a diagnosis — only your doctor can diagnose.",
+      "reliability": {
+        "level": "strong",
+        "summary": "The model was consistent and your information was complete.",
+        "points": [
+          "Prediction stability: 5 seeds agree within ±2.8 points.",
+          "Data quality: All 10 inputs present and within valid ranges.",
+          "Distribution shift (OOD): Patient resembles the training population.",
+          "Calibration: At ~84% predicted, 82% of similar test patients were positive.",
+          "Input sensitivity: Small measurement errors move the result by at most 0.9 points.",
+          "Hardware sensitivity: On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
+        ]
+      },
+      "influences": [
+        {
+          "label": "Number of indentations",
+          "direction": "increases",
+          "plain": "Your number of indentations pushed the estimate up."
+        },
+        {
+          "label": "Cell size (radius)",
+          "direction": "increases",
+          "plain": "Your cell size (radius) pushed the estimate up."
+        },
+        {
+          "label": "Cell outline length",
+          "direction": "increases",
+          "plain": "Your cell outline length pushed the estimate up."
+        },
+        {
+          "label": "Cell area",
+          "direction": "increases",
+          "plain": "Your cell area pushed the estimate up."
+        }
+      ],
+      "nextSteps": [
+        "Book an appointment with your doctor soon.",
+        "Bring this report and your original test results.",
+        "Ask about follow-up tests.",
+        "Note any new symptoms before your visit."
+      ],
+      "questions": [
+        "What do these results mean for me specifically?",
+        "Which follow-up tests would you recommend, and when?",
+        "Are any of my results likely to change with treatment or lifestyle?",
+        "How does this screening tool compare with the tests you usually use?"
+      ],
+      "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
+    },
+    "unusual": {
+      "reportId": "RPT-WDBC-0002",
+      "dataset": "wdbc",
+      "condition": "breast cancer",
+      "generatedAt": "2026-09-27T14:40:00+05:30",
+      "experimentId": "EXP-2047",
+      "result": {
+        "decision": "abstain",
+        "riskBand": null,
+        "probability": null,
+        "headline": "No reliable result"
+      },
+      "meaning": "We couldn't give a reliable result from this information. Some of your values are unlike anything the model learned from, so any number would be a guess.",
+      "reliability": {
+        "level": "weak",
+        "summary": "Several reliability checks did not pass.",
+        "points": [
+          "Prediction stability: Seed agreement means little when the model is extrapolating.",
+          "Data quality: 9 of 10 inputs present; missing: texture.",
+          "Distribution shift (OOD): 2 values outside anything seen in training.",
+          "Calibration: Calibration was only measured on patients within the training range.",
+          "Input sensitivity: Out-of-range inputs make the result unpredictable under small changes.",
+          "Hardware sensitivity: Hardware robustness was only tested within the training range."
+        ]
+      },
+      "influences": [
+        {
+          "label": "Cell area",
+          "direction": "increases",
+          "plain": "Your cell area pushed the estimate up."
+        },
+        {
+          "label": "Edge smoothness",
+          "direction": "increases",
+          "plain": "Your edge smoothness pushed the estimate up."
+        },
+        {
+          "label": "Number of indentations",
+          "direction": "increases",
+          "plain": "Your number of indentations pushed the estimate up."
+        },
+        {
+          "label": "Cell size (radius)",
+          "direction": "increases",
+          "plain": "Your cell size (radius) pushed the estimate up."
+        }
+      ],
+      "nextSteps": [
+        "Book an appointment with your doctor.",
+        "Bring this report and your original test results.",
+        "Ask whether any tests should be repeated."
+      ],
+      "questions": [
+        "What do these results mean for me specifically?",
+        "Which follow-up tests would you recommend, and when?",
+        "Are any of my results likely to change with treatment or lifestyle?",
+        "How does this screening tool compare with the tests you usually use?"
+      ],
+      "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
+    }
+  },
+  "heart": {
+    "sample": {
+      "reportId": "RPT-HEART-0003",
+      "dataset": "heart",
+      "condition": "heart disease",
+      "generatedAt": "2026-09-27T14:40:00+05:30",
+      "experimentId": "EXP-2029",
+      "result": {
+        "decision": "predict",
+        "riskBand": "high",
+        "probability": 0.82,
+        "headline": "Higher likelihood"
+      },
+      "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of heart disease. This is a screening signal, not a diagnosis — only your doctor can diagnose.",
+      "reliability": {
+        "level": "strong",
+        "summary": "The model was consistent and your information was complete.",
+        "points": [
+          "Prediction stability: 5 seeds agree within ±3.5 points.",
+          "Data quality: All 13 inputs present and within valid ranges.",
+          "Distribution shift (OOD): Patient resembles the training population.",
+          "Calibration: At ~86% predicted, 84% of similar test patients were positive.",
+          "Input sensitivity: Small measurement errors move the result by at most 0.4 points.",
+          "Hardware sensitivity: On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
+        ]
+      },
+      "influences": [
+        {
+          "label": "Heart scan result",
+          "direction": "increases",
+          "plain": "Your heart scan result pushed the estimate up."
+        },
+        {
+          "label": "Chest pain during exercise",
+          "direction": "increases",
+          "plain": "Your chest pain during exercise pushed the estimate up."
+        },
+        {
+          "label": "Highest heart rate in exercise test",
+          "direction": "increases",
+          "plain": "Your highest heart rate in exercise test pushed the estimate up."
+        },
+        {
+          "label": "Type of chest pain",
+          "direction": "increases",
+          "plain": "Your type of chest pain pushed the estimate up."
+        }
+      ],
+      "nextSteps": [
+        "Book an appointment with your doctor soon.",
+        "Bring this report and your original test results.",
+        "Ask about follow-up tests.",
+        "Note any new symptoms before your visit."
+      ],
+      "questions": [
+        "What do these results mean for me specifically?",
+        "Which follow-up tests would you recommend, and when?",
+        "Are any of my results likely to change with treatment or lifestyle?",
+        "How does this screening tool compare with the tests you usually use?"
+      ],
+      "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
+    },
+    "unusual": {
+      "reportId": "RPT-HEART-0004",
+      "dataset": "heart",
+      "condition": "heart disease",
+      "generatedAt": "2026-09-27T14:40:00+05:30",
+      "experimentId": "EXP-2029",
+      "result": {
+        "decision": "abstain",
+        "riskBand": null,
+        "probability": null,
+        "headline": "No reliable result"
+      },
+      "meaning": "We couldn't give a reliable result from this information. Some of your values are unlike anything the model learned from, so any number would be a guess.",
+      "reliability": {
+        "level": "weak",
+        "summary": "Several reliability checks did not pass.",
+        "points": [
+          "Prediction stability: Seed agreement means little when the model is extrapolating.",
+          "Data quality: 12 of 13 inputs present; missing: max heart rate.",
+          "Distribution shift (OOD): 2 values outside anything seen in training.",
+          "Calibration: Calibration was only measured on patients within the training range.",
+          "Input sensitivity: Out-of-range inputs make the result unpredictable under small changes.",
+          "Hardware sensitivity: Hardware robustness was only tested within the training range."
+        ]
+      },
+      "influences": [
+        {
+          "label": "Cholesterol",
+          "direction": "increases",
+          "plain": "Your cholesterol pushed the estimate up."
+        },
+        {
+          "label": "Resting blood pressure",
+          "direction": "increases",
+          "plain": "Your resting blood pressure pushed the estimate up."
+        },
+        {
+          "label": "Heart scan result",
+          "direction": "increases",
+          "plain": "Your heart scan result pushed the estimate up."
+        },
+        {
+          "label": "Chest pain during exercise",
+          "direction": "increases",
+          "plain": "Your chest pain during exercise pushed the estimate up."
+        }
+      ],
+      "nextSteps": [
+        "Book an appointment with your doctor.",
+        "Bring this report and your original test results.",
+        "Ask whether any tests should be repeated."
+      ],
+      "questions": [
+        "What do these results mean for me specifically?",
+        "Which follow-up tests would you recommend, and when?",
+        "Are any of my results likely to change with treatment or lifestyle?",
+        "How does this screening tool compare with the tests you usually use?"
+      ],
+      "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
+    }
+  }
+}

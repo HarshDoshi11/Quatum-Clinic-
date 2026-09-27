@@ -1,5 +1,9 @@
 import { Fragment, type ReactNode } from 'react'
+import { api, useResource } from '@/api'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { USE_MOCK } from '@/config'
+import { MODELS } from '@/lib/domain'
+import { formatAuc, formatDateTime } from '@/lib/format'
 import { useDataset } from '@/state/dataset'
 import type { Mode } from '@/state/mode'
 
@@ -17,24 +21,33 @@ function Field({ label, value }: StripField) {
   )
 }
 
-/**
- * Bottom status strip. Values are static placeholders in Phase 1 and are
- * wired to the mock/API service layer in Phase 2.
- */
+/** Bottom status strip: live values for the selected dataset. */
 export function StatusStrip({ mode }: { mode: Mode }) {
-  const { dataset } = useDataset()
+  const { datasetId, dataset } = useDataset()
+  const status = useResource((signal) => api.getStatus(datasetId, { signal }), [datasetId])
+  const data = status.data
 
   const fields: StripField[] = [
     { label: 'Dataset', value: `${dataset.code} · ${dataset.samples}` },
-    { label: 'Best quantum model', value: <span className="text-accent">QSVM 0.914</span> },
-    { label: 'Qubits', value: '4' },
-    { label: 'Last experiment', value: 'EXP-2048' },
-    { label: 'Updated', value: '2026-09-27 14:32' },
+    {
+      label: 'Best quantum model',
+      value: data ? (
+        <span className="text-accent">
+          {MODELS[data.bestQuantum.model].name} {formatAuc(data.bestQuantum.auc.mean)}
+        </span>
+      ) : (
+        <Skeleton width={10} />
+      ),
+    },
+    { label: 'Qubits', value: data ? data.bestQuantum.qubits : <Skeleton width={2} /> },
+    { label: 'Last experiment', value: data ? data.lastExperiment.id : <Skeleton width={8} /> },
+    { label: 'Updated', value: data ? formatDateTime(data.updatedAt) : <Skeleton width={18} /> },
   ]
 
   return (
     <footer
       aria-label="Status"
+      aria-busy={status.status === 'loading'}
       className="label-mono flex h-full items-center gap-5 overflow-hidden border-t border-rule bg-bg px-5 text-[10.5px]"
     >
       {mode === 'research' ? (
@@ -53,6 +66,7 @@ export function StatusStrip({ mode }: { mode: Mode }) {
       ) : (
         <p className="flex-1 text-muted">Decision support, not a diagnosis.</p>
       )}
+      {status.status === 'error' && <span className="shrink-0 text-risk-high">Backend unreachable</span>}
       {USE_MOCK && (
         <span
           className="shrink-0 rounded-[2px] border border-rule-strong px-1.5 py-px text-ink"

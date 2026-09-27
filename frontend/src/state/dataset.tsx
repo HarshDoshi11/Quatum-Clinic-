@@ -1,22 +1,12 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { DATASET_IDS, DATASETS, type DatasetMeta } from '@/lib/domain'
 import { readStored, writeStored } from '@/lib/storage'
+import type { DatasetId } from '@/types'
 
-export type DatasetId = 'wdbc' | 'heart'
-const DATASET_IDS = ['wdbc', 'heart'] as const
+export type { DatasetId, DatasetMeta }
+export { DATASETS }
+
 const STORAGE_KEY = 'qc.dataset'
-
-export interface DatasetMeta {
-  id: DatasetId
-  name: string
-  code: string
-  samples: number
-  features: number
-}
-
-export const DATASETS: Record<DatasetId, DatasetMeta> = {
-  wdbc: { id: 'wdbc', name: 'Breast Cancer', code: 'WDBC', samples: 569, features: 30 },
-  heart: { id: 'heart', name: 'Heart Disease', code: 'UCI', samples: 303, features: 13 },
-}
 
 interface DatasetContextValue {
   datasetId: DatasetId

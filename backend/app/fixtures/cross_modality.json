@@ -1,0 +1,86 @@
+{
+  "wdbc": {
+    "available": false,
+    "dataset": "wdbc",
+    "reason": "Cross-modality analysis uses the Heart Disease dataset.",
+    "supportedDataset": "heart"
+  },
+  "heart": {
+    "available": true,
+    "dataset": "heart",
+    "experimentId": "EXP-2036",
+    "model": "qsvm",
+    "modalities": [
+      {
+        "id": "demographics",
+        "label": "Demographics",
+        "features": [
+          "age",
+          "sex",
+          "trestbps"
+        ],
+        "auc": {
+          "mean": 0.712,
+          "std": 0.031
+        }
+      },
+      {
+        "id": "symptoms",
+        "label": "Symptoms",
+        "features": [
+          "cp"
+        ],
+        "auc": {
+          "mean": 0.781,
+          "std": 0.026
+        }
+      },
+      {
+        "id": "ecg",
+        "label": "ECG",
+        "features": [
+          "restecg",
+          "oldpeak",
+          "slope"
+        ],
+        "auc": {
+          "mean": 0.758,
+          "std": 0.028
+        }
+      },
+      {
+        "id": "exercise",
+        "label": "Exercise Test",
+        "features": [
+          "thalach",
+          "exang",
+          "thal",
+          "ca"
+        ],
+        "auc": {
+          "mean": 0.844,
+          "std": 0.021
+        }
+      },
+      {
+        "id": "labs",
+        "label": "Blood Labs",
+        "features": [
+          "chol",
+          "fbs"
+        ],
+        "auc": {
+          "mean": 0.694,
+          "std": 0.033
+        }
+      }
+    ],
+    "combined": {
+      "mean": 0.896,
+      "std": 0.015
+    },
+    "bestSingle": "exercise",
+    "gainPct": 6.2,
+    "takeaway": "Together: +6.2% over the best single signal (Exercise Test)."
+  }
+}

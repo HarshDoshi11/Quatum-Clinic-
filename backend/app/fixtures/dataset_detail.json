@@ -1,0 +1,1039 @@
+{
+  "wdbc": {
+    "id": "wdbc",
+    "name": "Breast Cancer",
+    "code": "WDBC",
+    "source": "Wisconsin Diagnostic Breast Cancer, UCI ML Repository",
+    "samples": 569,
+    "features": 30,
+    "target": "diagnosis",
+    "missingValues": 0,
+    "classBalance": {
+      "positiveLabel": "Malignant",
+      "negativeLabel": "Benign",
+      "positive": 212,
+      "negative": 357
+    },
+    "columns": [
+      {
+        "name": "diagnosis",
+        "label": "Diagnosis (M/B)",
+        "type": "binary",
+        "isTarget": true,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "radius_mean",
+        "label": "Radius (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm"
+      },
+      {
+        "name": "texture_mean",
+        "label": "Texture (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "perimeter_mean",
+        "label": "Perimeter (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm"
+      },
+      {
+        "name": "area_mean",
+        "label": "Area (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm²"
+      },
+      {
+        "name": "smoothness_mean",
+        "label": "Smoothness (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "compactness_mean",
+        "label": "Compactness (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "concavity_mean",
+        "label": "Concavity (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "concave_points_mean",
+        "label": "Concave points (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "symmetry_mean",
+        "label": "Symmetry (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "fractal_dimension_mean",
+        "label": "Fractal dimension (mean)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "radius_se",
+        "label": "Radius (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm"
+      },
+      {
+        "name": "texture_se",
+        "label": "Texture (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "perimeter_se",
+        "label": "Perimeter (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm"
+      },
+      {
+        "name": "area_se",
+        "label": "Area (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm²"
+      },
+      {
+        "name": "smoothness_se",
+        "label": "Smoothness (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "compactness_se",
+        "label": "Compactness (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "concavity_se",
+        "label": "Concavity (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "concave_points_se",
+        "label": "Concave points (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "symmetry_se",
+        "label": "Symmetry (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "fractal_dimension_se",
+        "label": "Fractal dimension (SE)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "radius_worst",
+        "label": "Radius (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm"
+      },
+      {
+        "name": "texture_worst",
+        "label": "Texture (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "perimeter_worst",
+        "label": "Perimeter (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm"
+      },
+      {
+        "name": "area_worst",
+        "label": "Area (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "µm²"
+      },
+      {
+        "name": "smoothness_worst",
+        "label": "Smoothness (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "compactness_worst",
+        "label": "Compactness (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "concavity_worst",
+        "label": "Concavity (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "concave_points_worst",
+        "label": "Concave points (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "symmetry_worst",
+        "label": "Symmetry (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "fractal_dimension_worst",
+        "label": "Fractal dimension (worst)",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      }
+    ],
+    "preview": [
+      {
+        "diagnosis": "M",
+        "radius_mean": 15.4577,
+        "radius_se": 1.211,
+        "radius_worst": 19.7125,
+        "texture_mean": 20.1293,
+        "texture_se": 1.3891,
+        "texture_worst": 23.8588,
+        "perimeter_mean": 94.8587,
+        "perimeter_se": 6.8861,
+        "perimeter_worst": 112.509,
+        "area_mean": 656.7,
+        "area_se": 42.8,
+        "area_worst": 771.1,
+        "smoothness_mean": 0.089,
+        "smoothness_se": 0.0062,
+        "smoothness_worst": 0.1048,
+        "compactness_mean": 0.161,
+        "compactness_se": 0.0114,
+        "compactness_worst": 0.1883,
+        "concavity_mean": 0.076,
+        "concavity_se": 0.0064,
+        "concavity_worst": 0.095,
+        "concave_points_mean": 0.0389,
+        "concave_points_se": 0.0029,
+        "concave_points_worst": 0.0468,
+        "symmetry_mean": 0.1824,
+        "symmetry_se": 0.0136,
+        "symmetry_worst": 0.2195,
+        "fractal_dimension_mean": 0.0684,
+        "fractal_dimension_se": 0.0057,
+        "fractal_dimension_worst": 0.0849
+      },
+      {
+        "diagnosis": "B",
+        "radius_mean": 14.0544,
+        "radius_se": 1.2043,
+        "radius_worst": 17.3936,
+        "texture_mean": 15.3225,
+        "texture_se": 1.2023,
+        "texture_worst": 19.5961,
+        "perimeter_mean": 50.5315,
+        "perimeter_se": 3.8669,
+        "perimeter_worst": 60.4971,
+        "area_mean": 671.2,
+        "area_se": 48.3,
+        "area_worst": 849.5,
+        "smoothness_mean": 0.0951,
+        "smoothness_se": 0.0081,
+        "smoothness_worst": 0.123,
+        "compactness_mean": 0.1551,
+        "compactness_se": 0.0126,
+        "compactness_worst": 0.1889,
+        "concavity_mean": 0.0619,
+        "concavity_se": 0.0044,
+        "concavity_worst": 0.072,
+        "concave_points_mean": 0,
+        "concave_points_se": 0,
+        "concave_points_worst": 0,
+        "symmetry_mean": 0.1797,
+        "symmetry_se": 0.016,
+        "symmetry_worst": 0.2139,
+        "fractal_dimension_mean": 0.0621,
+        "fractal_dimension_se": 0.0055,
+        "fractal_dimension_worst": 0.0773
+      },
+      {
+        "diagnosis": "B",
+        "radius_mean": 13.0332,
+        "radius_se": 0.8675,
+        "radius_worst": 15.2222,
+        "texture_mean": 18.3863,
+        "texture_se": 1.6325,
+        "texture_worst": 22.1208,
+        "perimeter_mean": 67.8226,
+        "perimeter_se": 6.035,
+        "perimeter_worst": 78.7969,
+        "area_mean": 248.2,
+        "area_se": 19.8,
+        "area_worst": 319.1,
+        "smoothness_mean": 0.0869,
+        "smoothness_se": 0.0064,
+        "smoothness_worst": 0.1129,
+        "compactness_mean": 0.0735,
+        "compactness_se": 0.0057,
+        "compactness_worst": 0.0915,
+        "concavity_mean": 0.0929,
+        "concavity_se": 0.0067,
+        "concavity_worst": 0.107,
+        "concave_points_mean": 0.0389,
+        "concave_points_se": 0.0027,
+        "concave_points_worst": 0.0482,
+        "symmetry_mean": 0.1824,
+        "symmetry_se": 0.0117,
+        "symmetry_worst": 0.2323,
+        "fractal_dimension_mean": 0.0608,
+        "fractal_dimension_se": 0.0049,
+        "fractal_dimension_worst": 0.0789
+      },
+      {
+        "diagnosis": "M",
+        "radius_mean": 20.9823,
+        "radius_se": 1.3318,
+        "radius_worst": 24.4214,
+        "texture_mean": 27.5708,
+        "texture_se": 2.1409,
+        "texture_worst": 34.029,
+        "perimeter_mean": 139.0487,
+        "perimeter_se": 9.3263,
+        "perimeter_worst": 176.4369,
+        "area_mean": 1068.8,
+        "area_se": 67.8,
+        "area_worst": 1330.4,
+        "smoothness_mean": 0.1033,
+        "smoothness_se": 0.0081,
+        "smoothness_worst": 0.129,
+        "compactness_mean": 0.1841,
+        "compactness_se": 0.0114,
+        "compactness_worst": 0.2306,
+        "concavity_mean": 0.2293,
+        "concavity_se": 0.0193,
+        "concavity_worst": 0.2651,
+        "concave_points_mean": 0.0916,
+        "concave_points_se": 0.0073,
+        "concave_points_worst": 0.1173,
+        "symmetry_mean": 0.2224,
+        "symmetry_se": 0.0185,
+        "symmetry_worst": 0.282,
+        "fractal_dimension_mean": 0.0749,
+        "fractal_dimension_se": 0.0047,
+        "fractal_dimension_worst": 0.0873
+      },
+      {
+        "diagnosis": "B",
+        "radius_mean": 13.2605,
+        "radius_se": 1.0439,
+        "radius_worst": 15.6675,
+        "texture_mean": 14.4791,
+        "texture_se": 1.2079,
+        "texture_worst": 17.7901,
+        "perimeter_mean": 62.902,
+        "perimeter_se": 4.4329,
+        "perimeter_worst": 80.0288,
+        "area_mean": 472.5,
+        "area_se": 35.6,
+        "area_worst": 555.3,
+        "smoothness_mean": 0.1003,
+        "smoothness_se": 0.0078,
+        "smoothness_worst": 0.1298,
+        "compactness_mean": 0.1104,
+        "compactness_se": 0.007,
+        "compactness_worst": 0.13,
+        "concavity_mean": 0.0183,
+        "concavity_se": 0.0014,
+        "concavity_worst": 0.0216,
+        "concave_points_mean": 0.0409,
+        "concave_points_se": 0.0028,
+        "concave_points_worst": 0.0522,
+        "symmetry_mean": 0.151,
+        "symmetry_se": 0.0112,
+        "symmetry_worst": 0.1774,
+        "fractal_dimension_mean": 0.0605,
+        "fractal_dimension_se": 0.0054,
+        "fractal_dimension_worst": 0.0699
+      },
+      {
+        "diagnosis": "B",
+        "radius_mean": 13.877,
+        "radius_se": 0.9804,
+        "radius_worst": 16.2387,
+        "texture_mean": 19.7914,
+        "texture_se": 1.763,
+        "texture_worst": 25.1209,
+        "perimeter_mean": 96.6166,
+        "perimeter_se": 7.131,
+        "perimeter_worst": 114.7801,
+        "area_mean": 466.4,
+        "area_se": 28.8,
+        "area_worst": 602.4,
+        "smoothness_mean": 0.0848,
+        "smoothness_se": 0.0069,
+        "smoothness_worst": 0.1055,
+        "compactness_mean": 0.0556,
+        "compactness_se": 0.0048,
+        "compactness_worst": 0.0682,
+        "concavity_mean": 0,
+        "concavity_se": 0,
+        "concavity_worst": 0,
+        "concave_points_mean": 0,
+        "concave_points_se": 0,
+        "concave_points_worst": 0,
+        "symmetry_mean": 0.1641,
+        "symmetry_se": 0.0128,
+        "symmetry_worst": 0.2116,
+        "fractal_dimension_mean": 0.0605,
+        "fractal_dimension_se": 0.0039,
+        "fractal_dimension_worst": 0.0744
+      },
+      {
+        "diagnosis": "M",
+        "radius_mean": 16.5882,
+        "radius_se": 1.0596,
+        "radius_worst": 21.4743,
+        "texture_mean": 22.2589,
+        "texture_se": 1.9258,
+        "texture_worst": 26.5554,
+        "perimeter_mean": 112.3988,
+        "perimeter_se": 9.4617,
+        "perimeter_worst": 141.7554,
+        "area_mean": 707.2,
+        "area_se": 45.5,
+        "area_worst": 881.7,
+        "smoothness_mean": 0.1053,
+        "smoothness_se": 0.0066,
+        "smoothness_worst": 0.1299,
+        "compactness_mean": 0.1382,
+        "compactness_se": 0.0109,
+        "compactness_worst": 0.1762,
+        "concavity_mean": 0.1167,
+        "concavity_se": 0.0072,
+        "concavity_worst": 0.1351,
+        "concave_points_mean": 0.0747,
+        "concave_points_se": 0.0051,
+        "concave_points_worst": 0.0951,
+        "symmetry_mean": 0.218,
+        "symmetry_se": 0.0168,
+        "symmetry_worst": 0.2822,
+        "fractal_dimension_mean": 0.0644,
+        "fractal_dimension_se": 0.0044,
+        "fractal_dimension_worst": 0.0797
+      },
+      {
+        "diagnosis": "B",
+        "radius_mean": 15.8087,
+        "radius_se": 1.2566,
+        "radius_worst": 19.4155,
+        "texture_mean": 20.935,
+        "texture_se": 1.5246,
+        "texture_worst": 26.0954,
+        "perimeter_mean": 100.9328,
+        "perimeter_se": 8.1129,
+        "perimeter_worst": 124.4132,
+        "area_mean": 919.5,
+        "area_se": 58.9,
+        "area_worst": 1074.8,
+        "smoothness_mean": 0.1046,
+        "smoothness_se": 0.0077,
+        "smoothness_worst": 0.1314,
+        "compactness_mean": 0.1616,
+        "compactness_se": 0.0115,
+        "compactness_worst": 0.2007,
+        "concavity_mean": 0.0637,
+        "concavity_se": 0.0054,
+        "concavity_worst": 0.0738,
+        "concave_points_mean": 0.0918,
+        "concave_points_se": 0.0056,
+        "concave_points_worst": 0.113,
+        "symmetry_mean": 0.1756,
+        "symmetry_se": 0.0132,
+        "symmetry_worst": 0.2249,
+        "fractal_dimension_mean": 0.0737,
+        "fractal_dimension_se": 0.006,
+        "fractal_dimension_worst": 0.0863
+      }
+    ],
+    "preprocessing": {
+      "steps": [
+        {
+          "id": "raw",
+          "label": "Raw",
+          "detail": "569 rows × 32 columns",
+          "rowsAfter": 569,
+          "featuresAfter": 30
+        },
+        {
+          "id": "clean",
+          "label": "Clean",
+          "detail": "Dropped ID column; encoded M/B → 1/0",
+          "rowsAfter": 569,
+          "featuresAfter": 30
+        },
+        {
+          "id": "missing",
+          "label": "Missing values",
+          "detail": "None found",
+          "rowsAfter": 569,
+          "featuresAfter": 30
+        },
+        {
+          "id": "outliers",
+          "label": "Outliers",
+          "detail": "142 values clipped at ±3σ",
+          "rowsAfter": 569,
+          "featuresAfter": 30
+        },
+        {
+          "id": "normalize",
+          "label": "Normalize",
+          "detail": "z-score on training split",
+          "rowsAfter": 569,
+          "featuresAfter": 30
+        },
+        {
+          "id": "select",
+          "label": "Feature selection",
+          "detail": "30 → 16 by mutual information",
+          "rowsAfter": 569,
+          "featuresAfter": 16
+        },
+        {
+          "id": "pca",
+          "label": "PCA",
+          "detail": "16 → 4 dims, 79% variance",
+          "rowsAfter": 569,
+          "featuresAfter": 4
+        },
+        {
+          "id": "ready",
+          "label": "Model-ready",
+          "detail": "569 × 4, angles scaled to [0, π]",
+          "rowsAfter": 569,
+          "featuresAfter": 4
+        }
+      ],
+      "missingBefore": 0,
+      "missingAfter": 0,
+      "outliersClipped": 142,
+      "selectedFeatures": [
+        "concave_points_worst",
+        "perimeter_worst",
+        "concave_points_mean",
+        "radius_worst",
+        "perimeter_mean",
+        "area_worst",
+        "radius_mean",
+        "area_mean",
+        "concavity_mean",
+        "concavity_worst",
+        "compactness_mean",
+        "compactness_worst",
+        "radius_se",
+        "perimeter_se",
+        "area_se",
+        "texture_worst"
+      ],
+      "pcaDims": 4,
+      "pca": [
+        {
+          "component": 1,
+          "explained": 0.443,
+          "cumulative": 0.443
+        },
+        {
+          "component": 2,
+          "explained": 0.19,
+          "cumulative": 0.633
+        },
+        {
+          "component": 3,
+          "explained": 0.094,
+          "cumulative": 0.727
+        },
+        {
+          "component": 4,
+          "explained": 0.066,
+          "cumulative": 0.793
+        },
+        {
+          "component": 5,
+          "explained": 0.055,
+          "cumulative": 0.848
+        },
+        {
+          "component": 6,
+          "explained": 0.04,
+          "cumulative": 0.888
+        },
+        {
+          "component": 7,
+          "explained": 0.023,
+          "cumulative": 0.911
+        },
+        {
+          "component": 8,
+          "explained": 0.016,
+          "cumulative": 0.927
+        }
+      ]
+    }
+  },
+  "heart": {
+    "id": "heart",
+    "name": "Heart Disease",
+    "code": "UCI",
+    "source": "Cleveland Heart Disease, UCI ML Repository",
+    "samples": 303,
+    "features": 13,
+    "target": "target",
+    "missingValues": 6,
+    "classBalance": {
+      "positiveLabel": "Disease",
+      "negativeLabel": "No disease",
+      "positive": 139,
+      "negative": 164
+    },
+    "columns": [
+      {
+        "name": "age",
+        "label": "Age",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "years"
+      },
+      {
+        "name": "sex",
+        "label": "Sex",
+        "type": "binary",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "trestbps",
+        "label": "Resting BP",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "mmHg"
+      },
+      {
+        "name": "cp",
+        "label": "Chest pain type",
+        "type": "categorical",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "restecg",
+        "label": "Resting ECG",
+        "type": "categorical",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "oldpeak",
+        "label": "ST depression",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "mm"
+      },
+      {
+        "name": "slope",
+        "label": "ST slope",
+        "type": "categorical",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "thalach",
+        "label": "Max heart rate",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "bpm"
+      },
+      {
+        "name": "exang",
+        "label": "Exercise angina",
+        "type": "binary",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "thal",
+        "label": "Thallium scan",
+        "type": "categorical",
+        "isTarget": false,
+        "missing": 2,
+        "unit": null
+      },
+      {
+        "name": "ca",
+        "label": "Major vessels",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 4,
+        "unit": "count"
+      },
+      {
+        "name": "chol",
+        "label": "Cholesterol",
+        "type": "numeric",
+        "isTarget": false,
+        "missing": 0,
+        "unit": "mg/dL"
+      },
+      {
+        "name": "fbs",
+        "label": "Fasting sugar > 120",
+        "type": "binary",
+        "isTarget": false,
+        "missing": 0,
+        "unit": null
+      },
+      {
+        "name": "target",
+        "label": "Heart disease (1/0)",
+        "type": "binary",
+        "isTarget": true,
+        "missing": 0,
+        "unit": null
+      }
+    ],
+    "preview": [
+      {
+        "age": 64,
+        "sex": 1,
+        "trestbps": 155,
+        "cp": 2,
+        "restecg": 2,
+        "oldpeak": 2.4,
+        "slope": 2,
+        "thalach": 143,
+        "exang": 1,
+        "thal": 2,
+        "ca": 1,
+        "chol": 243,
+        "fbs": 1,
+        "target": 1
+      },
+      {
+        "age": 46,
+        "sex": 0,
+        "trestbps": 100,
+        "cp": 2,
+        "restecg": 0,
+        "oldpeak": 2.1,
+        "slope": 1,
+        "thalach": 144,
+        "exang": 0,
+        "thal": 1,
+        "ca": 0,
+        "chol": 212,
+        "fbs": 0,
+        "target": 0
+      },
+      {
+        "age": 43,
+        "sex": 0,
+        "trestbps": 143,
+        "cp": 3,
+        "restecg": 1,
+        "oldpeak": 1.7,
+        "slope": 0,
+        "thalach": 163,
+        "exang": 0,
+        "thal": 1,
+        "ca": 0,
+        "chol": 247,
+        "fbs": 0,
+        "target": 0
+      },
+      {
+        "age": 59,
+        "sex": 0,
+        "trestbps": 148,
+        "cp": 2,
+        "restecg": 1,
+        "oldpeak": 0.9,
+        "slope": 1,
+        "thalach": 134,
+        "exang": 1,
+        "thal": 2,
+        "ca": 2,
+        "chol": 288,
+        "fbs": 1,
+        "target": 1
+      },
+      {
+        "age": 48,
+        "sex": 0,
+        "trestbps": 116,
+        "cp": 2,
+        "restecg": 1,
+        "oldpeak": 0.5,
+        "slope": 0,
+        "thalach": 175,
+        "exang": 0,
+        "thal": 0,
+        "ca": 0,
+        "chol": 249,
+        "fbs": 0,
+        "target": 0
+      },
+      {
+        "age": 67,
+        "sex": 0,
+        "trestbps": 132,
+        "cp": 2,
+        "restecg": 0,
+        "oldpeak": 0.2,
+        "slope": 1,
+        "thalach": 176,
+        "exang": 0,
+        "thal": 0,
+        "ca": null,
+        "chol": 198,
+        "fbs": 0,
+        "target": 0
+      },
+      {
+        "age": 74,
+        "sex": 0,
+        "trestbps": 147,
+        "cp": 3,
+        "restecg": 2,
+        "oldpeak": 1,
+        "slope": 1,
+        "thalach": 121,
+        "exang": 1,
+        "thal": 2,
+        "ca": 2,
+        "chol": 300,
+        "fbs": 1,
+        "target": 1
+      },
+      {
+        "age": 57,
+        "sex": 0,
+        "trestbps": 113,
+        "cp": 1,
+        "restecg": 0,
+        "oldpeak": 0.6,
+        "slope": 1,
+        "thalach": 149,
+        "exang": 0,
+        "thal": 0,
+        "ca": 0,
+        "chol": 175,
+        "fbs": 0,
+        "target": 0
+      }
+    ],
+    "preprocessing": {
+      "steps": [
+        {
+          "id": "raw",
+          "label": "Raw",
+          "detail": "303 rows × 14 columns",
+          "rowsAfter": 303,
+          "featuresAfter": 13
+        },
+        {
+          "id": "clean",
+          "label": "Clean",
+          "detail": "Binarised target (0 vs 1–4)",
+          "rowsAfter": 303,
+          "featuresAfter": 13
+        },
+        {
+          "id": "missing",
+          "label": "Missing values",
+          "detail": "6 imputed (median / mode)",
+          "rowsAfter": 303,
+          "featuresAfter": 13
+        },
+        {
+          "id": "outliers",
+          "label": "Outliers",
+          "detail": "21 values clipped at ±3σ",
+          "rowsAfter": 303,
+          "featuresAfter": 13
+        },
+        {
+          "id": "normalize",
+          "label": "Normalize",
+          "detail": "z-score on training split",
+          "rowsAfter": 303,
+          "featuresAfter": 13
+        },
+        {
+          "id": "select",
+          "label": "Feature selection",
+          "detail": "All 13 kept",
+          "rowsAfter": 303,
+          "featuresAfter": 13
+        },
+        {
+          "id": "pca",
+          "label": "PCA",
+          "detail": "13 → 4 dims, 52% variance",
+          "rowsAfter": 303,
+          "featuresAfter": 4
+        },
+        {
+          "id": "ready",
+          "label": "Model-ready",
+          "detail": "303 × 4, angles scaled to [0, π]",
+          "rowsAfter": 303,
+          "featuresAfter": 4
+        }
+      ],
+      "missingBefore": 6,
+      "missingAfter": 0,
+      "outliersClipped": 21,
+      "selectedFeatures": [
+        "age",
+        "sex",
+        "trestbps",
+        "cp",
+        "restecg",
+        "oldpeak",
+        "slope",
+        "thalach",
+        "exang",
+        "thal",
+        "ca",
+        "chol",
+        "fbs"
+      ],
+      "pcaDims": 4,
+      "pca": [
+        {
+          "component": 1,
+          "explained": 0.216,
+          "cumulative": 0.216
+        },
+        {
+          "component": 2,
+          "explained": 0.121,
+          "cumulative": 0.337
+        },
+        {
+          "component": 3,
+          "explained": 0.096,
+          "cumulative": 0.433
+        },
+        {
+          "component": 4,
+          "explained": 0.088,
+          "cumulative": 0.521
+        },
+        {
+          "component": 5,
+          "explained": 0.078,
+          "cumulative": 0.599
+        },
+        {
+          "component": 6,
+          "explained": 0.072,
+          "cumulative": 0.671
+        },
+        {
+          "component": 7,
+          "explained": 0.065,
+          "cumulative": 0.736
+        },
+        {
+          "component": 8,
+          "explained": 0.059,
+          "cumulative": 0.795
+        }
+      ]
+    }
+  }
+}

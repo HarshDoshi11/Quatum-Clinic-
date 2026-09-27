@@ -1,0 +1,224 @@
+{
+  "wdbc": {
+    "sample": {
+      "predictionId": "PRD-WDBC-0001",
+      "dataset": "wdbc",
+      "model": "qsvm",
+      "experimentId": "EXP-2047",
+      "threshold": 0.27,
+      "trust": [
+        {
+          "id": "stability",
+          "label": "Prediction stability",
+          "level": "strong",
+          "reason": "5 seeds agree within ±2.8 points."
+        },
+        {
+          "id": "data-quality",
+          "label": "Data quality",
+          "level": "strong",
+          "reason": "All 10 inputs present and within valid ranges."
+        },
+        {
+          "id": "distribution-shift",
+          "label": "Distribution shift (OOD)",
+          "level": "strong",
+          "reason": "Patient resembles the training population."
+        },
+        {
+          "id": "calibration",
+          "label": "Calibration",
+          "level": "strong",
+          "reason": "At ~84% predicted, 82% of similar test patients were positive."
+        },
+        {
+          "id": "input-sensitivity",
+          "label": "Input sensitivity",
+          "level": "strong",
+          "reason": "Small measurement errors move the result by at most 0.9 points."
+        },
+        {
+          "id": "hardware-sensitivity",
+          "label": "Hardware sensitivity",
+          "level": "partial",
+          "reason": "On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
+        }
+      ],
+      "decision": "predict",
+      "probability": 0.82,
+      "interval": [
+        0.791,
+        0.846
+      ],
+      "riskBand": "high",
+      "flagged": true,
+      "abstainReasons": []
+    },
+    "unusual": {
+      "predictionId": "PRD-WDBC-0002",
+      "dataset": "wdbc",
+      "model": "qsvm",
+      "experimentId": "EXP-2047",
+      "threshold": 0.27,
+      "trust": [
+        {
+          "id": "stability",
+          "label": "Prediction stability",
+          "level": "weak",
+          "reason": "Seed agreement means little when the model is extrapolating."
+        },
+        {
+          "id": "data-quality",
+          "label": "Data quality",
+          "level": "partial",
+          "reason": "9 of 10 inputs present; missing: texture."
+        },
+        {
+          "id": "distribution-shift",
+          "label": "Distribution shift (OOD)",
+          "level": "weak",
+          "reason": "2 values outside anything seen in training."
+        },
+        {
+          "id": "calibration",
+          "label": "Calibration",
+          "level": "weak",
+          "reason": "Calibration was only measured on patients within the training range."
+        },
+        {
+          "id": "input-sensitivity",
+          "label": "Input sensitivity",
+          "level": "weak",
+          "reason": "Out-of-range inputs make the result unpredictable under small changes."
+        },
+        {
+          "id": "hardware-sensitivity",
+          "label": "Hardware sensitivity",
+          "level": "weak",
+          "reason": "Hardware robustness was only tested within the training range."
+        }
+      ],
+      "decision": "abstain",
+      "probability": null,
+      "interval": null,
+      "riskBand": null,
+      "flagged": null,
+      "abstainReasons": [
+        "Area 4250 µm² is outside the training range (143.5 µm² – 2501 µm²).",
+        "Smoothness 0.21 is outside the training range (0.0526 – 0.1634).",
+        "Texture is missing."
+      ]
+    }
+  },
+  "heart": {
+    "sample": {
+      "predictionId": "PRD-HEART-0003",
+      "dataset": "heart",
+      "model": "qsvm",
+      "experimentId": "EXP-2029",
+      "threshold": 0.35,
+      "trust": [
+        {
+          "id": "stability",
+          "label": "Prediction stability",
+          "level": "strong",
+          "reason": "5 seeds agree within ±3.5 points."
+        },
+        {
+          "id": "data-quality",
+          "label": "Data quality",
+          "level": "strong",
+          "reason": "All 13 inputs present and within valid ranges."
+        },
+        {
+          "id": "distribution-shift",
+          "label": "Distribution shift (OOD)",
+          "level": "strong",
+          "reason": "Patient resembles the training population."
+        },
+        {
+          "id": "calibration",
+          "label": "Calibration",
+          "level": "strong",
+          "reason": "At ~86% predicted, 84% of similar test patients were positive."
+        },
+        {
+          "id": "input-sensitivity",
+          "label": "Input sensitivity",
+          "level": "strong",
+          "reason": "Small measurement errors move the result by at most 0.4 points."
+        },
+        {
+          "id": "hardware-sensitivity",
+          "label": "Hardware sensitivity",
+          "level": "partial",
+          "reason": "On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
+        }
+      ],
+      "decision": "predict",
+      "probability": 0.82,
+      "interval": [
+        0.783,
+        0.852
+      ],
+      "riskBand": "high",
+      "flagged": true,
+      "abstainReasons": []
+    },
+    "unusual": {
+      "predictionId": "PRD-HEART-0004",
+      "dataset": "heart",
+      "model": "qsvm",
+      "experimentId": "EXP-2029",
+      "threshold": 0.35,
+      "trust": [
+        {
+          "id": "stability",
+          "label": "Prediction stability",
+          "level": "weak",
+          "reason": "Seed agreement means little when the model is extrapolating."
+        },
+        {
+          "id": "data-quality",
+          "label": "Data quality",
+          "level": "partial",
+          "reason": "12 of 13 inputs present; missing: max heart rate."
+        },
+        {
+          "id": "distribution-shift",
+          "label": "Distribution shift (OOD)",
+          "level": "weak",
+          "reason": "2 values outside anything seen in training."
+        },
+        {
+          "id": "calibration",
+          "label": "Calibration",
+          "level": "weak",
+          "reason": "Calibration was only measured on patients within the training range."
+        },
+        {
+          "id": "input-sensitivity",
+          "label": "Input sensitivity",
+          "level": "weak",
+          "reason": "Out-of-range inputs make the result unpredictable under small changes."
+        },
+        {
+          "id": "hardware-sensitivity",
+          "label": "Hardware sensitivity",
+          "level": "weak",
+          "reason": "Hardware robustness was only tested within the training range."
+        }
+      ],
+      "decision": "abstain",
+      "probability": null,
+      "interval": null,
+      "riskBand": null,
+      "flagged": null,
+      "abstainReasons": [
+        "Resting BP 215 mmHg is outside the training range (94 mmHg – 200 mmHg).",
+        "Cholesterol 610 mg/dL is outside the training range (126 mg/dL – 564 mg/dL).",
+        "Max heart rate is missing."
+      ]
+    }
+  }
+}

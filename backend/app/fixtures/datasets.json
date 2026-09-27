@@ -1,0 +1,34 @@
+[
+  {
+    "id": "wdbc",
+    "name": "Breast Cancer",
+    "code": "WDBC",
+    "source": "Wisconsin Diagnostic Breast Cancer, UCI ML Repository",
+    "samples": 569,
+    "features": 30,
+    "target": "diagnosis",
+    "missingValues": 0,
+    "classBalance": {
+      "positiveLabel": "Malignant",
+      "negativeLabel": "Benign",
+      "positive": 212,
+      "negative": 357
+    }
+  },
+  {
+    "id": "heart",
+    "name": "Heart Disease",
+    "code": "UCI",
+    "source": "Cleveland Heart Disease, UCI ML Repository",
+    "samples": 303,
+    "features": 13,
+    "target": "target",
+    "missingValues": 6,
+    "classBalance": {
+      "positiveLabel": "Disease",
+      "negativeLabel": "No disease",
+      "positive": 139,
+      "negative": 164
+    }
+  }
+]

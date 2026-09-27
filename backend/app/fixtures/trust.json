@@ -1,0 +1,322 @@
+{
+  "wdbc": {
+    "dataset": "wdbc",
+    "model": "qsvm",
+    "experimentId": "EXP-2047",
+    "calibration": [
+      {
+        "predicted": 0.035,
+        "observed": 0.043,
+        "count": 70
+      },
+      {
+        "predicted": 0.142,
+        "observed": 0.159,
+        "count": 15
+      },
+      {
+        "predicted": 0.241,
+        "observed": 0.256,
+        "count": 11
+      },
+      {
+        "predicted": 0.337,
+        "observed": 0.349,
+        "count": 8
+      },
+      {
+        "predicted": 0.437,
+        "observed": 0.442,
+        "count": 8
+      },
+      {
+        "predicted": 0.543,
+        "observed": 0.54,
+        "count": 5
+      },
+      {
+        "predicted": 0.645,
+        "observed": 0.635,
+        "count": 6
+      },
+      {
+        "predicted": 0.747,
+        "observed": 0.731,
+        "count": 15
+      },
+      {
+        "predicted": 0.839,
+        "observed": 0.822,
+        "count": 8
+      },
+      {
+        "predicted": 0.957,
+        "observed": 0.948,
+        "count": 25
+      }
+    ],
+    "ece": 0.01,
+    "thresholdCurve": [
+      {
+        "threshold": 0.05,
+        "sensitivity": 0.987,
+        "specificity": 0.386
+      },
+      {
+        "threshold": 0.1,
+        "sensitivity": 0.967,
+        "specificity": 0.539
+      },
+      {
+        "threshold": 0.15,
+        "sensitivity": 0.945,
+        "specificity": 0.632
+      },
+      {
+        "threshold": 0.2,
+        "sensitivity": 0.921,
+        "specificity": 0.698
+      },
+      {
+        "threshold": 0.25,
+        "sensitivity": 0.897,
+        "specificity": 0.748
+      },
+      {
+        "threshold": 0.3,
+        "sensitivity": 0.872,
+        "specificity": 0.787
+      },
+      {
+        "threshold": 0.35,
+        "sensitivity": 0.845,
+        "specificity": 0.82
+      },
+      {
+        "threshold": 0.4,
+        "sensitivity": 0.817,
+        "specificity": 0.847
+      },
+      {
+        "threshold": 0.45,
+        "sensitivity": 0.788,
+        "specificity": 0.871
+      },
+      {
+        "threshold": 0.5,
+        "sensitivity": 0.757,
+        "specificity": 0.892
+      },
+      {
+        "threshold": 0.55,
+        "sensitivity": 0.723,
+        "specificity": 0.91
+      },
+      {
+        "threshold": 0.6,
+        "sensitivity": 0.687,
+        "specificity": 0.926
+      },
+      {
+        "threshold": 0.65,
+        "sensitivity": 0.646,
+        "specificity": 0.94
+      },
+      {
+        "threshold": 0.7,
+        "sensitivity": 0.602,
+        "specificity": 0.953
+      },
+      {
+        "threshold": 0.75,
+        "sensitivity": 0.551,
+        "specificity": 0.964
+      },
+      {
+        "threshold": 0.8,
+        "sensitivity": 0.491,
+        "specificity": 0.975
+      },
+      {
+        "threshold": 0.85,
+        "sensitivity": 0.42,
+        "specificity": 0.984
+      },
+      {
+        "threshold": 0.9,
+        "sensitivity": 0.329,
+        "specificity": 0.991
+      },
+      {
+        "threshold": 0.95,
+        "sensitivity": 0.204,
+        "specificity": 0.997
+      }
+    ],
+    "defaultThreshold": 0.27,
+    "testPatients": 171,
+    "abstained": 7,
+    "abstainRate": 0.0409,
+    "highConfidenceMisses": 0
+  },
+  "heart": {
+    "dataset": "heart",
+    "model": "qsvm",
+    "experimentId": "EXP-2029",
+    "calibration": [
+      {
+        "predicted": 0.046,
+        "observed": 0.056,
+        "count": 24
+      },
+      {
+        "predicted": 0.149,
+        "observed": 0.166,
+        "count": 16
+      },
+      {
+        "predicted": 0.246,
+        "observed": 0.262,
+        "count": 6
+      },
+      {
+        "predicted": 0.355,
+        "observed": 0.365,
+        "count": 5
+      },
+      {
+        "predicted": 0.461,
+        "observed": 0.464,
+        "count": 6
+      },
+      {
+        "predicted": 0.543,
+        "observed": 0.54,
+        "count": 4
+      },
+      {
+        "predicted": 0.658,
+        "observed": 0.647,
+        "count": 3
+      },
+      {
+        "predicted": 0.762,
+        "observed": 0.746,
+        "count": 6
+      },
+      {
+        "predicted": 0.856,
+        "observed": 0.839,
+        "count": 7
+      },
+      {
+        "predicted": 0.963,
+        "observed": 0.955,
+        "count": 14
+      }
+    ],
+    "ece": 0.012,
+    "thresholdCurve": [
+      {
+        "threshold": 0.05,
+        "sensitivity": 0.993,
+        "specificity": 0.251
+      },
+      {
+        "threshold": 0.1,
+        "sensitivity": 0.979,
+        "specificity": 0.401
+      },
+      {
+        "threshold": 0.15,
+        "sensitivity": 0.962,
+        "specificity": 0.504
+      },
+      {
+        "threshold": 0.2,
+        "sensitivity": 0.942,
+        "specificity": 0.581
+      },
+      {
+        "threshold": 0.25,
+        "sensitivity": 0.921,
+        "specificity": 0.643
+      },
+      {
+        "threshold": 0.3,
+        "sensitivity": 0.899,
+        "specificity": 0.694
+      },
+      {
+        "threshold": 0.35,
+        "sensitivity": 0.874,
+        "specificity": 0.737
+      },
+      {
+        "threshold": 0.4,
+        "sensitivity": 0.847,
+        "specificity": 0.775
+      },
+      {
+        "threshold": 0.45,
+        "sensitivity": 0.819,
+        "specificity": 0.808
+      },
+      {
+        "threshold": 0.5,
+        "sensitivity": 0.787,
+        "specificity": 0.837
+      },
+      {
+        "threshold": 0.55,
+        "sensitivity": 0.753,
+        "specificity": 0.863
+      },
+      {
+        "threshold": 0.6,
+        "sensitivity": 0.716,
+        "specificity": 0.887
+      },
+      {
+        "threshold": 0.65,
+        "sensitivity": 0.674,
+        "specificity": 0.908
+      },
+      {
+        "threshold": 0.7,
+        "sensitivity": 0.626,
+        "specificity": 0.928
+      },
+      {
+        "threshold": 0.75,
+        "sensitivity": 0.572,
+        "specificity": 0.945
+      },
+      {
+        "threshold": 0.8,
+        "sensitivity": 0.508,
+        "specificity": 0.961
+      },
+      {
+        "threshold": 0.85,
+        "sensitivity": 0.43,
+        "specificity": 0.975
+      },
+      {
+        "threshold": 0.9,
+        "sensitivity": 0.331,
+        "specificity": 0.987
+      },
+      {
+        "threshold": 0.95,
+        "sensitivity": 0.196,
+        "specificity": 0.996
+      }
+    ],
+    "defaultThreshold": 0.35,
+    "testPatients": 91,
+    "abstained": 4,
+    "abstainRate": 0.044,
+    "highConfidenceMisses": 0
+  }
+}

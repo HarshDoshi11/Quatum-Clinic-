@@ -14,7 +14,7 @@ A hybrid quantum-classical machine-learning platform for early disease detection
 ```
 qclinical/
 ├── frontend/   Vite + React 18 + TypeScript + Tailwind v4
-├── backend/    FastAPI (stub — Phase 2)
+├── backend/    FastAPI stub serving the same JSON as the mocks
 └── docs/       design notes
 ```
 
@@ -35,6 +35,8 @@ npm run dev        # http://localhost:5173
 | `npm run typecheck` | TypeScript only                |
 | `npm run lint`      | ESLint (`no-explicit-any` on)  |
 | `npm run preview`   | Serve the production build     |
+| `npm run check:mocks` | Assert mock numbers agree with the spec and across pages |
+| `npm run export:fixtures` | Regenerate `backend/app/fixtures/*.json` from the mocks |
 
 ### Configuration
 
@@ -49,23 +51,78 @@ Copy `frontend/.env.example` to `frontend/.env.local`:
 
 ```
 frontend/src/
+├── types/               TypeScript types for every API request/response
+├── api/                 service layer: `api` switches between mock and HTTP; `useResource` hook
+├── mocks/               mock implementation (`mockApi`) + deterministic data builders
 ├── routes.ts            single source of truth for navigation (sidebar, router, palette)
 ├── state/               theme, dataset (persisted) and mode (derived from URL: /patient/* = Patient)
 ├── styles/tokens.css    design tokens for both themes — see docs/design-tokens.md
-├── lib/                 motion vocabulary, storage and platform helpers
+├── lib/                 domain constants, formatting, motion vocabulary, storage helpers
 ├── components/shell/    sidebar, top bar, status strip
 ├── components/ui/       SectionLabel, Headline, Page, SegmentedToggle, Rule…
 └── pages/
 ```
 
+### Data layer
+
+Pages call `api.*` from `src/api` and never know whether data is mocked:
+
+```ts
+const overview = useResource((signal) => api.getOverview(datasetId, { signal }), [datasetId])
+```
+
+- **Mock mode** (`VITE_USE_MOCK` unset or `true`): `src/mocks/mockApi.ts` answers with 300–800ms simulated
+  latency. A `MOCK DATA` tag shows in the status strip.
+- **HTTP mode** (`VITE_USE_MOCK=false`): `src/api/http.ts` calls the FastAPI backend at `VITE_API_URL`.
+
+**One source of truth.** Only a handful of anchor values are hand-written, in
+`src/mocks/data/canon.ts`: each model's AUC ± std per dataset, the noise profiles, and the safety
+threshold. Everything else is derived from them: sensitivity and specificity (equal-variance binormal ROC),
+noise tolerance, learning curves, the circuit search, calibration, the cross-modality gain, and the abstain
+rate. `npm run check:mocks` asserts the headline numbers (XGBoost 0.921, QSVM 0.914 ±0.012, VQC 0.909,
+EXP-2044…2048, Δ −0.007, 1.2%, 4.1%, +6.2%) and that every experiment ID referenced anywhere resolves.
+
 ## Backend
 
-Coming in Phase 2 (FastAPI stub with CORS, `/health` and mock routes).
+Requires Python 3.10+.
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate          # Windows  (macOS/Linux: source .venv/bin/activate)
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+Interactive docs: http://localhost:8000/docs. To point the frontend at it, set `VITE_USE_MOCK=false` in
+`frontend/.env.local` and restart `npm run dev`.
+
+The backend is a **stub**: routes return JSON fixtures exported from the frontend mocks
+(`npm run export:fixtures`), so both modes show identical data. `TODO(ml)` comments in
+`backend/app/main.py` mark where the ML pipeline plugs in.
+
+| Method | Route | Returns |
+| ------ | ----- | ------- |
+| GET | `/health` | Service status |
+| GET | `/overview?dataset=` · `/status?dataset=` | Overview page · status strip |
+| GET | `/datasets` · `/datasets/{id}` · `/datasets/{id}/schema` | Dataset list · profile + preprocessing · patient feature schema |
+| POST | `/upload` | CSV profile (multipart `file`) |
+| POST | `/train` | Loss curve + per-model results; creates an experiment |
+| GET | `/experiments?dataset=&limit=` · `/experiments/{id}` | Experiment list · full record |
+| POST | `/experiments/{id}/rerun` | New experiment with the same config |
+| GET | `/compare?dataset=` | Benchmark table, resource scatter, seed stability |
+| GET | `/sweeps/{small-data \| scalability \| evolution \| failure-envelope}?dataset=` | Sweep results |
+| GET | `/noise/profiles` · POST `/noise/run` | Hardware profiles · noisy-vs-ideal operating point |
+| POST | `/predict` · GET `/trust?dataset=` · POST `/explain` | Prediction + trust evidence · model calibration · attributions |
+| GET | `/cross-modality?dataset=` | Per-modality AUCs (Heart only) |
+| POST | `/report` | Plain-language patient report |
+
+CORS allows any `localhost` port; add deployed origins with `CORS_ORIGINS=https://a.example,https://b.example`.
 
 ## Build status
 
 - [x] Phase 1 — setup, design tokens, app shell, routing
-- [ ] Phase 2 — types, mock data, API service layer, backend stub
+- [x] Phase 2 — types, mock data, API service layer, backend stub
 - [ ] Phase 3 — Overview + global features
 - [ ] Phase 4 — Data, Train, and research pages (section I)
 - [ ] Phase 5 — Hardware Reality Lab, Failure Envelope

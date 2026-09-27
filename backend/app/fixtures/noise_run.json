@@ -1,0 +1,454 @@
+{
+  "wdbc": {
+    "ideal-sim": {
+      "dataset": "wdbc",
+      "experimentId": "EXP-2041",
+      "model": "qsvm",
+      "reference": {
+        "sensitivity": 0.8936,
+        "specificity": 0.7649,
+        "auc": 0.918
+      },
+      "result": {
+        "sensitivity": 0.8936,
+        "specificity": 0.7649,
+        "auc": 0.918
+      },
+      "sensitivityStd": 0.006,
+      "threshold": 0.85,
+      "safe": true,
+      "sensitivityVsT2": [
+        {
+          "t2Us": 20,
+          "sensitivity": 0.8798
+        },
+        {
+          "t2Us": 40,
+          "sensitivity": 0.8867
+        },
+        {
+          "t2Us": 60,
+          "sensitivity": 0.889
+        },
+        {
+          "t2Us": 80,
+          "sensitivity": 0.8901
+        },
+        {
+          "t2Us": 100,
+          "sensitivity": 0.8908
+        },
+        {
+          "t2Us": 150,
+          "sensitivity": 0.8917
+        },
+        {
+          "t2Us": 200,
+          "sensitivity": 0.8922
+        },
+        {
+          "t2Us": 300,
+          "sensitivity": 0.8927
+        },
+        {
+          "t2Us": 500,
+          "sensitivity": 0.893
+        }
+      ]
+    },
+    "fake-backend-1": {
+      "dataset": "wdbc",
+      "experimentId": "EXP-2041",
+      "model": "qsvm",
+      "reference": {
+        "sensitivity": 0.8936,
+        "specificity": 0.7649,
+        "auc": 0.918
+      },
+      "result": {
+        "sensitivity": 0.8418,
+        "specificity": 0.7468,
+        "auc": 0.881
+      },
+      "sensitivityStd": 0.0183,
+      "threshold": 0.85,
+      "safe": false,
+      "sensitivityVsT2": [
+        {
+          "t2Us": 20,
+          "sensitivity": 0.8313
+        },
+        {
+          "t2Us": 40,
+          "sensitivity": 0.8382
+        },
+        {
+          "t2Us": 60,
+          "sensitivity": 0.8404
+        },
+        {
+          "t2Us": 80,
+          "sensitivity": 0.8416
+        },
+        {
+          "t2Us": 100,
+          "sensitivity": 0.8423
+        },
+        {
+          "t2Us": 150,
+          "sensitivity": 0.8432
+        },
+        {
+          "t2Us": 200,
+          "sensitivity": 0.8437
+        },
+        {
+          "t2Us": 300,
+          "sensitivity": 0.8441
+        },
+        {
+          "t2Us": 500,
+          "sensitivity": 0.8445
+        }
+      ]
+    },
+    "fake-backend-2": {
+      "dataset": "wdbc",
+      "experimentId": "EXP-2041",
+      "model": "qsvm",
+      "reference": {
+        "sensitivity": 0.8936,
+        "specificity": 0.7649,
+        "auc": 0.918
+      },
+      "result": {
+        "sensitivity": 0.8657,
+        "specificity": 0.7551,
+        "auc": 0.898
+      },
+      "sensitivityStd": 0.0155,
+      "threshold": 0.85,
+      "safe": true,
+      "sensitivityVsT2": [
+        {
+          "t2Us": 20,
+          "sensitivity": 0.8538
+        },
+        {
+          "t2Us": 40,
+          "sensitivity": 0.8607
+        },
+        {
+          "t2Us": 60,
+          "sensitivity": 0.863
+        },
+        {
+          "t2Us": 80,
+          "sensitivity": 0.8642
+        },
+        {
+          "t2Us": 100,
+          "sensitivity": 0.8648
+        },
+        {
+          "t2Us": 150,
+          "sensitivity": 0.8658
+        },
+        {
+          "t2Us": 200,
+          "sensitivity": 0.8662
+        },
+        {
+          "t2Us": 300,
+          "sensitivity": 0.8667
+        },
+        {
+          "t2Us": 500,
+          "sensitivity": 0.867
+        }
+      ]
+    },
+    "custom": {
+      "dataset": "wdbc",
+      "experimentId": "EXP-2041",
+      "model": "qsvm",
+      "reference": {
+        "sensitivity": 0.8936,
+        "specificity": 0.7649,
+        "auc": 0.918
+      },
+      "result": {
+        "sensitivity": 0.8657,
+        "specificity": 0.7551,
+        "auc": 0.898
+      },
+      "sensitivityStd": 0.0155,
+      "threshold": 0.85,
+      "safe": true,
+      "sensitivityVsT2": [
+        {
+          "t2Us": 20,
+          "sensitivity": 0.8538
+        },
+        {
+          "t2Us": 40,
+          "sensitivity": 0.8607
+        },
+        {
+          "t2Us": 60,
+          "sensitivity": 0.863
+        },
+        {
+          "t2Us": 80,
+          "sensitivity": 0.8642
+        },
+        {
+          "t2Us": 100,
+          "sensitivity": 0.8648
+        },
+        {
+          "t2Us": 150,
+          "sensitivity": 0.8658
+        },
+        {
+          "t2Us": 200,
+          "sensitivity": 0.8662
+        },
+        {
+          "t2Us": 300,
+          "sensitivity": 0.8667
+        },
+        {
+          "t2Us": 500,
+          "sensitivity": 0.867
+        }
+      ]
+    }
+  },
+  "heart": {
+    "ideal-sim": {
+      "dataset": "heart",
+      "experimentId": "EXP-2035",
+      "model": "qsvm",
+      "reference": {
+        "sensitivity": 0.8785,
+        "specificity": 0.741,
+        "auc": 0.9
+      },
+      "result": {
+        "sensitivity": 0.8785,
+        "specificity": 0.741,
+        "auc": 0.9
+      },
+      "sensitivityStd": 0.006,
+      "threshold": 0.85,
+      "safe": true,
+      "sensitivityVsT2": [
+        {
+          "t2Us": 20,
+          "sensitivity": 0.8648
+        },
+        {
+          "t2Us": 40,
+          "sensitivity": 0.8717
+        },
+        {
+          "t2Us": 60,
+          "sensitivity": 0.8739
+        },
+        {
+          "t2Us": 80,
+          "sensitivity": 0.8751
+        },
+        {
+          "t2Us": 100,
+          "sensitivity": 0.8758
+        },
+        {
+          "t2Us": 150,
+          "sensitivity": 0.8767
+        },
+        {
+          "t2Us": 200,
+          "sensitivity": 0.8772
+        },
+        {
+          "t2Us": 300,
+          "sensitivity": 0.8776
+        },
+        {
+          "t2Us": 500,
+          "sensitivity": 0.878
+        }
+      ]
+    },
+    "fake-backend-1": {
+      "dataset": "heart",
+      "experimentId": "EXP-2035",
+      "model": "qsvm",
+      "reference": {
+        "sensitivity": 0.8785,
+        "specificity": 0.741,
+        "auc": 0.9
+      },
+      "result": {
+        "sensitivity": 0.8268,
+        "specificity": 0.7229,
+        "auc": 0.861
+      },
+      "sensitivityStd": 0.0183,
+      "threshold": 0.85,
+      "safe": false,
+      "sensitivityVsT2": [
+        {
+          "t2Us": 20,
+          "sensitivity": 0.8162
+        },
+        {
+          "t2Us": 40,
+          "sensitivity": 0.8231
+        },
+        {
+          "t2Us": 60,
+          "sensitivity": 0.8254
+        },
+        {
+          "t2Us": 80,
+          "sensitivity": 0.8265
+        },
+        {
+          "t2Us": 100,
+          "sensitivity": 0.8272
+        },
+        {
+          "t2Us": 150,
+          "sensitivity": 0.8282
+        },
+        {
+          "t2Us": 200,
+          "sensitivity": 0.8286
+        },
+        {
+          "t2Us": 300,
+          "sensitivity": 0.8291
+        },
+        {
+          "t2Us": 500,
+          "sensitivity": 0.8294
+        }
+      ]
+    },
+    "fake-backend-2": {
+      "dataset": "heart",
+      "experimentId": "EXP-2035",
+      "model": "qsvm",
+      "reference": {
+        "sensitivity": 0.8785,
+        "specificity": 0.741,
+        "auc": 0.9
+      },
+      "result": {
+        "sensitivity": 0.8506,
+        "specificity": 0.7312,
+        "auc": 0.879
+      },
+      "sensitivityStd": 0.0155,
+      "threshold": 0.85,
+      "safe": true,
+      "sensitivityVsT2": [
+        {
+          "t2Us": 20,
+          "sensitivity": 0.8388
+        },
+        {
+          "t2Us": 40,
+          "sensitivity": 0.8457
+        },
+        {
+          "t2Us": 60,
+          "sensitivity": 0.848
+        },
+        {
+          "t2Us": 80,
+          "sensitivity": 0.8491
+        },
+        {
+          "t2Us": 100,
+          "sensitivity": 0.8498
+        },
+        {
+          "t2Us": 150,
+          "sensitivity": 0.8507
+        },
+        {
+          "t2Us": 200,
+          "sensitivity": 0.8512
+        },
+        {
+          "t2Us": 300,
+          "sensitivity": 0.8516
+        },
+        {
+          "t2Us": 500,
+          "sensitivity": 0.852
+        }
+      ]
+    },
+    "custom": {
+      "dataset": "heart",
+      "experimentId": "EXP-2035",
+      "model": "qsvm",
+      "reference": {
+        "sensitivity": 0.8785,
+        "specificity": 0.741,
+        "auc": 0.9
+      },
+      "result": {
+        "sensitivity": 0.8506,
+        "specificity": 0.7312,
+        "auc": 0.879
+      },
+      "sensitivityStd": 0.0155,
+      "threshold": 0.85,
+      "safe": true,
+      "sensitivityVsT2": [
+        {
+          "t2Us": 20,
+          "sensitivity": 0.8388
+        },
+        {
+          "t2Us": 40,
+          "sensitivity": 0.8457
+        },
+        {
+          "t2Us": 60,
+          "sensitivity": 0.848
+        },
+        {
+          "t2Us": 80,
+          "sensitivity": 0.8491
+        },
+        {
+          "t2Us": 100,
+          "sensitivity": 0.8498
+        },
+        {
+          "t2Us": 150,
+          "sensitivity": 0.8507
+        },
+        {
+          "t2Us": 200,
+          "sensitivity": 0.8512
+        },
+        {
+          "t2Us": 300,
+          "sensitivity": 0.8516
+        },
+        {
+          "t2Us": 500,
+          "sensitivity": 0.852
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "wdbc": {
+    "dataset": "wdbc",
+    "model": "qsvm",
+    "baseProbability": 0.373,
+    "probability": 0.82,
+    "contributions": [
+      {
+        "feature": "concave_points_mean",
+        "label": "Concave points",
+        "value": 0.083,
+        "contribution": 0.5082,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "radius_mean",
+        "label": "Radius",
+        "value": 17.2,
+        "contribution": 0.4126,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "perimeter_mean",
+        "label": "Perimeter",
+        "value": 113,
+        "contribution": 0.3639,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "area_mean",
+        "label": "Area",
+        "value": 920,
+        "contribution": 0.2772,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "concavity_mean",
+        "label": "Concavity",
+        "value": 0.142,
+        "contribution": 0.2105,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "texture_mean",
+        "label": "Texture",
+        "value": 21.4,
+        "contribution": 0.1161,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "compactness_mean",
+        "label": "Compactness",
+        "value": 0.128,
+        "contribution": 0.059,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "smoothness_mean",
+        "label": "Smoothness",
+        "value": 0.101,
+        "contribution": 0.0514,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "symmetry_mean",
+        "label": "Symmetry",
+        "value": 0.19,
+        "contribution": 0.0253,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "fractal_dimension_mean",
+        "label": "Fractal dimension",
+        "value": 0.061,
+        "contribution": 0.0133,
+        "direction": "increases",
+        "immutable": false
+      }
+    ]
+  },
+  "heart": {
+    "dataset": "heart",
+    "model": "qsvm",
+    "baseProbability": 0.459,
+    "probability": 0.82,
+    "contributions": [
+      {
+        "feature": "thal",
+        "label": "Thallium scan",
+        "value": 2,
+        "contribution": 0.3394,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "exang",
+        "label": "Exercise angina",
+        "value": 1,
+        "contribution": 0.2947,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "thalach",
+        "label": "Max heart rate",
+        "value": 128,
+        "contribution": 0.2383,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "cp",
+        "label": "Chest pain type",
+        "value": 3,
+        "contribution": 0.201,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "oldpeak",
+        "label": "ST depression",
+        "value": 1.8,
+        "contribution": 0.1655,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "ca",
+        "label": "Major vessels",
+        "value": 1,
+        "contribution": 0.1209,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "sex",
+        "label": "Sex",
+        "value": 1,
+        "contribution": 0.1095,
+        "direction": "increases",
+        "immutable": true
+      },
+      {
+        "feature": "slope",
+        "label": "ST slope",
+        "value": 1,
+        "contribution": 0.1037,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "age",
+        "label": "Age",
+        "value": 58,
+        "contribution": 0.0459,
+        "direction": "increases",
+        "immutable": true
+      },
+      {
+        "feature": "trestbps",
+        "label": "Resting BP",
+        "value": 140,
+        "contribution": 0.0433,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "chol",
+        "label": "Cholesterol",
+        "value": 268,
+        "contribution": 0.0283,
+        "direction": "increases",
+        "immutable": false
+      },
+      {
+        "feature": "fbs",
+        "label": "Fasting sugar > 120",
+        "value": 0,
+        "contribution": -0.0096,
+        "direction": "decreases",
+        "immutable": false
+      },
+      {
+        "feature": "restecg",
+        "label": "Resting ECG",
+        "value": 1,
+        "contribution": 0.0007,
+        "direction": "increases",
+        "immutable": false
+      }
+    ]
+  }
+}

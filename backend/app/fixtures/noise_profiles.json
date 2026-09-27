@@ -1,0 +1,58 @@
+[
+  {
+    "id": "ideal-sim",
+    "name": "Ideal Sim",
+    "description": "Noiseless statevector simulation.",
+    "qubits": 32,
+    "noise": {
+      "t1Us": null,
+      "t2Us": null,
+      "gateError1q": 0,
+      "gateError2q": 0,
+      "readoutError": 0,
+      "shots": null
+    }
+  },
+  {
+    "id": "fake-backend-1",
+    "name": "FakeBackend-1",
+    "description": "Calibration snapshot of a 27-qubit superconducting device.",
+    "qubits": 27,
+    "noise": {
+      "t1Us": 112,
+      "t2Us": 86,
+      "gateError1q": 0.04,
+      "gateError2q": 1.5,
+      "readoutError": 2.4,
+      "shots": 4096
+    }
+  },
+  {
+    "id": "fake-backend-2",
+    "name": "FakeBackend-2",
+    "description": "Newer-generation 27-qubit device, lower two-qubit error.",
+    "qubits": 27,
+    "noise": {
+      "t1Us": 186,
+      "t2Us": 142,
+      "gateError1q": 0.02,
+      "gateError2q": 0.8,
+      "readoutError": 1.3,
+      "shots": 4096
+    }
+  },
+  {
+    "id": "custom",
+    "name": "Custom",
+    "description": "Set each noise parameter by hand.",
+    "qubits": 27,
+    "noise": {
+      "t1Us": 186,
+      "t2Us": 142,
+      "gateError1q": 0.02,
+      "gateError2q": 0.8,
+      "readoutError": 1.3,
+      "shots": 4096
+    }
+  }
+]

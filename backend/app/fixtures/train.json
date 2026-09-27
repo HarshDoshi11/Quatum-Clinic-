@@ -1,0 +1,618 @@
+{
+  "wdbc": {
+    "jobId": "JOB-2049",
+    "experimentId": "EXP-2049",
+    "epochs": 50,
+    "lossCurve": [
+      {
+        "epoch": 1,
+        "loss": 0.6419,
+        "valLoss": 0.6882
+      },
+      {
+        "epoch": 2,
+        "loss": 0.6111,
+        "valLoss": 0.6518
+      },
+      {
+        "epoch": 3,
+        "loss": 0.5831,
+        "valLoss": 0.6401
+      },
+      {
+        "epoch": 4,
+        "loss": 0.542,
+        "valLoss": 0.6016
+      },
+      {
+        "epoch": 5,
+        "loss": 0.5325,
+        "valLoss": 0.5804
+      },
+      {
+        "epoch": 6,
+        "loss": 0.5182,
+        "valLoss": 0.5642
+      },
+      {
+        "epoch": 7,
+        "loss": 0.491,
+        "valLoss": 0.5487
+      },
+      {
+        "epoch": 8,
+        "loss": 0.4661,
+        "valLoss": 0.5363
+      },
+      {
+        "epoch": 9,
+        "loss": 0.4566,
+        "valLoss": 0.5089
+      },
+      {
+        "epoch": 10,
+        "loss": 0.4414,
+        "valLoss": 0.4836
+      },
+      {
+        "epoch": 11,
+        "loss": 0.4435,
+        "valLoss": 0.4794
+      },
+      {
+        "epoch": 12,
+        "loss": 0.4067,
+        "valLoss": 0.4674
+      },
+      {
+        "epoch": 13,
+        "loss": 0.401,
+        "valLoss": 0.4509
+      },
+      {
+        "epoch": 14,
+        "loss": 0.3726,
+        "valLoss": 0.4324
+      },
+      {
+        "epoch": 15,
+        "loss": 0.3693,
+        "valLoss": 0.4369
+      },
+      {
+        "epoch": 16,
+        "loss": 0.3669,
+        "valLoss": 0.4156
+      },
+      {
+        "epoch": 17,
+        "loss": 0.3461,
+        "valLoss": 0.3999
+      },
+      {
+        "epoch": 18,
+        "loss": 0.3513,
+        "valLoss": 0.3911
+      },
+      {
+        "epoch": 19,
+        "loss": 0.332,
+        "valLoss": 0.3772
+      },
+      {
+        "epoch": 20,
+        "loss": 0.3375,
+        "valLoss": 0.3985
+      },
+      {
+        "epoch": 21,
+        "loss": 0.3334,
+        "valLoss": 0.3722
+      },
+      {
+        "epoch": 22,
+        "loss": 0.3278,
+        "valLoss": 0.3632
+      },
+      {
+        "epoch": 23,
+        "loss": 0.3199,
+        "valLoss": 0.3554
+      },
+      {
+        "epoch": 24,
+        "loss": 0.3254,
+        "valLoss": 0.352
+      },
+      {
+        "epoch": 25,
+        "loss": 0.3171,
+        "valLoss": 0.3558
+      },
+      {
+        "epoch": 26,
+        "loss": 0.2988,
+        "valLoss": 0.3594
+      },
+      {
+        "epoch": 27,
+        "loss": 0.2899,
+        "valLoss": 0.353
+      },
+      {
+        "epoch": 28,
+        "loss": 0.2991,
+        "valLoss": 0.3381
+      },
+      {
+        "epoch": 29,
+        "loss": 0.2938,
+        "valLoss": 0.3421
+      },
+      {
+        "epoch": 30,
+        "loss": 0.2776,
+        "valLoss": 0.3516
+      },
+      {
+        "epoch": 31,
+        "loss": 0.2718,
+        "valLoss": 0.3411
+      },
+      {
+        "epoch": 32,
+        "loss": 0.276,
+        "valLoss": 0.3122
+      },
+      {
+        "epoch": 33,
+        "loss": 0.2755,
+        "valLoss": 0.321
+      },
+      {
+        "epoch": 34,
+        "loss": 0.2778,
+        "valLoss": 0.3182
+      },
+      {
+        "epoch": 35,
+        "loss": 0.2746,
+        "valLoss": 0.3417
+      },
+      {
+        "epoch": 36,
+        "loss": 0.2805,
+        "valLoss": 0.328
+      },
+      {
+        "epoch": 37,
+        "loss": 0.2796,
+        "valLoss": 0.3213
+      },
+      {
+        "epoch": 38,
+        "loss": 0.2784,
+        "valLoss": 0.2941
+      },
+      {
+        "epoch": 39,
+        "loss": 0.2791,
+        "valLoss": 0.3019
+      },
+      {
+        "epoch": 40,
+        "loss": 0.2765,
+        "valLoss": 0.3253
+      },
+      {
+        "epoch": 41,
+        "loss": 0.2626,
+        "valLoss": 0.2785
+      },
+      {
+        "epoch": 42,
+        "loss": 0.2487,
+        "valLoss": 0.3048
+      },
+      {
+        "epoch": 43,
+        "loss": 0.2639,
+        "valLoss": 0.3145
+      },
+      {
+        "epoch": 44,
+        "loss": 0.2613,
+        "valLoss": 0.3074
+      },
+      {
+        "epoch": 45,
+        "loss": 0.2469,
+        "valLoss": 0.295
+      },
+      {
+        "epoch": 46,
+        "loss": 0.252,
+        "valLoss": 0.2976
+      },
+      {
+        "epoch": 47,
+        "loss": 0.2687,
+        "valLoss": 0.2946
+      },
+      {
+        "epoch": 48,
+        "loss": 0.2758,
+        "valLoss": 0.3035
+      },
+      {
+        "epoch": 49,
+        "loss": 0.263,
+        "valLoss": 0.3125
+      },
+      {
+        "epoch": 50,
+        "loss": 0.2504,
+        "valLoss": 0.2926
+      }
+    ],
+    "results": [
+      {
+        "model": "vqc",
+        "family": "quantum",
+        "auc": {
+          "mean": 0.893,
+          "std": 0.015
+        }
+      },
+      {
+        "model": "qsvm",
+        "family": "quantum",
+        "auc": {
+          "mean": 0.914,
+          "std": 0.012
+        }
+      },
+      {
+        "model": "logreg",
+        "family": "classical",
+        "auc": {
+          "mean": 0.907,
+          "std": 0.01
+        }
+      },
+      {
+        "model": "svm",
+        "family": "classical",
+        "auc": {
+          "mean": 0.911,
+          "std": 0.011
+        }
+      },
+      {
+        "model": "rf",
+        "family": "classical",
+        "auc": {
+          "mean": 0.916,
+          "std": 0.01
+        }
+      },
+      {
+        "model": "xgboost",
+        "family": "classical",
+        "auc": {
+          "mean": 0.921,
+          "std": 0.009
+        }
+      }
+    ],
+    "completedAt": "2026-09-27T14:40:00+05:30"
+  },
+  "heart": {
+    "jobId": "JOB-2049",
+    "experimentId": "EXP-2049",
+    "epochs": 50,
+    "lossCurve": [
+      {
+        "epoch": 1,
+        "loss": 0.651,
+        "valLoss": 0.6857
+      },
+      {
+        "epoch": 2,
+        "loss": 0.6029,
+        "valLoss": 0.656
+      },
+      {
+        "epoch": 3,
+        "loss": 0.5698,
+        "valLoss": 0.616
+      },
+      {
+        "epoch": 4,
+        "loss": 0.5622,
+        "valLoss": 0.614
+      },
+      {
+        "epoch": 5,
+        "loss": 0.5367,
+        "valLoss": 0.5816
+      },
+      {
+        "epoch": 6,
+        "loss": 0.5072,
+        "valLoss": 0.5654
+      },
+      {
+        "epoch": 7,
+        "loss": 0.4759,
+        "valLoss": 0.5388
+      },
+      {
+        "epoch": 8,
+        "loss": 0.484,
+        "valLoss": 0.5288
+      },
+      {
+        "epoch": 9,
+        "loss": 0.4518,
+        "valLoss": 0.4974
+      },
+      {
+        "epoch": 10,
+        "loss": 0.438,
+        "valLoss": 0.5009
+      },
+      {
+        "epoch": 11,
+        "loss": 0.4415,
+        "valLoss": 0.4813
+      },
+      {
+        "epoch": 12,
+        "loss": 0.4127,
+        "valLoss": 0.4545
+      },
+      {
+        "epoch": 13,
+        "loss": 0.3994,
+        "valLoss": 0.4588
+      },
+      {
+        "epoch": 14,
+        "loss": 0.3783,
+        "valLoss": 0.4287
+      },
+      {
+        "epoch": 15,
+        "loss": 0.3758,
+        "valLoss": 0.4505
+      },
+      {
+        "epoch": 16,
+        "loss": 0.3626,
+        "valLoss": 0.4063
+      },
+      {
+        "epoch": 17,
+        "loss": 0.3604,
+        "valLoss": 0.4105
+      },
+      {
+        "epoch": 18,
+        "loss": 0.3418,
+        "valLoss": 0.4126
+      },
+      {
+        "epoch": 19,
+        "loss": 0.3328,
+        "valLoss": 0.391
+      },
+      {
+        "epoch": 20,
+        "loss": 0.3501,
+        "valLoss": 0.3773
+      },
+      {
+        "epoch": 21,
+        "loss": 0.3218,
+        "valLoss": 0.3915
+      },
+      {
+        "epoch": 22,
+        "loss": 0.3121,
+        "valLoss": 0.3825
+      },
+      {
+        "epoch": 23,
+        "loss": 0.314,
+        "valLoss": 0.3724
+      },
+      {
+        "epoch": 24,
+        "loss": 0.3082,
+        "valLoss": 0.3597
+      },
+      {
+        "epoch": 25,
+        "loss": 0.3046,
+        "valLoss": 0.3691
+      },
+      {
+        "epoch": 26,
+        "loss": 0.2917,
+        "valLoss": 0.3402
+      },
+      {
+        "epoch": 27,
+        "loss": 0.2974,
+        "valLoss": 0.3474
+      },
+      {
+        "epoch": 28,
+        "loss": 0.2785,
+        "valLoss": 0.3453
+      },
+      {
+        "epoch": 29,
+        "loss": 0.2971,
+        "valLoss": 0.3546
+      },
+      {
+        "epoch": 30,
+        "loss": 0.2858,
+        "valLoss": 0.3284
+      },
+      {
+        "epoch": 31,
+        "loss": 0.275,
+        "valLoss": 0.3474
+      },
+      {
+        "epoch": 32,
+        "loss": 0.2887,
+        "valLoss": 0.3309
+      },
+      {
+        "epoch": 33,
+        "loss": 0.2609,
+        "valLoss": 0.3367
+      },
+      {
+        "epoch": 34,
+        "loss": 0.2805,
+        "valLoss": 0.3124
+      },
+      {
+        "epoch": 35,
+        "loss": 0.2715,
+        "valLoss": 0.3333
+      },
+      {
+        "epoch": 36,
+        "loss": 0.2716,
+        "valLoss": 0.3377
+      },
+      {
+        "epoch": 37,
+        "loss": 0.269,
+        "valLoss": 0.3251
+      },
+      {
+        "epoch": 38,
+        "loss": 0.2677,
+        "valLoss": 0.3086
+      },
+      {
+        "epoch": 39,
+        "loss": 0.2593,
+        "valLoss": 0.2929
+      },
+      {
+        "epoch": 40,
+        "loss": 0.2557,
+        "valLoss": 0.3281
+      },
+      {
+        "epoch": 41,
+        "loss": 0.2743,
+        "valLoss": 0.3246
+      },
+      {
+        "epoch": 42,
+        "loss": 0.26,
+        "valLoss": 0.2959
+      },
+      {
+        "epoch": 43,
+        "loss": 0.2607,
+        "valLoss": 0.2827
+      },
+      {
+        "epoch": 44,
+        "loss": 0.2645,
+        "valLoss": 0.317
+      },
+      {
+        "epoch": 45,
+        "loss": 0.2651,
+        "valLoss": 0.2977
+      },
+      {
+        "epoch": 46,
+        "loss": 0.2515,
+        "valLoss": 0.3083
+      },
+      {
+        "epoch": 47,
+        "loss": 0.2555,
+        "valLoss": 0.3012
+      },
+      {
+        "epoch": 48,
+        "loss": 0.2458,
+        "valLoss": 0.2828
+      },
+      {
+        "epoch": 49,
+        "loss": 0.2501,
+        "valLoss": 0.2982
+      },
+      {
+        "epoch": 50,
+        "loss": 0.2522,
+        "valLoss": 0.3104
+      }
+    ],
+    "results": [
+      {
+        "model": "vqc",
+        "family": "quantum",
+        "auc": {
+          "mean": 0.872,
+          "std": 0.018
+        }
+      },
+      {
+        "model": "qsvm",
+        "family": "quantum",
+        "auc": {
+          "mean": 0.896,
+          "std": 0.015
+        }
+      },
+      {
+        "model": "logreg",
+        "family": "classical",
+        "auc": {
+          "mean": 0.884,
+          "std": 0.017
+        }
+      },
+      {
+        "model": "svm",
+        "family": "classical",
+        "auc": {
+          "mean": 0.892,
+          "std": 0.016
+        }
+      },
+      {
+        "model": "rf",
+        "family": "classical",
+        "auc": {
+          "mean": 0.898,
+          "std": 0.015
+        }
+      },
+      {
+        "model": "xgboost",
+        "family": "classical",
+        "auc": {
+          "mean": 0.903,
+          "std": 0.014
+        }
+      }
+    ],
+    "completedAt": "2026-09-27T14:40:00+05:30"
+  }
+}
