@@ -1,27 +1,72 @@
 import { motion, useReducedMotion } from 'motion/react'
-import type { ReactNode } from 'react'
-import { Term } from '@/components/ui/Term'
+import { Tooltip } from '@/components/ui/Tooltip'
 import type { DatasetMeta } from '@/lib/domain'
 
 interface Stage {
-  label: ReactNode
+  label: string
   detail: string
   quantum: boolean
+  /** One plain sentence for the hover tooltip. */
+  explain: string
 }
 
 function stages(dataset: DatasetMeta): Stage[] {
   return [
-    { label: 'Data', detail: `${dataset.samples} × ${dataset.features}`, quantum: false },
-    { label: 'Preprocess', detail: 'Clean · z-score', quantum: false },
-    { label: <Term term="pca">PCA</Term>, detail: '→ 4 dims', quantum: false },
-    { label: <Term term="encoding">Encode</Term>, detail: 'Angle · 4 qubits', quantum: true },
-    { label: 'Circuit', detail: 'ZZ map · depth 2', quantum: true },
-    { label: 'Measure', detail: '4096 shots', quantum: true },
-    { label: 'Evaluate', detail: 'AUC · 5 seeds', quantum: false },
+    {
+      label: 'Data',
+      detail: `${dataset.samples} × ${dataset.features}`,
+      quantum: false,
+      explain: `Patient records go in: ${dataset.samples} patients, ${dataset.features} measurements each.`,
+    },
+    {
+      label: 'Preprocess',
+      detail: 'Clean · z-score',
+      quantum: false,
+      explain: 'Gaps are filled, extreme values tamed, and every measurement put on the same scale.',
+    },
+    {
+      label: 'PCA',
+      detail: '→ 4 dims',
+      quantum: false,
+      explain: 'Many measurements are squeezed into 4 summary numbers, one for each qubit.',
+    },
+    {
+      label: 'Encode',
+      detail: 'Angle · 4 qubits',
+      quantum: true,
+      explain: 'Each summary number becomes a rotation angle that tilts one qubit.',
+    },
+    {
+      label: 'Circuit',
+      detail: 'ZZ map · depth 2',
+      quantum: true,
+      explain: 'Quantum gates let the qubits interact, mixing the patient’s features together.',
+    },
+    {
+      label: 'Measure',
+      detail: '4096 shots',
+      quantum: true,
+      explain: 'The qubits are read thousands of times; the pattern of 0s and 1s is the model’s signal.',
+    },
+    {
+      label: 'Evaluate',
+      detail: 'AUC · 5 seeds',
+      quantum: false,
+      explain: 'Predictions are scored against the true diagnoses, repeated over 5 random seeds.',
+    },
   ]
 }
 
 const pct = (i: number, n: number) => `${(i / (n - 1)) * 100}%`
+
+function StageTag({ quantum }: { quantum: boolean }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span className={`block h-[6px] w-[6px] ${quantum ? 'bg-accent' : 'bg-classical'}`} aria-hidden="true" />
+      {quantum ? 'Quantum' : 'Classical'}
+    </span>
+  )
+}
 
 /** Seven-stage hybrid pipeline: classical stages grey, quantum stages accent, a dot looping every 4s. */
 export function Pipeline({ dataset }: { dataset: DatasetMeta }) {
@@ -32,7 +77,7 @@ export function Pipeline({ dataset }: { dataset: DatasetMeta }) {
   const lastQ = list.length - 1 - [...list].reverse().findIndex((s) => s.quantum)
 
   return (
-    <div className="px-[60px] pt-10">
+    <div className="px-[60px] pt-10" data-tour="pipeline">
       <div className="relative h-[132px]">
         {/* Quantum bracket */}
         <div
@@ -61,18 +106,27 @@ export function Pipeline({ dataset }: { dataset: DatasetMeta }) {
 
         <ol className="absolute inset-0" aria-label="Hybrid pipeline stages">
           {list.map((stage, i) => (
-            <li
-              key={i}
-              className="absolute top-[25px] flex w-[120px] -translate-x-1/2 flex-col items-center text-center"
-              style={{ left: pct(i, n) }}
-            >
-              <span
-                className={`block h-[13px] w-[13px] border ${stage.quantum ? 'border-accent bg-accent' : 'border-classical bg-classical'}`}
-                aria-hidden="true"
-              />
-              <span className="mt-4 text-[13.5px] text-ink">{stage.label}</span>
-              <span className="label-mono mt-1 text-[10px] text-muted">{stage.detail}</span>
-              <span className="sr-only">{stage.quantum ? '(quantum stage)' : '(classical stage)'}</span>
+            <li key={stage.label} className="absolute top-[18px] w-[120px] -translate-x-1/2" style={{ left: pct(i, n) }}>
+              <Tooltip label={<StageTag quantum={stage.quantum} />} content={stage.explain} width={240}>
+                <span
+                  tabIndex={0}
+                  className="group flex cursor-help flex-col items-center rounded-[2px] px-1 pt-[7px] pb-1 text-center"
+                >
+                  <span
+                    className={`block h-[13px] w-[13px] border transition-transform duration-200 group-hover:scale-125 group-focus-visible:scale-125 ${
+                      stage.quantum ? 'border-accent bg-accent' : 'border-classical bg-classical'
+                    }`}
+                    aria-hidden="true"
+                  />
+                  <span className="mt-4 text-[13.5px] text-ink underline decoration-transparent decoration-dotted underline-offset-[3px] group-hover:decoration-muted">
+                    {stage.label}
+                  </span>
+                  <span className="label-mono mt-1 text-[10px] text-muted">{stage.detail}</span>
+                  <span className="sr-only">
+                    ({stage.quantum ? 'quantum' : 'classical'} stage) {stage.explain}
+                  </span>
+                </span>
+              </Tooltip>
             </li>
           ))}
         </ol>
@@ -84,6 +138,7 @@ export function Pipeline({ dataset }: { dataset: DatasetMeta }) {
         <span className="flex items-center gap-2">
           <span className="block h-2 w-2 bg-accent" aria-hidden="true" /> Quantum
         </span>
+        <span>· Hover a stage for a plain explanation</span>
       </p>
     </div>
   )

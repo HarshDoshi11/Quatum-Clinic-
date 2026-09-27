@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { readStored, writeStored } from '@/lib/storage'
 
 export type Theme = 'light' | 'dark'
@@ -22,12 +22,15 @@ function initialTheme(): Theme {
   return readStored(STORAGE_KEY, THEMES) ?? (systemQuery().matches ? 'dark' : 'light')
 }
 
+/** Update the DOM attribute synchronously, so components that read CSS variables during render see the new theme. */
+function applyTheme(theme: Theme): void {
+  document.documentElement.dataset.theme = theme
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(initialTheme)
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme
-  }, [theme])
+  const themeRef = useRef(theme)
+  themeRef.current = theme
 
   // Enable the 300ms color transition only after first paint, so load doesn't animate.
   useEffect(() => {
@@ -40,24 +43,22 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (readStored(STORAGE_KEY, THEMES)) return
     const query = systemQuery()
     const onChange = (event: MediaQueryListEvent) => {
-      if (!readStored(STORAGE_KEY, THEMES)) setThemeState(event.matches ? 'dark' : 'light')
+      if (readStored(STORAGE_KEY, THEMES)) return
+      const next = event.matches ? 'dark' : 'light'
+      applyTheme(next)
+      setThemeState(next)
     }
     query.addEventListener('change', onChange)
     return () => query.removeEventListener('change', onChange)
   }, [])
 
   const setTheme = useCallback((next: Theme) => {
+    applyTheme(next)
     writeStored(STORAGE_KEY, next)
     setThemeState(next)
   }, [])
 
-  const toggleTheme = useCallback(() => {
-    setThemeState((prev) => {
-      const next = prev === 'light' ? 'dark' : 'light'
-      writeStored(STORAGE_KEY, next)
-      return next
-    })
-  }, [])
+  const toggleTheme = useCallback(() => setTheme(themeRef.current === 'light' ? 'dark' : 'light'), [setTheme])
 
   const value = useMemo(() => ({ theme, setTheme, toggleTheme }), [theme, setTheme, toggleTheme])
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

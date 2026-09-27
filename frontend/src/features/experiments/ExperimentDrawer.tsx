@@ -5,10 +5,10 @@ import { Drawer } from '@/components/ui/Drawer'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Term } from '@/components/ui/Term'
-import { useToast } from '@/components/ui/Toast'
 import { BACKENDS, DATASETS, MODELS } from '@/lib/domain'
 import { formatDateTime, formatStd } from '@/lib/format'
 import type { GlossaryKey } from '@/lib/glossary'
+import { useAppActions } from '@/features/actions'
 import { useDataVersion } from '@/state/dataVersion'
 import type { Experiment, ExperimentMetrics, MeanStd } from '@/types'
 
@@ -64,6 +64,7 @@ function Row({ label, value, term }: { label: string; value: ReactNode; term?: G
 const dash = '—'
 
 function ExperimentBody({ exp }: { exp: Experiment }) {
+  const { copyExperimentId } = useAppActions()
   const c = exp.config
   const quantum = c.qubits !== null
   const n = c.noise
@@ -73,7 +74,17 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
       <p className="label-mono text-muted">
         {exp.kind} · {exp.status} · {DATASETS[exp.dataset].code}
       </p>
-      <h2 className="num mt-4 text-[44px] leading-none tracking-[-0.02em] text-ink">{exp.id}</h2>
+      <div className="mt-4 flex items-end gap-4">
+        <h2 className="num text-[44px] leading-none tracking-[-0.02em] text-ink">{exp.id}</h2>
+        <button
+          type="button"
+          onClick={() => copyExperimentId(exp.id)}
+          aria-label={`Copy ${exp.id}`}
+          className="label-mono mb-1 rounded-[2px] border border-rule px-2 py-1 text-muted hover:border-ink hover:text-ink"
+        >
+          Copy ID
+        </button>
+      </div>
       <p className="mt-3 font-serif text-[28px] leading-tight text-ink">{exp.title}</p>
       <p className="label-mono mt-3 text-muted">{formatDateTime(exp.timestamp)} IST</p>
       {exp.notes && <p className="mt-5 max-w-[46ch] text-[14px] leading-6 text-muted">{exp.notes}</p>}
@@ -81,7 +92,7 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
       {exp.metrics && (
         <section className="mt-10" aria-label="Metrics">
           <p className="label-mono mb-3 text-muted">
-            Metrics · mean ± std over {c.seeds} seed{c.seeds > 1 ? 's' : ''}
+            Metrics · mean ± std over {c.seeds} <Term term="seed">seed{c.seeds > 1 ? 's' : ''}</Term>
           </p>
           <div className="grid grid-cols-2 border-t border-rule">
             {METRIC_ROWS.map((m, i) => {
@@ -111,14 +122,16 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
           <Row label="Qubits" term="qubit" value={c.qubits ?? dash} />
           <Row label="Circuit depth" term="circuit depth" value={c.circuitDepth ?? dash} />
           <Row label="Entanglement" value={c.entanglement ?? dash} />
-          <Row label="Backend" value={BACKENDS[c.backend].name} />
-          <Row label="Seed" value={`${c.seed} · ${c.seeds} run${c.seeds > 1 ? 's' : ''}`} />
+          <Row label="Backend" term="backend" value={BACKENDS[c.backend].name} />
+          <Row label="Seed" term="seed" value={`${c.seed} · ${c.seeds} run${c.seeds > 1 ? 's' : ''}`} />
         </dl>
       </section>
 
       {quantum && (
         <section className="mt-10" aria-label="Noise parameters">
-          <p className="label-mono mb-1 text-muted">Noise parameters</p>
+          <p className="label-mono mb-1 text-muted">
+            <Term term="noise">Noise</Term> parameters
+          </p>
           {n && (n.gateError2q > 0 || n.t1Us !== null) ? (
             <dl className="border-t border-rule">
               <Row label="T1" term="t1" value={n.t1Us !== null ? `${n.t1Us} µs` : dash} />
@@ -129,7 +142,9 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
               <Row label="Shots" term="shots" value={n.shots?.toLocaleString('en-US') ?? dash} />
             </dl>
           ) : (
-            <p className="border-t border-rule py-3 text-[13px] text-muted">Noiseless simulation.</p>
+            <p className="border-t border-rule py-3 text-[13px] text-muted">
+              Noiseless <Term term="simulator">simulation</Term>.
+            </p>
           )}
         </section>
       )}
@@ -138,23 +153,16 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
 }
 
 function ExperimentDetail({ id, onOpen }: { id: string; onOpen: (id: string) => void }) {
-  const { version, invalidate } = useDataVersion()
-  const { toast } = useToast()
+  const { version } = useDataVersion()
+  const { rerunExperiment } = useAppActions()
   const [rerunning, setRerunning] = useState(false)
   const exp = useResource((signal) => api.getExperiment(id, { signal }), [id, version])
 
   const rerun = async () => {
     setRerunning(true)
-    try {
-      const created = await api.rerunExperiment(id)
-      toast(`${created.id} · re-run of ${id} complete`, 'accent')
-      invalidate()
-      onOpen(created.id)
-    } catch (error) {
-      toast(error instanceof Error ? error.message : 'Re-run failed', 'error')
-    } finally {
-      setRerunning(false)
-    }
+    const created = await rerunExperiment(id)
+    setRerunning(false)
+    if (created) onOpen(created.id)
   }
 
   if (exp.status === 'error') {

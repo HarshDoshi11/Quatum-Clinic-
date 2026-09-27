@@ -1,5 +1,6 @@
 import { Moon, Sun } from 'lucide-react'
 import { SegmentedToggle, type SegmentOption } from '@/components/ui/SegmentedToggle'
+import { useAppActions } from '@/features/actions'
 import { useTheme, type Theme } from '@/state/theme'
 
 const OPTIONS: readonly SegmentOption<Theme>[] = [
@@ -8,7 +9,8 @@ const OPTIONS: readonly SegmentOption<Theme>[] = [
 ]
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme } = useTheme()
+  const { setTheme } = useAppActions()
   return (
     <SegmentedToggle<Theme>
       options={OPTIONS}

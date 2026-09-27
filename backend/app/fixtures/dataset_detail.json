@@ -615,43 +615,84 @@
         {
           "component": 1,
           "explained": 0.443,
-          "cumulative": 0.443
+          "cumulative": 0.443,
+          "label": "mostly tumor size",
+          "drivers": [
+            "radius",
+            "perimeter",
+            "area",
+            "concave points"
+          ]
         },
         {
           "component": 2,
           "explained": 0.19,
-          "cumulative": 0.633
+          "cumulative": 0.633,
+          "label": "mostly edge smoothness",
+          "drivers": [
+            "smoothness",
+            "fractal dimension"
+          ]
         },
         {
           "component": 3,
           "explained": 0.094,
-          "cumulative": 0.727
+          "cumulative": 0.727,
+          "label": "mostly cell texture",
+          "drivers": [
+            "texture"
+          ]
         },
         {
           "component": 4,
           "explained": 0.066,
-          "cumulative": 0.793
+          "cumulative": 0.793,
+          "label": "mostly shape symmetry",
+          "drivers": [
+            "symmetry",
+            "compactness"
+          ]
         },
         {
           "component": 5,
           "explained": 0.055,
-          "cumulative": 0.848
+          "cumulative": 0.848,
+          "label": "mixed shape detail",
+          "drivers": [
+            "concavity",
+            "compactness"
+          ]
         },
         {
           "component": 6,
           "explained": 0.04,
-          "cumulative": 0.888
+          "cumulative": 0.888,
+          "label": "mixed texture detail",
+          "drivers": [
+            "texture",
+            "smoothness"
+          ]
         },
         {
           "component": 7,
           "explained": 0.023,
-          "cumulative": 0.911
+          "cumulative": 0.911,
+          "label": "residual variation",
+          "drivers": []
         },
         {
           "component": 8,
           "explained": 0.016,
-          "cumulative": 0.927
+          "cumulative": 0.927,
+          "label": "residual variation",
+          "drivers": []
         }
+      ],
+      "sampleEncoding": [
+        0.68,
+        0.41,
+        0.57,
+        0.52
       ]
     }
   },
@@ -996,43 +1037,85 @@
         {
           "component": 1,
           "explained": 0.216,
-          "cumulative": 0.216
+          "cumulative": 0.216,
+          "label": "mostly exercise response",
+          "drivers": [
+            "max heart rate",
+            "ST depression",
+            "exercise angina"
+          ]
         },
         {
           "component": 2,
           "explained": 0.121,
-          "cumulative": 0.337
+          "cumulative": 0.337,
+          "label": "mostly age and blood pressure",
+          "drivers": [
+            "age",
+            "resting BP"
+          ]
         },
         {
           "component": 3,
           "explained": 0.096,
-          "cumulative": 0.433
+          "cumulative": 0.433,
+          "label": "mostly chest pain type",
+          "drivers": [
+            "chest pain type",
+            "ST slope"
+          ]
         },
         {
           "component": 4,
           "explained": 0.088,
-          "cumulative": 0.521
+          "cumulative": 0.521,
+          "label": "mostly cholesterol and blood sugar",
+          "drivers": [
+            "cholesterol",
+            "fasting sugar"
+          ]
         },
         {
           "component": 5,
           "explained": 0.078,
-          "cumulative": 0.599
+          "cumulative": 0.599,
+          "label": "mostly scan findings",
+          "drivers": [
+            "thallium scan",
+            "major vessels"
+          ]
         },
         {
           "component": 6,
           "explained": 0.072,
-          "cumulative": 0.671
+          "cumulative": 0.671,
+          "label": "mostly resting ECG",
+          "drivers": [
+            "resting ECG"
+          ]
         },
         {
           "component": 7,
           "explained": 0.065,
-          "cumulative": 0.736
+          "cumulative": 0.736,
+          "label": "mostly sex",
+          "drivers": [
+            "sex"
+          ]
         },
         {
           "component": 8,
           "explained": 0.059,
-          "cumulative": 0.795
+          "cumulative": 0.795,
+          "label": "residual variation",
+          "drivers": []
         }
+      ],
+      "sampleEncoding": [
+        0.66,
+        0.58,
+        0.72,
+        0.55
       ]
     }
   }

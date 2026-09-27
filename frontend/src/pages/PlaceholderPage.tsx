@@ -1,6 +1,5 @@
-import { Headline } from '@/components/ui/Headline'
 import { Page, PageItem } from '@/components/ui/Page'
-import { SectionLabel } from '@/components/ui/SectionLabel'
+import { PageHeader } from '@/components/ui/PageHeader'
 import type { RouteMeta } from '@/routes'
 
 interface PlaceholderPageProps {
@@ -11,16 +10,11 @@ interface PlaceholderPageProps {
 
 /** Stand-in for pages not built yet — already uses the final label + headline. */
 export function PlaceholderPage({ route, variant = 'research' }: PlaceholderPageProps) {
-  const headingId = `${route.id}-heading`
-
   return (
     <Page label={route.label}>
       <div className="grid-12">
         <PageItem as="header" className="col-span-12 lg:col-span-10">
-          <SectionLabel>{route.section}</SectionLabel>
-          <Headline id={headingId} className="mt-6">
-            {route.headline}
-          </Headline>
+          <PageHeader route={route} />
         </PageItem>
 
         <PageItem className="col-span-12 mt-16">

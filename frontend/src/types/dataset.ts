@@ -44,6 +44,10 @@ export interface PcaComponent {
   /** Fraction of variance explained by this component. */
   explained: number
   cumulative: number
+  /** Plain-words summary of what the component captures, e.g. "mostly tumor size". */
+  label: string
+  /** Original features that load most heavily on this component. */
+  drivers: string[]
 }
 
 export interface DatasetSummary {
@@ -66,6 +70,11 @@ export interface PreprocessingReport {
   selectedFeatures: string[]
   pcaDims: number
   pca: PcaComponent[]
+  /**
+   * The demo (sample) patient after PCA + scaling: one value in [0, 1] per qubit.
+   * Higher values point toward |1⟩ and read as higher risk.
+   */
+  sampleEncoding: number[]
 }
 
 export interface DatasetDetail extends DatasetSummary {

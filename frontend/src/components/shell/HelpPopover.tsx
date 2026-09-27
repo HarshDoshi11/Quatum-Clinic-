@@ -1,12 +1,15 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useId, useMemo, useRef, useState } from 'react'
+import { useCallback, useId, useMemo, useRef, useState, type ReactNode } from 'react'
+import { Button } from '@/components/ui/Button'
+import { Term } from '@/components/ui/Term'
+import { useTour } from '@/features/tour/Tour'
 import { modKeyLabel } from '@/lib/platform'
 import { tQuick } from '@/lib/motion'
 import { useDismiss } from '@/lib/useDismiss'
 
-const LEGEND: readonly { swatch: string; label: string }[] = [
+const LEGEND: readonly { swatch: string; label: ReactNode }[] = [
   { swatch: 'bg-accent', label: 'Quantum model / live value' },
-  { swatch: 'bg-classical', label: 'Classical baseline' },
+  { swatch: 'bg-classical', label: <>Classical <Term term="baseline">baseline</Term></> },
   { swatch: 'bg-risk-low', label: 'Lower risk' },
   { swatch: 'bg-risk-mid', label: 'Moderate risk' },
   { swatch: 'bg-risk-high', label: 'Higher risk' },
@@ -27,6 +30,7 @@ export function HelpPopover() {
   const close = useCallback(() => setOpen(false), [])
   const dismissRefs = useMemo(() => [buttonRef, panelRef], [])
   useDismiss(dismissRefs, open, close)
+  const { startTour } = useTour()
 
   return (
     <div className="relative">
@@ -59,13 +63,23 @@ export function HelpPopover() {
             <p className="font-serif text-[26px] leading-tight">How to read this lab</p>
             <p className="mt-2 text-[13px] leading-5 text-muted">
               Each page answers one question. Read the one-line takeaway above a chart first, then the chart. Dotted
-              underlines explain jargon on hover.
+              underlines explain jargon on hover, like <Term>AUC</Term>.
             </p>
+            <Button
+              size="sm"
+              className="mt-4 w-full"
+              onClick={() => {
+                setOpen(false)
+                startTour()
+              }}
+            >
+              Take the 8-step guided tour →
+            </Button>
 
             <p className="label-mono mt-5 mb-2 text-muted">Colour key</p>
             <ul className="flex flex-col gap-1.5">
               {LEGEND.map((item) => (
-                <li key={item.label} className="flex items-center gap-3 text-[13px]">
+                <li key={item.swatch} className="flex items-center gap-3 text-[13px]">
                   <span className={`block h-2 w-2 ${item.swatch}`} aria-hidden="true" />
                   {item.label}
                 </li>

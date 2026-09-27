@@ -15,7 +15,7 @@ interface ToastContextValue {
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null)
-const DURATION = 4000
+const DURATION = 3000
 const MAX = 3
 
 const MARK: Record<ToastTone, string> = { neutral: 'bg-ink', accent: 'bg-accent', error: 'bg-risk-high' }
@@ -52,9 +52,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <motion.div
               key={t.id}
               layout
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -8, transition: { duration: 0.15 } }}
               transition={tQuick}
               role={t.tone === 'error' ? 'alert' : 'status'}
               className="pointer-events-auto flex items-center gap-3 rounded-[2px] border border-rule-strong bg-bg px-3 py-2"

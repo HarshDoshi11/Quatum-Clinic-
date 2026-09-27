@@ -113,6 +113,64 @@
   box-shadow: var(--shadow-float);
 }
 
+/* ─── Range slider: 1px track, filled portion, 10px square thumb ─── */
+.qc-range {
+  --fill: 50%;
+  --fill-color: var(--ink);
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+.qc-range[data-tone='accent'] {
+  --fill-color: var(--accent);
+}
+.qc-range:disabled {
+  cursor: not-allowed;
+}
+.qc-range::-webkit-slider-runnable-track {
+  height: 1px;
+  /* Hard colour stop: a filled/unfilled split, not a visual gradient. */
+  background: linear-gradient(to right, var(--fill-color) var(--fill), var(--rule-strong) var(--fill));
+}
+.qc-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  margin-top: -4.5px;
+  border: 0;
+  border-radius: 0;
+  background: var(--fill-color);
+}
+.qc-range::-moz-range-track {
+  height: 1px;
+  background: var(--rule-strong);
+}
+.qc-range::-moz-range-progress {
+  height: 1px;
+  background: var(--fill-color);
+}
+.qc-range::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 0;
+  border-radius: 0;
+  background: var(--fill-color);
+}
+.qc-range:focus-visible {
+  outline: none;
+}
+.qc-range:focus-visible::-webkit-slider-thumb {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+.qc-range:focus-visible::-moz-range-thumb {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.theme-ready *,
   html.theme-ready *::before,

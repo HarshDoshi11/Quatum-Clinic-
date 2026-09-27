@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { api } from '@/api'
 import { COMMAND_PALETTE_EVENT } from '@/components/shell/TopBar'
-import { useToast } from '@/components/ui/Toast'
+import { useAppActions } from '@/features/actions'
 import { useExperimentDrawer } from '@/features/experiments/ExperimentDrawer'
 import { DATASETS, MODELS } from '@/lib/domain'
 import { formatTime } from '@/lib/format'
@@ -45,10 +45,10 @@ export function CommandPalette() {
 
   const navigate = useNavigate()
   const { mode, setMode } = useMode()
-  const { theme, toggleTheme } = useTheme()
-  const { datasetId, setDataset } = useDataset()
+  const { theme } = useTheme()
+  const { datasetId } = useDataset()
   const { openExperiment } = useExperimentDrawer()
-  const { toast } = useToast()
+  const { switchDataset, toggleTheme, runPrediction, newExperiment } = useAppActions()
 
   const show = useCallback(() => {
     returnFocus.current = document.activeElement as HTMLElement | null
@@ -151,21 +151,16 @@ export function CommandPalette() {
                 <Command.Group heading="Actions" className={groupClass}>
                   {mode === 'research' && (
                     <>
-                      <Item value="Run a prediction" keywords={['predict', 'patient', 'trust']} onSelect={() => run(() => navigate('/predict'))} hint="III.1">
+                      <Item value="Run a prediction" keywords={['predict', 'patient', 'trust']} onSelect={() => run(runPrediction)} hint="III.1">
                         Run a prediction
                       </Item>
-                      <Item value="New experiment" keywords={['train', 'model']} onSelect={() => run(() => navigate('/train'))} hint="00.2">
+                      <Item value="New experiment" keywords={['train', 'model']} onSelect={() => run(newExperiment)} hint="00.2">
                         New experiment
                       </Item>
                       <Item
                         value={`Switch dataset to ${otherDataset.name}`}
                         keywords={['dataset', otherDataset.code, 'data']}
-                        onSelect={() =>
-                          run(() => {
-                            setDataset(otherDataset.id)
-                            toast(`Dataset · ${otherDataset.name} (${otherDataset.code}) · ${otherDataset.samples}`)
-                          })
-                        }
+                        onSelect={() => run(() => switchDataset(otherDataset.id))}
                         hint={otherDataset.code}
                       >
                         Switch dataset to {otherDataset.name} ({otherDataset.code})

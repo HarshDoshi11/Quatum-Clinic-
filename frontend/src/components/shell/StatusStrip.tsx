@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from 'react'
 import { api, useResource } from '@/api'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { Term } from '@/components/ui/Term'
 import { USE_MOCK } from '@/config'
 import { MODELS } from '@/lib/domain'
 import { formatAuc, formatDateTime } from '@/lib/format'
@@ -9,11 +10,12 @@ import { useDataset } from '@/state/dataset'
 import type { Mode } from '@/state/mode'
 
 interface StripField {
-  label: string
+  key: string
+  label: ReactNode
   value: ReactNode
 }
 
-function Field({ label, value }: StripField) {
+function Field({ label, value }: Omit<StripField, "key">) {
   return (
     <span className="flex items-center gap-2 whitespace-nowrap">
       <span className="text-muted">{label}</span>
@@ -30,8 +32,9 @@ export function StatusStrip({ mode }: { mode: Mode }) {
   const data = status.data
 
   const fields: StripField[] = [
-    { label: 'Dataset', value: `${dataset.code} · ${dataset.samples}` },
+    { key: 'dataset', label: 'Dataset', value: `${dataset.code} · ${dataset.samples}` },
     {
+      key: 'best',
       label: 'Best quantum model',
       value: data ? (
         <span className="text-accent">
@@ -41,9 +44,9 @@ export function StatusStrip({ mode }: { mode: Mode }) {
         <Skeleton width={10} />
       ),
     },
-    { label: 'Qubits', value: data ? data.bestQuantum.qubits : <Skeleton width={2} /> },
-    { label: 'Last experiment', value: data ? data.lastExperiment.id : <Skeleton width={8} /> },
-    { label: 'Updated', value: data ? formatDateTime(data.updatedAt) : <Skeleton width={18} /> },
+    { key: 'qubits', label: <Term term="qubit">Qubits</Term>, value: data ? data.bestQuantum.qubits : <Skeleton width={2} /> },
+    { key: 'last', label: <>Last <Term term="experiment">experiment</Term></>, value: data ? data.lastExperiment.id : <Skeleton width={8} /> },
+    { key: 'updated', label: 'Updated', value: data ? formatDateTime(data.updatedAt) : <Skeleton width={18} /> },
   ]
 
   return (
@@ -55,13 +58,13 @@ export function StatusStrip({ mode }: { mode: Mode }) {
       {mode === 'research' ? (
         <div className="flex min-w-0 flex-1 items-center gap-4 overflow-hidden xl:gap-5">
           {fields.map((field, i) => (
-            <Fragment key={field.label}>
+            <Fragment key={field.key}>
               {i > 0 && (
                 <span className="hidden text-rule-strong xl:inline" aria-hidden="true">
                   ·
                 </span>
               )}
-              <Field {...field} />
+              <Field label={field.label} value={field.value} />
             </Fragment>
           ))}
         </div>

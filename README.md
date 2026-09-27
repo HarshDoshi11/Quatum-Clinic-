@@ -92,7 +92,11 @@ EXP-2044…2048, Δ −0.007, 1.2%, 4.1%, +6.2%) and that every experiment ID re
   Re-run button. Re-runs create a new ID and refresh the status strip and lists.
 - **Glossary:** `<Term>` adds a dotted underline and a one-line definition on hover or focus
   (`src/lib/glossary.ts`).
-- **Toasts:** bottom-left, via `useToast()`.
+- **Toasts:** bottom-left, via `useToast()`. Shared actions (dataset, theme, re-run, copy ID…) toast through
+  `useAppActions()`.
+- **Beginner layer:** a *Plain language* toggle in the top bar adds an "In simple words:" line under every section;
+  every page has a *What is this? ↗* panel; `?` → *Take the guided tour* walks through the Overview in 8 steps.
+  Standing rules for new pages are in [CLAUDE.md](CLAUDE.md).
 
 ## Backend
 

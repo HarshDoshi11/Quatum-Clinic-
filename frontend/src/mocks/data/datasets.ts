@@ -30,6 +30,36 @@ const MISSING: Record<DatasetId, Record<string, number>> = {
 
 const OUTLIERS_CLIPPED: Record<DatasetId, number> = { wdbc: 142, heart: 21 }
 
+/** What each principal component mostly captures (from its loadings), in plain words. */
+const PCA_MEANING: Record<DatasetId, { label: string; drivers: string[] }[]> = {
+  wdbc: [
+    { label: 'mostly tumor size', drivers: ['radius', 'perimeter', 'area', 'concave points'] },
+    { label: 'mostly edge smoothness', drivers: ['smoothness', 'fractal dimension'] },
+    { label: 'mostly cell texture', drivers: ['texture'] },
+    { label: 'mostly shape symmetry', drivers: ['symmetry', 'compactness'] },
+    { label: 'mixed shape detail', drivers: ['concavity', 'compactness'] },
+    { label: 'mixed texture detail', drivers: ['texture', 'smoothness'] },
+    { label: 'residual variation', drivers: [] },
+    { label: 'residual variation', drivers: [] },
+  ],
+  heart: [
+    { label: 'mostly exercise response', drivers: ['max heart rate', 'ST depression', 'exercise angina'] },
+    { label: 'mostly age and blood pressure', drivers: ['age', 'resting BP'] },
+    { label: 'mostly chest pain type', drivers: ['chest pain type', 'ST slope'] },
+    { label: 'mostly cholesterol and blood sugar', drivers: ['cholesterol', 'fasting sugar'] },
+    { label: 'mostly scan findings', drivers: ['thallium scan', 'major vessels'] },
+    { label: 'mostly resting ECG', drivers: ['resting ECG'] },
+    { label: 'mostly sex', drivers: ['sex'] },
+    { label: 'residual variation', drivers: [] },
+  ],
+}
+
+/** Demo patient after PCA, scaled to [0, 1] per qubit (angle encoding input). */
+const SAMPLE_ENCODING: Record<DatasetId, number[]> = {
+  wdbc: [0.68, 0.41, 0.57, 0.52],
+  heart: [0.66, 0.58, 0.72, 0.55],
+}
+
 // ─── Columns ────────────────────────────────────────────────
 
 const WDBC_BASES = ['radius', 'texture', 'perimeter', 'area', 'smoothness', 'compactness', 'concavity', 'concave_points', 'symmetry', 'fractal_dimension']
@@ -112,7 +142,7 @@ function pca(dataset: DatasetId): PcaComponent[] {
   let cumulative = 0
   return PCA_EXPLAINED[dataset].map((explained, i) => {
     cumulative += explained
-    return { component: i + 1, explained, cumulative: round(cumulative) }
+    return { component: i + 1, explained, cumulative: round(cumulative), ...PCA_MEANING[dataset][i] }
   })
 }
 
@@ -180,6 +210,7 @@ export function datasetDetail(dataset: DatasetId): DatasetDetail {
       selectedFeatures: SELECTED_NAMES[dataset],
       pcaDims: PCA_DIMS,
       pca: pca(dataset),
+      sampleEncoding: SAMPLE_ENCODING[dataset],
     },
   }
 }

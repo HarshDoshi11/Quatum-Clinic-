@@ -4,10 +4,12 @@ import { AppShell } from '@/components/shell/AppShell'
 import { ToastProvider } from '@/components/ui/Toast'
 import { CommandPalette } from '@/features/command/CommandPalette'
 import { ExperimentDrawerProvider } from '@/features/experiments/ExperimentDrawer'
+import { TourProvider } from '@/features/tour/Tour'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { Overview } from '@/pages/research/Overview'
 import { PATIENT_ROUTES, RESEARCH_ROUTES, type RouteMeta } from '@/routes'
 import { DataVersionProvider } from '@/state/dataVersion'
+import { PlainLanguageProvider } from '@/state/plainLanguage'
 
 /** Built pages; everything else renders a placeholder until its phase. */
 function researchPage(route: RouteMeta) {
@@ -41,14 +43,18 @@ export function App() {
     // reducedMotion="user": transform/layout animations are skipped when the OS asks for reduced motion.
     <MotionConfig reducedMotion="user">
       <DataVersionProvider>
-        <ToastProvider>
-          <ExperimentDrawerProvider>
-            <AppShell>
-              <AnimatedRoutes />
-            </AppShell>
-            <CommandPalette />
-          </ExperimentDrawerProvider>
-        </ToastProvider>
+        <PlainLanguageProvider>
+          <ToastProvider>
+            <ExperimentDrawerProvider>
+              <TourProvider>
+                <AppShell>
+                  <AnimatedRoutes />
+                </AppShell>
+                <CommandPalette />
+              </TourProvider>
+            </ExperimentDrawerProvider>
+          </ToastProvider>
+        </PlainLanguageProvider>
       </DataVersionProvider>
     </MotionConfig>
   )
