@@ -7,7 +7,13 @@ import { ExperimentDrawerProvider } from '@/features/experiments/ExperimentDrawe
 import { ShortcutsProvider } from '@/features/shortcuts/Shortcuts'
 import { TourProvider } from '@/features/tour/Tour'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
+import { Advantage } from '@/pages/research/Advantage'
+import { Data } from '@/pages/research/Data'
+import { Evolution } from '@/pages/research/Evolution'
 import { Overview } from '@/pages/research/Overview'
+import { Scalability } from '@/pages/research/Scalability'
+import { SmallData } from '@/pages/research/SmallData'
+import { Train } from '@/pages/research/Train'
 import { PATIENT_ROUTES, RESEARCH_ROUTES, type RouteMeta } from '@/routes'
 import { DataVersionProvider } from '@/state/dataVersion'
 import { PlainLanguageProvider } from '@/state/plainLanguage'
@@ -17,6 +23,18 @@ function researchPage(route: RouteMeta) {
   switch (route.id) {
     case 'overview':
       return <Overview route={route} />
+    case 'data':
+      return <Data route={route} />
+    case 'train':
+      return <Train route={route} />
+    case 'advantage':
+      return <Advantage route={route} />
+    case 'small-data':
+      return <SmallData route={route} />
+    case 'scalability':
+      return <Scalability route={route} />
+    case 'evolution':
+      return <Evolution route={route} />
     default:
       return <PlaceholderPage route={route} />
   }

@@ -76,7 +76,17 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 - **Tables.** Use `HairlineTable`: 15px rows (`type-ui`), 13px mono headers (`type-label`), rows at least 44px tall
   (`h-11`), tabular numerals.
 - **Charts.** Axis and tick labels are at least 12px. Label lines directly instead of using legends where possible.
-  Quantum is accent and classical is grey.
+  Quantum is accent and classical is grey. Build every chart from the kit in `src/components/charts/`:
+  - Wrap it in `ChartFigure`, which provides the label, the takeaway above the plot, the legend and the required
+    Chart / Table toggle.
+  - Style axes with the `AXIS` / `TICK` props and colours with `C.*` (CSS variables, so charts follow theme and
+    projector mode).
+  - Put ticks on round values with `niceScale` / `niceTimeScale`. Never show values like 0.916 or 26:56.
+  - Use `endLabel` + `resolveLabelOffsets` for direct labels, and size gutters and gaps with `useChartUnits()`.
+    Never use fixed pixel values for text spacing.
+  - Hover shows the `ChartTooltipCard`. Lines draw in, and markers are at least 8px across.
+  - When two series share a colour (two quantum or two classical models), the second is dashed.
+  - There is never a second y-axis.
 - **Numbers.** Always format through `src/lib/format.ts`. AUC has 3 decimals (`formatAuc`), percentages have 1
   decimal (`formatPercent`), and durations are mm:ss or ms (`formatDuration`, `formatMs`). Use a true minus sign
   (`formatDelta`).

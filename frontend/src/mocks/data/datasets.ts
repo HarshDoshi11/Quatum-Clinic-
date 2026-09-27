@@ -12,6 +12,7 @@ import type {
   UploadResponse,
 } from '../../types'
 import { SELECTED_FEATURES } from './experiments'
+import { EXPERIMENT_IDS } from './ids'
 import { MODEL_FEATURES } from './features'
 import { gaussian, hashSeed, rng, round } from './math'
 
@@ -211,6 +212,7 @@ export function datasetDetail(dataset: DatasetId): DatasetDetail {
       pcaDims: PCA_DIMS,
       pca: pca(dataset),
       sampleEncoding: SAMPLE_ENCODING[dataset],
+      experimentId: EXPERIMENT_IDS[dataset].benchmark,
     },
   }
 }

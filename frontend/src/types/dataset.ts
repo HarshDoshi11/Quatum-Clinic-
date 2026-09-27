@@ -70,6 +70,8 @@ export interface PreprocessingReport {
   selectedFeatures: string[]
   pcaDims: number
   pca: PcaComponent[]
+  /** Experiment whose runs used this preprocessing (the dataset benchmark). */
+  experimentId: string
   /**
    * The demo (sample) patient after PCA + scaling: one value in [0, 1] per qubit.
    * Higher values point toward |1⟩ and read as higher risk.

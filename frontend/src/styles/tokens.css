@@ -20,7 +20,7 @@
 
   --accent: #2340ff;
   --accent-ink: #f3f1ec; /* text placed on an accent fill */
-  --classical: #8c8c8c;
+  --classical: #858585; /* 3.1 : 1 on bg and surface — chart marks need ≥ 3 : 1 */
 
   --risk-low: #5e8c61;
   --risk-mid: #c8912b;
