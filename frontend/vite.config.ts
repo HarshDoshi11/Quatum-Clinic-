@@ -9,4 +9,6 @@ export default defineConfig({
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   server: { port: 5173 },
+  // three.js + drei (~830 kB) ship as their own lazy chunk, loaded only with the 3D views.
+  build: { chunkSizeWarningLimit: 900 },
 })

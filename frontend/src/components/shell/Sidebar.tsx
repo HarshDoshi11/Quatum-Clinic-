@@ -104,7 +104,7 @@ export function Sidebar({ mode }: { mode: Mode }) {
         {mode === 'research' ? (
           <div className="flex items-center justify-between">
             <span className="label-mono flex items-center gap-2 text-ink">
-              <span className="block h-[6px] w-[6px] bg-risk-low" aria-hidden="true" />
+              <span className="block h-[6px] w-[6px] bg-ink" aria-hidden="true" />
               System nominal
             </span>
             <span className="label-mono text-muted">v{APP_VERSION}</span>

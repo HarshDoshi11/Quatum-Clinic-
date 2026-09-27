@@ -87,30 +87,30 @@
   }
 }
 
-@layer components {
-  /* Uppercase mono label used for section numbers, captions, table heads. */
-  .label-mono {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 1.4;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
+/* Custom utilities (usable with variants, e.g. [&_x]:label-mono). */
 
-  .num {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-  }
+/* Uppercase mono label used for section numbers, captions, table heads. */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-  .grid-12 {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: var(--gutter);
-  }
+@utility num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
 
-  .shadow-float {
-    box-shadow: var(--shadow-float);
-  }
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+@utility shadow-float {
+  box-shadow: var(--shadow-float);
 }
 
 @media (prefers-reduced-motion: reduce) {

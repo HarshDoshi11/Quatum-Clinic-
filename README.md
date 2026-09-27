@@ -59,7 +59,9 @@ frontend/src/
 ├── styles/tokens.css    design tokens for both themes — see docs/design-tokens.md
 ├── lib/                 domain constants, formatting, motion vocabulary, storage helpers
 ├── components/shell/    sidebar, top bar, status strip
-├── components/ui/       SectionLabel, Headline, Page, SegmentedToggle, Rule…
+├── components/ui/       SectionLabel, Headline, Metric, Term, HairlineTable, Drawer, Toast,
+│                        ExperimentTag, Button, Skeleton, EmptyState, SegmentedToggle…
+├── features/            command palette, experiment drawer, overview (Bloch sphere, pipeline)
 └── pages/
 ```
 
@@ -81,6 +83,16 @@ threshold. Everything else is derived from them: sensitivity and specificity (eq
 noise tolerance, learning curves, the circuit search, calibration, the cross-modality gain, and the abstain
 rate. `npm run check:mocks` asserts the headline numbers (XGBoost 0.921, QSVM 0.914 ±0.012, VQC 0.909,
 EXP-2044…2048, Δ −0.007, 1.2%, 4.1%, +6.2%) and that every experiment ID referenced anywhere resolves.
+
+### Global features
+
+- **Command palette:** `Ctrl K` / `⌘K`, or the Search button. Jump to any page, switch dataset, theme or
+  mode, run a prediction, start an experiment, open a recent experiment.
+- **Experiment drawer:** any experiment ID (table rows, `EXP-…` tags) opens its full config, metrics and a
+  Re-run button. Re-runs create a new ID and refresh the status strip and lists.
+- **Glossary:** `<Term>` adds a dotted underline and a one-line definition on hover or focus
+  (`src/lib/glossary.ts`).
+- **Toasts:** bottom-left, via `useToast()`.
 
 ## Backend
 
@@ -123,7 +135,7 @@ CORS allows any `localhost` port; add deployed origins with `CORS_ORIGINS=https:
 
 - [x] Phase 1 — setup, design tokens, app shell, routing
 - [x] Phase 2 — types, mock data, API service layer, backend stub
-- [ ] Phase 3 — Overview + global features
+- [x] Phase 3 — Overview + global features
 - [ ] Phase 4 — Data, Train, and research pages (section I)
 - [ ] Phase 5 — Hardware Reality Lab, Failure Envelope
 - [ ] Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report

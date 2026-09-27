@@ -1,4 +1,5 @@
-type HeadlineSize = 'xl' | 'lg' | 'md'
+/** 'custom' applies no size class — pass one via className. */
+type HeadlineSize = 'xl' | 'lg' | 'md' | 'custom'
 
 interface HeadlineProps {
   /** A string, or an array of lines for forced breaks. */
@@ -13,6 +14,7 @@ const SIZE: Record<HeadlineSize, string> = {
   xl: 'text-[length:var(--text-display-xl)]',
   lg: 'text-[length:var(--text-display-lg)]',
   md: 'text-[length:var(--text-display-md)]',
+  custom: '',
 }
 
 /** Instrument Serif display headline. Always a single ink color. */

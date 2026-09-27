@@ -4,6 +4,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { USE_MOCK } from '@/config'
 import { MODELS } from '@/lib/domain'
 import { formatAuc, formatDateTime } from '@/lib/format'
+import { useDataVersion } from '@/state/dataVersion'
 import { useDataset } from '@/state/dataset'
 import type { Mode } from '@/state/mode'
 
@@ -24,7 +25,8 @@ function Field({ label, value }: StripField) {
 /** Bottom status strip: live values for the selected dataset. */
 export function StatusStrip({ mode }: { mode: Mode }) {
   const { datasetId, dataset } = useDataset()
-  const status = useResource((signal) => api.getStatus(datasetId, { signal }), [datasetId])
+  const { version } = useDataVersion()
+  const status = useResource((signal) => api.getStatus(datasetId, { signal }), [datasetId, version])
   const data = status.data
 
   const fields: StripField[] = [

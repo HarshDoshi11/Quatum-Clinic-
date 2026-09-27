@@ -54,9 +54,16 @@ function respond<T>(produce: () => T, opts?: RequestOptions, latency?: number): 
 const registry: Experiment[] = [...EXPERIMENTS]
 let nextId = FIRST_NEW_EXPERIMENT
 
-/** Current time as ISO-8601 in IST, matching the fixtures. */
+/**
+ * Mock clock: the demo session starts at 27 Sep 2026, 14:40 IST (just after the
+ * latest fixture, EXP-2048 at 14:32) and runs in real time, so experiments
+ * created in the session always sort after the fixtures.
+ */
+const MOCK_EPOCH = Date.parse('2026-09-27T14:40:00+05:30')
+const SESSION_START = Date.now()
+
 function nowIst(): string {
-  const ist = new Date(Date.now() + 5.5 * 3600_000)
+  const ist = new Date(MOCK_EPOCH + (Date.now() - SESSION_START) + 5.5 * 3600_000)
   return `${ist.toISOString().slice(0, 19)}+05:30`
 }
 
