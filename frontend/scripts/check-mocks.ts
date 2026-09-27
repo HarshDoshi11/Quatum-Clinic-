@@ -10,7 +10,8 @@ import { compare } from '../src/mocks/data/compare'
 import { crossModality } from '../src/mocks/data/crossModality'
 import { EXPERIMENTS, circuitSearchChild } from '../src/mocks/data/experiments'
 import { featureSchema } from '../src/mocks/data/features'
-import { noiseRun } from '../src/mocks/data/hardware'
+import { HARDWARE_PROFILES, noiseRun } from '../src/mocks/data/hardware'
+import { safetyStatus } from '../src/lib/safety'
 import { predict, trust } from '../src/mocks/data/model'
 import { overview } from '../src/mocks/data/overview'
 import { patientReport } from '../src/mocks/data/report'
@@ -102,6 +103,23 @@ for (const d of ['wdbc', 'heart'] as const) {
   const sc = scalabilitySweep(d)
   const flat = Math.max(...sc.points.map((p) => p.auc)) - Math.min(...sc.points.map((p) => p.auc))
   check(`${d}: scalability wording (spread ${flat.toFixed(3)})`, sc.takeaway.length > 0)
+}
+
+// ─── Phase 5: hardware + envelope ───────────────────────────
+console.log('\nHardware Reality Lab & Failure Envelope')
+for (const d of ['wdbc', 'heart'] as const) {
+  const hw = HARDWARE_PROFILES.map((p) => noiseRun({ dataset: d, profileId: p.id, noise: p.noise }))
+  problems.length = 0
+  for (const r of hw) problems.push(...checkResponseConsistency(r, `noise/${d}`))
+  eq(`${d}: noise-run AUCs agree with the results store`, problems, [])
+  const fb1 = hw[1]
+  eq(`${d}: FakeBackend-1 AUC = store QSVM on FakeBackend-1`, fb1.result.auc, result(d, { model: 'qsvm', qubits: 4, encoding: 'angle', circuitDepth: 2, entanglement: 'full', backend: 'fake-backend-1' }).auc.mean)
+  check(`${d}: status follows the shared safety rule`, hw.every((r) => r.status === safetyStatus(r.result.sensitivity, r.sensitivityStd, r.threshold)))
+  const custom = noiseRun({ dataset: d, profileId: 'fake-backend-1', noise: { ...NOISE_PROFILES.fakeBackend1, gateError2q: 0.7 } })
+  eq(`${d}: edited preset has no store key`, custom.result.configKey, null)
+  const env = failureEnvelopeSweep(d)
+  eq(`${d}: envelope "you are here" = FakeBackend-1 run`, [env.current.sensitivity, env.current.std], [fb1.result.sensitivity, fb1.sensitivityStd])
+  check(`${d}: T2 sweep carries ±std`, fb1.sensitivityVsT2.every((p) => p.std > 0))
 }
 
 // ─── Unchanged anchors ──────────────────────────────────────

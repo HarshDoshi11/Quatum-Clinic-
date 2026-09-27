@@ -15,6 +15,9 @@ export interface ThemeColors {
   classical: RGBA
   rule: RGBA
   bg: RGBA
+  riskLow: RGBA
+  riskMid: RGBA
+  riskHigh: RGBA
 }
 
 function parse(value: string): RGBA {
@@ -48,6 +51,9 @@ export function useThemeColors(): ThemeColors {
       classical: read('--classical'),
       rule: read('--rule'),
       bg: read('--bg'),
+      riskLow: read('--risk-low'),
+      riskMid: read('--risk-mid'),
+      riskHigh: read('--risk-high'),
     }
   }, [theme, projector])
 }

@@ -17,7 +17,8 @@ import type {
   ScalabilitySweep,
   SmallDataSweep,
 } from '../../types'
-import { NOISE_PROFILES, SAFE_SENSITIVITY, SEEDS, noisyOperatingPoint } from './canon'
+import { envelopeSentence } from '../../lib/safety'
+import { NOISE_PROFILES, SAFE_SENSITIVITY, SEEDS, noisyOperatingPoint, noisySensitivityStd } from './canon'
 import { EXPERIMENT_IDS } from './ids'
 import { round } from './math'
 import { bestModel, referenceResult, result } from './results'
@@ -266,10 +267,16 @@ export function failureEnvelopeSweep(dataset: DatasetId): FailureEnvelopeSweep {
   const sensitivity = corruptionValues.map((corr) =>
     noiseValues.map((e2) => round(noisyOperatingPoint(dataset, { ...fb1, gateError2q: e2 }, corr).sensitivity, 4)),
   )
-  const current = noisyOperatingPoint(dataset, fb1, 0)
-  const safeCells = sensitivity.flat().filter((s) => s >= SAFE_SENSITIVITY).length
-  const total = noiseValues.length * corruptionValues.length
-  const inside = current.sensitivity >= SAFE_SENSITIVITY
+  // Shot/seed noise depends on the hardware noise, not on data corruption.
+  const sensitivityStd = corruptionValues.map(() => noiseValues.map((e2) => round(noisySensitivityStd({ ...fb1, gateError2q: e2 }), 4)))
+  const currentOp = noisyOperatingPoint(dataset, fb1, 0)
+  const current = {
+    noise: fb1.gateError2q,
+    corruption: 0,
+    sensitivity: round(currentOp.sensitivity, 4),
+    std: round(noisySensitivityStd(fb1), 4),
+    profileName: 'FakeBackend-1',
+  }
 
   return {
     type: 'failure-envelope',
@@ -280,8 +287,9 @@ export function failureEnvelopeSweep(dataset: DatasetId): FailureEnvelopeSweep {
     noiseAxis: { label: 'Two-qubit gate error', unit: '%', values: noiseValues },
     corruptionAxis: { label: 'Data corruption', unit: '%', values: corruptionValues },
     sensitivity,
+    sensitivityStd,
     threshold: SAFE_SENSITIVITY,
-    current: { noise: fb1.gateError2q, corruption: 0, sensitivity: round(current.sensitivity, 4), profileName: 'FakeBackend-1' },
-    takeaway: `${Math.round((safeCells / total) * 100)}% of the tested conditions keep sensitivity at or above ${Math.round(SAFE_SENSITIVITY * 100)}%; FakeBackend-1 ${inside ? 'sits inside' : 'already sits outside'} that region.`,
+    current,
+    takeaway: envelopeSentence(sensitivity, sensitivityStd, SAFE_SENSITIVITY, current),
   }
 }

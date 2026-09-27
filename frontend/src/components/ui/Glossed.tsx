@@ -14,6 +14,8 @@ const PHRASES: [string, GlossaryKey][] = [
   ['readout error', 'readout error'],
   ['circuit depth', 'circuit depth'],
   ['Pareto front', 'pareto front'],
+  ['FakeBackend-1', 'fake backend'],
+  ['FakeBackend-2', 'fake backend'],
   ['state vector', 'state vector'],
   ['Bloch sphere', 'bloch sphere'],
   ['superposition', 'superposition'],

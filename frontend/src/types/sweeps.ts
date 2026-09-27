@@ -120,8 +120,10 @@ export interface FailureEnvelopeSweep extends SweepBase {
   corruptionAxis: EnvelopeAxis
   /** sensitivity[corruptionIndex][noiseIndex], fraction 0–1. */
   sensitivity: number[][]
+  /** Seed/shot std for each cell, same shape. */
+  sensitivityStd: number[][]
   threshold: number
-  current: { noise: number; corruption: number; sensitivity: number; profileName: string }
+  current: { noise: number; corruption: number; sensitivity: number; std: number; profileName: string }
 }
 
 export interface SweepResponseMap {

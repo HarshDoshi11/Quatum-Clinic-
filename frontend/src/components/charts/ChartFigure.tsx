@@ -95,7 +95,9 @@ export function ChartFigure<Row>({ label, subtitle, takeaway, caption, note, asi
 
       <div className="mt-5">
         {view === 'table' && table ? (
-          <HairlineTable columns={table.columns} rows={table.rows} rowKey={table.rowKey} caption={table.caption} loading={loading} />
+          <div className="overflow-x-auto">
+            <HairlineTable columns={table.columns} rows={table.rows} rowKey={table.rowKey} caption={table.caption} loading={loading} />
+          </div>
         ) : loading ? (
           <div style={{ height: height === 'auto' ? '22rem' : height }} className="flex items-end gap-2 border-b border-l border-rule px-4 pb-4" aria-busy="true">
             {[38, 52, 61, 70, 76, 80, 82].map((h, i) => (

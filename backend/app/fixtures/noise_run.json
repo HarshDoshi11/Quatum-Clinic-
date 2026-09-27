@@ -5,11 +5,13 @@
       "experimentId": "EXP-2041",
       "model": "qsvm",
       "reference": {
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.9556,
         "specificity": 0.9283,
         "auc": 0.987
       },
       "result": {
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.9556,
         "specificity": 0.9283,
         "auc": 0.987
@@ -17,6 +19,10 @@
       "sensitivityStd": 0.006,
       "threshold": 0.85,
       "safe": true,
+      "status": "safe",
+      "takeaway": "On Ideal Sim, sensitivity is 95.6% — the noiseless reference — and stays above the 85% threshold beyond seed noise.",
+      "t2Takeaway": "Across 20–500 µs, T2 alone never pushes sensitivity below the 85% threshold with these settings.",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -70,11 +76,13 @@
       "experimentId": "EXP-2041",
       "model": "qsvm",
       "reference": {
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.9556,
         "specificity": 0.9283,
         "auc": 0.987
       },
       "result": {
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|fake-backend-1",
         "sensitivity": 0.8263,
         "specificity": 0.8831,
         "auc": 0.934
@@ -82,6 +90,10 @@
       "sensitivityStd": 0.0183,
       "threshold": 0.85,
       "safe": false,
+      "status": "unsafe",
+      "takeaway": "On FakeBackend-1, sensitivity falls from 95.6% to 82.6% (±1.8) and sits below the 85% threshold beyond seed noise.",
+      "t2Takeaway": "Even at T2 = 500 µs sensitivity does not clear the 85% threshold beyond noise — other noise sources dominate.",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -135,11 +147,13 @@
       "experimentId": "EXP-2041",
       "model": "qsvm",
       "reference": {
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.9556,
         "specificity": 0.9283,
         "auc": 0.987
       },
       "result": {
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|fake-backend-2",
         "sensitivity": 0.8863,
         "specificity": 0.9041,
         "auc": 0.962
@@ -147,6 +161,10 @@
       "sensitivityStd": 0.0155,
       "threshold": 0.85,
       "safe": true,
+      "status": "safe",
+      "takeaway": "On FakeBackend-2, sensitivity falls from 95.6% to 88.6% (±1.6) and stays above the 85% threshold beyond seed noise.",
+      "t2Takeaway": "Across 20–500 µs, T2 alone never pushes sensitivity below the 85% threshold with these settings.",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -200,11 +218,13 @@
       "experimentId": "EXP-2041",
       "model": "qsvm",
       "reference": {
+        "configKey": "wdbc|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.9556,
         "specificity": 0.9283,
         "auc": 0.987
       },
       "result": {
+        "configKey": null,
         "sensitivity": 0.8863,
         "specificity": 0.9041,
         "auc": 0.962
@@ -212,6 +232,10 @@
       "sensitivityStd": 0.0155,
       "threshold": 0.85,
       "safe": true,
+      "status": "safe",
+      "takeaway": "On these custom settings, sensitivity falls from 95.6% to 88.6% (±1.6) and stays above the 85% threshold beyond seed noise.",
+      "t2Takeaway": "Across 20–500 µs, T2 alone never pushes sensitivity below the 85% threshold with these settings.",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -267,11 +291,13 @@
       "experimentId": "EXP-2035",
       "model": "qsvm",
       "reference": {
+        "configKey": "heart|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.8837,
         "specificity": 0.7428,
         "auc": 0.904
       },
       "result": {
+        "configKey": "heart|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.8837,
         "specificity": 0.7428,
         "auc": 0.904
@@ -279,6 +305,10 @@
       "sensitivityStd": 0.006,
       "threshold": 0.85,
       "safe": true,
+      "status": "safe",
+      "takeaway": "On Ideal Sim, sensitivity is 88.4% — the noiseless reference — and stays above the 85% threshold beyond seed noise.",
+      "t2Takeaway": "Across 20–500 µs, T2 alone never pushes sensitivity below the 85% threshold with these settings.",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -332,11 +362,13 @@
       "experimentId": "EXP-2035",
       "model": "qsvm",
       "reference": {
+        "configKey": "heart|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.8837,
         "specificity": 0.7428,
         "auc": 0.904
       },
       "result": {
+        "configKey": "heart|qsvm|4q|angle|d2|full|fake-backend-1",
         "sensitivity": 0.7545,
         "specificity": 0.6976,
         "auc": 0.803
@@ -344,6 +376,10 @@
       "sensitivityStd": 0.0183,
       "threshold": 0.85,
       "safe": false,
+      "status": "unsafe",
+      "takeaway": "On FakeBackend-1, sensitivity falls from 88.4% to 75.4% (±1.8) and sits below the 85% threshold beyond seed noise.",
+      "t2Takeaway": "Even at T2 = 500 µs sensitivity does not clear the 85% threshold beyond noise — other noise sources dominate.",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -397,11 +433,13 @@
       "experimentId": "EXP-2035",
       "model": "qsvm",
       "reference": {
+        "configKey": "heart|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.8837,
         "specificity": 0.7428,
         "auc": 0.904
       },
       "result": {
+        "configKey": "heart|qsvm|4q|angle|d2|full|fake-backend-2",
         "sensitivity": 0.8145,
         "specificity": 0.7185,
         "auc": 0.851
@@ -409,6 +447,10 @@
       "sensitivityStd": 0.0155,
       "threshold": 0.85,
       "safe": false,
+      "status": "unsafe",
+      "takeaway": "On FakeBackend-2, sensitivity falls from 88.4% to 81.5% (±1.6) and sits below the 85% threshold beyond seed noise.",
+      "t2Takeaway": "Even at T2 = 500 µs sensitivity does not clear the 85% threshold beyond noise — other noise sources dominate.",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -462,11 +504,13 @@
       "experimentId": "EXP-2035",
       "model": "qsvm",
       "reference": {
+        "configKey": "heart|qsvm|4q|angle|d2|full|ideal-sim",
         "sensitivity": 0.8837,
         "specificity": 0.7428,
         "auc": 0.904
       },
       "result": {
+        "configKey": null,
         "sensitivity": 0.8145,
         "specificity": 0.7185,
         "auc": 0.851
@@ -474,6 +518,10 @@
       "sensitivityStd": 0.0155,
       "threshold": 0.85,
       "safe": false,
+      "status": "unsafe",
+      "takeaway": "On these custom settings, sensitivity falls from 88.4% to 81.5% (±1.6) and sits below the 85% threshold beyond seed noise.",
+      "t2Takeaway": "Even at T2 = 500 µs sensitivity does not clear the 85% threshold beyond noise — other noise sources dominate.",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
       "sensitivityVsT2": [
         {
           "t2Us": 20,

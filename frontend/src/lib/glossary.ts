@@ -48,6 +48,8 @@ export const GLOSSARY = {
   'readout error': entry('Readout error', 'The chance a qubit is measured as the wrong value.'),
   backend: entry('Backend', 'Where a circuit actually runs: a simulator on a computer or a real quantum chip.'),
   simulator: entry('Simulator', 'Ordinary software that imitates a quantum computer, with or without noise.'),
+  'fake backend': entry('Fake backend', 'A simulator loaded with the measured noise of a real quantum chip.'),
+  threshold: entry('Safety threshold', 'The lowest sensitivity we accept before calling a setup unsafe for patients.'),
   qpu: entry('QPU', 'Quantum Processing Unit: a real quantum chip.'),
 } as const satisfies Record<string, Entry>
 
