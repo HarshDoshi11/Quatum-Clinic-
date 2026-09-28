@@ -5,6 +5,19 @@ import { MODEL_FEATURES } from './features'
 import { abstains, checkInput, explain, fmt, predict } from './model'
 
 const RISK_WORD: Record<RiskBand, string> = { low: 'Lower', moderate: 'Moderate', high: 'Higher' }
+/** Patient Mode's headline: guiding, not alarming. */
+const PATIENT_HEADLINE: Record<RiskBand, string> = {
+  low: 'Your results look reassuring',
+  moderate: 'Worth mentioning to your doctor',
+  high: 'Worth talking to a doctor soon',
+}
+
+/** "About 7 in 10 people with results like yours have heart disease." (with the two edge cases worded plainly) */
+function inTen(n: number, name: string): string {
+  if (n <= 0) return `Fewer than 1 in 10 people with results like yours have ${name}.`
+  if (n >= 10) return `Almost all people with results like yours (about 10 in 10) have ${name}.`
+  return `About ${n} in 10 people with results like yours have ${name}.`
+}
 
 /** Each trust check, named neutrally so it reads right whether it passed or not. */
 const CHECK_PLAIN: Record<TrustSignalId, string> = {
@@ -91,7 +104,9 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
       probability: p,
       headline: abstained || !band ? 'No reliable result' : `${RISK_WORD[band]} likelihood`,
       // A calibrated probability read as a natural frequency.
-      frequency: p === null ? null : `Out of 100 people with results like yours, about ${Math.round(p * 100)} have ${meta.patient.name}.`,
+      frequency: p === null ? null : inTen(Math.round(p * 10), meta.patient.name),
+      outOfTen: p === null ? null : Math.round(p * 10),
+      patientHeadline: abstained || !band ? null : PATIENT_HEADLINE[band],
       reasons,
     },
     meaning: abstained
@@ -102,12 +117,7 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
     // What to do next: the dataset config's journey for this outcome.
     nextSteps: journey.map((s) => s.text),
     journey,
-    questions: [
-      'What do these results mean for me specifically?',
-      'Which follow-up tests would you recommend, and when?',
-      'Are any of my results likely to change with treatment or lifestyle?',
-      'How does this screening tool compare with the tests you usually use?',
-    ],
+    questions: meta.patient.questions.slice(0, 4),
     safetyNote:
       'This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care.',
   }

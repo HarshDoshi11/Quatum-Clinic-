@@ -1,10 +1,10 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { easeGentle } from '@/lib/motion'
+import { CONFIDENCE_WORD } from '@/lib/patientText'
 import type { TrustLevel } from '@/types'
 
 const LEVELS = ['Low', 'Medium', 'High'] as const
 const FILLED: Record<TrustLevel, number> = { weak: 1, partial: 2, strong: 3 }
-export const CONFIDENCE_WORD: Record<TrustLevel, (typeof LEVELS)[number]> = { weak: 'Low', partial: 'Medium', strong: 'High' }
 
 /** Three segments (Low / Medium / High confidence), filled from the trust checks; fills once on load. */
 export function ConfidenceMeter({ level }: { level: TrustLevel }) {

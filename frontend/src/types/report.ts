@@ -36,8 +36,12 @@ export interface PatientReport {
     probability: number | null
     /** "Higher likelihood" / "No reliable result". */
     headline: string
-    /** Natural-frequency reading of the calibrated probability; null when abstaining. */
+    /** Natural-frequency reading of the calibrated probability ("About 7 in 10 …"); null when abstaining. */
     frequency: string | null
+    /** round(probability × 10): the filled figures in Patient Mode; null when abstaining. */
+    outOfTen: number | null
+    /** Patient Mode headline by risk band, guiding rather than alarming; null when abstaining. */
+    patientHeadline: string | null
     /** Why there is no result, in plain language; empty unless abstaining. */
     reasons: string[]
   }

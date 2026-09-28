@@ -17,6 +17,7 @@ import { explain, hardwareSeparationScale, predict, trust } from '../src/mocks/d
 import { normInv } from '../src/mocks/data/math'
 import { overview } from '../src/mocks/data/overview'
 import { patientReport } from '../src/mocks/data/report'
+import { familySummary, readAloudScript } from '../src/lib/patientText'
 import { bestModel, checkResponseConsistency, referenceResult, result, trainableParameters } from '../src/mocks/data/results'
 import { evolutionSweep, failureEnvelopeSweep, scalabilitySweep, smallDataSweep } from '../src/mocks/data/sweeps'
 import { trainResponse } from '../src/mocks/data/train'
@@ -256,7 +257,7 @@ for (const d of DATASET_IDS) {
     if (p.decision === 'abstain') {
       eq(`${d} ${name}: abstain → no result, no frequency, no influences`, [r.result.headline, r.result.frequency, r.influences.length], ['No reliable result', null, 0])
     } else {
-      check(`${d} ${name}: frequency is the calibrated probability`, r.result.frequency === `Out of 100 people with results like yours, about ${Math.round((p.probability ?? 0) * 100)} have ${DATASETS[d].patient.name}.`, r.result.frequency ?? '')
+      check(`${d} ${name}: frequency is the calibrated probability`, r.result.outOfTen === Math.round((p.probability ?? 0) * 10) && (r.result.frequency ?? '').includes(`${r.result.outOfTen} in 10`), r.result.frequency ?? '')
       const ex = explain(d, input)
       check(`${d} ${name}: influence directions match Explain`, r.influences.every((inf, i) => inf.direction === ex.contributions.filter((c) => c.value !== null)[i]?.direction))
       check(`${d} ${name}: influences use the config's wording (${DATASETS[d].reportSubject})`, r.influences.every((inf) => inf.plain.startsWith(`${DATASETS[d].reportSubject} `)))
@@ -336,6 +337,19 @@ for (const d of DATASET_IDS) {
   const unusualReport = patientReport(d, sc.unusualPatient, '')
   eq(`${d}: next steps are the config's journey for the outcome (sample: ${sampleReport.result.riskBand}; unusual: abstain)`, [sampleReport.journey, unusualReport.journey], [cfg.guidance[sampleReport.result.riskBand ?? 'abstain'], cfg.guidance.abstain])
   check(`${d}: influences name their input, so Patient Mode can show its icon`, sampleReport.influences.every((inf) => sc.features.some((f) => f.key === inf.feature)))
+  eq(`${d}: a learn card for every input`, Object.keys(cfg.learn).sort(), sc.features.map((f) => f.key).sort())
+  const numeric = new Set(sc.features.filter((f) => !f.options).map((f) => f.key))
+  check(`${d}: reference ranges only for measured numbers, zones contiguous across the scale`, Object.entries(cfg.ranges).every(([k, r]) => numeric.has(k) && r.zones[0].from === r.scale[0] && r.zones[r.zones.length - 1].to === r.scale[1] && r.zones.every((z, i) => i === 0 || z.from === r.zones[i - 1].to) && r.source.length > 0))
+  check(`${d}: with no ranges there is an explanation instead (and only then)`, (Object.keys(cfg.ranges).length === 0) === (cfg.rangesNote !== null))
+  check(`${d}: at least four questions for the doctor, and the report uses them`, cfg.questions.length >= 4 && sampleReport.questions.every((q) => cfg.questions.includes(q)))
+  eq(`${d}: patient headline follows the band; none when abstaining`, [sampleReport.result.patientHeadline !== null, unusualReport.result.patientHeadline, unusualReport.result.outOfTen], [true, null, null])
+  // Shared with family: no identifiers, and no numbers except "N in 10".
+  for (const rep of [sampleReport, unusualReport]) {
+    const text = familySummary(rep)
+    const stripped = text.replace(/\b\d+ in 10\b/g, '')
+    check(`${d} ${rep.result.decision}: family summary has no report ID, date or other numbers`, !text.includes(rep.reportId) && !/\d/.test(stripped), stripped.match(/.{0,20}\d.{0,20}/)?.[0])
+    check(`${d} ${rep.result.decision}: read-aloud covers the headline, how sure, and every next step`, rep.journey.every((st) => readAloudScript(rep).includes(st.text)) && (rep.result.decision === 'abstain' || readAloudScript(rep).includes('How sure are we?')))
+  }
 }
 
 // ─── Unchanged anchors ──────────────────────────────────────

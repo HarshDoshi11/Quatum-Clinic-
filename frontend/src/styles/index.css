@@ -19,6 +19,8 @@
   --color-risk-low-text: var(--risk-low-text);
   --color-risk-mid-text: var(--risk-mid-text);
   --color-risk-high-text: var(--risk-high-text);
+  --color-coral: var(--coral);
+  --color-amber: var(--amber);
 
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);
@@ -115,6 +117,16 @@
   line-height: 1.1;
   letter-spacing: -0.005em;
 }
+/* Patient Mode's result headline: Fraunces at the h2 size, guiding rather than alarming. */
+@utility type-headline-soft {
+  font-family: var(--font-fraunces);
+  font-size: var(--type-h2);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-optical-sizing: auto;
+}
+
 @utility type-metric-xl {
   font-family: var(--font-mono);
   font-size: var(--type-metric-xl);

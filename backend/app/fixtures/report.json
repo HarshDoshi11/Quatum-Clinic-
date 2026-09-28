@@ -11,7 +11,9 @@
         "riskBand": "high",
         "probability": 0.82,
         "headline": "Higher likelihood",
-        "frequency": "Out of 100 people with results like yours, about 82 have breast cancer.",
+        "frequency": "About 8 in 10 people with results like yours have breast cancer.",
+        "outOfTen": 8,
+        "patientHeadline": "Worth talking to a doctor soon",
         "reasons": []
       },
       "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of breast cancer. This is a screening signal, not a diagnosis. Only your doctor can diagnose.",
@@ -108,10 +110,10 @@
         }
       ],
       "questions": [
-        "What do these results mean for me specifically?",
-        "Which follow-up tests would you recommend, and when?",
-        "Are any of my results likely to change with treatment or lifestyle?",
-        "How does this screening tool compare with the tests you usually use?"
+        "What do these results mean for me?",
+        "What did the specialist see in my sample?",
+        "Do I need any more tests, like imaging or another biopsy?",
+        "What are the next steps, and how soon should they happen?"
       ],
       "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
     },
@@ -127,6 +129,8 @@
         "probability": null,
         "headline": "No reliable result",
         "frequency": null,
+        "outOfTen": null,
+        "patientHeadline": null,
         "reasons": [
           "Your sample’s cell area (4250 µm²) is outside the range the model learned from (143.5 µm² – 2501 µm²).",
           "Your sample’s edge smoothness (0.21) is outside the range the model learned from (0.0526 – 0.1634).",
@@ -197,10 +201,10 @@
         }
       ],
       "questions": [
-        "What do these results mean for me specifically?",
-        "Which follow-up tests would you recommend, and when?",
-        "Are any of my results likely to change with treatment or lifestyle?",
-        "How does this screening tool compare with the tests you usually use?"
+        "What do these results mean for me?",
+        "What did the specialist see in my sample?",
+        "Do I need any more tests, like imaging or another biopsy?",
+        "What are the next steps, and how soon should they happen?"
       ],
       "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
     }
@@ -217,7 +221,9 @@
         "riskBand": "high",
         "probability": 0.82,
         "headline": "Higher likelihood",
-        "frequency": "Out of 100 people with results like yours, about 82 have heart disease.",
+        "frequency": "About 8 in 10 people with results like yours have heart disease.",
+        "outOfTen": 8,
+        "patientHeadline": "Worth talking to a doctor soon",
         "reasons": []
       },
       "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of heart disease. This is a screening signal, not a diagnosis. Only your doctor can diagnose.",
@@ -314,10 +320,10 @@
         }
       ],
       "questions": [
-        "What do these results mean for me specifically?",
-        "Which follow-up tests would you recommend, and when?",
-        "Are any of my results likely to change with treatment or lifestyle?",
-        "How does this screening tool compare with the tests you usually use?"
+        "What do these results mean for me?",
+        "Do I need any more tests, like an exercise test or a heart scan?",
+        "Is my blood pressure or cholesterol something we should treat?",
+        "Which symptoms should make me seek care straight away?"
       ],
       "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
     },
@@ -333,6 +339,8 @@
         "probability": null,
         "headline": "No reliable result",
         "frequency": null,
+        "outOfTen": null,
+        "patientHeadline": null,
         "reasons": [
           "Your resting blood pressure (215 mmHg) is outside the range the model learned from (94 mmHg – 200 mmHg).",
           "Your cholesterol (610 mg/dL) is outside the range the model learned from (126 mg/dL – 564 mg/dL).",
@@ -403,10 +411,10 @@
         }
       ],
       "questions": [
-        "What do these results mean for me specifically?",
-        "Which follow-up tests would you recommend, and when?",
-        "Are any of my results likely to change with treatment or lifestyle?",
-        "How does this screening tool compare with the tests you usually use?"
+        "What do these results mean for me?",
+        "Do I need any more tests, like an exercise test or a heart scan?",
+        "Is my blood pressure or cholesterol something we should treat?",
+        "Which symptoms should make me seek care straight away?"
       ],
       "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
     }

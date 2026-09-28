@@ -23,7 +23,61 @@
       }
     ],
     "condition": "breast cancer",
-    "patientName": "breast cancer"
+    "patient": {
+      "name": "breast cancer",
+      "ranges": {},
+      "rangesNote": "These are measurements of cells from your tissue sample, made in a laboratory. There are no everyday “healthy ranges” for them: your doctor, or the specialist who examined your sample, is the best person to explain what they mean for you.",
+      "learn": {
+        "radius_mean": {
+          "title": "What is cell size?",
+          "body": "Under the microscope, the lab measures the size of the cell centres (nuclei) in your sample. Abnormal cells often have larger nuclei than healthy ones."
+        },
+        "texture_mean": {
+          "title": "What is texture variation?",
+          "body": "This measures how much the shading varies inside each cell centre in the image. Uneven texture can be one sign that cells are growing abnormally."
+        },
+        "perimeter_mean": {
+          "title": "What is the cell outline length?",
+          "body": "This is the length of the outline around each cell centre. Like size, a longer outline can go with larger, abnormal cells."
+        },
+        "area_mean": {
+          "title": "What is cell area?",
+          "body": "This is the area each cell centre covers in the image. It goes together with size and outline length."
+        },
+        "smoothness_mean": {
+          "title": "What is edge smoothness?",
+          "body": "This describes how smooth or bumpy the edge of each cell centre is. Healthy cells tend to have smooth, regular edges."
+        },
+        "compactness_mean": {
+          "title": "What is compactness?",
+          "body": "This compares the outline of each cell centre with the space it covers. Irregular shapes score differently from neat, round ones."
+        },
+        "concavity_mean": {
+          "title": "What is the depth of indentations?",
+          "body": "This measures how deep the dips in each cell centre’s edge are. Deeper dips are more common in abnormal cells."
+        },
+        "concave_points_mean": {
+          "title": "What is the number of indentations?",
+          "body": "This counts the dips along each cell centre’s edge. More dips can be a sign of irregular, abnormal cells."
+        },
+        "symmetry_mean": {
+          "title": "What is symmetry?",
+          "body": "This compares the two halves of each cell centre. Healthy cells tend to be more even."
+        },
+        "fractal_dimension_mean": {
+          "title": "What is edge complexity?",
+          "body": "This describes how complicated the edge of each cell centre is, a bit like measuring a coastline. More complex edges can go with abnormal growth."
+        }
+      },
+      "questions": [
+        "What do these results mean for me?",
+        "What did the specialist see in my sample?",
+        "Do I need any more tests, like imaging or another biopsy?",
+        "What are the next steps, and how soon should they happen?",
+        "Who can I talk to about how I’m feeling?",
+        "How does this screening tool compare with the tests you usually use?"
+      ]
+    }
   },
   {
     "id": "heart",
@@ -68,6 +122,130 @@
       }
     ],
     "condition": "heart disease",
-    "patientName": "heart disease"
+    "patient": {
+      "name": "heart disease",
+      "ranges": {
+        "trestbps": {
+          "name": "Blood pressure",
+          "scale": [
+            80,
+            200
+          ],
+          "zones": [
+            {
+              "from": 80,
+              "to": 90,
+              "kind": "borderline"
+            },
+            {
+              "from": 90,
+              "to": 120,
+              "kind": "healthy"
+            },
+            {
+              "from": 120,
+              "to": 140,
+              "kind": "borderline"
+            },
+            {
+              "from": 140,
+              "to": 200,
+              "kind": "outside"
+            }
+          ],
+          "healthy": "healthy is under 120",
+          "source": "Top number at rest; American Heart Association blood pressure categories."
+        },
+        "chol": {
+          "name": "Cholesterol",
+          "scale": [
+            100,
+            400
+          ],
+          "zones": [
+            {
+              "from": 100,
+              "to": 200,
+              "kind": "healthy"
+            },
+            {
+              "from": 200,
+              "to": 240,
+              "kind": "borderline"
+            },
+            {
+              "from": 240,
+              "to": 400,
+              "kind": "outside"
+            }
+          ],
+          "healthy": "healthy is under 200",
+          "source": "Total cholesterol; US National Cholesterol Education Program categories."
+        }
+      },
+      "rangesNote": null,
+      "learn": {
+        "age": {
+          "title": "Why does age matter?",
+          "body": "The chance of heart disease rises gradually with age, as blood vessels stiffen and narrow over time. Age can’t be changed, which is why your other results matter too."
+        },
+        "sex": {
+          "title": "Why does sex matter?",
+          "body": "Men tend to develop heart disease earlier than women, though women’s risk rises after menopause. Symptoms can also look different in women, so mention any that feel unusual."
+        },
+        "trestbps": {
+          "title": "What is blood pressure?",
+          "body": "Blood pressure is the force of blood pushing on the walls of your arteries. The top number, measured at rest, is used here. Over time, high blood pressure strains the heart and blood vessels."
+        },
+        "cp": {
+          "title": "Why does the type of chest pain matter?",
+          "body": "Doctors group chest pain by how it feels and when it happens. Pain that comes with effort and eases with rest is more typical of the heart; other kinds often have other causes. Some people with heart disease have no chest pain at all."
+        },
+        "restecg": {
+          "title": "What is a resting ECG?",
+          "body": "An ECG records your heart’s electrical activity through small stickers on your skin. At rest, it can show signs of strain, thickened heart muscle or earlier damage."
+        },
+        "oldpeak": {
+          "title": "What is an ECG change during exercise?",
+          "body": "During an exercise test, part of the ECG trace can dip below its usual level. A bigger dip can mean the heart muscle isn’t getting enough blood when it works harder."
+        },
+        "slope": {
+          "title": "What does the ECG slope mean?",
+          "body": "This describes the shape of that same part of the ECG trace at the peak of exercise. Rising is usually reassuring; flat or falling can point to less blood reaching the heart."
+        },
+        "thalach": {
+          "title": "Why does your highest heart rate matter?",
+          "body": "This is the fastest your heart beat during the exercise test. A heart that speeds up well with effort is usually a good sign; a lower peak can mean exercise is harder for the heart."
+        },
+        "exang": {
+          "title": "Why does chest pain during exercise matter?",
+          "body": "Chest pain that comes on with effort can mean the heart muscle needs more blood than narrowed arteries can deliver. It is one of the symptoms doctors pay most attention to."
+        },
+        "thal": {
+          "title": "What is a heart scan?",
+          "body": "A small amount of a tracer is injected, and a camera shows how blood reaches the heart muscle at rest and during exercise. A “reversible defect” means an area gets less blood only during effort."
+        },
+        "ca": {
+          "title": "What does “narrowed vessels” mean?",
+          "body": "This counts how many of the heart’s main blood vessels looked narrowed on a special X-ray. Narrowed vessels carry less blood to the heart muscle."
+        },
+        "chol": {
+          "title": "What is cholesterol?",
+          "body": "Cholesterol is a fatty substance carried in your blood. Too much of it can build up in artery walls and narrow them over time. Food, activity, genes and medicines all affect it."
+        },
+        "fbs": {
+          "title": "Why does fasting blood sugar matter?",
+          "body": "This checks your blood sugar after several hours without eating. A high result can be a sign of diabetes, which raises the risk of heart and blood-vessel problems."
+        }
+      },
+      "questions": [
+        "What do these results mean for me?",
+        "Do I need any more tests, like an exercise test or a heart scan?",
+        "Is my blood pressure or cholesterol something we should treat?",
+        "Which symptoms should make me seek care straight away?",
+        "What changes to my daily life would help my heart the most?",
+        "How does this screening tool compare with the tests you usually use?"
+      ]
+    }
   }
 ]

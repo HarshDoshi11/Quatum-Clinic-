@@ -18,7 +18,7 @@ export function PatientHome({ route }: { route: RouteMeta }) {
   const { datasetId } = useDataset()
   const { version } = useDataVersion()
   const datasets = useResource((signal) => api.listDatasets({ signal }), [version])
-  const name = datasets.data?.find((d) => d.id === datasetId)?.patientName ?? null
+  const name = datasets.data?.find((d) => d.id === datasetId)?.patient?.name ?? null
 
   const points = [
     {

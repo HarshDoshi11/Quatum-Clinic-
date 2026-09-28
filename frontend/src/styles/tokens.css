@@ -75,6 +75,9 @@
 :root {
   --panel-radius: 4px;
   --control-radius: 2px;
+  /* Patient Mode's figures and range bars; outside Patient Mode they fall back to the risk colours. */
+  --coral: var(--risk-high);
+  --amber: var(--risk-mid);
   --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 [data-mode='patient'] {
@@ -83,6 +86,13 @@
   --accent-soft: color-mix(in srgb, var(--risk-low) 16%, transparent);
   --panel-radius: 0.5rem;
   --control-radius: 0.5rem;
+  /* Softer than the research risk colours: guiding, not alarming. */
+  --coral: #d9826c;
+  --amber: #d6a24a;
+}
+:root[data-theme='dark'] [data-mode='patient'] {
+  --coral: #e3957f;
+  --amber: #e0ae5c;
 }
 
 /*
@@ -109,6 +119,8 @@
   --font-serif: 'Instrument Serif', 'Times New Roman', serif;
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  /* Patient Mode's result headline only (type-headline-soft). */
+  --font-fraunces: 'Fraunces', 'Instrument Serif', Georgia, serif;
 
   /*
    * Type scale — the ONLY font sizes allowed (see CLAUDE.md). rem-based so

@@ -9,13 +9,12 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - The full product spec (all pages, Patient Mode, phases) is in `docs/brief.md`. Read it before starting any phase.
   If the brief and this file disagree, this file wins.
 - Phases 1–6: done and approved (Phase 6 includes the Predict & Trust rework and the Explain workspace).
-- Phase 7 — Patient Mode: done ("Calm Clinic" redesign, Parts A and B), awaiting approval. Pages in `src/pages/patient/`:
-  Home (breathing visual), Assessment (one config group per step → "Checking your answers…" → My Report), and
-  My Report (100-people grid, confidence meter, influence cards, journey timeline, copyable questions, safety note,
-  PDF / Share). Patient Mode shows no AUC, qubits, models, experiments, backends or 3D; `check:mocks` asserts the
-  patient-facing text has no research jargon, the patient config covers every input and every outcome, and the
-  report's next steps are the config's journey. The assessment edits the shared in-memory patient.
-  A "For your doctor" clinician page in the PDF is pending: there is no Clinician Report yet.
+- Phase 7 — Patient Mode: "Calm Clinic" redesign in progress. Part A (token layer, Home, step-by-step Assessment,
+  patient config) and Part B (My Report: guiding headline, ten figures, confidence, Your numbers / Learn / Plan your
+  visit, share with family, read aloud, two-page doctor PDF) are done; Part C is next. Pages in `src/pages/patient/`.
+  Patient Mode shows no AUC, qubits, models, experiments, backends or 3D on screen (the doctor's printed page is the
+  exception); `check:mocks` asserts no research jargon, full config coverage (icons, questions, learn cards, journeys
+  per outcome, valid ranges), the "N in 10" wording and the family summary. The assessment edits the in-memory patient.
 - Next: Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
@@ -206,10 +205,14 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   risk colours only for the risk word and the icon grid, motion 250–500ms eased (`tGentle`, `stepSlide`). Patient
   copy (name, per-input icon and question, next-step journeys per outcome) comes from `DATASETS[id].patient`; icons
   map through `features/patient/icons.ts`, never per dataset in a component. Patient section titles are Instrument
-  Serif `type-h2`; soft `bg-surface` + `rounded-panel` panels are allowed in Patient Mode only. Numbers for patients
-  are natural frequencies ("Out of 100 people with results like yours, about 52 have …") and the 100-people grid;
-  an abstained patient gets an outlined grid with a "?" and no number. Sections reveal once on scroll (`Reveal`,
-  which always prints visible); print styles keep only the page.
+  Serif `type-h2`, except the result headline, which is Fraunces (`type-headline-soft`, patient only). Soft
+  `bg-surface` + `rounded-panel` panels are allowed in Patient Mode only. Coral and amber (`--coral`, `--amber`, softer
+  in the patient layer) are only for the result figures and the reference-range bars. Numbers for patients are
+  "about N in 10" (`result.outOfTen`) with a row of ten figures; an abstained patient gets outlined figures with a
+  "?" and no number anywhere, and the page opens on the next steps. Reference ranges are general health ranges from
+  the config, always labelled as not what the model used. Anything shared with family (`familySummary`) has no
+  identifiers and no numbers beyond "N in 10" (asserted in check:mocks). Sections reveal once on scroll (`Reveal`,
+  which always prints visible); "Download for my doctor" prints the patient page plus a "For your doctor" page.
 - Motion uses Framer Motion (`motion/react`). Keep it quick and precise (200–400ms), never bouncy. Share values via
   `src/lib/motion.ts`. Respect reduced motion (`MotionConfig reducedMotion="user"`, `useReducedMotion`).
 - Every data view has a skeleton loading state and an empty or error state (`Skeleton`, `EmptyState`).

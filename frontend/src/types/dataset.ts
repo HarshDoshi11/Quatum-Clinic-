@@ -1,3 +1,4 @@
+import type { PatientConfig } from '../lib/domain'
 import type { DatasetId } from './common'
 import type { ModalityInfo } from './crossModality'
 
@@ -69,8 +70,11 @@ export interface DatasetSummary {
   modalities: ModalityInfo[]
   /** Condition in patient-facing copy (from the dataset config), e.g. "heart disease"; null for an uploaded file. */
   condition: string | null
-  /** Patient Mode (from the dataset config): what the check is about. */
-  patientName: string | null
+  /**
+   * Patient Mode (from the dataset config): what the check is about, reference ranges (or the note shown
+   * instead), learn cards and suggested questions. Null for an uploaded file.
+   */
+  patient: Omit<PatientConfig, 'features' | 'guidance'> | null
 }
 
 export interface PreprocessingReport {
