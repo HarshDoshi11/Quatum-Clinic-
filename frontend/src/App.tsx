@@ -11,6 +11,7 @@ import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { Overview } from '@/pages/research/Overview'
 import { PATIENT_ROUTES, RESEARCH_ROUTES, type RouteMeta } from '@/routes'
 import { DataVersionProvider } from '@/state/dataVersion'
+import { PageBackendProvider } from '@/state/pageBackend'
 import { PatientProvider } from '@/state/patient'
 import { PlainLanguageProvider } from '@/state/plainLanguage'
 
@@ -102,9 +103,11 @@ export function App() {
               <ExperimentDrawerProvider>
                 <TourProvider>
                   <ShortcutsProvider>
-                    <AppShell>
-                      <AnimatedRoutes />
-                    </AppShell>
+                    <PageBackendProvider>
+                      <AppShell>
+                        <AnimatedRoutes />
+                      </AppShell>
+                    </PageBackendProvider>
                     <CommandPalette />
                   </ShortcutsProvider>
                 </TourProvider>

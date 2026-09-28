@@ -15,6 +15,9 @@
   --color-risk-low: var(--risk-low);
   --color-risk-mid: var(--risk-mid);
   --color-risk-high: var(--risk-high);
+  --color-risk-low-text: var(--risk-low-text);
+  --color-risk-mid-text: var(--risk-mid-text);
+  --color-risk-high-text: var(--risk-high-text);
 
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);

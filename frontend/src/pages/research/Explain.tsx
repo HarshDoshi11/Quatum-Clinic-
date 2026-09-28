@@ -8,6 +8,7 @@ import { ChartTooltipCard } from '@/components/charts/ChartTooltip'
 import { AXIS, C, TICK, niceScale, useChartUnits } from '@/components/charts/chartTheme'
 import { Button, ButtonLink } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { BackendNote } from '@/components/ui/BackendNote'
 import { ExperimentTag } from '@/components/ui/ExperimentTag'
 import { formatFeatureValue as formatValue } from '@/components/ui/Field'
 import { Glossed } from '@/components/ui/Glossed'
@@ -24,6 +25,8 @@ import { useDebouncedValue } from '@/lib/useDebouncedValue'
 import type { RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import { useDataVersion } from '@/state/dataVersion'
+import { useMode } from '@/state/mode'
+import { usePageBackend } from '@/state/pageBackend'
 import { PATIENT_SOURCE_LABEL, useCurrentPatient } from '@/state/patient'
 import type { DatasetId, ExplainResponse, FeatureContribution, FeatureSpec, PatientInput } from '@/types'
 
@@ -146,12 +149,14 @@ export function Explain({ route }: { route: RouteMeta }) {
     (signal) => (patient ? api.explain({ dataset: datasetId, input: patient }, { signal }) : new Promise<never>(() => {})),
     [datasetId, version, patient],
   )
-  // Would Predict give a number for this patient? If it abstains, the bars explain an estimate the system withholds.
-  const decision = useResource(
-    (signal) => (patient ? api.predict({ dataset: datasetId, input: patient }, { signal }) : new Promise<never>(() => {})),
-    [datasetId, version, patient],
-  )
-  const abstains = decision.data?.dataset === datasetId && decision.data.decision === 'abstain'
+  const { mode } = useMode()
+  const originalData = original.data?.dataset === datasetId ? original.data : undefined
+  // Same abstain rule as Predict: the explanation says whether this patient gets a reported result.
+  const abstains = originalData?.decision === 'abstain'
+  // Research Mode only, off by default: the raw output, clearly labelled as not reported.
+  const [showRaw, setShowRaw] = useState(false)
+  const rawAllowed = mode === 'research'
+  usePageBackend(originalData?.backend, originalData?.qubits)
   const usedOriginal = useMemo(() => new Map((original.data?.contributions ?? []).map((c) => [c.feature, c])), [original.data])
 
   // What-if draft: always the ORIGINAL features. Every change is sent to /explain,
@@ -218,8 +223,7 @@ export function Explain({ route }: { route: RouteMeta }) {
     )
   }
 
-  const before = original.data?.probability
-  const now = current?.probability
+  const nowAbstains = current?.decision === 'abstain'
 
   return (
     <Page label={route.label}>
@@ -227,6 +231,7 @@ export function Explain({ route }: { route: RouteMeta }) {
         <PageHeader route={route}>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             {original.data && <ExperimentTag id={original.data.experimentId} detail="QSVM · explanation" />}
+            {originalData && <BackendNote backend={originalData.backend} model={originalData.model} qubits={originalData.qubits} />}
             {selected && (
               <span className="type-label text-muted">
                 {PATIENT_SOURCE_LABEL[selected.source]} · set on{' '}
@@ -245,15 +250,21 @@ export function Explain({ route }: { route: RouteMeta }) {
           title="What moved this estimate"
           plain="Each bar shows how much one of the patient's results pushed the estimate up or down, compared with an average patient."
         />
-        {abstains && decision.data && (
-          <div className="measure mt-8 border-l-2 border-ink pl-4">
+        {abstains && originalData && (
+          <div className="measure mt-8 border-l-2 border-ink pl-4" role="note">
             <p className="type-ui text-ink">
-              For this patient the system <Term term="abstain">abstains</Term>: it would not give an estimate.
+              The system declined to answer for this patient. The bars below show what the model looked at, not a result.
             </p>
-            <p className="mt-1 type-small text-muted">
-              <Glossed text={decision.data.abstainReasons.join(' ')} /> The bars below show what the model would lean on after cleaning (missing values
-              filled with the training average, out-of-range values clipped), not a result to act on.
-            </p>
+            <ul className="mt-2 flex flex-col gap-1">
+              {originalData.abstainReasons.map((r) => (
+                <li key={r} className="flex gap-2 type-small text-muted">
+                  <span className="mt-[0.55rem] block h-1 w-1 shrink-0 bg-muted" aria-hidden="true" />
+                  <span>
+                    <Glossed text={r} />
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
         <div className="mt-8" data-tour="explain-chart">
@@ -355,26 +366,73 @@ export function Explain({ route }: { route: RouteMeta }) {
           {/* Live readout */}
           <aside className="col-span-12 xl:col-span-5" aria-live="polite" aria-label="What-if result">
             <div className="xl:sticky xl:top-8">
-              <p className="type-label text-muted">
-                Estimate · probability of {config ? config.classBalance.positiveLabel.toLowerCase() : 'disease'}
-                {abstains && ' · withheld on Predict'}
-              </p>
-              {before !== undefined && now !== undefined ? (
+              <p className="type-label text-muted">Estimate · probability of {config ? config.classBalance.positiveLabel.toLowerCase() : 'disease'}</p>
+              {current && originalData ? (
                 <>
-                  <p className="mt-3 flex items-baseline gap-3 whitespace-nowrap">
-                    <span className="type-metric text-muted">{formatPercent(before)}</span>
-                    <span className="type-metric text-muted" aria-hidden="true">
-                      →
-                    </span>
-                    <span className="type-metric text-ink">
-                      <AnimatedNumber value={now} from={before} format={(v) => formatPercent(v)} />
-                    </span>
-                  </p>
-                  <p className={`num mt-1 type-small ${now > before + 1e-9 ? 'text-risk-high' : 'text-muted'}`}>
-                    {changed.length === 0 ? 'No changes yet' : `${formatDelta((now - before) * 100, 1)} pts vs this patient · ${changed.length} input${changed.length > 1 ? 's' : ''} changed`}
-                  </p>
+                  {nowAbstains ? (
+                    // Still abstained: no reported number, whatever the sliders say.
+                    <>
+                      <p className="mt-3 type-h2 text-ink">No reliable answer</p>
+                      <p className="mt-1 type-small text-muted">
+                        {changed.length === 0 ? 'The system declines to answer for this patient.' : `Still abstaining after ${changed.length} change${changed.length > 1 ? 's' : ''}:`}{' '}
+                        {current.abstainReasons.length} reason{current.abstainReasons.length === 1 ? '' : 's'} remain.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mt-3 flex items-baseline gap-3 whitespace-nowrap">
+                        <span className={abstains ? 'type-ui text-muted' : 'type-metric text-muted'}>{abstains || originalData.probability === null ? 'No answer' : formatPercent(originalData.probability)}</span>
+                        <span className="type-metric text-muted" aria-hidden="true">
+                          →
+                        </span>
+                        <span className="type-metric text-ink">
+                          <AnimatedNumber value={current.probability ?? 0} from={originalData.probability ?? current.probability ?? 0} format={(v) => formatPercent(v)} />
+                        </span>
+                      </p>
+                      <p className={`num mt-1 type-small ${originalData.probability !== null && (current.probability ?? 0) > originalData.probability + 1e-9 ? 'text-risk-high-text' : 'text-muted'}`}>
+                        {changed.length === 0
+                          ? 'No changes yet'
+                          : originalData.probability === null
+                            ? `Back within range after ${changed.length} change${changed.length > 1 ? 's' : ''}: the system now gives a result`
+                            : `${formatDelta(((current.probability ?? 0) - originalData.probability) * 100, 1)} pts vs this patient · ${changed.length} input${changed.length > 1 ? 's' : ''} changed`}
+                      </p>
+                    </>
+                  )}
+
+                  {rawAllowed && nowAbstains && (
+                    <div className="mt-4 border-t border-rule pt-3">
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={showRaw}
+                        onClick={() => setShowRaw((v) => !v)}
+                        className="flex items-center gap-3 type-small text-ink"
+                      >
+                        <span className={`relative block h-4 w-7 rounded-[2px] border border-ink ${showRaw ? 'bg-ink' : ''}`} aria-hidden="true">
+                          <span className={`absolute top-[2px] block h-2.5 w-2.5 transition-[left] duration-200 ${showRaw ? 'left-[0.8rem] bg-bg' : 'left-[2px] bg-ink'}`} />
+                        </span>
+                        Show raw model estimate
+                      </button>
+                      {showRaw && (
+                        <div className="mt-3">
+                          <p className="type-label text-muted">Raw estimate · not reported</p>
+                          <p className="num mt-1 flex items-baseline gap-2 type-ui text-muted">
+                            {formatPercent(originalData.rawProbability)}
+                            {changed.length > 0 && (
+                              <>
+                                <span aria-hidden="true">→</span>
+                                <span className="text-ink">{formatPercent(current.rawProbability)}</span>
+                                <span className="type-label">raw · still abstained</span>
+                              </>
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <p className="mt-3 type-small text-muted">
-                    An average patient scores <span className="num">{formatPercent(current?.baseProbability ?? 0)}</span>.
+                    An average patient scores <span className="num">{formatPercent(current.baseProbability)}</span>.
                   </p>
                   <div className="mt-4">
                     <Button variant="outline" size="sm" onClick={reset} disabled={changed.length === 0}>

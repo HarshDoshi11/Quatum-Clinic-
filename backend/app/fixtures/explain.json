@@ -4,8 +4,13 @@
     "model": "qsvm",
     "experimentId": "EXP-2047",
     "evaluation": "QSVM 4q · angle encoding · same pipeline as training · WDBC",
+    "backend": "noisy-sim",
+    "qubits": 4,
+    "decision": "predict",
+    "abstainReasons": [],
     "baseProbability": 0.373,
     "probability": 0.82,
+    "rawProbability": 0.82,
     "contributions": [
       {
         "feature": "radius_mean",
@@ -147,8 +152,13 @@
     "model": "qsvm",
     "experimentId": "EXP-2029",
     "evaluation": "QSVM 4q · angle encoding · same pipeline as training · UCI",
+    "backend": "noisy-sim",
+    "qubits": 4,
+    "decision": "predict",
+    "abstainReasons": [],
     "baseProbability": 0.459,
     "probability": 0.82,
+    "rawProbability": 0.82,
     "contributions": [
       {
         "feature": "exang",

@@ -3,6 +3,8 @@
     "dataset": "wdbc",
     "model": "qsvm",
     "experimentId": "EXP-2047",
+    "backend": "noisy-sim",
+    "qubits": 4,
     "evaluation": "QSVM 4q · noisy sim · 5 seeds · held-out 30% · WDBC",
     "calibration": [
       {
@@ -789,6 +791,8 @@
     "dataset": "heart",
     "model": "qsvm",
     "experimentId": "EXP-2029",
+    "backend": "noisy-sim",
+    "qubits": 4,
     "evaluation": "QSVM 4q · noisy sim · 5 seeds · held-out 30% · UCI",
     "calibration": [
       {

@@ -76,18 +76,18 @@ export function riskBand(p: number): RiskBand {
 }
 
 /** Value with unit, trailing zeros trimmed: 0.2100 → "0.21", 143.5 → "143.5 µm²". */
-const fmt = (f: ModelFeature, x: number): string => `${Number(x.toFixed(4))}${f.unit ? ` ${f.unit}` : ''}`
+export const fmt = (f: ModelFeature, x: number): string => `${Number(x.toFixed(4))}${f.unit ? ` ${f.unit}` : ''}`
 
 // ─── Input checks ───────────────────────────────────────────
 
-interface InputCheck {
+export interface InputCheck {
   missing: ModelFeature[]
   outOfRange: { feature: ModelFeature; value: number }[]
   maxAbsZ: number
   maxZFeature: ModelFeature | null
 }
 
-function checkInput(dataset: DatasetId, input: PatientInput): InputCheck {
+export function checkInput(dataset: DatasetId, input: PatientInput): InputCheck {
   const check: InputCheck = { missing: [], outOfRange: [], maxAbsZ: 0, maxZFeature: null }
   for (const f of MODEL_FEATURES[dataset]) {
     const x = input[f.key] ?? null
@@ -105,12 +105,29 @@ function checkInput(dataset: DatasetId, input: PatientInput): InputCheck {
   return check
 }
 
+/** The one abstain rule: out of range, or too much missing (or missing plus an unusual value). */
+export const abstains = (check: InputCheck): boolean =>
+  check.outOfRange.length > 0 || check.missing.length >= 3 || (check.missing.length > 0 && check.maxAbsZ > 3)
+
+function abstainReasonsFor(check: InputCheck): string[] {
+  return [
+    ...check.outOfRange.map(
+      ({ feature, value }) => `${feature.label} ${fmt(feature, value)} is outside the training range (${fmt(feature, feature.min)} – ${fmt(feature, feature.max)}).`,
+    ),
+    ...check.missing.map((f) => `${f.label} is missing.`),
+  ]
+}
+
 // ─── Per-prediction trust evidence ──────────────────────────
 
 const levelOf = (value: number, strongBelow: number, partialBelow: number): TrustLevel =>
   value < strongBelow ? 'strong' : value < partialBelow ? 'partial' : 'weak'
 
-function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck, threshold: number): TrustSignal[] {
+/**
+ * Six checks on one estimate. When the system abstains, no reason may reveal the
+ * withheld number (e.g. "At ~86% predicted…"), so those reasons switch to wording without it.
+ */
+function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck, threshold: number, abstain: boolean): TrustSignal[] {
   const features = MODEL_FEATURES[dataset]
   const l = scoreLogit(dataset, input)
   const p = sigmoid(l)
@@ -151,17 +168,26 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
   const presentCount = n - check.missing.length
   // Outside the training range the model is extrapolating: behaviour checks can't vouch for it.
   const extrapolating = check.outOfRange.length > 0
+  // Abstaining on missing data: behaviour checks ran on filled-in averages, so they can't vouch for this patient.
+  const filledIn = abstain && !extrapolating
+  const FILLED = 'Not meaningful: too much of this patient’s information is filled in with averages.'
+  const pts = (x: number) => (x * 100).toFixed(1)
 
   return [
     {
       id: 'stability',
       label: 'Prediction stability',
-      level: extrapolating || crosses ? 'weak' : levelOf(spread, 0.08, 0.15),
+      level: extrapolating || filledIn || crosses ? 'weak' : levelOf(spread, 0.08, 0.15),
       reason: extrapolating
         ? 'Seed agreement means little when the model is extrapolating.'
-        : crosses
-          ? `Seeds disagree on the side of the threshold (${Math.round(lo * 100)}–${Math.round(hi * 100)}%).`
+        : filledIn
+          ? FILLED
+          : crosses
+          ? abstain
+            ? 'Seeds disagree on which side of the threshold this patient falls.'
+            : `Seeds disagree on the side of the threshold (${Math.round(lo * 100)}–${Math.round(hi * 100)}%).`
           : `5 seeds agree within ±${(spread * 50).toFixed(1)} points.`,
+      short: extrapolating ? 'Extrapolating' : filledIn ? 'Filled-in values' : crosses ? 'Seeds straddle the threshold' : `±${(spread * 50).toFixed(1)} pts across 5 seeds`,
     },
     {
       id: 'data-quality',
@@ -171,46 +197,70 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
         check.missing.length === 0
           ? `All ${n} inputs present and within valid ranges.`
           : `${presentCount} of ${n} inputs present; missing: ${check.missing.map((f) => f.label.toLowerCase()).join(', ')}.`,
+      short: check.missing.length === 0 ? `All ${n} present` : `${check.missing.length} of ${n} missing`,
     },
     {
       id: 'distribution-shift',
       label: 'Distribution shift (OOD)',
-      level: check.outOfRange.length > 0 ? 'weak' : levelOf(check.maxAbsZ, 2.5, 3.5),
+      level: check.outOfRange.length > 0 ? 'weak' : filledIn ? 'partial' : levelOf(check.maxAbsZ, 2.5, 3.5),
       reason:
         check.outOfRange.length > 0
           ? `${check.outOfRange.length} value${check.outOfRange.length > 1 ? 's' : ''} outside anything seen in training.`
-          : check.maxAbsZ < 2.5
+          : filledIn
+            ? `Only ${presentCount} of ${n} values to compare with the training population.`
+            : check.maxAbsZ < 2.5
             ? 'Patient resembles the training population.'
             : `${check.maxZFeature?.label ?? 'One value'} is unusual (${check.maxAbsZ.toFixed(1)} SD from average).`,
+      short:
+        check.outOfRange.length > 0
+          ? `${check.outOfRange.length} outside training range`
+          : filledIn
+            ? `Only ${presentCount} of ${n} values to compare`
+            : check.maxAbsZ < 2.5
+            ? 'Resembles training data'
+            : `${check.maxZFeature?.label ?? 'One value'} ${check.maxAbsZ.toFixed(1)} SD out`,
     },
     {
       id: 'calibration',
       label: 'Calibration',
-      level: extrapolating ? 'weak' : levelOf(gap, 0.05, 0.1),
+      level: extrapolating || abstain ? 'weak' : levelOf(gap, 0.05, 0.1),
       reason: extrapolating
         ? 'Calibration was only measured on patients within the training range.'
-        : `At ~${Math.round(bin.predicted * 100)}% predicted, ${Math.round(bin.observed * 100)}% of similar test patients were positive.`,
+        : abstain
+          ? 'Not judged for this patient: there is no reported estimate to check.'
+          : `At ~${Math.round(bin.predicted * 100)}% predicted, ${Math.round(bin.observed * 100)}% of similar test patients were positive.`,
+      short: extrapolating
+        ? 'Not measured this far out'
+        : abstain
+          ? 'No estimate to check'
+          : `${Math.round(bin.predicted * 100)}% predicted → ${Math.round(bin.observed * 100)}% observed`,
     },
     {
       id: 'input-sensitivity',
       label: 'Input sensitivity',
-      level: extrapolating || flips ? 'weak' : levelOf(maxDelta, 0.03, 0.06),
+      level: extrapolating || filledIn || flips ? 'weak' : levelOf(maxDelta, 0.03, 0.06),
       reason: extrapolating
         ? 'Out-of-range inputs make the result unpredictable under small changes.'
-        : flips
+        : filledIn
+          ? FILLED
+          : flips
           ? 'A small error in one entered value could flip the decision.'
-          : `Small errors in the entered values move the result by at most ${(maxDelta * 100).toFixed(1)} points.`,
+          : `Small errors in the entered values move the result by at most ${pts(maxDelta)} points.`,
+      short: extrapolating ? 'Unpredictable out of range' : filledIn ? 'Filled-in values' : flips ? 'A small error could flip it' : `≤ ${pts(maxDelta)} pts from small errors`,
     },
     {
       id: 'hardware-sensitivity',
       label: 'Hardware sensitivity',
       // Weak only if noise would flip the decision; a large move that keeps the decision is partial.
-      level: extrapolating || hwFlip ? 'weak' : hwDelta < 0.03 ? 'strong' : 'partial',
+      level: extrapolating || filledIn || hwFlip ? 'weak' : hwDelta < 0.03 ? 'strong' : 'partial',
       reason: extrapolating
         ? 'Hardware robustness was only tested within the training range.'
-        : hwFlip
+        : filledIn
+          ? FILLED
+          : hwFlip
           ? 'Real-hardware noise would flip this decision.'
-        : `On FakeBackend-1 noise the result moves ${(hwDelta * 100).toFixed(1)} points; decision unchanged.`,
+          : `On FakeBackend-1 noise the result moves ${pts(hwDelta)} points; decision unchanged.`,
+      short: extrapolating ? 'Untested out of range' : filledIn ? 'Filled-in values' : hwFlip ? 'Hardware noise would flip it' : `Moves ${pts(hwDelta)} pts on FakeBackend-1`,
     },
   ]
 }
@@ -219,19 +269,17 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
 
 let predictionCounter = 0
 
+/** Backend and qubits of the deployed model, so pages can say which backend they use. */
+function deployed(dataset: DatasetId) {
+  const { config } = referenceResult(dataset, MODEL)
+  return { backend: config.backend, qubits: config.qubits ?? 0 }
+}
+
 export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: number): PredictResponse {
   const threshold = thresholdIn ?? defaultThreshold(dataset)
   const check = checkInput(dataset, input)
-  const trust = trustSignals(dataset, input, check, threshold)
-
-  const abstainReasons: string[] = [
-    ...check.outOfRange.map(
-      ({ feature, value }) =>
-        `${feature.label} ${fmt(feature, value)} is outside the training range (${fmt(feature, feature.min)} – ${fmt(feature, feature.max)}).`,
-    ),
-    ...check.missing.map((f) => `${f.label} is missing.`),
-  ]
-  const abstain = check.outOfRange.length > 0 || check.missing.length >= 3 || (check.missing.length > 0 && check.maxAbsZ > 3)
+  const abstain = abstains(check)
+  const trust = trustSignals(dataset, input, check, threshold, abstain)
 
   predictionCounter += 1
   const base = {
@@ -240,12 +288,14 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
     model: MODEL,
     experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
     evaluation: `${modelSetting(dataset)} · same pipeline as training · ${DATASETS[dataset].code}`,
+    ...deployed(dataset),
     threshold,
     trust,
   }
 
+  // Abstaining: no probability, interval, band or decision leaves the API.
   if (abstain) {
-    return { ...base, decision: 'abstain', probability: null, interval: null, riskBand: null, flagged: null, abstainReasons }
+    return { ...base, decision: 'abstain', probability: null, interval: null, riskBand: null, flagged: null, abstainReasons: abstainReasonsFor(check) }
   }
 
   const l = scoreLogit(dataset, input)
@@ -297,13 +347,21 @@ export function explain(dataset: DatasetId, input: PatientInput): ExplainRespons
     })
     .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
   const encoding: EncodedComponent[] = pre.encoding.map((value, k) => ({ component: k + 1, label: PCA_MEANING[dataset][k].label, value }))
+  // Same abstain rule as Predict: an abstained patient has no reported probability here either.
+  const check = checkInput(dataset, input)
+  const abstain = abstains(check)
+  const raw = round(probability(dataset, input))
   return {
     dataset,
     model: MODEL,
     experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
     evaluation: `${MODELS[MODEL].name} 4q · angle encoding · same pipeline as training · ${DATASETS[dataset].code}`,
+    ...deployed(dataset),
+    decision: abstain ? 'abstain' : 'predict',
+    abstainReasons: abstain ? abstainReasonsFor(check) : [],
     baseProbability: round(sigmoid(bias)),
-    probability: round(probability(dataset, input)),
+    probability: abstain ? null : raw,
+    rawProbability: raw,
     contributions,
     encoding,
     takeaway: explainTakeaway(contributions),
@@ -408,6 +466,7 @@ export function trust(dataset: DatasetId): TrustResponse {
     dataset,
     model: MODEL,
     experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
+    ...deployed(dataset),
     evaluation: `${modelSetting(dataset)} · ${SEEDS} seeds · held-out 30% · ${DATASETS[dataset].code}`,
     calibration: bins,
     ece: round(ece),

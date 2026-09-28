@@ -1,5 +1,6 @@
 import { useEffect, useId, useState, type ReactNode } from 'react'
 import type { FeatureSpec } from '@/types'
+import { Select, type SelectOption } from './Select'
 
 /** Decimals implied by a step: 0.01 → 2, 1 → 0. */
 export const decimalsOf = (step: number): number => (step >= 1 ? 0 : Math.min(4, Math.ceil(-Math.log10(step))))
@@ -35,20 +36,18 @@ export function FeatureField({ feature: f, value, onChange }: FeatureFieldProps)
 
   let control: ReactNode
   if (f.options) {
+    // "Not recorded" is a real choice (the value is missing), listed last and muted.
+    const options: SelectOption<string>[] = [...f.options.map((o) => ({ value: String(o.value), label: o.label })), { value: '', label: 'Not recorded', muted: true }]
     control = (
-      <select
-        id={id}
-        value={value === null ? '' : String(Math.round(value))}
-        onChange={(e) => onChange(e.target.value === '' ? null : Number(e.target.value))}
-        className={`${INPUT} ${line} cursor-pointer`}
-      >
-        <option value="">Missing</option>
-        {f.options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+      <div className="mt-1">
+        <Select
+          id={id}
+          value={value === null ? '' : String(Math.round(value))}
+          options={options}
+          onChange={(v) => onChange(v === '' ? null : Number(v))}
+          emphasis={outside}
+        />
+      </div>
     )
   } else {
     control = <NumberInput id={id} value={value} step={f.step} onChange={onChange} className={`${INPUT} ${line}`} unit={f.unit} />
@@ -66,7 +65,7 @@ export function FeatureField({ feature: f, value, onChange }: FeatureFieldProps)
             <span className="type-label">Outside training range</span> · {range.replace('Range ', '')}
           </>
         ) : value === null ? (
-          <>Missing · {range.toLowerCase()}</>
+          <>Not recorded · {range.replace(/^Range /, 'range ')}</>
         ) : (
           range
         )}

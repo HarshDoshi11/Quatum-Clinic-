@@ -149,7 +149,7 @@ for (const d of ['wdbc', 'heart'] as const) {
   const ex = explain(d, sc.samplePatient)
   check(`${d}: locked contributions follow the config`, ex.contributions.every((c) => c.locked === DATASETS[d].lockedFeatures.includes(c.feature)))
   const sum = ex.contributions.reduce((a, c) => a + c.contribution, 0)
-  check(`${d}: contributions sum to logit(p) − logit(base) (${sum.toFixed(3)})`, Math.abs(sum - (logit(ex.probability) - logit(ex.baseProbability))) < 0.01)
+  check(`${d}: contributions sum to logit(p) − logit(base) (${sum.toFixed(3)})`, Math.abs(sum - (logit(ex.rawProbability) - logit(ex.baseProbability))) < 0.01)
   eq(`${d}: Explain probability = Predict probability`, ex.probability, predict(d, sc.samplePatient).probability)
   // Any in-range edit (as entered on Predict or dragged on Explain) scores the same on both pages.
   const edits = sc.features.filter((x) => !x.locked).map((x) => ({ ...sc.samplePatient, [x.key]: x.min + (x.max - x.min) * 0.37 }))
@@ -160,7 +160,8 @@ for (const d of ['wdbc', 'heart'] as const) {
   if (f) {
     const atMax = explain(d, { ...sc.samplePatient, [f.key]: f.max })
     const beyond = explain(d, { ...sc.samplePatient, [f.key]: f.max * 2 })
-    check(`${d}: what-if ${f.label} beyond range is clipped, not extrapolated`, beyond.probability === atMax.probability && beyond.contributions.find((c) => c.feature === f.key)?.adjustment === 'clipped')
+    check(`${d}: what-if ${f.label} beyond range is clipped, not extrapolated`, beyond.rawProbability === atMax.rawProbability && beyond.contributions.find((c) => c.feature === f.key)?.adjustment === 'clipped')
+    eq(`${d}: …and the patient then abstains (no reported probability)`, [beyond.decision, beyond.probability], ['abstain', null])
   }
 }
 
@@ -244,6 +245,34 @@ for (const d of DATASET_IDS) {
       check(`${d} ${name}: influences use the config's wording (${DATASETS[d].reportSubject})`, r.influences.every((inf) => inf.plain.startsWith(`${DATASETS[d].reportSubject} `)))
       check(`${d} ${name}: summary counts the checks`, weak > 0 || r.reliability.summary.includes(partial > 0 ? `${p.trust.length - partial} of ${p.trust.length} checks passed` : `All ${p.trust.length} checks passed`), r.reliability.summary)
     }
+  }
+}
+
+// ─── Abstain consistency ────────────────────────────────────
+console.log('\nAbstained patients never show a reported probability')
+for (const d of DATASET_IDS) {
+  const sc = featureSchema(d)
+  const keys = sc.features.map((f) => f.key)
+  const cases: [string, Record<string, number | null>][] = [
+    ['unusual (out of range)', sc.unusualPatient],
+    ['three missing', { ...sc.samplePatient, [keys[0]]: null, [keys[1]]: null, [keys[2]]: null }],
+    ['everything cleared', Object.fromEntries(keys.map((k) => [k, null]))],
+  ]
+  for (const [name, input] of cases) {
+    const p = predict(d, input)
+    const ex = explain(d, input)
+    const r = patientReport(d, input, '')
+    eq(`${d} ${name}: Predict, Explain and Report all abstain`, [p.decision, ex.decision, r.result.decision], ['abstain', 'abstain', 'abstain'])
+    eq(`${d} ${name}: no reported probability, interval, band or frequency anywhere`, [p.probability, p.interval, p.riskBand, p.flagged, ex.probability, r.result.probability, r.result.riskBand, r.result.frequency], [null, null, null, null, null, null, null, null])
+    eq(`${d} ${name}: Explain gives Predict's reasons`, ex.abstainReasons, p.abstainReasons)
+    check(`${d} ${name}: report explains why in plain language`, r.result.reasons.length > 0 && r.influences.length === 0)
+    const behaviour = p.trust.filter((t) => ['stability', 'calibration', 'input-sensitivity', 'hardware-sensitivity'].includes(t.id))
+    check(`${d} ${name}: behaviour checks don't vouch for an abstained patient (all weak)`, behaviour.every((t) => t.level === 'weak'), behaviour.map((t) => `${t.id}=${t.level}`).join(', '))
+    // The withheld number must not leak through any text (trust reasons, report copy).
+    const raw = ex.rawProbability * 100
+    const leaks = [`${Math.round(raw)}%`, `${raw.toFixed(1)}%`, `~${Math.round(raw)}`]
+    const text = JSON.stringify({ trust: p.trust, report: r })
+    check(`${d} ${name}: the raw estimate (${raw.toFixed(1)}%) appears in no reported text`, leaks.every((l) => !text.includes(l)), leaks.filter((l) => text.includes(l)).join(', '))
   }
 }
 

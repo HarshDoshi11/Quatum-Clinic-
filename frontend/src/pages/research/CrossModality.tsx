@@ -6,6 +6,7 @@ import { ChartTooltipCard } from '@/components/charts/ChartTooltip'
 import { AXIS, C, TICK, niceScale, useChartUnits } from '@/components/charts/chartTheme'
 import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { BackendNote } from '@/components/ui/BackendNote'
 import { ExperimentTag } from '@/components/ui/ExperimentTag'
 import { Glossed } from '@/components/ui/Glossed'
 import { HairlineTable, type Column } from '@/components/ui/HairlineTable'
@@ -20,6 +21,7 @@ import { formatAuc, formatDelta, formatStd } from '@/lib/format'
 import type { RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import { useDataVersion } from '@/state/dataVersion'
+import { usePageBackend } from '@/state/pageBackend'
 import type { CombinedVerdict, CrossModalityAvailable, CrossModalityUnavailable, DatasetSummary } from '@/types'
 
 const VERDICT_LABEL: Record<CombinedVerdict, string> = {
@@ -165,6 +167,7 @@ export function CrossModality({ route }: { route: RouteMeta }) {
   const datasets = useResource((signal) => api.listDatasets({ signal }), [version])
   const data = res.data?.dataset === datasetId ? res.data : undefined
   const available = data?.available ? data : undefined
+  usePageBackend(available?.backend, available?.qubits)
 
   if (res.status === 'error') {
     return (
@@ -190,7 +193,10 @@ export function CrossModality({ route }: { route: RouteMeta }) {
     <Page label={route.label}>
       <PageItem as="header">
         <PageHeader route={route}>
-          <div className="mt-6">{available && <ExperimentTag id={available.experimentId} detail={`${available.modalities.length} signals · 5 seeds`} />}</div>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            {available && <ExperimentTag id={available.experimentId} detail={`${available.modalities.length} signals · 5 seeds`} />}
+            {available && <BackendNote backend={available.backend} model={available.model} qubits={available.qubits} />}
+          </div>
         </PageHeader>
       </PageItem>
 

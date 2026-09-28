@@ -13,6 +13,8 @@
     "dataset": "heart",
     "experimentId": "EXP-2036",
     "model": "qsvm",
+    "backend": "noisy-sim",
+    "qubits": 4,
     "evaluation": "QSVM 4q · noisy sim · 5 seeds · held-out 30% · UCI",
     "modalities": [
       {

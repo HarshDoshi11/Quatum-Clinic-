@@ -84,7 +84,20 @@ export function ReportLetter({ report: r, aside }: ReportLetterProps) {
             {r.result.headline}
           </p>
           {r.result.frequency && <p className="measure mt-3 type-body-lg text-ink">{r.result.frequency}</p>}
-          {abstained && <p className="measure mt-3 type-body-lg text-ink">Please consult a doctor.</p>}
+          {abstained && (
+            <>
+              <p className="measure mt-3 type-body-lg text-ink">We couldn’t give a reliable result from this information, because:</p>
+              <ul className="measure mt-2 flex flex-col gap-1">
+                {r.result.reasons.map((reason) => (
+                  <li key={reason} className="flex gap-3 type-body text-ink">
+                    <span className="mt-[0.7rem] block h-1 w-1 shrink-0 bg-ink" aria-hidden="true" />
+                    {reason}
+                  </li>
+                ))}
+              </ul>
+              <p className="measure mt-4 type-body-lg text-ink">Please consult a doctor.</p>
+            </>
+          )}
         </div>
       </section>
 

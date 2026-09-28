@@ -6,43 +6,51 @@
       "model": "qsvm",
       "experimentId": "EXP-2047",
       "evaluation": "QSVM 4q · noisy sim · same pipeline as training · WDBC",
+      "backend": "noisy-sim",
+      "qubits": 4,
       "threshold": 0.32,
       "trust": [
         {
           "id": "stability",
           "label": "Prediction stability",
           "level": "strong",
-          "reason": "5 seeds agree within ±1.4 points."
+          "reason": "5 seeds agree within ±1.4 points.",
+          "short": "±1.4 pts across 5 seeds"
         },
         {
           "id": "data-quality",
           "label": "Data quality",
           "level": "strong",
-          "reason": "All 10 inputs present and within valid ranges."
+          "reason": "All 10 inputs present and within valid ranges.",
+          "short": "All 10 present"
         },
         {
           "id": "distribution-shift",
           "label": "Distribution shift (OOD)",
           "level": "strong",
-          "reason": "Patient resembles the training population."
+          "reason": "Patient resembles the training population.",
+          "short": "Resembles training data"
         },
         {
           "id": "calibration",
           "label": "Calibration",
           "level": "strong",
-          "reason": "At ~86% predicted, 84% of similar test patients were positive."
+          "reason": "At ~86% predicted, 84% of similar test patients were positive.",
+          "short": "86% predicted → 84% observed"
         },
         {
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "strong",
-          "reason": "Small errors in the entered values move the result by at most 0.7 points."
+          "reason": "Small errors in the entered values move the result by at most 0.7 points.",
+          "short": "≤ 0.7 pts from small errors"
         },
         {
           "id": "hardware-sensitivity",
           "label": "Hardware sensitivity",
           "level": "partial",
-          "reason": "On FakeBackend-1 noise the result moves 10.7 points; decision unchanged."
+          "reason": "On FakeBackend-1 noise the result moves 10.7 points; decision unchanged.",
+          "short": "Moves 10.7 pts on FakeBackend-1"
         }
       ],
       "decision": "predict",
@@ -61,43 +69,51 @@
       "model": "qsvm",
       "experimentId": "EXP-2047",
       "evaluation": "QSVM 4q · noisy sim · same pipeline as training · WDBC",
+      "backend": "noisy-sim",
+      "qubits": 4,
       "threshold": 0.32,
       "trust": [
         {
           "id": "stability",
           "label": "Prediction stability",
           "level": "weak",
-          "reason": "Seed agreement means little when the model is extrapolating."
+          "reason": "Seed agreement means little when the model is extrapolating.",
+          "short": "Extrapolating"
         },
         {
           "id": "data-quality",
           "label": "Data quality",
           "level": "partial",
-          "reason": "9 of 10 inputs present; missing: texture."
+          "reason": "9 of 10 inputs present; missing: texture.",
+          "short": "1 of 10 missing"
         },
         {
           "id": "distribution-shift",
           "label": "Distribution shift (OOD)",
           "level": "weak",
-          "reason": "2 values outside anything seen in training."
+          "reason": "2 values outside anything seen in training.",
+          "short": "2 outside training range"
         },
         {
           "id": "calibration",
           "label": "Calibration",
           "level": "weak",
-          "reason": "Calibration was only measured on patients within the training range."
+          "reason": "Calibration was only measured on patients within the training range.",
+          "short": "Not measured this far out"
         },
         {
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "weak",
-          "reason": "Out-of-range inputs make the result unpredictable under small changes."
+          "reason": "Out-of-range inputs make the result unpredictable under small changes.",
+          "short": "Unpredictable out of range"
         },
         {
           "id": "hardware-sensitivity",
           "label": "Hardware sensitivity",
           "level": "weak",
-          "reason": "Hardware robustness was only tested within the training range."
+          "reason": "Hardware robustness was only tested within the training range.",
+          "short": "Untested out of range"
         }
       ],
       "decision": "abstain",
@@ -119,43 +135,51 @@
       "model": "qsvm",
       "experimentId": "EXP-2029",
       "evaluation": "QSVM 4q · noisy sim · same pipeline as training · UCI",
+      "backend": "noisy-sim",
+      "qubits": 4,
       "threshold": 0.35,
       "trust": [
         {
           "id": "stability",
           "label": "Prediction stability",
           "level": "strong",
-          "reason": "5 seeds agree within ±3.5 points."
+          "reason": "5 seeds agree within ±3.5 points.",
+          "short": "±3.5 pts across 5 seeds"
         },
         {
           "id": "data-quality",
           "label": "Data quality",
           "level": "strong",
-          "reason": "All 13 inputs present and within valid ranges."
+          "reason": "All 13 inputs present and within valid ranges.",
+          "short": "All 13 present"
         },
         {
           "id": "distribution-shift",
           "label": "Distribution shift (OOD)",
           "level": "strong",
-          "reason": "Patient resembles the training population."
+          "reason": "Patient resembles the training population.",
+          "short": "Resembles training data"
         },
         {
           "id": "calibration",
           "label": "Calibration",
           "level": "strong",
-          "reason": "At ~86% predicted, 84% of similar test patients were positive."
+          "reason": "At ~86% predicted, 84% of similar test patients were positive.",
+          "short": "86% predicted → 84% observed"
         },
         {
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "strong",
-          "reason": "Small errors in the entered values move the result by at most 0.5 points."
+          "reason": "Small errors in the entered values move the result by at most 0.5 points.",
+          "short": "≤ 0.5 pts from small errors"
         },
         {
           "id": "hardware-sensitivity",
           "label": "Hardware sensitivity",
           "level": "partial",
-          "reason": "On FakeBackend-1 noise the result moves 9.4 points; decision unchanged."
+          "reason": "On FakeBackend-1 noise the result moves 9.4 points; decision unchanged.",
+          "short": "Moves 9.4 pts on FakeBackend-1"
         }
       ],
       "decision": "predict",
@@ -174,43 +198,51 @@
       "model": "qsvm",
       "experimentId": "EXP-2029",
       "evaluation": "QSVM 4q · noisy sim · same pipeline as training · UCI",
+      "backend": "noisy-sim",
+      "qubits": 4,
       "threshold": 0.35,
       "trust": [
         {
           "id": "stability",
           "label": "Prediction stability",
           "level": "weak",
-          "reason": "Seed agreement means little when the model is extrapolating."
+          "reason": "Seed agreement means little when the model is extrapolating.",
+          "short": "Extrapolating"
         },
         {
           "id": "data-quality",
           "label": "Data quality",
           "level": "partial",
-          "reason": "12 of 13 inputs present; missing: max heart rate."
+          "reason": "12 of 13 inputs present; missing: max heart rate.",
+          "short": "1 of 13 missing"
         },
         {
           "id": "distribution-shift",
           "label": "Distribution shift (OOD)",
           "level": "weak",
-          "reason": "2 values outside anything seen in training."
+          "reason": "2 values outside anything seen in training.",
+          "short": "2 outside training range"
         },
         {
           "id": "calibration",
           "label": "Calibration",
           "level": "weak",
-          "reason": "Calibration was only measured on patients within the training range."
+          "reason": "Calibration was only measured on patients within the training range.",
+          "short": "Not measured this far out"
         },
         {
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "weak",
-          "reason": "Out-of-range inputs make the result unpredictable under small changes."
+          "reason": "Out-of-range inputs make the result unpredictable under small changes.",
+          "short": "Unpredictable out of range"
         },
         {
           "id": "hardware-sensitivity",
           "label": "Hardware sensitivity",
           "level": "weak",
-          "reason": "Hardware robustness was only tested within the training range."
+          "reason": "Hardware robustness was only tested within the training range.",
+          "short": "Untested out of range"
         }
       ],
       "decision": "abstain",

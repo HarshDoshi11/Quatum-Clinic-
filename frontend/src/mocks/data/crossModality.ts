@@ -73,6 +73,8 @@ export function crossModality(dataset: DatasetId): CrossModalityResponse {
     dataset,
     experimentId: EXPERIMENT_IDS[dataset].crossModality ?? EXPERIMENT_IDS[dataset].benchmark,
     model: MODEL,
+    backend: reference.backend,
+    qubits: reference.qubits ?? 0,
     evaluation: `${MODELS[MODEL].name} ${reference.qubits}q · ${BACKENDS[reference.backend].name.toLowerCase()} · ${SEEDS} seeds · held-out 30% · ${meta.code}`,
     modalities,
     combined,

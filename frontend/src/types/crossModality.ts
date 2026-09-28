@@ -1,4 +1,4 @@
-import type { ConfigKey, DatasetId, ExperimentId, MeanStd, ModelId } from './common'
+import type { BackendId, ConfigKey, DatasetId, ExperimentId, MeanStd, ModelId } from './common'
 
 export type ModalityId = 'demographics' | 'symptoms' | 'ecg' | 'exercise' | 'labs' | 'cytology'
 
@@ -32,6 +32,8 @@ export interface CrossModalityAvailable {
   dataset: DatasetId
   experimentId: ExperimentId
   model: ModelId
+  backend: BackendId
+  qubits: number
   /** e.g. "QSVM 4Q · NOISY SIM · 5 SEEDS · HELD-OUT 30% · UCI". */
   evaluation: string
   modalities: Modality[]

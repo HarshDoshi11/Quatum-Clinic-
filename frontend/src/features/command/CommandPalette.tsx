@@ -8,7 +8,7 @@ import { COMMAND_PALETTE_EVENT } from '@/components/shell/TopBar'
 import { useAppActions } from '@/features/actions'
 import { useExperimentDrawer } from '@/features/experiments/ExperimentDrawer'
 import { useShortcuts } from '@/features/shortcuts/Shortcuts'
-import { DATASETS, MODELS } from '@/lib/domain'
+import { DATASET_IDS, DATASETS, MODELS } from '@/lib/domain'
 import { formatTime } from '@/lib/format'
 import { easePrecise } from '@/lib/motion'
 import { isMac } from '@/lib/platform'
@@ -101,7 +101,6 @@ export function CommandPalette() {
     action()
   }
 
-  const otherDataset = datasetId === 'wdbc' ? DATASETS.heart : DATASETS.wdbc
 
   return createPortal(
     <AnimatePresence>
@@ -163,14 +162,21 @@ export function CommandPalette() {
                       <Item value="New experiment" keywords={['train', 'model']} onSelect={() => run(newExperiment)} hint="00.2">
                         New experiment
                       </Item>
-                      <Item
-                        value={`Switch dataset to ${otherDataset.name}`}
-                        keywords={['dataset', otherDataset.code, 'data']}
-                        onSelect={() => run(() => switchDataset(otherDataset.id))}
-                        hint={otherDataset.code}
-                      >
-                        Switch dataset to {otherDataset.name} ({otherDataset.code})
-                      </Item>
+                      {DATASET_IDS.map((id) => {
+                        const d = DATASETS[id]
+                        const current = id === datasetId
+                        return (
+                          <Item
+                            key={id}
+                            value={`Switch to ${d.name}`}
+                            keywords={['dataset', 'switch', d.code, d.condition]}
+                            onSelect={() => run(() => !current && switchDataset(id))}
+                            hint={current ? 'Current' : d.code}
+                          >
+                            Switch to {d.name} ({d.code})
+                          </Item>
+                        )
+                      })}
                     </>
                   )}
                   <Item

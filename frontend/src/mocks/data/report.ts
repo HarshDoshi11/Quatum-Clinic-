@@ -2,7 +2,7 @@
 import { DATASETS } from '../../lib/domain'
 import type { DatasetId, PatientInput, PatientReport, ReliabilityPoint, RiskBand, TrustLevel, TrustSignalId } from '../../types'
 import { MODEL_FEATURES } from './features'
-import { explain, predict } from './model'
+import { abstains, checkInput, explain, fmt, predict } from './model'
 
 const RISK_WORD: Record<RiskBand, string> = { low: 'Lower', moderate: 'Moderate', high: 'Higher' }
 
@@ -60,6 +60,18 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
               : `${subject} ${plainLabel(c.feature).toLowerCase()} pulled the estimate down.`,
         }))
 
+  // Why there is no result, in the patient's words (same checks as Predict's abstain reasons).
+  const check = checkInput(dataset, input)
+  const reasons = abstains(check)
+    ? [
+        ...check.outOfRange.map(
+          ({ feature: f, value }) =>
+            `${subject} ${f.plainLabel.toLowerCase()} (${fmt(f, value)}) is outside the range the model learned from (${fmt(f, f.min)} – ${fmt(f, f.max)}).`,
+        ),
+        ...check.missing.map((f) => `${subject} ${f.plainLabel.toLowerCase()} was not recorded.`),
+      ]
+    : []
+
   const band = prediction.riskBand
   const p = prediction.probability
   const outside = prediction.trust.find((t) => t.id === 'distribution-shift')?.level === 'weak'
@@ -78,9 +90,10 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
       headline: abstained || !band ? 'No reliable result' : `${RISK_WORD[band]} likelihood`,
       // A calibrated probability read as a natural frequency.
       frequency: p === null ? null : `About ${Math.round(p * 100)} in 100 people with results like these have ${meta.condition}.`,
+      reasons,
     },
     meaning: abstained
-      ? `We couldn't give a reliable result from this information. ${outside ? 'Some of your values are unlike anything the model learned from' : 'Too much of your information is missing'}, so any number would be a guess.`
+      ? `${outside ? 'Some of your values are unlike anything the model learned from' : 'Too much of your information is missing'}, so any number would be a guess. That is neither good nor bad news about ${meta.condition}: it means the information needs checking with your doctor.`
       : `Compared with people whose tests look similar to yours, the model estimates a ${RISK_WORD[band ?? 'moderate'].toLowerCase()} likelihood of ${meta.condition}. This is a screening signal, not a diagnosis. Only your doctor can diagnose.`,
     reliability: { level, summary: reliabilitySummary(points, abstained), points },
     influences,

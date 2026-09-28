@@ -25,6 +25,10 @@
   --risk-low: #5e8c61;
   --risk-mid: #c8912b;
   --risk-high: #b23a2e;
+  /* Risk as text (a risk word): ≥ 4.5 : 1 on bg and surface. Fills above are for marks only. */
+  --risk-low-text: #44704a; /* 5.1 : 1 / 4.7 : 1 */
+  --risk-mid-text: #8a5d0e; /* 5.1 : 1 / 4.7 : 1 */
+  --risk-high-text: #b23a2e; /* 5.3 : 1 / 4.9 : 1 */
 
   --overlay: rgba(13, 13, 13, 0.28);
   --shadow-float: 0 12px 40px -12px rgba(13, 13, 13, 0.22), 0 0 0 1px var(--rule);
@@ -47,6 +51,9 @@
   --risk-low: #7fb083;
   --risk-mid: #e0a84a;
   --risk-high: #d25a4d;
+  --risk-low-text: #7fb083; /* 7.8 : 1 */
+  --risk-mid-text: #e0a84a; /* 9.1 : 1 */
+  --risk-high-text: #d25a4d; /* 4.9 : 1 / 4.6 : 1 */
 
   --overlay: rgba(0, 0, 0, 0.55);
   --shadow-float: 0 16px 48px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--rule);
@@ -143,6 +150,9 @@
     --risk-low: #5e8c61;
     --risk-mid: #c8912b;
     --risk-high: #b23a2e;
+    --risk-low-text: #44704a;
+    --risk-mid-text: #8a5d0e;
+    --risk-high-text: #b23a2e;
     color-scheme: light;
   }
   html,

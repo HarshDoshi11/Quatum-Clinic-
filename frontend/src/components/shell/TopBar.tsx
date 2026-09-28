@@ -1,6 +1,7 @@
 import { SegmentedToggle, type SegmentOption } from '@/components/ui/SegmentedToggle'
 import { isMac, modKeyLabel } from '@/lib/platform'
 import { useMode, type Mode } from '@/state/mode'
+import { BACKEND_STATUS, backendTitle, useCurrentPageBackend } from '@/state/pageBackend'
 import { DatasetSelect } from './DatasetSelect'
 import { HelpPopover } from './HelpPopover'
 import { PlainToggle } from './PlainToggle'
@@ -20,6 +21,10 @@ function openCommandPalette(): void {
 
 export function TopBar() {
   const { mode, setMode } = useMode()
+  // A page that runs on a specific backend (e.g. Predict on Noisy Sim) says so here; otherwise the default.
+  const page = useCurrentPageBackend()
+  const [kind, name] = page ? BACKEND_STATUS[page.backend] : ['SIM', 'IDEAL']
+  const qubits = page?.qubits ?? 4
 
   return (
     <header className="@container flex h-full items-center gap-4 px-6">
@@ -39,9 +44,9 @@ export function TopBar() {
         {mode === 'research' && (
           <span
             className="type-label hidden whitespace-nowrap text-muted @min-[74rem]:inline"
-            title="Active backend: ideal simulator, 4 qubits"
+            title={page ? backendTitle(page) : 'Active backend: ideal simulator, 4 qubits'}
           >
-            <span className="text-ink">SIM</span> · IDEAL · <span className="text-accent">4Q</span>
+            <span className="text-ink">{kind}</span> · {name} · <span className="text-accent">{qubits}Q</span>
           </span>
         )}
         <PlainToggle />

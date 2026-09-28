@@ -11,7 +11,8 @@
         "riskBand": "high",
         "probability": 0.82,
         "headline": "Higher likelihood",
-        "frequency": "About 82 in 100 people with results like these have breast cancer."
+        "frequency": "About 82 in 100 people with results like these have breast cancer.",
+        "reasons": []
       },
       "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of breast cancer. This is a screening signal, not a diagnosis. Only your doctor can diagnose.",
       "reliability": {
@@ -103,9 +104,14 @@
         "riskBand": null,
         "probability": null,
         "headline": "No reliable result",
-        "frequency": null
+        "frequency": null,
+        "reasons": [
+          "Your sample’s cell area (4250 µm²) is outside the range the model learned from (143.5 µm² – 2501 µm²).",
+          "Your sample’s edge smoothness (0.21) is outside the range the model learned from (0.0526 – 0.1634).",
+          "Your sample’s texture variation was not recorded."
+        ]
       },
-      "meaning": "We couldn't give a reliable result from this information. Some of your values are unlike anything the model learned from, so any number would be a guess.",
+      "meaning": "Some of your values are unlike anything the model learned from, so any number would be a guess. That is neither good nor bad news about breast cancer: it means the information needs checking with your doctor.",
       "reliability": {
         "level": "weak",
         "summary": "We couldn’t check this result, because some of your information is missing or outside what the model learned from.",
@@ -175,7 +181,8 @@
         "riskBand": "high",
         "probability": 0.82,
         "headline": "Higher likelihood",
-        "frequency": "About 82 in 100 people with results like these have heart disease."
+        "frequency": "About 82 in 100 people with results like these have heart disease.",
+        "reasons": []
       },
       "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of heart disease. This is a screening signal, not a diagnosis. Only your doctor can diagnose.",
       "reliability": {
@@ -267,9 +274,14 @@
         "riskBand": null,
         "probability": null,
         "headline": "No reliable result",
-        "frequency": null
+        "frequency": null,
+        "reasons": [
+          "Your resting blood pressure (215 mmHg) is outside the range the model learned from (94 mmHg – 200 mmHg).",
+          "Your cholesterol (610 mg/dL) is outside the range the model learned from (126 mg/dL – 564 mg/dL).",
+          "Your highest heart rate in exercise test was not recorded."
+        ]
       },
-      "meaning": "We couldn't give a reliable result from this information. Some of your values are unlike anything the model learned from, so any number would be a guess.",
+      "meaning": "Some of your values are unlike anything the model learned from, so any number would be a guess. That is neither good nor bad news about heart disease: it means the information needs checking with your doctor.",
       "reliability": {
         "level": "weak",
         "summary": "We couldn’t check this result, because some of your information is missing or outside what the model learned from.",

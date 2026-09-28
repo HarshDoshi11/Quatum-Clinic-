@@ -35,6 +35,8 @@ export interface PatientReport {
     headline: string
     /** Natural-frequency reading of the calibrated probability; null when abstaining. */
     frequency: string | null
+    /** Why there is no result, in plain language; empty unless abstaining. */
+    reasons: string[]
   }
   meaning: string
   reliability: {

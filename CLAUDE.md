@@ -9,7 +9,8 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - The full product spec (all pages, Patient Mode, phases) is in `docs/brief.md`. Read it before starting any phase.
   If the brief and this file disagree, this file wins.
 - Phases 1–5: done and approved.
-- Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report: built, awaiting approval.
+- Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report: built; review fixes applied (abstain
+  consistency, shared Select, first-screen Predict layout, chart fixes, page backend), awaiting approval.
 - Next: Phase 7 (Patient Mode; reuse `features/report/ReportLetter` for My Report), then Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
@@ -84,6 +85,22 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
    Observatory, Scalability, Evolution, experiment records and the status strip. Responses carry `configKey` next to
    `auc`. In dev, the mock API warns on any key reported with two values, and `check:mocks` asserts no conflicts
    across all endpoints. The real backend must keep the same contract.
+6. **Abstained patients never show a reported probability anywhere.** When the system abstains, Predict, Explain,
+   the Patient Report and Patient Mode show "No reliable answer" / "No reliable result" with the computed reasons —
+   never a probability, seed interval, risk band, natural frequency, or text that leaks the number. The API enforces
+   it (`probability: null` when abstaining; Explain's raw value lives only in `rawProbability`), and `check:mocks`
+   asserts it. The only exception is Explain's Research-Mode toggle "Show raw model estimate" (off by default,
+   labelled "RAW ESTIMATE · NOT REPORTED", hidden entirely in Patient Mode).
+7. **Say which backend the numbers come from.** A page whose results come from a specific backend declares it with
+   `usePageBackend(backend, qubits)` (the top bar then shows it) and shows `<BackendNote>` ("THIS PAGE USES NOISY
+   SIM · QSVM 4Q"). Never silently contradict the top bar.
+
+## Demo-critical layout
+
+- **Key results fit the first screen** on demo-critical pages, without scrolling, at 1366×768 and 1440×900
+  (browser viewport). On Predict & Trust that is the result, the decision threshold, the trust evidence and the
+  stats line, in a sticky column beside the scrolling form; secondary charts go in tabs below. Verify by measuring
+  element positions in a headless browser, in every state (normal, abstain, cleared form).
 
 ## Beginner-friendly layer (required on every page)
 
@@ -165,6 +182,10 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   IDs, parameters and uppercase section labels (`label-mono`, `num`).
 - Use 1px hairline rules, not cards. Corners are at most 4px. Only the command palette, drawer and tour card get
   `shadow-float`.
+- **Never use a native `<select>`.** Use `Select` (`src/components/ui/Select.tsx`): a keyboard-accessible listbox
+  that follows the theme. An empty choice is labelled "Not recorded", muted, and listed last.
+- A risk *word* uses the text-safe risk tokens (`text-risk-low-text`, `text-risk-mid-text`, `text-risk-high-text`,
+  ≥ 4.5:1 in both themes); the plain `risk-*` colours are for marks and fills.
 - Never use purple, gradients (hard-stop slider fills excepted), glassmorphism, glows, emoji, icons in coloured
   circles, or two-tone headlines.
 - Motion uses Framer Motion (`motion/react`). Keep it quick and precise (200–400ms), never bouncy. Share values via

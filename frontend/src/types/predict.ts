@@ -1,4 +1,4 @@
-import type { ConfigKey, DatasetId, ExperimentId, MeanStd, ModelId } from './common'
+import type { BackendId, ConfigKey, DatasetId, ExperimentId, MeanStd, ModelId } from './common'
 import type { ModalityId } from './crossModality'
 
 export type FeatureKind = 'continuous' | 'integer' | 'binary' | 'categorical'
@@ -55,6 +55,14 @@ export interface TrustSignal {
   label: string
   level: TrustLevel
   reason: string
+  /** A few words for one-line lists; `reason` is the full sentence (shown on hover). */
+  short: string
+}
+
+/** Where the deployed model runs, so a page can say which backend its numbers come from. */
+export interface DeployedSetting {
+  backend: BackendId
+  qubits: number
 }
 
 export interface PredictRequest {
@@ -66,7 +74,7 @@ export interface PredictRequest {
 
 export type Decision = 'predict' | 'abstain'
 
-export interface PredictResponse {
+export interface PredictResponse extends DeployedSetting {
   predictionId: string
   dataset: DatasetId
   model: ModelId
@@ -113,7 +121,7 @@ export interface DefaultOperatingPoint {
   specificity: MeanStd
 }
 
-export interface TrustResponse {
+export interface TrustResponse extends DeployedSetting {
   dataset: DatasetId
   model: ModelId
   experimentId: ExperimentId
@@ -175,15 +183,24 @@ export interface EncodedComponent {
   value: number
 }
 
-export interface ExplainResponse {
+export interface ExplainResponse extends DeployedSetting {
   dataset: DatasetId
   model: ModelId
   experimentId: ExperimentId
   /** e.g. "QSVM 4Q · IDEAL SIM · WDBC". */
   evaluation: string
+  /** Same abstain rule as Predict. */
+  decision: Decision
+  abstainReasons: string[]
   /** Probability for an average patient. */
   baseProbability: number
-  probability: number
+  /** Reported probability; null when the system abstains for this patient. */
+  probability: number | null
+  /**
+   * The model's raw output, reported or not. Research Mode may show it behind an
+   * explicit toggle, labelled "RAW ESTIMATE · NOT REPORTED"; never in Patient Mode.
+   */
+  rawProbability: number
   /** Sorted by |contribution|, descending. */
   contributions: FeatureContribution[]
   /** The patient after the training pipeline: what the circuit actually receives. */
