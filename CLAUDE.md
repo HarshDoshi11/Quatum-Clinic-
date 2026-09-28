@@ -11,6 +11,9 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - Phases 1–5: done and approved.
 - Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report: built; review fixes applied (abstain
   consistency, shared Select, first-screen Predict layout, chart fixes, page backend), awaiting approval.
+- Predict & Trust rework, Part 1 done: threshold scrubber (`components/charts/ThresholdScrubber`) replaces the slider;
+  the bottom Model trust section is gone (calibration data stays in the trust API). Part 2 (calibration inside the
+  trust evidence rows) is next, and must restore the first-screen fit: the scrubber added ~110px to the right column.
 - Next: Phase 7 (Patient Mode; reuse `features/report/ReportLetter` for My Report), then Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.

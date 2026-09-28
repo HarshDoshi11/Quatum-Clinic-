@@ -16,7 +16,8 @@ interface SegmentedToggleProps<T extends string> {
   /** Unique per toggle instance — drives the sliding indicator. */
   layoutId: string
   ariaLabel: string
-  size?: 'sm' | 'md'
+  /** xs: compact, for controls inside a dense panel (e.g. a chart's Chart / Table switch). */
+  size?: 'xs' | 'sm' | 'md'
 }
 
 /**
@@ -43,7 +44,7 @@ export function SegmentedToggle<T extends string>({
     refs.current[next]?.focus()
   }
 
-  const pad = size === 'sm' ? 'h-8 px-2' : 'h-8 px-3'
+  const pad = size === 'xs' ? 'h-6 px-1.5' : size === 'sm' ? 'h-8 px-2' : 'h-8 px-3'
 
   return (
     <div

@@ -71,9 +71,9 @@ export const PAGE_CONTENT: Record<ResearchRouteId | PatientRouteId, PageGuide> =
   },
   predict: {
     plain: 'Enter a patient’s results, get a risk estimate, and see whether that estimate deserves trust.',
-    shows: 'A patient form, the predicted probability, six pieces of trust evidence, and the model’s calibration.',
+    shows: 'A patient form, the predicted probability, a chart for choosing the decision threshold, and six pieces of trust evidence.',
     matters: 'A number without a reason to trust it is dangerous in medicine. When evidence is weak, the system says so and declines to answer.',
-    read: 'Filled squares are strong evidence, half-filled partial, empty weak. Try the “unusual patient” to see the system abstain.',
+    read: 'Drag across the threshold chart to choose the cut-off: the blue line is how many sick patients are caught, and the green zone is where that stays safe. Filled squares are strong evidence, half-filled partial, empty weak. Try the “unusual patient” to see the system abstain.',
   },
   explain: {
     plain: 'Which of this patient’s results pushed the estimate up, and which pulled it down?',
