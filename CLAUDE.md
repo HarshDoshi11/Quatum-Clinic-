@@ -51,7 +51,7 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 - User actions that other parts of the UI can also trigger go through `useAppActions()` (`src/features/actions.ts`),
   so each action shows the same toast wherever it's triggered.
 - Per-dataset behaviour is declared on the dataset config (`DATASETS` in `src/lib/domain.ts`, e.g. `lockedFeatures`,
-  `explainCaption`) and reaches pages through the API. Never special-case a dataset ID in a page or mock; a new
+  `explainCaption`, `modalities`, `reportSubject`, `riskBandEdges`) and reaches pages through the API. Never special-case a dataset ID in a page or mock; a new
   dataset defines its own behaviour by adding a config entry.
 - The patient being assessed lives in `useCurrentPatient` (`src/state/patient.tsx`): Predict sets it, Explain and
   the Report read it. It is patient data, so it stays in memory and is never written to storage.
@@ -99,7 +99,8 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 
 - **Key results fit the first screen** on demo-critical pages, without scrolling, at 1366×768 and 1440×900
   (browser viewport). On Predict & Trust that is the result, the decision threshold, the trust evidence and the
-  stats line, in a sticky column beside the scrolling form; secondary charts go in tabs below. Verify by measuring
+  stats line, in a sticky column that starts at the top of the page beside the headline and scrolling form (the
+  whole column, buttons included, at 1440×900); secondary charts go in tabs below. Verify by measuring
   element positions in a headless browser, in every state (normal, abstain, cleared form).
 
 ## Beginner-friendly layer (required on every page)

@@ -8,6 +8,10 @@
       "evaluation": "QSVM 4q · noisy sim · same pipeline as training · WDBC",
       "backend": "noisy-sim",
       "qubits": 4,
+      "riskBandEdges": [
+        0.3,
+        0.6
+      ],
       "threshold": 0.32,
       "trust": [
         {
@@ -71,6 +75,10 @@
       "evaluation": "QSVM 4q · noisy sim · same pipeline as training · WDBC",
       "backend": "noisy-sim",
       "qubits": 4,
+      "riskBandEdges": [
+        0.3,
+        0.6
+      ],
       "threshold": 0.32,
       "trust": [
         {
@@ -137,6 +145,10 @@
       "evaluation": "QSVM 4q · noisy sim · same pipeline as training · UCI",
       "backend": "noisy-sim",
       "qubits": 4,
+      "riskBandEdges": [
+        0.3,
+        0.6
+      ],
       "threshold": 0.35,
       "trust": [
         {
@@ -200,6 +212,10 @@
       "evaluation": "QSVM 4q · noisy sim · same pipeline as training · UCI",
       "backend": "noisy-sim",
       "qubits": 4,
+      "riskBandEdges": [
+        0.3,
+        0.6
+      ],
       "threshold": 0.35,
       "trust": [
         {

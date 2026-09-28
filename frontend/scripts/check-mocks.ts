@@ -220,6 +220,18 @@ for (const d of DATASET_IDS) {
   eq(`${d}: flagged ⇔ probability ≥ threshold`, p.flagged, (p.probability ?? 0) >= threshold)
   const high = predict(d, sc.samplePatient, 0.99)
   eq(`${d}: moving the threshold re-decides, probability unchanged`, [high.flagged, high.probability], [false, p.probability])
+  // Risk band: from the probability alone, with the edges declared on the dataset config.
+  const [mod, hi] = DATASETS[d].riskBandEdges
+  eq(`${d}: response carries the config's risk-band edges`, p.riskBandEdges, DATASETS[d].riskBandEdges)
+  const bandFor = (x: number) => (x < mod ? 'low' : x < hi ? 'moderate' : 'high')
+  check(`${d}: risk band depends only on the probability (edges ${mod}/${hi})`, [0.05, 0.25, 0.45, 0.65, 0.85].every((f) => {
+    const q = predict(d, sc.samplePatient, f)
+    return q.probability !== null && q.riskBand === bandFor(q.probability) && q.riskBand === p.riskBand
+  }))
+  // Threshold slider range 5–95%: default is safe, and the range can reach an unsafe setting (so the warning is live).
+  const inRangePts = t.thresholdCurve.filter((x) => x.threshold >= 0.05 && x.threshold <= 0.95)
+  eq(`${d}: default threshold is safe beyond seed noise`, safetyStatus(ref.metrics.sensitivity.mean, ref.metrics.sensitivity.std, t.safeSensitivity), 'safe')
+  check(`${d}: some threshold in 5–95% is unsafe`, inRangePts.some((x) => safetyStatus(x.sensitivity, x.sensitivityStd, t.safeSensitivity) === 'unsafe'))
   eq(`${d}: unusual patient abstains with reasons`, [predict(d, sc.unusualPatient).decision, predict(d, sc.unusualPatient).abstainReasons.length > 0], ['abstain', true])
 }
 

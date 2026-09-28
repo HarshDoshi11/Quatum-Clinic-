@@ -49,6 +49,8 @@ export interface DatasetMeta {
   modalities: ModalityInfo[]
   /** How the patient report refers to the inputs: "Your" values, or "Your sample’s" when they measure a tissue sample. */
   reportSubject: string
+  /** Probability where the risk band turns moderate, then high: [moderate, high]. The band depends only on the probability. */
+  riskBandEdges: [number, number]
 }
 
 export const DATASETS: Record<DatasetId, DatasetMeta> = {
@@ -68,6 +70,7 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     explainCaption: 'These are measurements of the tumor sample, not things a patient can change. Use this to see what the model pays attention to.',
     modalities: [{ id: 'cytology', label: 'Tumor cytology' }],
     reportSubject: 'Your sample’s',
+    riskBandEdges: [0.3, 0.6],
   },
   heart: {
     id: 'heart',
@@ -91,6 +94,7 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
       { id: 'labs', label: 'Blood Labs' },
     ],
     reportSubject: 'Your',
+    riskBandEdges: [0.3, 0.6],
   },
 }
 

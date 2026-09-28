@@ -71,8 +71,10 @@ export function hardwareSeparationScale(dataset: DatasetId): number {
   return dPrime(fb1.auc.mean) / dPrime(ref.auc.mean)
 }
 
-export function riskBand(p: number): RiskBand {
-  return p < 0.3 ? 'low' : p < 0.6 ? 'moderate' : 'high'
+/** Risk band from the probability alone, with the edges declared on the dataset config. */
+export function riskBand(dataset: DatasetId, p: number): RiskBand {
+  const [moderate, high] = DATASETS[dataset].riskBandEdges
+  return p < moderate ? 'low' : p < high ? 'moderate' : 'high'
 }
 
 /** Value with unit, trailing zeros trimmed: 0.2100 → "0.21", 143.5 → "143.5 µm²". */
@@ -289,6 +291,7 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
     experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
     evaluation: `${modelSetting(dataset)} · same pipeline as training · ${DATASETS[dataset].code}`,
     ...deployed(dataset),
+    riskBandEdges: DATASETS[dataset].riskBandEdges,
     threshold,
     trust,
   }
@@ -306,7 +309,7 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
     decision: 'predict',
     probability: round(p),
     interval: [round(sigmoid(l - 1.96 * sigma)), round(sigmoid(l + 1.96 * sigma))],
-    riskBand: riskBand(p),
+    riskBand: riskBand(dataset, p),
     flagged: p >= threshold,
     abstainReasons: [],
   }

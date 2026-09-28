@@ -87,6 +87,8 @@ export interface PredictResponse extends DeployedSetting {
   /** Spread across seeds, [low, high]. */
   interval: [number, number] | null
   riskBand: RiskBand | null
+  /** [moderate, high] edges of the risk bands, from the dataset config (for the risk scale). */
+  riskBandEdges: [number, number]
   threshold: number
   /** True when probability ≥ threshold. */
   flagged: boolean | null
