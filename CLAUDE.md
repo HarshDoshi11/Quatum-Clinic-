@@ -14,6 +14,9 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - Predict & Trust rework done (Parts 1–2): compact one-line header; one result block with the risk scale under it;
   threshold scrubber (`components/charts/ThresholdScrubber`, threshold shown only in its header, Chart/Table in a ⋯ menu);
   expandable trust evidence (`features/predict/TrustEvidence`, panels read `PredictResponse.evidence`). Awaiting approval.
+- Explain restructured into one workspace: controls (fixed line from `lockedFeatures`, group tabs, `SegmentedControl` for
+  choices, sliders for numbers) beside a sticky estimate, influence bars in percentage points (`features/explain/InfluenceBars`,
+  from `FeatureContribution.effect`) and a collapsible quantum-input panel. Awaiting approval.
 - Next: Phase 7 (Patient Mode; reuse `features/report/ReportLetter` for My Report), then Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.

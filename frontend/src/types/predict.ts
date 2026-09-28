@@ -205,6 +205,11 @@ export interface FeatureContribution {
    * logit(probability) − logit(baseProbability).
    */
   contribution: number
+  /**
+   * The same push in probability (fraction; shown as percentage points): the estimate minus the estimate
+   * without this input's push, the others held. Computed from `contribution`, so it has the same sign.
+   */
+  effect: number
   direction: 'increases' | 'decreases'
   locked: boolean
 }

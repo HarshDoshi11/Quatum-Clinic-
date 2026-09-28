@@ -7,12 +7,14 @@ interface AnimatedNumberProps {
   /** Start value for the count-up. Defaults to 0. */
   from?: number
   className?: string
+  /** Spring for the glide; defaults to a slow count-up. */
+  spring?: { stiffness: number; damping: number }
 }
 
 /** A number that springs to its value (counts up on mount, glides on change). */
-export function AnimatedNumber({ value, format, from = 0, className = '' }: AnimatedNumberProps) {
+export function AnimatedNumber({ value, format, from = 0, className = '', spring: feel = { stiffness: 70, damping: 20 } }: AnimatedNumberProps) {
   const reduced = useReducedMotion()
-  const spring = useSpring(reduced ? value : from, { stiffness: 70, damping: 20, mass: 1 })
+  const spring = useSpring(reduced ? value : from, { ...feel, mass: 1 })
   const text = useTransform(spring, (n) => format(n))
 
   useEffect(() => {

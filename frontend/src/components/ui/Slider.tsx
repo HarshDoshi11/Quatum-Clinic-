@@ -1,4 +1,5 @@
 import { useId, type CSSProperties, type ReactNode } from 'react'
+import { AnimatedNumber } from './Metric'
 
 interface SliderProps {
   label: ReactNode
@@ -15,10 +16,14 @@ interface SliderProps {
   tone?: 'ink' | 'accent'
   hint?: ReactNode
   disabled?: boolean
+  /** The value text counts smoothly to each new number (the thumb still follows the pointer 1:1). */
+  countUp?: boolean
+  /** Marks a value the user changed (what-ifs): value text and fill in accent. */
+  changed?: boolean
 }
 
 /** Native range input restyled: 1px track, filled portion, small square thumb, mono readout. */
-export function Slider({ label, value, min, max, step, onChange, format = String, valueText, tone = 'ink', hint, disabled }: SliderProps) {
+export function Slider({ label, value, min, max, step, onChange, format = String, valueText, tone = 'ink', hint, disabled, countUp = false, changed = false }: SliderProps) {
   const id = useId()
   const fill = ((value - min) / (max - min)) * 100
   return (
@@ -28,8 +33,8 @@ export function Slider({ label, value, min, max, step, onChange, format = String
         <label htmlFor={id} className="type-label text-muted">
           {label}
         </label>
-        <output htmlFor={id} className="num type-small text-ink">
-          {format(value)}
+        <output htmlFor={id} className={`num type-small transition-colors duration-150 ${changed ? 'text-accent' : 'text-ink'}`}>
+          {countUp ? <AnimatedNumber value={value} from={value} format={format} spring={{ stiffness: 400, damping: 40 }} /> : format(value)}
         </output>
       </div>
       <input
@@ -42,7 +47,7 @@ export function Slider({ label, value, min, max, step, onChange, format = String
         disabled={disabled}
         onChange={(e) => onChange(Number(e.target.value))}
         aria-valuetext={(valueText ?? format)(value)}
-        data-tone={tone}
+        data-tone={changed ? 'accent' : tone}
         className="qc-range mt-1.5 disabled:cursor-not-allowed disabled:opacity-40"
         style={{ '--fill': `${fill}%` } as CSSProperties}
       />

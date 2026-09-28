@@ -393,9 +393,11 @@ export function explain(dataset: DatasetId, input: PatientInput): ExplainRespons
   const { bias, scale } = CALIBRATION[dataset]
   const pre = preprocess(dataset, input)
   const weights = PCA[dataset].featureWeights
+  const pushes = pre.features.map(({ z }, j) => scale * weights[j] * z)
+  const logitNow = bias + pushes.reduce((s, c) => s + c, 0)
   const contributions: FeatureContribution[] = pre.features
-    .map(({ feature: f, raw, used, z, adjustment }, j) => {
-      const contribution = round(scale * weights[j] * z, 4)
+    .map(({ feature: f, raw, used, adjustment }, j) => {
+      const contribution = round(pushes[j], 4)
       return {
         feature: f.key,
         label: f.label,
@@ -404,6 +406,8 @@ export function explain(dataset: DatasetId, input: PatientInput): ExplainRespons
         used: round(used, 4),
         adjustment,
         contribution,
+        // Leave-one-out on the probability scale: what this input's push adds to the estimate, the others held.
+        effect: round(sigmoid(logitNow) - sigmoid(logitNow - pushes[j]), 4),
         direction: contribution >= 0 ? ('increases' as const) : ('decreases' as const),
         locked: f.locked,
       }

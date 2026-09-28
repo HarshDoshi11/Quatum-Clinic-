@@ -29,3 +29,20 @@ export const itemVariants: Variants = {
   enter: { opacity: 1, y: 0, transition: { duration: 0.35, ease: easePrecise } },
   exit: { opacity: 0 },
 }
+
+/** Selection indicators in form controls (segmented buttons): a quick glide. */
+export const tIndicator: Transition = { duration: 0.18, ease: easePrecise }
+
+/** Tab panels and similar swaps: crossfade with a small vertical slide. */
+export const panelSwap = {
+  initial: { opacity: 0, y: 6 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -6 },
+  transition: { duration: 0.2, ease: easePrecise },
+} as const
+
+/** A headline number reacting to input (the what-if estimate). */
+export const springEstimate = { type: 'spring', stiffness: 200, damping: 26 } as const
+
+/** Bars resizing and re-sorting as inputs change. */
+export const springBar: Transition = { type: 'spring', stiffness: 260, damping: 30 }

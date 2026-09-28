@@ -77,9 +77,9 @@ export const PAGE_CONTENT: Record<ResearchRouteId | PatientRouteId, PageGuide> =
   },
   explain: {
     plain: 'Which of this patient’s results pushed the estimate up, and which pulled it down?',
-    shows: 'How much each input moved the prediction, and what-if sliders to explore changes.',
+    shows: 'One workspace: controls for the patient’s results on the left, and on the right the estimate, how many percentage points each input adds or takes off, and (on request) what the quantum circuit receives.',
     matters: 'Doctors need to check the model’s reasoning against their own. What-ifs show which factors could change the outlook.',
-    read: 'Bars to the right raise risk, bars to the left lower it. The sliders change the original results; each change goes through the same cleaning and PCA as training. Inputs a patient can’t change are locked. This is a simulation, not advice.',
+    read: 'Pick a group of inputs from the tabs and change a value: the estimate and the bars update as you go. Red bars raise risk, green bars lower it; a faint bar shows where it started. Hover a bar for the value the model used and its log-odds. Inputs a patient can’t change are listed as fixed. Every change goes through the same cleaning and PCA as training. This is a simulation, not advice.',
   },
   'cross-modality': {
     plain: 'Do different kinds of tests (ECG, blood work, symptoms) predict better together than alone?',

@@ -20,6 +20,7 @@
         "used": 17.2,
         "adjustment": null,
         "contribution": 0.4334,
+        "effect": 0.0729,
         "direction": "increases",
         "locked": false
       },
@@ -31,6 +32,7 @@
         "used": 113,
         "adjustment": null,
         "contribution": 0.4297,
+        "effect": 0.0723,
         "direction": "increases",
         "locked": false
       },
@@ -42,6 +44,7 @@
         "used": 0.083,
         "adjustment": null,
         "contribution": 0.4285,
+        "effect": 0.072,
         "direction": "increases",
         "locked": false
       },
@@ -53,6 +56,7 @@
         "used": 920,
         "adjustment": null,
         "contribution": 0.3579,
+        "effect": 0.059,
         "direction": "increases",
         "locked": false
       },
@@ -64,6 +68,7 @@
         "used": 21.4,
         "adjustment": null,
         "contribution": 0.1338,
+        "effect": 0.0206,
         "direction": "increases",
         "locked": false
       },
@@ -75,6 +80,7 @@
         "used": 0.142,
         "adjustment": null,
         "contribution": 0.0839,
+        "effect": 0.0127,
         "direction": "increases",
         "locked": false
       },
@@ -86,6 +92,7 @@
         "used": 0.128,
         "adjustment": null,
         "contribution": 0.0564,
+        "effect": 0.0085,
         "direction": "increases",
         "locked": false
       },
@@ -97,6 +104,7 @@
         "used": 0.101,
         "adjustment": null,
         "contribution": 0.045,
+        "effect": 0.0067,
         "direction": "increases",
         "locked": false
       },
@@ -108,6 +116,7 @@
         "used": 0.19,
         "adjustment": null,
         "contribution": 0.0362,
+        "effect": 0.0054,
         "direction": "increases",
         "locked": false
       },
@@ -119,6 +128,7 @@
         "used": 0.061,
         "adjustment": null,
         "contribution": 0.0327,
+        "effect": 0.0049,
         "direction": "increases",
         "locked": false
       }
@@ -168,6 +178,7 @@
         "used": 1,
         "adjustment": null,
         "contribution": 0.4068,
+        "effect": 0.068,
         "direction": "increases",
         "locked": false
       },
@@ -179,6 +190,7 @@
         "used": 128,
         "adjustment": null,
         "contribution": 0.2691,
+        "effect": 0.0432,
         "direction": "increases",
         "locked": false
       },
@@ -190,6 +202,7 @@
         "used": 3,
         "adjustment": null,
         "contribution": 0.2331,
+        "effect": 0.037,
         "direction": "increases",
         "locked": false
       },
@@ -201,6 +214,7 @@
         "used": 1.8,
         "adjustment": null,
         "contribution": 0.2039,
+        "effect": 0.0321,
         "direction": "increases",
         "locked": false
       },
@@ -212,6 +226,7 @@
         "used": 1,
         "adjustment": null,
         "contribution": 0.173,
+        "effect": 0.027,
         "direction": "increases",
         "locked": false
       },
@@ -223,6 +238,7 @@
         "used": 2,
         "adjustment": null,
         "contribution": 0.1371,
+        "effect": 0.0211,
         "direction": "increases",
         "locked": false
       },
@@ -234,6 +250,7 @@
         "used": 58,
         "adjustment": null,
         "contribution": 0.0811,
+        "effect": 0.0123,
         "direction": "increases",
         "locked": true
       },
@@ -245,6 +262,7 @@
         "used": 140,
         "adjustment": null,
         "contribution": 0.073,
+        "effect": 0.011,
         "direction": "increases",
         "locked": false
       },
@@ -256,6 +274,7 @@
         "used": 1,
         "adjustment": null,
         "contribution": 0.0546,
+        "effect": 0.0082,
         "direction": "increases",
         "locked": true
       },
@@ -267,6 +286,7 @@
         "used": 268,
         "adjustment": null,
         "contribution": 0.0392,
+        "effect": 0.0059,
         "direction": "increases",
         "locked": false
       },
@@ -278,6 +298,7 @@
         "used": 1,
         "adjustment": null,
         "contribution": 0.0381,
+        "effect": 0.0057,
         "direction": "increases",
         "locked": false
       },
@@ -289,6 +310,7 @@
         "used": 0,
         "adjustment": null,
         "contribution": -0.0281,
+        "effect": -0.0041,
         "direction": "decreases",
         "locked": false
       },
@@ -300,6 +322,7 @@
         "used": 1,
         "adjustment": null,
         "contribution": 0.0008,
+        "effect": 0.0001,
         "direction": "increases",
         "locked": false
       }

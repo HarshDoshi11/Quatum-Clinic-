@@ -151,6 +151,11 @@ for (const d of ['wdbc', 'heart'] as const) {
   const sum = ex.contributions.reduce((a, c) => a + c.contribution, 0)
   check(`${d}: contributions sum to logit(p) − logit(base) (${sum.toFixed(3)})`, Math.abs(sum - (logit(ex.rawProbability) - logit(ex.baseProbability))) < 0.01)
   eq(`${d}: Explain probability = Predict probability`, ex.probability, predict(d, sc.samplePatient).probability)
+  // Influence in percentage points is computed from the log-odds: same sign, and it recomputes from the raw estimate.
+  const sigm = (x: number) => 1 / (1 + Math.exp(-x))
+  const lg = Math.log(ex.rawProbability / (1 - ex.rawProbability))
+  check(`${d}: influence in points has the sign of its log-odds push`, ex.contributions.every((c) => Math.sign(c.effect) === Math.sign(c.contribution) || c.contribution === 0))
+  check(`${d}: influence in points = estimate − estimate without that push`, ex.contributions.every((c) => Math.abs(c.effect - (ex.rawProbability - sigm(lg - c.contribution))) < 2e-3))
   // Any in-range edit (as entered on Predict or dragged on Explain) scores the same on both pages.
   const edits = sc.features.filter((x) => !x.locked).map((x) => ({ ...sc.samplePatient, [x.key]: x.min + (x.max - x.min) * 0.37 }))
   check(`${d}: Explain = Predict for ${edits.length} edited patients`, edits.every((input) => explain(d, input).probability === predict(d, input).probability))

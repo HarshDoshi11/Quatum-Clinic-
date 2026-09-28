@@ -1,4 +1,4 @@
-import { Check, Ellipsis, TriangleAlert } from 'lucide-react'
+import { TriangleAlert } from 'lucide-react'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react'
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
 import { HairlineTable, type Column } from '@/components/ui/HairlineTable'
@@ -6,14 +6,12 @@ import { Tooltip } from '@/components/ui/Tooltip'
 import { formatPercent, formatPoints } from '@/lib/format'
 import { tQuick } from '@/lib/motion'
 import { safetyStatus } from '@/lib/safety'
-import { useDismiss } from '@/lib/useDismiss'
 import { useElementSize } from '@/lib/useElementSize'
 import { SHORT_VIEWPORT, useMediaQuery } from '@/lib/useMediaQuery'
 import type { ThresholdPoint } from '@/types'
 import { C, TICK, useChartUnits } from './chartTheme'
 import { resolveLabelOffsets } from './directLabels'
-
-type View = 'chart' | 'table'
+import { ViewMenu, type View } from './ViewMenu'
 
 const X_TICKS = [0, 0.25, 0.5, 0.75, 1]
 /** Dragging within this distance of the default or a safe-range edge lands on it. */
@@ -42,72 +40,6 @@ function at(curve: ThresholdPoint[], key: 'sensitivity' | 'specificity', v: numb
 function safeRange(curve: ThresholdPoint[], safe: number, min: number, max: number): [number, number] | null {
   const ok = curve.filter((p) => p.threshold >= min - 1e-9 && p.threshold <= max + 1e-9 && p.sensitivity >= safe)
   return ok.length ? [ok[0].threshold, ok[ok.length - 1].threshold] : null
-}
-
-/** "⋯" menu holding the Chart / Table switch (menuitemradio; arrows move, Enter picks, Esc closes). */
-function ViewMenu({ view, onChange }: { view: View; onChange: (v: View) => void }) {
-  const [open, setOpen] = useState(false)
-  const wrap = useRef<HTMLDivElement>(null)
-  const items = useRef<(HTMLButtonElement | null)[]>([])
-  const [refs] = useState(() => [wrap])
-  useDismiss(refs, open, () => setOpen(false))
-  useEffect(() => {
-    if (open) items.current[view === 'chart' ? 0 : 1]?.focus()
-  }, [open, view])
-  const options: { value: View; label: string }[] = [
-    { value: 'chart', label: 'Show as chart' },
-    { value: 'table', label: 'Show as table' },
-  ]
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
-    e.preventDefault()
-    const i = items.current.findIndex((el) => el === document.activeElement)
-    items.current[(i + (e.key === 'ArrowDown' ? 1 : -1) + options.length) % options.length]?.focus()
-  }
-  return (
-    <div ref={wrap} className="relative">
-      <button
-        type="button"
-        aria-label="Threshold chart options"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
-        className="inline-flex h-6 w-6 items-center justify-center rounded-[2px] text-muted hover:bg-ink/[0.07] hover:text-ink"
-      >
-        <Ellipsis size="1rem" strokeWidth={1.5} aria-hidden="true" />
-      </button>
-      {open && (
-        <div
-          role="menu"
-          aria-label="View"
-          onKeyDown={onKeyDown}
-          className="absolute top-full right-0 z-20 mt-1 min-w-[10rem] rounded-[2px] border border-rule bg-surface py-1 shadow-float"
-        >
-          {options.map((o, i) => (
-            <button
-              key={o.value}
-              ref={(el) => {
-                items.current[i] = el
-              }}
-              type="button"
-              role="menuitemradio"
-              aria-checked={view === o.value}
-              onClick={() => {
-                onChange(o.value)
-                setOpen(false)
-              }}
-              className="flex h-8 w-full items-center gap-2 px-3 text-left type-ui text-ink outline-none hover:bg-ink/[0.07] focus-visible:bg-ink/[0.07]"
-            >
-              <span className="inline-flex w-3.5 justify-center" aria-hidden="true">
-                {view === o.value && <Check size="0.875rem" strokeWidth={1.5} className="text-accent" />}
-              </span>
-              {o.label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  )
 }
 
 interface ThresholdScrubberProps {
@@ -335,7 +267,7 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
               Reset to default
             </button>
           )}
-          <ViewMenu view={view} onChange={setView} />
+          <ViewMenu view={view} onChange={setView} label="Threshold chart options" />
         </div>
       </div>
 
