@@ -167,8 +167,7 @@ export function datasetSummary(dataset: DatasetId): DatasetSummary {
     explainCaption: meta.explainCaption,
     modalities: meta.modalities,
     condition: meta.condition,
-    // Everything Patient Mode needs except the per-input map (on the schema) and the journeys (on the report).
-    patient: (({ features: _features, guidance: _guidance, ...rest }) => rest)(meta.patient),
+    patient: { name: meta.patient.name, ranges: meta.patient.ranges, rangesNote: meta.patient.rangesNote, learn: meta.patient.learn, questions: meta.patient.questions },
   }
 }
 

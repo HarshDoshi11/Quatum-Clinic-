@@ -26,16 +26,11 @@ export const BACKENDS: Record<BackendId, BackendInfo> = {
   cpu: { id: 'cpu', name: 'CPU' },
 }
 
-/** How Patient Mode presents one input: an icon, its plain name ("Your age"), the question, and a helper line. */
+/** How Patient Mode presents one input: an icon, and the question in plain words ("Your age"). */
 export interface PatientFeatureInfo {
   icon: PatientIcon
-  plainName: string
   question: string
-  helper: string
 }
-
-/** The 3D form on Patient Mode's Home. */
-export type HeroShape = 'heart' | 'cells'
 
 /** One step of the "What to do next" journey. */
 export interface PatientStep {
@@ -77,17 +72,6 @@ export interface LearnCard {
 export interface PatientConfig {
   /** What the check is about, in patient copy ("heart disease"). */
   name: string
-  /** The Home pill: "Heart health check". */
-  checkLabel: string
-  /** How long the check takes, in minutes (shown beside the start button). */
-  minutes: number
-  /** Home headline, broken intentionally across lines; `italic` is one word set in italic. */
-  headline: { lines: string[]; italic: string }
-  heroShape: HeroShape
-  /** Symptoms that need urgent care now: the safety check before any questions. */
-  redFlags: string[]
-  /** Numbers to call from the urgent-care screen. */
-  emergencyNumbers: { label: string; number: string }[]
   /** One entry per input. check:mocks asserts every model input has one. */
   features: Record<string, PatientFeatureInfo>
   /** "What to do next", per outcome; the report's next steps come from here. */
@@ -152,31 +136,17 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     riskBandEdges: [0.3, 0.6],
     patient: {
       name: 'breast cancer',
-      checkLabel: 'Breast health check',
-      minutes: 3,
-      headline: { lines: ['Let’s look at', 'your sample results,', 'together.'], italic: 'together.' },
-      heroShape: 'cells',
-      redFlags: [
-        'A breast that is suddenly red, hot and very painful, with a fever',
-        'Bleeding that won’t stop',
-        'Severe breathlessness or chest pain',
-        'Fainting, or feeling like you might faint',
-      ],
-      emergencyNumbers: [
-        { label: 'Emergency', number: '112' },
-        { label: 'Ambulance', number: '108' },
-      ],
       features: {
-        radius_mean: { icon: 'circle-dot', plainName: 'Cell size (radius)', question: 'What is the cell size (radius)?', helper: 'From your cytology report, for example 14.1 µm.' },
-        texture_mean: { icon: 'grip', plainName: 'Texture variation', question: 'What is the texture variation?', helper: 'From your cytology report, for example 19.3.' },
-        perimeter_mean: { icon: 'circle-dashed', plainName: 'Cell outline length', question: 'What is the cell outline length?', helper: 'From your cytology report, for example 92.0 µm.' },
-        area_mean: { icon: 'square', plainName: 'Cell area', question: 'What is the cell area?', helper: 'From your cytology report, for example 655 µm².' },
-        smoothness_mean: { icon: 'spline', plainName: 'Edge smoothness', question: 'What is the edge smoothness?', helper: 'From your cytology report, for example 0.096.' },
-        compactness_mean: { icon: 'shrink', plainName: 'Compactness', question: 'What is the compactness?', helper: 'From your cytology report, for example 0.104.' },
-        concavity_mean: { icon: 'orbit', plainName: 'Depth of indentations', question: 'What is the depth of indentations?', helper: 'From your cytology report, for example 0.089.' },
-        concave_points_mean: { icon: 'sparkles', plainName: 'Number of indentations', question: 'What is the number of indentations?', helper: 'From your cytology report, for example 0.049.' },
-        symmetry_mean: { icon: 'scale', plainName: 'Symmetry', question: 'What is the symmetry?', helper: 'From your cytology report, for example 0.181.' },
-        fractal_dimension_mean: { icon: 'hexagon', plainName: 'Edge complexity', question: 'What is the edge complexity?', helper: 'From your cytology report, for example 0.063.' },
+        radius_mean: { icon: 'circle-dot', question: 'Cell size (radius)' },
+        texture_mean: { icon: 'grip', question: 'Texture variation' },
+        perimeter_mean: { icon: 'circle-dashed', question: 'Cell outline length' },
+        area_mean: { icon: 'square', question: 'Cell area' },
+        smoothness_mean: { icon: 'spline', question: 'Edge smoothness' },
+        compactness_mean: { icon: 'shrink', question: 'Compactness' },
+        concavity_mean: { icon: 'orbit', question: 'Depth of indentations' },
+        concave_points_mean: { icon: 'sparkles', question: 'Number of indentations' },
+        symmetry_mean: { icon: 'scale', question: 'Symmetry' },
+        fractal_dimension_mean: { icon: 'hexagon', question: 'Edge complexity' },
       },
       guidance: {
         high: [
@@ -251,34 +221,20 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     riskBandEdges: [0.3, 0.6],
     patient: {
       name: 'heart disease',
-      checkLabel: 'Heart health check',
-      minutes: 3,
-      headline: { lines: ['Let’s look at', 'your heart health,', 'together.'], italic: 'together.' },
-      heroShape: 'heart',
-      redFlags: [
-        'Chest pain or pressure while resting',
-        'Pain spreading to your arm, jaw, neck or back',
-        'Severe breathlessness',
-        'Fainting, or feeling like you might faint',
-      ],
-      emergencyNumbers: [
-        { label: 'Emergency', number: '112' },
-        { label: 'Ambulance', number: '108' },
-      ],
       features: {
-        age: { icon: 'cake', plainName: 'Your age', question: 'How old are you?', helper: 'In years, for example 54.' },
-        sex: { icon: 'user', plainName: 'Your sex', question: 'What is your sex?', helper: 'As written in your medical records.' },
-        trestbps: { icon: 'gauge', plainName: 'Your blood pressure at rest', question: 'What is your blood pressure at rest?', helper: 'The top number, for example 128 mmHg.' },
-        cp: { icon: 'heart-crack', plainName: 'What kind of chest pain you have', question: 'What kind of chest pain do you have?', helper: 'Choose the closest match. Many people have none.' },
-        restecg: { icon: 'activity', plainName: 'Your resting heart tracing (ECG)', question: 'What did your resting ECG show?', helper: 'It’s written on your ECG report.' },
-        oldpeak: { icon: 'trending-down', plainName: 'ECG change during exercise', question: 'How much did your ECG change during exercise?', helper: 'From your exercise test report, for example 1.0 mm.' },
-        slope: { icon: 'trending-up', plainName: 'ECG slope at peak exercise', question: 'What was the ECG slope at the peak of exercise?', helper: 'From your exercise test report.' },
-        thalach: { icon: 'heart-pulse', plainName: 'Your highest heart rate in the exercise test', question: 'What was your highest heart rate in the exercise test?', helper: 'In beats per minute, for example 150.' },
-        exang: { icon: 'footprints', plainName: 'Chest pain when you exercise', question: 'Did you get chest pain when you exercised?', helper: 'During the exercise test, or when you’re active.' },
-        thal: { icon: 'scan-line', plainName: 'Your heart scan result', question: 'What did your heart scan show?', helper: 'From your heart scan report.' },
-        ca: { icon: 'waypoints', plainName: 'Narrowed vessels seen on your scan', question: 'How many narrowed vessels did your scan show?', helper: 'A number from 0 to 3, from your scan report.' },
-        chol: { icon: 'droplet', plainName: 'Your cholesterol', question: 'What is your cholesterol?', helper: 'Total cholesterol, for example 210 mg/dL.' },
-        fbs: { icon: 'candy', plainName: 'High fasting blood sugar', question: 'Is your fasting blood sugar above 120 mg/dL?', helper: 'From a blood test taken before eating.' },
+        age: { icon: 'cake', question: 'Your age' },
+        sex: { icon: 'user', question: 'Your sex' },
+        trestbps: { icon: 'gauge', question: 'Your blood pressure at rest' },
+        cp: { icon: 'heart-crack', question: 'What kind of chest pain you have' },
+        restecg: { icon: 'activity', question: 'Your resting heart tracing (ECG)' },
+        oldpeak: { icon: 'trending-down', question: 'ECG change during exercise' },
+        slope: { icon: 'trending-up', question: 'ECG slope at peak exercise' },
+        thalach: { icon: 'heart-pulse', question: 'Your highest heart rate in the exercise test' },
+        exang: { icon: 'footprints', question: 'Chest pain when you exercise' },
+        thal: { icon: 'scan-line', question: 'Your heart scan result' },
+        ca: { icon: 'waypoints', question: 'Narrowed vessels seen on your scan' },
+        chol: { icon: 'droplet', question: 'Your cholesterol' },
+        fbs: { icon: 'candy', question: 'High fasting blood sugar' },
       },
       guidance: {
         high: [

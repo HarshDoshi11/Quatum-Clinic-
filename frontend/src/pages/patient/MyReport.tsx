@@ -13,6 +13,7 @@ import { LearnCards } from '@/features/patient/LearnCards'
 import { PatientFooter } from '@/features/patient/PatientFooter'
 import { PeopleRow } from '@/features/patient/PeopleRow'
 import { EMPTY_PLAN, PlanVisit, type VisitPlan } from '@/features/patient/PlanVisit'
+import { ReadAloud } from '@/features/patient/ReadAloud'
 import { Reveal } from '@/features/patient/Reveal'
 import { SectionSwitch } from '@/features/patient/SectionSwitch'
 import { ShareSheet } from '@/features/patient/ShareSheet'
@@ -23,7 +24,6 @@ import { PATIENT_BASE, type RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import { useDataVersion } from '@/state/dataVersion'
 import { useCurrentPatient } from '@/state/patient'
-import { useSpeakable } from '@/state/speech'
 import type { DatasetId } from '@/types'
 
 type Section = 'numbers' | 'learn' | 'plan'
@@ -60,8 +60,6 @@ export function MyReport({ route }: { route: RouteMeta }) {
   const active: Section = section?.dataset === datasetId ? section.value : abstained ? 'plan' : 'numbers'
   const [plan, setPlan] = useState<VisitPlan>(EMPTY_PLAN)
   const [sharing, setSharing] = useState(false)
-  // The top bar's read-aloud toggle speaks the headline, "about N in 10", how sure we are, and the next steps.
-  useSpeakable(r ? readAloudScript(r) : null)
 
   if (schema.status === 'error' || report.status === 'error') {
     return (
@@ -105,6 +103,7 @@ export function MyReport({ route }: { route: RouteMeta }) {
               </div>
               <p className="mt-4 type-body text-muted">{NOT_A_DIAGNOSIS}</p>
               <div className="mt-8 flex flex-wrap gap-3">
+                <ReadAloud text={readAloudScript(r)} />
                 <Button variant="outline" onClick={() => setSharing(true)}>
                   <Share2 size="1.125rem" strokeWidth={1.5} aria-hidden="true" />
                   Share with family

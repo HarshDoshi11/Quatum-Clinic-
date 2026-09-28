@@ -13,9 +13,7 @@ import { PATIENT_ROUTES, RESEARCH_ROUTES, type RouteMeta } from '@/routes'
 import { DataVersionProvider } from '@/state/dataVersion'
 import { PageBackendProvider } from '@/state/pageBackend'
 import { PatientProvider } from '@/state/patient'
-import { LanguageProvider } from '@/state/language'
 import { PlainLanguageProvider } from '@/state/plainLanguage'
-import { SpeechProvider } from '@/state/speech'
 
 // Chart pages are code-split (Recharts is large); the Overview stays in the main bundle.
 const Data = lazy(() => import('@/pages/research/Data').then((m) => ({ default: m.Data })))
@@ -123,13 +121,9 @@ export function App() {
                 <TourProvider>
                   <ShortcutsProvider>
                     <PageBackendProvider>
-                      <LanguageProvider>
-                        <SpeechProvider>
-                          <AppShell>
-                            <AnimatedRoutes />
-                          </AppShell>
-                        </SpeechProvider>
-                      </LanguageProvider>
+                      <AppShell>
+                        <AnimatedRoutes />
+                      </AppShell>
                     </PageBackendProvider>
                     <CommandPalette />
                   </ShortcutsProvider>

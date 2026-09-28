@@ -58,11 +58,9 @@ export interface FeatureSpec {
   /** Step group for the patient assessment form. */
   group: string
   modality: ModalityId | null
-  /** Patient Mode (from the dataset config): icon, plain name ("Your age"), question ("How old are you?"), helper line. */
+  /** Patient Mode (from the dataset config): icon and the question in plain words, e.g. "Your age". */
   icon: PatientIcon
-  plainName: string
   question: string
-  helper: string
 }
 
 /** Feature key → value; null = missing. */

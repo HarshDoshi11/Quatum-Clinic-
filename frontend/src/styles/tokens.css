@@ -67,15 +67,32 @@
   color-scheme: dark;
 }
 
-/* Radii and patient-only colours; outside Patient Mode they fall back to research values. */
+/*
+ * Patient Mode ("Calm Clinic"): the same bone/ink bases, with sage (the text-safe --risk-low family)
+ * as the accent, softer 8px panel corners and a soft tint for selected options. Set on the shell by
+ * AppShell (data-mode), so it follows the theme and projector tokens above.
+ */
 :root {
   --panel-radius: 4px;
   --control-radius: 2px;
-  --raised: var(--surface);
-  --sage: var(--risk-low);
+  /* Patient Mode's figures and range bars; outside Patient Mode they fall back to the risk colours. */
   --coral: var(--risk-high);
   --amber: var(--risk-mid);
   --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+[data-mode='patient'] {
+  --accent: var(--risk-low-text);
+  --accent-ink: var(--bg);
+  --accent-soft: color-mix(in srgb, var(--risk-low) 16%, transparent);
+  --panel-radius: 0.5rem;
+  --control-radius: 0.5rem;
+  /* Softer than the research risk colours: guiding, not alarming. */
+  --coral: #d9826c;
+  --amber: #d6a24a;
+}
+:root[data-theme='dark'] [data-mode='patient'] {
+  --coral: #e3957f;
+  --amber: #e0ae5c;
 }
 
 /*
@@ -97,67 +114,10 @@
   --rule-strong: rgba(243, 241, 236, 0.44);
 }
 
-/*
- * Patient Mode: a calm health-app palette of its own (warm green-charcoal / warm paper), teal accent,
- * Fraunces headlines, 16px cards and 12px buttons. AppShell sets data-mode on <html>, so portalled
- * panels follow it too. Placed after the projector rules, with equal specificity, so it wins.
- * Contrast (text on bg): dark ink 15.9 : 1, secondary 8.4 : 1, teal 7.6 : 1; light ink 14.2 : 1,
- * secondary 5.9 : 1, teal 5.9 : 1, coral-as-text 5.0 : 1.
- */
-:root[data-mode='patient']:not([data-theme='dark']) {
-  --bg: #faf7f2;
-  --surface: #ffffff;
-  --raised: #f1ebe1;
-  --ink: #1f2a24;
-  --muted: #5b6660;
-  --rule: rgba(31, 42, 36, 0.1);
-  --rule-strong: rgba(31, 42, 36, 0.22);
-  --accent: #2f6f66;
-  --accent-ink: #faf7f2;
-  --sage: #4f8a5e;
-  --coral: #c8654a;
-  --amber: #b8862e;
-  --risk-low: #4f8a5e;
-  --risk-mid: #b8862e;
-  --risk-high: #c8654a;
-  --risk-low-text: #3f7250;
-  --risk-mid-text: #8a6420;
-  --risk-high-text: #a9503a;
-  --shadow-soft: 0 10px 30px -14px rgba(31, 42, 36, 0.28);
-}
-:root[data-mode='patient'][data-theme='dark'] {
-  --bg: #0f1412;
-  --surface: #161c19;
-  --raised: #1c2420;
-  --ink: #eceae3;
-  --muted: #a9b1ab;
-  --rule: rgba(236, 234, 227, 0.09);
-  --rule-strong: rgba(236, 234, 227, 0.2);
-  --accent: #5fb3a3;
-  --accent-ink: #0f1412;
-  --sage: #8fbf9a;
-  --coral: #e08a6d;
-  --amber: #e0b25c;
-  --risk-low: #8fbf9a;
-  --risk-mid: #e0b25c;
-  --risk-high: #e08a6d;
-  --risk-low-text: #8fbf9a;
-  --risk-mid-text: #e0b25c;
-  --risk-high-text: #e08a6d;
-  --shadow-soft: 0 12px 34px -14px rgba(0, 0, 0, 0.6);
-}
-:root[data-mode='patient'] {
-  --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
-  --panel-radius: 1rem;
-  --control-radius: 0.75rem;
-  /* Headlines in Patient Mode are Fraunces. */
-  --font-serif: var(--font-fraunces);
-}
-
 :root {
   /* Families */
   --font-serif: 'Instrument Serif', 'Times New Roman', serif;
-  --font-sans: 'IBM Plex Sans', 'IBM Plex Sans Devanagari', 'Nirmala UI', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
   /* Patient Mode's result headline only (type-headline-soft). */
   --font-fraunces: 'Fraunces', 'Instrument Serif', Georgia, serif;
