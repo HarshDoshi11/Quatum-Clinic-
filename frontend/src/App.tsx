@@ -24,6 +24,7 @@ const Evolution = lazy(() => import('@/pages/research/Evolution').then((m) => ({
 const Hardware = lazy(() => import('@/pages/research/Hardware').then((m) => ({ default: m.Hardware })))
 const Explain = lazy(() => import('@/pages/research/Explain').then((m) => ({ default: m.Explain })))
 const Predict = lazy(() => import('@/pages/research/Predict').then((m) => ({ default: m.Predict })))
+const CrossModality = lazy(() => import('@/pages/research/CrossModality').then((m) => ({ default: m.CrossModality })))
 const Failure = lazy(() => import('@/pages/research/Failure').then((m) => ({ default: m.Failure })))
 
 /** Shown for the instant a code-split page is loading: the page frame, no spinner. */
@@ -61,6 +62,8 @@ function researchPage(route: RouteMeta) {
       return lazyPage(<Failure route={route} />)
     case 'predict':
       return lazyPage(<Predict route={route} />)
+    case 'cross-modality':
+      return lazyPage(<CrossModality route={route} />)
     case 'explain':
       return lazyPage(<Explain route={route} />)
     default:

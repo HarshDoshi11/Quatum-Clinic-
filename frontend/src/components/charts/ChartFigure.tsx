@@ -9,7 +9,7 @@ export interface LegendItem {
   label: ReactNode
   color: string
   dashed?: boolean
-  shape?: 'line' | 'dot' | 'ring' | 'square'
+  shape?: 'line' | 'dot' | 'ring' | 'square' | 'square-outline'
 }
 
 type View = 'chart' | 'table'
@@ -43,6 +43,7 @@ interface ChartFigureProps<Row> {
 function Swatch({ item }: { item: LegendItem }) {
   if (item.shape === 'dot') return <span className="block h-2.5 w-2.5 rounded-full" style={{ background: item.color }} aria-hidden="true" />
   if (item.shape === 'ring') return <span className="block h-2.5 w-2.5 rounded-full border-[1.5px]" style={{ borderColor: item.color }} aria-hidden="true" />
+  if (item.shape === 'square-outline') return <span className="block h-2.5 w-2.5 border-[1.5px]" style={{ borderColor: item.color }} aria-hidden="true" />
   if (item.shape === 'square') return <span className="block h-2.5 w-2.5" style={{ background: item.color }} aria-hidden="true" />
   return (
     <svg width="20" height="8" aria-hidden="true">
