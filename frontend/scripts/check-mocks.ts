@@ -151,6 +151,9 @@ for (const d of ['wdbc', 'heart'] as const) {
   const sum = ex.contributions.reduce((a, c) => a + c.contribution, 0)
   check(`${d}: contributions sum to logit(p) − logit(base) (${sum.toFixed(3)})`, Math.abs(sum - (logit(ex.probability) - logit(ex.baseProbability))) < 0.01)
   eq(`${d}: Explain probability = Predict probability`, ex.probability, predict(d, sc.samplePatient).probability)
+  // Any in-range edit (as entered on Predict or dragged on Explain) scores the same on both pages.
+  const edits = sc.features.filter((x) => !x.locked).map((x) => ({ ...sc.samplePatient, [x.key]: x.min + (x.max - x.min) * 0.37 }))
+  check(`${d}: Explain = Predict for ${edits.length} edited patients`, edits.every((input) => explain(d, input).probability === predict(d, input).probability))
   eq(`${d}: encoding = Data page demo encoding`, ex.encoding.map((c) => c.value), datasetDetail(d).preprocessing.sampleEncoding)
   // A what-if value beyond the training range is clipped by the pipeline, exactly like training data.
   const f = sc.features.find((x) => x.kind === 'continuous' && !x.locked)

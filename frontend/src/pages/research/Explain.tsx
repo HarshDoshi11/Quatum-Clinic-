@@ -1,3 +1,4 @@
+import { Lock } from 'lucide-react'
 import { useReducedMotion } from 'motion/react'
 import { useEffect, useMemo, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -5,11 +6,13 @@ import { api, isAbortError, useResource } from '@/api'
 import { ChartFigure } from '@/components/charts/ChartFigure'
 import { ChartTooltipCard } from '@/components/charts/ChartTooltip'
 import { AXIS, C, TICK, niceScale, useChartUnits } from '@/components/charts/chartTheme'
-import { Button } from '@/components/ui/Button'
+import { Button, ButtonLink } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ExperimentTag } from '@/components/ui/ExperimentTag'
+import { formatFeatureValue as formatValue } from '@/components/ui/Field'
 import { Glossed } from '@/components/ui/Glossed'
 import type { Column } from '@/components/ui/HairlineTable'
+import { AnimatedNumber } from '@/components/ui/Metric'
 import { Page, PageItem } from '@/components/ui/Page'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { SectionHeader } from '@/components/ui/SectionHeader'
@@ -21,20 +24,10 @@ import { useDebouncedValue } from '@/lib/useDebouncedValue'
 import type { RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import { useDataVersion } from '@/state/dataVersion'
+import { PATIENT_SOURCE_LABEL, useCurrentPatient } from '@/state/patient'
 import type { DatasetId, ExplainResponse, FeatureContribution, FeatureSpec, PatientInput } from '@/types'
 
 const ROW_REM = 2.25
-
-/** Decimals implied by a slider step: 0.01 → 2, 1 → 0. */
-const decimalsOf = (step: number) => (step >= 1 ? 0 : Math.min(4, Math.ceil(-Math.log10(step))))
-
-/** A feature value as a person reads it: option label, or number with unit. */
-function formatValue(f: Pick<FeatureSpec, 'options' | 'unit' | 'step'>, v: number | null): string {
-  if (v === null) return 'missing'
-  const option = f.options?.find((o) => o.value === Math.round(v))
-  if (option) return option.label
-  return `${v.toFixed(decimalsOf(f.step))}${f.unit ? `\u00a0${f.unit}` : ''}`
-}
 
 // ─── Fig. 01 — contributions ────────────────────────────────
 
@@ -147,18 +140,26 @@ export function Explain({ route }: { route: RouteMeta }) {
   const schema = useResource((signal) => api.getFeatureSchema(datasetId, { signal }), [datasetId, version])
   const datasets = useResource((signal) => api.listDatasets({ signal }), [version])
   const config = datasets.data?.find((d) => d.id === datasetId)
-  const patient = schema.data?.samplePatient
+  const { patient: selected } = useCurrentPatient(datasetId, schema.data)
+  const patient = selected?.input
   const original = useResource(
     (signal) => (patient ? api.explain({ dataset: datasetId, input: patient }, { signal }) : new Promise<never>(() => {})),
     [datasetId, version, patient],
   )
+  // Would Predict give a number for this patient? If it abstains, the bars explain an estimate the system withholds.
+  const decision = useResource(
+    (signal) => (patient ? api.predict({ dataset: datasetId, input: patient }, { signal }) : new Promise<never>(() => {})),
+    [datasetId, version, patient],
+  )
+  const abstains = decision.data?.dataset === datasetId && decision.data.decision === 'abstain'
+  const usedOriginal = useMemo(() => new Map((original.data?.contributions ?? []).map((c) => [c.feature, c])), [original.data])
 
   // What-if draft: always the ORIGINAL features. Every change is sent to /explain,
   // which runs it through the same preprocessing and PCA as training.
   const [draft, setDraft] = useState<Draft | null>(null)
   useEffect(() => {
-    if (schema.data) setDraft({ dataset: schema.data.dataset, values: schema.data.samplePatient })
-  }, [schema.data])
+    if (patient) setDraft({ dataset: datasetId, values: patient })
+  }, [patient, datasetId])
   const debounced = useDebouncedValue(draft, 120)
   const [live, setLive] = useState<ExplainResponse | null>(null)
   const [liveError, setLiveError] = useState<Error | null>(null)
@@ -224,7 +225,17 @@ export function Explain({ route }: { route: RouteMeta }) {
     <Page label={route.label}>
       <PageItem as="header">
         <PageHeader route={route}>
-          <div className="mt-6">{original.data && <ExperimentTag id={original.data.experimentId} detail="QSVM · explanation" />}</div>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            {original.data && <ExperimentTag id={original.data.experimentId} detail="QSVM · explanation" />}
+            {selected && (
+              <span className="type-label text-muted">
+                {PATIENT_SOURCE_LABEL[selected.source]} · set on{' '}
+                <ButtonLink to="/predict" variant="ghost" size="sm" className="!h-auto !px-0 underline-offset-4 hover:underline">
+                  Predict &amp; Trust
+                </ButtonLink>
+              </span>
+            )}
+          </div>
         </PageHeader>
       </PageItem>
 
@@ -234,12 +245,23 @@ export function Explain({ route }: { route: RouteMeta }) {
           title="What moved this estimate"
           plain="Each bar shows how much one of the patient's results pushed the estimate up or down, compared with an average patient."
         />
+        {abstains && decision.data && (
+          <div className="measure mt-8 border-l-2 border-ink pl-4">
+            <p className="type-ui text-ink">
+              For this patient the system <Term term="abstain">abstains</Term>: it would not give an estimate.
+            </p>
+            <p className="mt-1 type-small text-muted">
+              <Glossed text={decision.data.abstainReasons.join(' ')} /> The bars below show what the model would lean on after cleaning (missing values
+              filled with the training average, out-of-range values clipped), not a result to act on.
+            </p>
+          </div>
+        )}
         <div className="mt-8" data-tour="explain-chart">
           {liveError ? (
             <EmptyState tone="error" title="Couldn't explain these values." body={liveError.message} />
           ) : (
             <ChartFigure<ContributionRow>
-              label="Fig. 01 — Push of each input on the estimate · demo patient"
+              label={`Fig. 01 — Push of each input on the estimate · ${selected ? PATIENT_SOURCE_LABEL[selected.source].toLowerCase() : 'patient'}`}
               subtitle={current?.evaluation}
               takeaway={current?.takeaway}
               caption={
@@ -284,16 +306,27 @@ export function Explain({ route }: { route: RouteMeta }) {
                   <legend className="type-label mb-4 text-muted">{group}</legend>
                   <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
                     {fs.map((f) => {
-                      const value = draft.values[f.key] ?? patient[f.key] ?? f.min
                       const was = patient[f.key] ?? null
-                      const isChanged = value !== was
+                      const used = usedOriginal.get(f.key)
+                      // A missing or out-of-range value starts where the pipeline put it (training average / clipped).
+                      const value = draft.values[f.key] ?? used?.used ?? f.min
+                      const isChanged = draft.values[f.key] !== was
+                      const hint = f.locked
+                        ? 'A patient can’t change this.'
+                        : isChanged
+                          ? `Was ${formatValue(f, was)}`
+                          : used?.adjustment === 'imputed'
+                            ? 'Missing · the model used the training average'
+                            : used?.adjustment === 'clipped'
+                              ? `Entered ${formatValue(f, was)} · clipped to the training range`
+                              : undefined
                       return (
                         <Slider
                           key={f.key}
                           label={
                             <span className="inline-flex items-baseline gap-2">
                               {f.label}
-                              {f.locked && <span className="type-label rounded-[2px] border border-rule-strong px-1 text-muted">Locked</span>}
+                              {f.locked && <Lock size="0.8125rem" strokeWidth={1.5} className="text-muted" aria-label="Locked" />}
                             </span>
                           }
                           value={value}
@@ -303,7 +336,7 @@ export function Explain({ route }: { route: RouteMeta }) {
                           disabled={f.locked}
                           onChange={(v) => set(f.key, v)}
                           format={(v) => formatValue(f, v)}
-                          hint={f.locked ? 'A patient can’t change this.' : isChanged ? `Was ${formatValue(f, was)}` : undefined}
+                          hint={hint}
                         />
                       )
                     })}
@@ -322,7 +355,10 @@ export function Explain({ route }: { route: RouteMeta }) {
           {/* Live readout */}
           <aside className="col-span-12 xl:col-span-5" aria-live="polite" aria-label="What-if result">
             <div className="xl:sticky xl:top-8">
-              <p className="type-label text-muted">Estimate · probability of {config ? config.classBalance.positiveLabel.toLowerCase() : 'disease'}</p>
+              <p className="type-label text-muted">
+                Estimate · probability of {config ? config.classBalance.positiveLabel.toLowerCase() : 'disease'}
+                {abstains && ' · withheld on Predict'}
+              </p>
               {before !== undefined && now !== undefined ? (
                 <>
                   <p className="mt-3 flex items-baseline gap-3 whitespace-nowrap">
@@ -330,7 +366,9 @@ export function Explain({ route }: { route: RouteMeta }) {
                     <span className="type-metric text-muted" aria-hidden="true">
                       →
                     </span>
-                    <span className="type-metric text-ink">{formatPercent(now)}</span>
+                    <span className="type-metric text-ink">
+                      <AnimatedNumber value={now} from={before} format={(v) => formatPercent(v)} />
+                    </span>
                   </p>
                   <p className={`num mt-1 type-small ${now > before + 1e-9 ? 'text-risk-high' : 'text-muted'}`}>
                     {changed.length === 0 ? 'No changes yet' : `${formatDelta((now - before) * 100, 1)} pts vs this patient · ${changed.length} input${changed.length > 1 ? 's' : ''} changed`}
@@ -359,7 +397,7 @@ export function Explain({ route }: { route: RouteMeta }) {
                 Your changes are cleaned, scaled and compressed into four numbers, one per <Term term="qubit">qubit</Term>, exactly like training data. The
                 thin line marks where each one started.
               </p>
-              <p className="measure mt-6 type-small text-muted">This is a simulation to show what the model pays attention to, not medical advice.</p>
+              <p className="type-label mt-6 text-muted">Model simulation, not medical advice.</p>
             </div>
           </aside>
         </div>
