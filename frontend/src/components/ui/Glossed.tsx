@@ -10,6 +10,8 @@ import { Term } from './Term'
  */
 const PHRASES: [string, GlossaryKey][] = [
   ['two-qubit gate error', 'gate error'],
+  ['decision threshold', 'decision threshold'],
+  ['safety threshold', 'threshold'],
   ['gate error', 'gate error'],
   ['readout error', 'readout error'],
   ['circuit depth', 'circuit depth'],
@@ -41,6 +43,7 @@ const PHRASES: [string, GlossaryKey][] = [
   ['PCA', 'pca'],
   ['QPU', 'qpu'],
   ['OOD', 'ood'],
+  ['ECE', 'ece'],
   ['T1', 't1'],
   ['T2', 't2'],
 ]
@@ -61,8 +64,8 @@ function keyFor(match: string): GlossaryKey | null {
  * Renders plain text (typically from the API) with every glossary word wrapped
  * in <Term>. Each term is linked once per text, on first occurrence.
  */
-export function Glossed({ text }: { text: string }) {
-  const seen = new Set<GlossaryKey>()
+export function Glossed({ text, skip = [] }: { text: string; /** Terms not to link here (the word means something else). */ skip?: readonly GlossaryKey[] }) {
+  const seen = new Set<GlossaryKey>(skip)
   const parts = text.split(PATTERN)
   return (
     <>

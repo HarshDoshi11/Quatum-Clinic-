@@ -4,7 +4,9 @@
  * patient or a what-if change — goes through the same preprocessing and PCA.
  * Deterministic, so Predict, Explain, Trust and the Report always agree.
  */
-import { DATASETS, MODELS, testSize } from '../../lib/domain'
+import { BACKENDS, DATASETS, MODELS, testSize } from '../../lib/domain'
+import { formatPercent } from '../../lib/format'
+import { operatingSentence } from '../../lib/safety'
 import type {
   CalibrationBin,
   DatasetId,
@@ -19,9 +21,9 @@ import type {
   TrustResponse,
   TrustSignal,
 } from '../../types'
-import { ABSTAINED, BEST_QUANTUM, dPrime, operatingPoint, prevalence, probToScore, sensSpecAtScore } from './canon'
+import { ABSTAINED, BEST_QUANTUM, SAFE_SENSITIVITY, SEEDS, dPrime, operatingPoint, prevalence, probToScore, sensSpecAtScore } from './canon'
 import { EXPERIMENT_IDS } from './ids'
-import { referenceResult } from './results'
+import { referenceResult, result } from './results'
 import { MODEL_FEATURES, SAMPLE_PATIENTS, SAMPLE_PROBABILITY, type ModelFeature } from './features'
 import { gaussian, logit, rng, round, sigmoid } from './math'
 import { PCA, PCA_MEANING, preprocess } from './pipeline'
@@ -52,6 +54,22 @@ export const probability = (dataset: DatasetId, input: PatientInput): number => 
 
 export const defaultThreshold = (dataset: DatasetId): number =>
   round(operatingPoint(dataset, referenceResult(dataset, MODEL).auc.mean).probThreshold, 2)
+
+/** "QSVM 4q · noisy sim" — the deployed model's benchmark configuration. */
+function modelSetting(dataset: DatasetId): string {
+  const { config } = referenceResult(dataset, MODEL)
+  return `${MODELS[MODEL].name} ${config.qubits}q · ${BACKENDS[config.backend].name.toLowerCase()}`
+}
+
+/**
+ * How much FakeBackend-1 noise shrinks the model's separation (d′), read from the
+ * results store: the same FakeBackend-1 result the Hardware Lab shows.
+ */
+export function hardwareSeparationScale(dataset: DatasetId): number {
+  const ref = referenceResult(dataset, MODEL)
+  const fb1 = result(dataset, { ...ref.config, backend: 'fake-backend-1' })
+  return dPrime(fb1.auc.mean) / dPrime(ref.auc.mean)
+}
 
 export function riskBand(p: number): RiskBand {
   return p < 0.3 ? 'low' : p < 0.6 ? 'moderate' : 'high'
@@ -118,8 +136,9 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
     }
   }
 
-  // Hardware sensitivity: FakeBackend-1 noise flattens the kernel, shrinking the logit.
-  const pNoisy = sigmoid(l * 0.8)
+  // Hardware sensitivity: FakeBackend-1 noise flattens the kernel, pulling the score toward the base rate.
+  const bias = CALIBRATION[dataset].bias
+  const pNoisy = sigmoid(bias + (l - bias) * hardwareSeparationScale(dataset))
   const hwDelta = Math.abs(pNoisy - p)
   const hwFlip = pNoisy >= threshold !== flagged
 
@@ -179,13 +198,14 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
       reason: extrapolating
         ? 'Out-of-range inputs make the result unpredictable under small changes.'
         : flips
-          ? 'A small measurement error could flip the decision.'
-          : `Small measurement errors move the result by at most ${(maxDelta * 100).toFixed(1)} points.`,
+          ? 'A small error in one entered value could flip the decision.'
+          : `Small errors in the entered values move the result by at most ${(maxDelta * 100).toFixed(1)} points.`,
     },
     {
       id: 'hardware-sensitivity',
       label: 'Hardware sensitivity',
-      level: extrapolating || hwFlip ? 'weak' : levelOf(hwDelta, 0.03, 0.08),
+      // Weak only if noise would flip the decision; a large move that keeps the decision is partial.
+      level: extrapolating || hwFlip ? 'weak' : hwDelta < 0.03 ? 'strong' : 'partial',
       reason: extrapolating
         ? 'Hardware robustness was only tested within the training range.'
         : hwFlip
@@ -219,6 +239,7 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
     dataset,
     model: MODEL,
     experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
+    evaluation: `${modelSetting(dataset)} · same pipeline as training · ${DATASETS[dataset].code}`,
     threshold,
     trust,
   }
@@ -327,9 +348,12 @@ export function calibrationBins(dataset: DatasetId): CalibrationBin[] {
   for (let b = 0; b < 10; b++) {
     const inBin = cases.filter((c) => c.p >= b / 10 && (c.p < (b + 1) / 10 || (b === 9 && c.p <= 1)))
     if (inBin.length === 0) continue
+    const observed = inBin.reduce((s, c) => s + c.truth, 0) / inBin.length
     bins.push({
       predicted: round(inBin.reduce((s, c) => s + c.p, 0) / inBin.length),
-      observed: round(inBin.reduce((s, c) => s + c.truth, 0) / inBin.length),
+      observed: round(observed),
+      // Spread of the observed rate across seeds ≈ its binomial std for this bin size.
+      observedStd: round(Math.max(0.005, Math.sqrt((observed * (1 - observed)) / inBin.length)), 4),
       count: inBin.length,
     })
   }
@@ -337,27 +361,63 @@ export function calibrationBins(dataset: DatasetId): CalibrationBin[] {
   return bins
 }
 
+/** Computed reading of the calibration curve: is the bias beyond the average seed spread? */
+function calibrationTakeaway(bias: number, noise: number, ece: number): string {
+  const e = `ECE ${formatPercent(ece)}`
+  if (Math.abs(bias) <= noise) return `Predicted and observed rates agree within seed noise (${e}).`
+  const pts = `${(Math.abs(bias) * 100).toFixed(1)} points`
+  return bias > 0
+    ? `The model is over-confident: its predictions sit ${pts} further from 50% than what happened, beyond seed noise (${e}).`
+    : `The model is under-confident: its predictions sit ${pts} closer to 50% than what happened, beyond seed noise (${e}).`
+}
+
+/** Seed std of a rate p, scaled like binomial spread from the store's std at the operating point p0. */
+const spreadAt = (p: number, p0: number, std0: number): number =>
+  round(Math.max(0.002, (std0 * Math.sqrt(p * (1 - p))) / Math.sqrt(p0 * (1 - p0))), 4)
+
 export function trust(dataset: DatasetId): TrustResponse {
-  const auc = referenceResult(dataset, MODEL).auc.mean
+  const ref = referenceResult(dataset, MODEL)
+  const auc = ref.auc.mean
   const bins = calibrationBins(dataset)
   const total = bins.reduce((s, b) => s + b.count, 0)
-  const ece = bins.reduce((s, b) => s + (b.count / total) * Math.abs(b.observed - b.predicted), 0)
+  const weighted = (f: (b: CalibrationBin) => number) => bins.reduce((s, b) => s + (b.count / total) * f(b), 0)
+  const ece = weighted((b) => Math.abs(b.observed - b.predicted))
+  // Positive when predictions sit further from 50% than the observed rates (over-confidence).
+  const bias = weighted((b) => Math.sign(b.predicted - 0.5) * (b.predicted - b.observed))
+  const noise = weighted((b) => b.observedStd)
 
-  const thresholds = Array.from({ length: 19 }, (_, i) => round((i + 1) * 0.05, 2))
+  // The default threshold is the store's operating point, so it shows the same numbers as every other page.
+  const t0 = defaultThreshold(dataset)
+  const { sensitivity: sens0, specificity: spec0 } = ref.metrics
+  const thresholds = Array.from({ length: 99 }, (_, i) => round((i + 1) / 100, 2))
   const thresholdCurve: ThresholdPoint[] = thresholds.map((t) => {
+    if (t === t0) return { threshold: t, sensitivity: sens0.mean, sensitivityStd: sens0.std, specificity: spec0.mean, specificityStd: spec0.std }
     const { sensitivity, specificity } = sensSpecAtScore(auc, probToScore(dataset, auc, t))
-    return { threshold: t, sensitivity: round(sensitivity), specificity: round(specificity) }
+    return {
+      threshold: t,
+      sensitivity: round(sensitivity, 4),
+      sensitivityStd: spreadAt(sensitivity, sens0.mean, sens0.std),
+      specificity: round(specificity, 4),
+      specificityStd: spreadAt(specificity, spec0.mean, spec0.std),
+    }
   })
+  const point = { sensitivity: sens0.mean, sensitivityStd: sens0.std, specificity: spec0.mean, specificityStd: spec0.std }
 
   const n = testSize(dataset)
   return {
     dataset,
     model: MODEL,
     experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
+    evaluation: `${modelSetting(dataset)} · ${SEEDS} seeds · held-out 30% · ${DATASETS[dataset].code}`,
     calibration: bins,
     ece: round(ece),
+    calibrationBias: round(bias, 4),
+    calibrationTakeaway: calibrationTakeaway(bias, noise, ece),
     thresholdCurve,
-    defaultThreshold: defaultThreshold(dataset),
+    operatingPoint: { configKey: ref.key, threshold: t0, auc, sensitivity: sens0, specificity: spec0 },
+    thresholdTakeaway: operatingSentence(t0, point, SAFE_SENSITIVITY, true),
+    safeSensitivity: SAFE_SENSITIVITY,
+    defaultThreshold: t0,
     testPatients: n,
     abstained: ABSTAINED[dataset],
     abstainRate: round(ABSTAINED[dataset] / n, 4),

@@ -18,6 +18,8 @@ export const GLOSSARY = {
   calibration: entry('Calibration', 'Whether a predicted 80% really comes true about 80% of the time.'),
   baseline: entry('Baseline', 'A standard classical model used as the yardstick quantum models must beat.'),
   abstain: entry('Abstain', 'The model declines to answer when the evidence is too weak.'),
+  ece: entry('ECE', 'Expected calibration error: the average gap between the risk the model predicts and how often it really happens.'),
+  'decision threshold': entry('Decision threshold', 'The predicted risk above which the model flags a patient for follow-up.'),
   ood: entry('OOD', 'Out-of-distribution: a patient unlike anyone the model learned from.'),
   'pareto front': entry('Pareto front', 'The designs where you cannot gain accuracy without adding cost.'),
 

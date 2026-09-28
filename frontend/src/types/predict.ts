@@ -1,4 +1,4 @@
-import type { DatasetId, ExperimentId, ModelId } from './common'
+import type { ConfigKey, DatasetId, ExperimentId, MeanStd, ModelId } from './common'
 import type { ModalityId } from './crossModality'
 
 export type FeatureKind = 'continuous' | 'integer' | 'binary' | 'categorical'
@@ -71,6 +71,8 @@ export interface PredictResponse {
   dataset: DatasetId
   model: ModelId
   experimentId: ExperimentId
+  /** e.g. "QSVM 4q · noisy sim · same pipeline as training · WDBC". */
+  evaluation: string
   decision: Decision
   /** Null when abstaining. */
   probability: number | null
@@ -89,23 +91,48 @@ export interface PredictResponse {
 export interface CalibrationBin {
   predicted: number
   observed: number
+  /** ±1 std of the observed rate across the 5 seeds. */
+  observedStd: number
   count: number
 }
 
 export interface ThresholdPoint {
   threshold: number
   sensitivity: number
+  sensitivityStd: number
   specificity: number
+  specificityStd: number
+}
+
+/** The model at its default threshold: exactly the results-store numbers shown on every page. */
+export interface DefaultOperatingPoint {
+  configKey: ConfigKey
+  threshold: number
+  auc: number
+  sensitivity: MeanStd
+  specificity: MeanStd
 }
 
 export interface TrustResponse {
   dataset: DatasetId
   model: ModelId
   experimentId: ExperimentId
+  /** e.g. "QSVM 4q · noisy sim · 5 seeds · held-out 30% · WDBC". */
+  evaluation: string
   calibration: CalibrationBin[]
   /** Expected calibration error (fraction). */
   ece: number
+  /** Count-weighted mean of (predicted − observed); positive = over-confident. */
+  calibrationBias: number
+  /** Computed reading of the calibration curve, judged against seed noise. */
+  calibrationTakeaway: string
+  /** 0.01 steps; the default-threshold point is the operating point. */
   thresholdCurve: ThresholdPoint[]
+  operatingPoint: DefaultOperatingPoint
+  /** Computed reading of the default operating point against the safety threshold. */
+  thresholdTakeaway: string
+  /** Sensitivity must stay at or above this to count as safe. */
+  safeSensitivity: number
   defaultThreshold: number
   testPatients: number
   abstained: number

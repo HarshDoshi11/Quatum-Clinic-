@@ -5,6 +5,7 @@
       "dataset": "wdbc",
       "model": "qsvm",
       "experimentId": "EXP-2047",
+      "evaluation": "QSVM 4q · noisy sim · same pipeline as training · WDBC",
       "threshold": 0.32,
       "trust": [
         {
@@ -35,13 +36,13 @@
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "strong",
-          "reason": "Small measurement errors move the result by at most 0.7 points."
+          "reason": "Small errors in the entered values move the result by at most 0.7 points."
         },
         {
           "id": "hardware-sensitivity",
           "label": "Hardware sensitivity",
           "level": "partial",
-          "reason": "On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
+          "reason": "On FakeBackend-1 noise the result moves 10.7 points; decision unchanged."
         }
       ],
       "decision": "predict",
@@ -59,6 +60,7 @@
       "dataset": "wdbc",
       "model": "qsvm",
       "experimentId": "EXP-2047",
+      "evaluation": "QSVM 4q · noisy sim · same pipeline as training · WDBC",
       "threshold": 0.32,
       "trust": [
         {
@@ -116,6 +118,7 @@
       "dataset": "heart",
       "model": "qsvm",
       "experimentId": "EXP-2029",
+      "evaluation": "QSVM 4q · noisy sim · same pipeline as training · UCI",
       "threshold": 0.35,
       "trust": [
         {
@@ -146,13 +149,13 @@
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "strong",
-          "reason": "Small measurement errors move the result by at most 0.5 points."
+          "reason": "Small errors in the entered values move the result by at most 0.5 points."
         },
         {
           "id": "hardware-sensitivity",
           "label": "Hardware sensitivity",
           "level": "partial",
-          "reason": "On FakeBackend-1 noise the result moves 4.9 points; decision unchanged."
+          "reason": "On FakeBackend-1 noise the result moves 9.4 points; decision unchanged."
         }
       ],
       "decision": "predict",
@@ -170,6 +173,7 @@
       "dataset": "heart",
       "model": "qsvm",
       "experimentId": "EXP-2029",
+      "evaluation": "QSVM 4q · noisy sim · same pipeline as training · UCI",
       "threshold": 0.35,
       "trust": [
         {

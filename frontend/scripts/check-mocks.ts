@@ -13,7 +13,8 @@ import { featureSchema } from '../src/mocks/data/features'
 import { HARDWARE_PROFILES, noiseRun } from '../src/mocks/data/hardware'
 import { safetyStatus } from '../src/lib/safety'
 import { datasetDetail, datasetSummary } from '../src/mocks/data/datasets'
-import { explain, predict, trust } from '../src/mocks/data/model'
+import { explain, hardwareSeparationScale, predict, trust } from '../src/mocks/data/model'
+import { normInv } from '../src/mocks/data/math'
 import { overview } from '../src/mocks/data/overview'
 import { patientReport } from '../src/mocks/data/report'
 import { bestModel, checkResponseConsistency, referenceResult, result, trainableParameters } from '../src/mocks/data/results'
@@ -190,6 +191,33 @@ const cm = crossModality('heart')
 eq('Heart cross-modality: combined 0.896, +6.2%, beyond seed noise', cm.available ? [cm.combined.auc.mean, cm.gainPct, cm.verdict] : null, [0.896, 6.2, 'gain'])
 const cmW = crossModality('wdbc')
 eq('WDBC cross-modality: unavailable, points to Heart', cmW.available ? null : [cmW.reason, cmW.supportedDatasets], ['Cross-modality analysis uses the Heart Disease dataset.', ['heart']])
+
+// ─── Predict & Trust ────────────────────────────────────────
+console.log('\nPredict & Trust')
+for (const d of DATASET_IDS) {
+  const t = trust(d)
+  const ref = referenceResult(d, 'qsvm')
+  const atDefault = t.thresholdCurve.find((p) => p.threshold === t.defaultThreshold)
+  eq(`${d}: curve at the default threshold = store QSVM (sens, std, spec, std)`, atDefault ? [atDefault.sensitivity, atDefault.sensitivityStd, atDefault.specificity, atDefault.specificityStd] : null, [ref.metrics.sensitivity.mean, ref.metrics.sensitivity.std, ref.metrics.specificity.mean, ref.metrics.specificity.std])
+  problems.length = 0
+  problems.push(...checkResponseConsistency(t, `trust/${d}`), ...checkResponseConsistency(compare(d), `compare/${d}`))
+  eq(`${d}: trust operating point agrees with every other endpoint`, problems, [])
+  check(`${d}: every threshold point and calibration bin carries ±std`, t.thresholdCurve.every((p) => p.sensitivityStd > 0 && p.specificityStd > 0) && t.calibration.every((b) => b.observedStd > 0))
+  const total = t.calibration.reduce((s, b) => s + b.count, 0)
+  const noise = t.calibration.reduce((s, b) => s + (b.count / total) * b.observedStd, 0)
+  check(`${d}: calibration wording matches the noise test`, t.calibrationTakeaway.includes(Math.abs(t.calibrationBias) <= noise ? 'within seed noise' : 'beyond seed noise'), t.calibrationTakeaway)
+  check(`${d}: threshold takeaway follows the shared safety rule`, t.thresholdTakeaway.includes(safetyStatus(ref.metrics.sensitivity.mean, ref.metrics.sensitivity.std, t.safeSensitivity) === 'safe' ? 'beyond seed noise' : 'seed noise'))
+  const fb1 = result(d, { ...ref.config, backend: 'fake-backend-1' })
+  const dp = (auc: number) => Math.SQRT2 * normInv(auc)
+  eq(`${d}: hardware check uses the store's FakeBackend-1 AUC`, hardwareSeparationScale(d).toFixed(6), (dp(fb1.auc.mean) / dp(ref.auc.mean)).toFixed(6))
+  const sc = featureSchema(d)
+  const threshold = t.defaultThreshold
+  const p = predict(d, sc.samplePatient, threshold)
+  eq(`${d}: flagged ⇔ probability ≥ threshold`, p.flagged, (p.probability ?? 0) >= threshold)
+  const high = predict(d, sc.samplePatient, 0.99)
+  eq(`${d}: moving the threshold re-decides, probability unchanged`, [high.flagged, high.probability], [false, p.probability])
+  eq(`${d}: unusual patient abstains with reasons`, [predict(d, sc.unusualPatient).decision, predict(d, sc.unusualPatient).abstainReasons.length > 0], ['abstain', true])
+}
 
 // ─── Unchanged anchors ──────────────────────────────────────
 console.log('\nRegistry, trust, patient')

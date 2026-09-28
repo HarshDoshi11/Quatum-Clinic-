@@ -28,6 +28,26 @@ const STATUS_PHRASE: Record<SafetyStatus, (t: string) => string> = {
   unsafe: (t) => `sits below the ${t} threshold beyond seed noise`,
 }
 
+/** "stays above the 85% threshold beyond seed noise" — for a sensitivity ± std against the safety threshold. */
+export function safetyPhrase(value: number, std: number, threshold: number): string {
+  return STATUS_PHRASE[safetyStatus(value, std, threshold)](`${Math.round(threshold * 100)}% safety`)
+}
+
+/**
+ * Reading of one operating point (Predict & Trust): used by the API for the
+ * default threshold and by the page for a threshold the user picks.
+ */
+export function operatingSentence(
+  threshold: number,
+  point: { sensitivity: number; sensitivityStd: number; specificity: number; specificityStd: number },
+  safeSensitivity: number,
+  isDefault: boolean,
+): string {
+  const at = `${isDefault ? 'At the default decision threshold of' : 'At a decision threshold of'} ${Math.round(threshold * 100)}%`
+  const pm = (x: number) => `±${(x * 100).toFixed(1)}`
+  return `${at}, sensitivity is ${formatPercent(point.sensitivity)} (${pm(point.sensitivityStd)}) and specificity ${formatPercent(point.specificity)} (${pm(point.specificityStd)}); sensitivity ${safetyPhrase(point.sensitivity, point.sensitivityStd, safeSensitivity)}.`
+}
+
 /** "On FakeBackend-1, sensitivity falls from 95.6% to 82.6% (±1.8) and sits below the 85% threshold beyond seed noise." */
 export function noiseRunSentence(where: string, reference: number, value: number, std: number, threshold: number): string {
   const t = `${Math.round(threshold * 100)}%`
