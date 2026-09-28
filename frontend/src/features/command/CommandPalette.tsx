@@ -70,6 +70,8 @@ export function CommandPalette() {
   // Global shortcut + top-bar button.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      // No search in Patient Mode: it is a calm three-step app with its own top bar.
+      if (mode === 'patient') return
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault()
         if (open) close()
@@ -82,7 +84,7 @@ export function CommandPalette() {
       window.removeEventListener('keydown', onKey)
       window.removeEventListener(COMMAND_PALETTE_EVENT, show)
     }
-  }, [open, show, close])
+  }, [open, show, close, mode])
 
   // Recent experiments for the active dataset, fetched when the palette opens.
   useEffect(() => {

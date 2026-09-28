@@ -186,7 +186,7 @@ export const PATIENT_ROUTES: readonly RouteMeta<PatientRouteId>[] = [
   {
     id: 'patient-assessment',
     path: `${PATIENT_BASE}/assessment`,
-    label: 'Assessment',
+    label: 'Check',
     section: 'Assessment',
     headline: 'A few questions, one step at a time.',
     phase: 7,
@@ -194,7 +194,7 @@ export const PATIENT_ROUTES: readonly RouteMeta<PatientRouteId>[] = [
   {
     id: 'patient-report',
     path: `${PATIENT_BASE}/report`,
-    label: 'My Report',
+    label: 'My result',
     section: 'My report',
     headline: 'Your report, in plain words.',
     phase: 7,

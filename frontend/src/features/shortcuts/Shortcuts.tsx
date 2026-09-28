@@ -3,6 +3,7 @@ import { Drawer } from '@/components/ui/Drawer'
 import { useToast } from '@/components/ui/Toast'
 import { useAppActions } from '@/features/actions'
 import { isMac } from '@/lib/platform'
+import { useMode } from '@/state/mode'
 import { usePlainLanguage } from '@/state/plainLanguage'
 import { useProjector } from '@/state/projector'
 
@@ -44,13 +45,15 @@ export function ShortcutsProvider({ children }: { children: ReactNode }) {
   const { plain, togglePlain } = usePlainLanguage()
   const { projector, toggleProjector } = useProjector()
   const { toast } = useToast()
+  // Patient Mode has no shortcuts sheet and no Plain language toggle: its copy is always plain.
+  const patient = useMode().mode === 'patient'
 
   const openShortcuts = useCallback(() => setOpen(true), [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey || isTyping(e.target)) return
-      if (e.key === '?') {
+      if (e.key === '?' && !patient) {
         e.preventDefault()
         setOpen((o) => !o)
         return
@@ -67,6 +70,7 @@ export function ShortcutsProvider({ children }: { children: ReactNode }) {
           toggleTheme()
           break
         case 'l':
+          if (patient) break
           e.preventDefault()
           togglePlain()
           toast(`Plain language · ${plain ? 'off' : 'on'}`)
@@ -75,14 +79,14 @@ export function ShortcutsProvider({ children }: { children: ReactNode }) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [toggleProjector, toggleTheme, togglePlain, projector, plain, toast])
+  }, [toggleProjector, toggleTheme, togglePlain, projector, plain, toast, patient])
 
   const value = useMemo(() => ({ openShortcuts }), [openShortcuts])
 
   return (
     <ShortcutsContext.Provider value={value}>
       {children}
-      <Drawer open={open} onClose={() => setOpen(false)} label="Keyboard shortcuts" width={480}>
+      <Drawer open={open && !patient} onClose={() => setOpen(false)} label="Keyboard shortcuts" width={480}>
         <div className="px-8 pt-8 pb-12">
           <p className="type-label text-muted">Keyboard</p>
           <p className="mt-4 type-h2 text-ink">Keyboard shortcuts</p>

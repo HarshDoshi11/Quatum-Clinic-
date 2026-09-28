@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { PAGE_CONTENT } from '@/content/pages'
 import type { RouteMeta } from '@/routes'
+import { useMode } from '@/state/mode'
 import { Drawer } from './Drawer'
 import { Headline } from './Headline'
 import { CompactPlainLine, PlainLine } from './PlainLine'
@@ -31,7 +32,8 @@ const PARTS = [
  */
 export function PageHeader({ route, headlineClassName, children, compact = false }: PageHeaderProps) {
   const [open, setOpen] = useState(false)
-  const guide = PAGE_CONTENT[route.id as keyof typeof PAGE_CONTENT]
+  // Patient pages are plain already: no "What is this?" panel there.
+  const guide = useMode().mode === 'research' ? PAGE_CONTENT[route.id as keyof typeof PAGE_CONTENT] : undefined
 
   return (
     <div data-tour="headline">

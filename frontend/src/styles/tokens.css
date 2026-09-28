@@ -67,32 +67,15 @@
   color-scheme: dark;
 }
 
-/*
- * Patient Mode ("Calm Clinic"): the same bone/ink bases, with sage (the text-safe --risk-low family)
- * as the accent, softer 8px panel corners and a soft tint for selected options. Set on the shell by
- * AppShell (data-mode), so it follows the theme and projector tokens above.
- */
+/* Radii and patient-only colours; outside Patient Mode they fall back to the research values. */
 :root {
   --panel-radius: 4px;
   --control-radius: 2px;
-  /* Patient Mode's figures and range bars; outside Patient Mode they fall back to the risk colours. */
   --coral: var(--risk-high);
   --amber: var(--risk-mid);
   --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-[data-mode='patient'] {
-  --accent: var(--risk-low-text);
-  --accent-ink: var(--bg);
-  --accent-soft: color-mix(in srgb, var(--risk-low) 16%, transparent);
-  --panel-radius: 0.5rem;
-  --control-radius: 0.5rem;
-  /* Softer than the research risk colours: guiding, not alarming. */
-  --coral: #d9826c;
-  --amber: #d6a24a;
-}
-:root[data-theme='dark'] [data-mode='patient'] {
-  --coral: #e3957f;
-  --amber: #e0ae5c;
+  --hero-form: var(--risk-high);
+  --hero-light: #ffffff;
 }
 
 /*
@@ -114,13 +97,87 @@
   --rule-strong: rgba(243, 241, 236, 0.44);
 }
 
+/*
+ * Patient Mode: a calm health app with its own palette. AppShell sets data-mode on <html>, so drawers
+ * and other portalled panels follow it; Research Mode never matches these selectors.
+ * Contrast (text on bg / surface): light ink 13.1 / 12.0, muted 5.7 / 5.2, teal 5.3 / 4.8, coral text
+ * 5.1 / 4.7, sage text 5.6 / 5.1; dark ink 14.6 / 13.1, muted 8.5 / 7.6, teal 8.1 / 7.3, coral 7.1 / 6.4.
+ */
+:root[data-mode='patient']:not([data-theme='dark']) {
+  --bg: #f7f1e6; /* warm cream */
+  --surface: #efe7d8;
+  --ink: #1f2b25; /* deep green-charcoal */
+  --muted: #56625b;
+  --rule: rgba(31, 43, 37, 0.1);
+  --rule-strong: rgba(31, 43, 37, 0.2);
+  --accent: #1f6f68; /* calm teal */
+  --accent-ink: #f7f1e6;
+  --risk-low: #4a7d58;
+  --risk-mid: #b8862e;
+  --risk-high: #b4553f;
+  --risk-low-text: #3f6f4c;
+  --risk-mid-text: #8a6420;
+  --risk-high-text: #a44c38;
+  --coral: #c9705a; /* soft coral: risk states only */
+  --amber: #c99a45;
+  --hero-form: #c98f86; /* the Home heart: dusty rose, decoration not a risk signal */
+  --hero-light: #ffe6cc; /* warm key light on the Home heart */
+  --shadow-soft: 0 12px 32px -16px rgba(31, 43, 37, 0.3);
+  --overlay: rgba(31, 43, 37, 0.3);
+  color-scheme: light;
+}
+:root[data-mode='patient'][data-theme='dark'] {
+  --bg: #141c18; /* warm green-charcoal */
+  --surface: #1c2621;
+  --ink: #f1ebdf; /* cream */
+  --muted: #aeb8b0;
+  --rule: rgba(241, 235, 223, 0.09);
+  --rule-strong: rgba(241, 235, 223, 0.18);
+  --accent: #6cc0b3;
+  --accent-ink: #141c18;
+  --risk-low: #8fc29c;
+  --risk-mid: #e0b25c;
+  --risk-high: #e6907a;
+  --risk-low-text: #8fc29c;
+  --risk-mid-text: #e0b25c;
+  --risk-high-text: #e6907a;
+  --coral: #e6907a;
+  --amber: #e0b25c;
+  --hero-form: #d9a098;
+  --hero-light: #ffd9b8;
+  --shadow-soft: 0 14px 36px -16px rgba(0, 0, 0, 0.6);
+  --overlay: rgba(6, 10, 8, 0.6);
+  color-scheme: dark;
+}
+:root[data-mode='patient'] {
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --panel-radius: 0.875rem; /* 14px cards */
+  --control-radius: 0.625rem; /* 10px buttons and inputs */
+  /* Fraunces replaces Instrument Serif everywhere in Patient Mode (soft, optical sizing: index.css). */
+  --font-serif: var(--font-fraunces);
+  /* Headlines scale with the viewport and never clip. */
+  --type-display: clamp(2.5rem, 1.4rem + 3.4vw, 4.75rem);
+  --type-h2: clamp(1.625rem, 1.2rem + 1.2vw, 2.375rem);
+}
+/* Projector mode in Patient Mode: the same boost (secondary text toward ink, stronger hairlines). */
+:root[data-mode='patient'][data-projector='on']:not([data-theme='dark']) {
+  --muted: #3d4842;
+  --rule: rgba(31, 43, 37, 0.2);
+  --rule-strong: rgba(31, 43, 37, 0.36);
+}
+:root[data-mode='patient'][data-projector='on'][data-theme='dark'] {
+  --muted: #cdd4ce;
+  --rule: rgba(241, 235, 223, 0.18);
+  --rule-strong: rgba(241, 235, 223, 0.32);
+}
+
 :root {
   /* Families */
   --font-serif: 'Instrument Serif', 'Times New Roman', serif;
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
   /* Patient Mode's result headline only (type-headline-soft). */
-  --font-fraunces: 'Fraunces', 'Instrument Serif', Georgia, serif;
+  --font-fraunces: 'Fraunces', Georgia, 'Times New Roman', serif;
 
   /*
    * Type scale — the ONLY font sizes allowed (see CLAUDE.md). rem-based so

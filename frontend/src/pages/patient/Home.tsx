@@ -1,80 +1,86 @@
-import { ListChecks, ScanSearch, ShieldCheck } from 'lucide-react'
+import { useState } from 'react'
 import { api, useResource } from '@/api'
-import { ButtonLink } from '@/components/ui/Button'
+import { Button, ButtonLink } from '@/components/ui/Button'
+import { Headline } from '@/components/ui/Headline'
 import { Page, PageItem } from '@/components/ui/Page'
-import { PageHeader } from '@/components/ui/PageHeader'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { BreathingCircle } from '@/features/patient/BreathingCircle'
+import { EcgLine } from '@/features/patient/EcgLine'
+import { HeroVisual } from '@/features/patient/HeroVisual'
+import { HowItWorks } from '@/features/patient/HowItWorks'
 import { PatientFooter } from '@/features/patient/PatientFooter'
+import { QuestionsSheet } from '@/features/patient/QuestionsSheet'
+import { UrgentStrip } from '@/features/patient/UrgentStrip'
 import { PATIENT_BASE, type RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import { useDataVersion } from '@/state/dataVersion'
 
 /**
- * Patient Mode · Home ("Calm Clinic"): the question, one warm sentence, a breathing visual,
- * one way forward, and three plain points. No numbers, models or machines.
+ * Patient Mode · Home: an editorial hero (the question, one line, two ways in) beside a living 3D heart
+ * with its ECG line, then how the check works as a short story down the page, and what to do if it's
+ * urgent. All copy comes from the dataset config; no numbers, models or machines.
  */
 export function PatientHome({ route }: { route: RouteMeta }) {
   const { datasetId } = useDataset()
   const { version } = useDataVersion()
   const datasets = useResource((signal) => api.listDatasets({ signal }), [version])
-  const name = datasets.data?.find((d) => d.id === datasetId)?.patient?.name ?? null
-
-  const points = [
-    {
-      icon: ScanSearch,
-      title: 'What it checks',
-      body: `It reads the test results you already have and estimates how likely ${name ?? 'the condition'} is for people with results like yours.`,
-    },
-    {
-      icon: ShieldCheck,
-      title: 'How sure it is',
-      body: 'Every result says how sure it is. If your information is incomplete or unusual, it tells you so instead of guessing.',
-    },
-    {
-      icon: ListChecks,
-      title: 'What to do next',
-      body: 'You get simple next steps, questions for your doctor, and a short report you can download and share.',
-    },
-  ]
+  const schema = useResource((signal) => api.getFeatureSchema(datasetId, { signal }), [datasetId, version])
+  const patient = datasets.data?.find((d) => d.id === datasetId)?.patient ?? null
+  const home = patient?.home ?? null
+  const [asking, setAsking] = useState(false)
 
   return (
-    <Page label={route.label}>
-      <div className="grid grid-cols-1 items-center gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
-        <PageItem as="header">
-          <PageHeader route={route} />
-          <p className="mt-8 max-w-[60ch] type-body-lg text-ink">
-            {name ? (
+    <Page label={route.label} className="!pt-0">
+      <div className="mx-auto max-w-[84rem]">
+        {/* Hero: text left (55%), the heart right */}
+        <section
+          aria-label="Welcome"
+          className="grid min-h-[min(calc(100svh-var(--topbar-h)),52rem)] grid-cols-1 items-center gap-x-12 gap-y-10 py-12 lg:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]"
+        >
+          <PageItem>
+            {home ? (
               <>
-                A short, private check about {name}. Answer a few questions at your own pace, and get a clear answer in plain words, with what to do
-                next.
+                <p className="type-body-lg text-accent">{home.eyebrow}</p>
+                <Headline className="mt-5 max-w-[14ch]">{home.headline}</Headline>
+                <p className="mt-6 max-w-[44ch] type-body-lg text-muted">{home.subtext}</p>
               </>
             ) : (
-              <Skeleton width="100%" height="3.5rem" />
+              <div className="flex flex-col gap-5">
+                <Skeleton width="12rem" height="1.5rem" />
+                <Skeleton width="100%" height="10rem" />
+                <Skeleton width="80%" height="3.5rem" />
+              </div>
             )}
-          </p>
-          <div className="mt-10">
-            <ButtonLink to={`${PATIENT_BASE}/assessment`}>Start assessment →</ButtonLink>
-          </div>
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              <ButtonLink to={`${PATIENT_BASE}/assessment`} className="px-7">
+                Start the check
+              </ButtonLink>
+              <Button variant="ghost" onClick={() => setAsking(true)} aria-haspopup="dialog" className="text-ink underline-offset-4 hover:underline">
+                What will you ask me?
+              </Button>
+            </div>
+            <p className="mt-6 type-body text-muted">Takes a few minutes. Nothing is saved after you close the page.</p>
+          </PageItem>
+
+          <PageItem className="mx-auto flex w-full max-w-[34rem] flex-col items-center">
+            <div className="aspect-square w-full max-w-[min(100%,58svh)]">{home ? <HeroVisual shape={home.hero} /> : null}</div>
+            {home?.hero === 'heart' && <EcgLine className="mt-2" />}
+          </PageItem>
+        </section>
+
+        <PageItem className="mt-8">
+          <HowItWorks />
         </PageItem>
-        <PageItem className="mx-auto w-full max-w-[22rem]">
-          <BreathingCircle />
-        </PageItem>
+
+        {patient?.urgent && (
+          <PageItem className="mt-28">
+            <UrgentStrip urgent={patient.urgent} />
+          </PageItem>
+        )}
+
+        <PatientFooter />
       </div>
 
-      <PageItem as="section" className="mt-16" aria-label="About this check">
-        <ul className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-3">
-          {points.map(({ icon: Icon, title, body }) => (
-            <li key={title} className="max-w-[60ch]">
-              <Icon size="1.5rem" strokeWidth={1.5} className="text-accent" aria-hidden="true" />
-              <p className="mt-4 type-body-lg font-medium text-ink">{title}</p>
-              <p className="mt-2 type-body-lg text-muted">{body}</p>
-            </li>
-          ))}
-        </ul>
-      </PageItem>
-
-      <PatientFooter />
+      <QuestionsSheet open={asking} onClose={() => setAsking(false)} features={schema.data?.features ?? null} />
     </Page>
   )
 }

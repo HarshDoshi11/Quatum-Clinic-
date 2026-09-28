@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useMode } from '@/state/mode'
 import { useProjector } from '@/state/projector'
 import { useTheme } from '@/state/theme'
 
@@ -18,6 +19,9 @@ export interface ThemeColors {
   riskLow: RGBA
   riskMid: RGBA
   riskHigh: RGBA
+  /** Patient Home hero: the form's colour and its warm key light. */
+  heroForm: RGBA
+  heroLight: RGBA
 }
 
 function parse(value: string): RGBA {
@@ -39,9 +43,11 @@ function parse(value: string): RGBA {
 export function useThemeColors(): ThemeColors {
   const { theme } = useTheme()
   const { projector } = useProjector()
+  const { mode } = useMode()
   return useMemo(() => {
-    void theme // recompute when the theme or projector mode (and so the CSS variables) change
+    void theme // recompute when the theme, projector or app mode (and so the CSS variables) change
     void projector
+    void mode
     const style = getComputedStyle(document.documentElement)
     const read = (name: string) => parse(style.getPropertyValue(name))
     return {
@@ -54,6 +60,8 @@ export function useThemeColors(): ThemeColors {
       riskLow: read('--risk-low'),
       riskMid: read('--risk-mid'),
       riskHigh: read('--risk-high'),
+      heroForm: read('--hero-form'),
+      heroLight: read('--hero-light'),
     }
-  }, [theme, projector])
+  }, [theme, projector, mode])
 }

@@ -5,6 +5,7 @@ import { tBase } from '@/lib/motion'
 import { PATIENT_ROUTES, RESEARCH_ROUTES } from '@/routes'
 import { useMode } from '@/state/mode'
 import { Logo } from './Logo'
+import { PatientTopBar } from './PatientTopBar'
 import { Sidebar } from './Sidebar'
 import { StatusStrip } from './StatusStrip'
 import { TopBar } from './TopBar'
@@ -22,6 +23,10 @@ import { TopBar } from './TopBar'
 export function AppShell({ children }: { children: ReactNode }) {
   const { mode } = useMode()
   const { pathname } = useLocation()
+  // The mode's token layer is keyed on <html> ([data-mode='patient'] in tokens.css), so drawers and other
+  // portalled panels follow it too. Written during render (idempotent) so colours read in this same render,
+  // e.g. by a 3D scene, already see it.
+  if (typeof document !== 'undefined' && document.documentElement.dataset.mode !== mode) document.documentElement.dataset.mode = mode
   const mainRef = useRef<HTMLElement>(null)
 
   // Each route starts at the top of the scroll container.
@@ -35,10 +40,28 @@ export function AppShell({ children }: { children: ReactNode }) {
     document.title = !route || route.id === 'overview' ? 'Q/Clinical — Early Signal Lab' : `${route.label} — Q/Clinical`
   }, [pathname])
 
+  // Patient Mode is its own calm app: its top bar, no sidebar, no status strip.
+  if (mode === 'patient') {
+    return (
+      <div
+        className="grid h-full min-w-0 overflow-hidden bg-bg text-ink print:block print:h-auto print:overflow-visible"
+        style={{ gridTemplateRows: 'var(--topbar-h) minmax(0, 1fr)' }}
+      >
+        <a href="#main" className="sr-only z-50 rounded-control bg-ink px-3 py-2 type-small text-bg focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
+          Skip to content
+        </a>
+        <div className="border-b border-rule print:hidden">
+          <PatientTopBar />
+        </div>
+        <main id="main" ref={mainRef} tabIndex={-1} className="relative overflow-y-auto overflow-x-hidden print:overflow-visible">
+          {children}
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div
-      // Patient Mode swaps in its token layer ([data-mode='patient'] in tokens.css).
-      data-mode={mode}
       // Printing (Download PDF) keeps only the page content: no chrome, no scroll container.
       className="grid h-full min-w-[1024px] overflow-hidden bg-bg text-ink print:block print:h-auto print:min-w-0 print:overflow-visible"
       style={{

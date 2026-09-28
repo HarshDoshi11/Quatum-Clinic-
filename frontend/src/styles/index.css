@@ -103,6 +103,12 @@
  * roles set their family; sans roles inherit it, so `num type-small` gives
  * small tabular mono numbers. Uppercase tracking never exceeds 0.06em.
  */
+/* Patient Mode's Fraunces: soft corners and optical sizing (Research never matches). */
+:root[data-mode='patient'] :is(.font-serif, [class*='type-display'], [class*='type-h2'], [class*='type-headline-soft']) {
+  font-variation-settings: 'SOFT' 100, 'WONK' 0;
+  font-optical-sizing: auto;
+}
+
 @utility type-display {
   font-family: var(--font-serif);
   font-size: var(--type-display);

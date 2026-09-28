@@ -24,7 +24,7 @@ export function SceneSkeleton({ label = 'Loading 3D view', shape = 'circle' }: {
   )
 }
 
-/** Suspense boundary with the standard scene skeleton. */
-export function SceneFrame({ children, label, shape }: { children: ReactNode; label?: string; shape?: 'circle' | 'rect' }) {
-  return <Suspense fallback={<SceneSkeleton label={label} shape={shape} />}>{children}</Suspense>
+/** Suspense boundary with the standard scene skeleton, or a still picture of the scene (`fallback`). */
+export function SceneFrame({ children, label, shape, fallback }: { children: ReactNode; label?: string; shape?: 'circle' | 'rect'; fallback?: ReactNode }) {
+  return <Suspense fallback={fallback ?? <SceneSkeleton label={label} shape={shape} />}>{children}</Suspense>
 }

@@ -11,7 +11,9 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - Phases 1–6: done and approved (Phase 6 includes the Predict & Trust rework and the Explain workspace).
 - Phase 7 — Patient Mode: "Calm Clinic" redesign in progress. Part A (token layer, Home, step-by-step Assessment,
   patient config) and Part B (My Report: guiding headline, ten figures, confidence, Your numbers / Learn / Plan your
-  visit, share with family, read aloud, two-page doctor PDF) are done; Part C is next. Pages in `src/pages/patient/`.
+  visit, share with family, read aloud, two-page doctor PDF) are done. Part A1 (own shell and top bar, green-charcoal /
+  cream theme with a teal accent, Fraunces headlines, editorial Home with the 3D heart + ECG, How it works, urgent strip)
+  is done; next: the Safety check page (the urgent strip links to it once it exists), then Part C. Pages in `src/pages/patient/`.
   Patient Mode shows no AUC, qubits, models, experiments, backends or 3D on screen (the doctor's printed page is the
   exception); `check:mocks` asserts no research jargon, full config coverage (icons, questions, learn cards, journeys
   per outcome, valid ranges), the "N in 10" wording and the family summary. The assessment edits the in-memory patient.
@@ -198,16 +200,26 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   ≥ 4.5:1 in both themes); the plain `risk-*` colours are for marks and fills.
 - Never use purple, gradients (hard-stop slider fills excepted), glassmorphism, glows, emoji, icons in coloured
   circles, or two-tone headlines.
-- **Patient Mode ("Calm Clinic")** has its own token layer, `[data-mode='patient']` in `tokens.css` (AppShell sets
-  `data-mode`): the accent becomes sage (text-safe `--risk-low-text`), panels and buttons get 8px corners
-  (`rounded-panel`, `rounded-control`; Research keeps 4px / 2px), and `bg-accent-soft` tints selections. On patient
+- **Patient Mode ("Calm Clinic")** has its own shell and token layer. Research Mode must stay pixel-identical, so every
+  patient style is scoped under `:root[data-mode='patient']` in `tokens.css` (AppShell sets `data-mode` on `<html>`, so
+  drawers follow it). The shell is `PatientTopBar` (wordmark, steps Home · Check · My result, language EN with hi/mr
+  slots from `lib/patientLanguages.ts`, theme, "Switch to research view") with no sidebar or status strip. There is no
+  Plain language toggle, "What is this?", Ctrl+K palette or "?" sheet in Patient Mode: patient copy is always plain.
+  Palette: warm cream / deep green-charcoal (light), green-charcoal / cream (dark), a calm teal accent, soft coral only
+  for risk states; no cobalt, and Fraunces (soft, optical size) replaces Instrument Serif everywhere, with clamp()
+  headline sizes. Panels 14px and controls 10px (`rounded-panel`, `rounded-control`; Research keeps 4px / 2px), and
+  `bg-accent-soft` tints selections. "Decision support, not a diagnosis" appears once, in `PatientFooter`. Home copy
+  (eyebrow, headline, subtext, hero shape) and the "Is this urgent?" strip (symptoms, numbers to call) come from
+  `DATASETS[id].patient.home` / `.urgent`. The Home hero is a lazy 3D form (`HeroVisual`: still SVG fallback, static
+  under reduced motion) with an ECG line on the same 60 bpm clock (`features/patient/heartbeat.ts`); no icon-column
+  grids, centred hero + button, or concentric circles. On patient
   pages: `type-body-lg` as the default text, lines ≤ 60ch, sections ≥ 56px apart, mono only for report IDs and dates,
   risk colours only for the risk word and the icon grid, motion 250–500ms eased (`tGentle`, `stepSlide`). Patient
   copy (name, per-input icon and question, next-step journeys per outcome) comes from `DATASETS[id].patient`; icons
-  map through `features/patient/icons.ts`, never per dataset in a component. Patient section titles are Instrument
-  Serif `type-h2`, except the result headline, which is Fraunces (`type-headline-soft`, patient only). Soft
+  map through `features/patient/icons.ts`, never per dataset in a component. Patient section titles are `type-h2`
+  (Fraunces in Patient Mode); the result headline uses `type-headline-soft`. Soft
   `bg-surface` + `rounded-panel` panels are allowed in Patient Mode only. Coral and amber (`--coral`, `--amber`, softer
-  in the patient layer) are only for the result figures and the reference-range bars. Numbers for patients are
+  in the patient layer) are only for the result figures, the reference-range bars and the urgent strip's symptoms. Numbers for patients are
   "about N in 10" (`result.outOfTen`) with a row of ten figures; an abstained patient gets outlined figures with a
   "?" and no number anywhere, and the page opens on the next steps. Reference ranges are general health ranges from
   the config, always labelled as not what the model used. Anything shared with family (`familySummary`) has no

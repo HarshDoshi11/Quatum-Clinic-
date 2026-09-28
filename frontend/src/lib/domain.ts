@@ -68,8 +68,25 @@ export interface LearnCard {
   body: string
 }
 
+/** The Home hero: copy, and which form the 3D hero draws. */
+export interface PatientHome {
+  eyebrow: string
+  headline: string
+  subtext: string
+  /** 'heart' draws the beating heart with a live ECG line; 'cells' a slow cluster of cells, no ECG. */
+  hero: 'heart' | 'cells'
+}
+
+/** "Is this urgent?": the symptoms that need care now, and who to call. Null when the condition has none. */
+export interface PatientUrgent {
+  symptoms: string
+  numbers: { number: string; label: string }[]
+}
+
 /** Everything Patient Mode needs from a dataset. */
 export interface PatientConfig {
+  home: PatientHome
+  urgent: PatientUrgent | null
   /** What the check is about, in patient copy ("heart disease"). */
   name: string
   /** One entry per input. check:mocks asserts every model input has one. */
@@ -135,6 +152,13 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     reportSubject: 'Your sample’s',
     riskBandEdges: [0.3, 0.6],
     patient: {
+      home: {
+        eyebrow: 'Breast health check',
+        headline: 'Got a biopsy report? Let’s make sense of it.',
+        subtext: 'Answer what your report shows. You get a clear answer, how sure it is, and what to do next.',
+        hero: 'cells',
+      },
+      urgent: null,
       name: 'breast cancer',
       features: {
         radius_mean: { icon: 'circle-dot', question: 'Cell size (radius)' },
@@ -220,6 +244,19 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     reportSubject: 'Your',
     riskBandEdges: [0.3, 0.6],
     patient: {
+      home: {
+        eyebrow: 'Heart health check',
+        headline: 'Got a heart test report? Let’s make sense of it.',
+        subtext: 'Answer what you know from your latest results. You get a clear answer, how sure it is, and what to do next.',
+        hero: 'heart',
+      },
+      urgent: {
+        symptoms: 'chest pain right now, trouble breathing, or fainting',
+        numbers: [
+          { number: '112', label: 'Emergency' },
+          { number: '108', label: 'Ambulance' },
+        ],
+      },
       name: 'heart disease',
       features: {
         age: { icon: 'cake', question: 'Your age' },

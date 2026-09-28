@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { easePrecise } from '@/lib/motion'
+import { useMode } from '@/state/mode'
 import { usePlainLanguage } from '@/state/plainLanguage'
 import { Tooltip } from './Tooltip'
 
@@ -9,7 +10,10 @@ import { Tooltip } from './Tooltip'
  * Every section title and page header carries one (see CLAUDE.md).
  */
 export function PlainLine({ children, className = '' }: { children: ReactNode; className?: string }) {
-  const { plain } = usePlainLanguage()
+  // Patient Mode copy is always plain, so it has no toggle and no extra line.
+  const { plain: plainOn } = usePlainLanguage()
+  const { mode } = useMode()
+  const plain = plainOn && mode === 'research'
   return (
     <AnimatePresence initial={false}>
       {plain && (
@@ -36,7 +40,9 @@ export function PlainLine({ children, className = '' }: { children: ReactNode; c
  * Follows the Plain language toggle like PlainLine (fade + height, 200ms).
  */
 export function CompactPlainLine({ children, className = '' }: { children: ReactNode; className?: string }) {
-  const { plain } = usePlainLanguage()
+  const { plain: plainOn } = usePlainLanguage()
+  const { mode } = useMode()
+  const plain = plainOn && mode === 'research'
   const textRef = useRef<HTMLSpanElement>(null)
   const [overflows, setOverflows] = useState(false)
   useLayoutEffect(() => {

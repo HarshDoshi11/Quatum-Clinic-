@@ -341,6 +341,9 @@ for (const d of DATASET_IDS) {
   const numeric = new Set(sc.features.filter((f) => !f.options).map((f) => f.key))
   check(`${d}: reference ranges only for measured numbers, zones contiguous across the scale`, Object.entries(cfg.ranges).every(([k, r]) => numeric.has(k) && r.zones[0].from === r.scale[0] && r.zones[r.zones.length - 1].to === r.scale[1] && r.zones.every((z, i) => i === 0 || z.from === r.zones[i - 1].to) && r.source.length > 0))
   check(`${d}: with no ranges there is an explanation instead (and only then)`, (Object.keys(cfg.ranges).length === 0) === (cfg.rangesNote !== null))
+  const home = cfg.home
+  check(`${d}: Home copy is set (eyebrow, headline, subtext; hero is a known shape) and has no jargon or numbers`, [home.eyebrow, home.headline, home.subtext].every((t) => t.trim().length > 0 && !JARGON.test(t) && !/\d/.test(t)) && ['heart', 'cells'].includes(home.hero))
+  check(`${d}: the urgent strip, when set, names its symptoms and numbers to call (digits only)`, cfg.urgent === null || (cfg.urgent.symptoms.trim().length > 0 && cfg.urgent.numbers.length > 0 && cfg.urgent.numbers.every((n) => /^\d{3,}$/.test(n.number) && n.label.trim().length > 0)))
   check(`${d}: at least four questions for the doctor, and the report uses them`, cfg.questions.length >= 4 && sampleReport.questions.every((q) => cfg.questions.includes(q)))
   eq(`${d}: patient headline follows the band; none when abstaining`, [sampleReport.result.patientHeadline !== null, unusualReport.result.patientHeadline, unusualReport.result.outOfTen], [true, null, null])
   // Shared with family: no identifiers, and no numbers except "N in 10".
