@@ -157,5 +157,5 @@ CORS allows any `localhost` port; add deployed origins with `CORS_ORIGINS=https:
 - [x] Phase 4 — Data, Train, and research pages (section I)
 - [x] Phase 5 — Hardware Reality Lab, Failure Envelope
 - [x] Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report
-- [ ] Phase 7 — Patient Mode
+- [x] Phase 7 — Patient Mode
 - [ ] Phase 8 — Polish

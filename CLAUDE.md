@@ -8,16 +8,12 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 
 - The full product spec (all pages, Patient Mode, phases) is in `docs/brief.md`. Read it before starting any phase.
   If the brief and this file disagree, this file wins.
-- Phases 1–5: done and approved.
-- Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report: built; review fixes applied (abstain
-  consistency, shared Select, first-screen Predict layout, chart fixes, page backend), awaiting approval.
-- Predict & Trust rework done (Parts 1–2): compact one-line header; one result block with the risk scale under it;
-  threshold scrubber (`components/charts/ThresholdScrubber`, threshold shown only in its header, Chart/Table in a ⋯ menu);
-  expandable trust evidence (`features/predict/TrustEvidence`, panels read `PredictResponse.evidence`). Awaiting approval.
-- Explain restructured into one workspace: controls (fixed line from `lockedFeatures`, group tabs, `SegmentedControl` for
-  choices, sliders for numbers) beside a sticky estimate, influence bars in percentage points (`features/explain/InfluenceBars`,
-  from `FeatureContribution.effect`) and a collapsible quantum-input panel. Awaiting approval.
-- Next: Phase 7 (Patient Mode; reuse `features/report/ReportLetter` for My Report), then Phase 8 (polish).
+- Phases 1–6: done and approved (Phase 6 includes the Predict & Trust rework and the Explain workspace).
+- Phase 7 — Patient Mode: built, awaiting approval. Pages in `src/pages/patient/` (Home, Assessment, MyReport).
+  Patient Mode shows no AUC, qubits, models, experiments, backends or 3D: `ReportLetter audience="patient"` hides
+  each check's technical detail, form fields use `plainLabel` (`<FeatureField plain />`), and `check:mocks` asserts
+  the patient-facing report text has no research jargon. The assessment edits the shared in-memory patient.
+- Next: Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
 - Update this section at the end of every session.

@@ -30,6 +30,7 @@ const Report = lazy(() => import('@/pages/research/Report').then((m) => ({ defau
 const Failure = lazy(() => import('@/pages/research/Failure').then((m) => ({ default: m.Failure })))
 const PatientHome = lazy(() => import('@/pages/patient/Home').then((m) => ({ default: m.PatientHome })))
 const Assessment = lazy(() => import('@/pages/patient/Assessment').then((m) => ({ default: m.Assessment })))
+const MyReport = lazy(() => import('@/pages/patient/MyReport').then((m) => ({ default: m.MyReport })))
 
 /** Shown for the instant a code-split page is loading: the page frame, no spinner. */
 function PageFallback() {
@@ -84,6 +85,8 @@ function patientPage(route: RouteMeta) {
       return lazyPage(<PatientHome route={route} />)
     case 'patient-assessment':
       return lazyPage(<Assessment route={route} />)
+    case 'patient-report':
+      return lazyPage(<MyReport route={route} />)
     default:
       return <PlaceholderPage route={route} variant="patient" />
   }
