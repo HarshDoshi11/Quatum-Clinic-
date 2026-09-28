@@ -117,7 +117,11 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
    `src/content/pages.ts` with `plain`, `shows`, `matters` and `read`. Add it in the same change that adds the page.
 2. **Section headers.** Every section uses `<SectionHeader index title plain="…" />`. The `plain` prop is required: one
    sentence, no jargon, and no result numbers. It appears as "In simple words: …" when the top-bar Plain language
-   toggle is on. Dense demo-critical pages (Predict & Trust) use `plainAs="popover"`: a small "?" beside the label.
+   toggle is on. **The Plain language toggle works on every page; no page opts out.** Demo-critical pages (Predict &
+   Trust, Explain) use the compact style (`<SectionHeader compact />`, `<PageHeader compact />`): a "?" popover beside
+   each label always, and while the toggle is on a one-line type-small muted line under the label (truncated, with a
+   "more" link to the popover; in the page header it sits beside "What is this?"). It must not push essential content
+   below the first screen at 1440×900.
 3. **Glossary.** Wrap every technical term in UI copy in `<Term>` (`<Term>AUC</Term>`, `<Term term="gate error">…</Term>`).
    Render API-provided text (takeaways, summaries) through `<Glossed text={…} />`, which wraps glossary words automatically.
    If a new technical word appears, add it to `src/lib/glossary.ts` with a one-line plain definition, and add its

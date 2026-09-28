@@ -287,7 +287,7 @@ export function Predict({ route }: { route: RouteMeta }) {
             <SectionHeader
               index="01"
               title="Patient"
-              plainAs="popover"
+              compact
               plain="Type in a patient's test results, or load a demo patient. The estimate on the right updates as you type."
             />
             <div className="mt-4" data-tour="predict-form">
@@ -335,7 +335,7 @@ export function Predict({ route }: { route: RouteMeta }) {
             <SectionHeader
               index="02"
               title="Estimate and trust"
-              plainAs="popover"
+              compact
               plain="What the model estimates for this patient, what that means at the chosen cut-off, and how much to trust it."
             />
 

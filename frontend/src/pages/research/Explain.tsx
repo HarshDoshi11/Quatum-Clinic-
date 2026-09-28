@@ -325,7 +325,7 @@ export function Explain({ route }: { route: RouteMeta }) {
             <SectionHeader
               index="01"
               title="What if?"
-              plainAs="popover"
+              compact
               plain="Change the patient's original results and watch the estimate update. Each change is cleaned and compressed exactly as the training data was before the model sees it."
               aside={
                 selected && (
@@ -391,7 +391,7 @@ export function Explain({ route }: { route: RouteMeta }) {
             <SectionHeader
               index="02"
               title={`Estimate · probability of ${config ? config.classBalance.positiveLabel.toLowerCase() : 'disease'}`}
-              plainAs="popover"
+              compact
               plain="The model's estimate for this patient, and how your changes move it."
             />
             <div className="mt-4" aria-live="polite">
@@ -476,7 +476,7 @@ export function Explain({ route }: { route: RouteMeta }) {
               <SectionHeader
                 index="03"
                 title="What moved it"
-                plainAs="popover"
+                compact
                 plain="Each bar shows how many percentage points one of the patient's results adds to or takes off the estimate, compared with an average patient."
               />
               <div className="mt-4">

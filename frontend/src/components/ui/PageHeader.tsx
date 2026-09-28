@@ -3,7 +3,7 @@ import { PAGE_CONTENT } from '@/content/pages'
 import type { RouteMeta } from '@/routes'
 import { Drawer } from './Drawer'
 import { Headline } from './Headline'
-import { PlainLine } from './PlainLine'
+import { CompactPlainLine, PlainLine } from './PlainLine'
 import { SectionLabel } from './SectionLabel'
 
 interface PageHeaderProps {
@@ -14,7 +14,7 @@ interface PageHeaderProps {
   children?: ReactNode
   /**
    * Compact (dense tool pages): the headline at type-h2 on one line with `children` on the same row, and
-   * the plain-language line moved into the "What is this?" panel, so the header stays under ~120px.
+   * the plain-language line (when the toggle is on) one line long beside "What is this?", so the header stays under ~120px.
    */
   compact?: boolean
 }
@@ -47,6 +47,8 @@ export function PageHeader({ route, headlineClassName, children, compact = false
             What is this? ↗
           </button>
         )}
+        {/* Compact pages keep the plain-language line in this row, so the toggle never pushes results down */}
+        {compact && guide && <CompactPlainLine className="min-w-0 flex-1 [&>span]:pt-0">{guide.plain}</CompactPlainLine>}
       </div>
       {compact ? (
         <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">

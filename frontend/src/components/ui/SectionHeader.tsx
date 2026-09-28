@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { PlainLine } from './PlainLine'
+import { CompactPlainLine, PlainLine } from './PlainLine'
 import { SectionLabel } from './SectionLabel'
 import { Tooltip } from './Tooltip'
 
@@ -12,14 +12,14 @@ interface SectionHeaderProps {
   aside?: ReactNode
   id?: string
   /**
-   * 'line' (default): "In simple words: …" under the label while Plain language is on.
-   * 'popover': always behind a small "?" beside the label, for dense pages where lines would push results down.
+   * Demo-critical pages: a "?" beside the label always opens the explanation, and while Plain language is on
+   * a one-line compact line sits right under the label. Every page follows the toggle; none opts out.
    */
-  plainAs?: 'line' | 'popover'
+  compact?: boolean
 }
 
 /** Hairline rule + "01 — TITLE" label, optional aside, and the plain-language line. */
-export function SectionHeader({ index, title, plain, aside, id, plainAs = 'line' }: SectionHeaderProps) {
+export function SectionHeader({ index, title, plain, aside, id, compact = false }: SectionHeaderProps) {
   return (
     <div className="border-t border-rule pt-5">
       <div className="flex items-center justify-between gap-6">
@@ -27,11 +27,11 @@ export function SectionHeader({ index, title, plain, aside, id, plainAs = 'line'
           <SectionLabel index={index} as="h2" className="!text-muted">
             <span id={id}>{title}</span>
           </SectionLabel>
-          {plainAs === 'popover' && <PlainHint>{plain}</PlainHint>}
+          {compact && <PlainHint>{plain}</PlainHint>}
         </div>
         {aside}
       </div>
-      {plainAs === 'line' && <PlainLine>{plain}</PlainLine>}
+      {compact ? <CompactPlainLine>{plain}</CompactPlainLine> : <PlainLine>{plain}</PlainLine>}
     </div>
   )
 }
