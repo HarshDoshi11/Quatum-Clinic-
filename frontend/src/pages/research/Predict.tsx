@@ -270,7 +270,7 @@ function ThresholdChart({ trust, threshold }: { trust: TrustResponse; threshold:
 /** One labelled row of the result: mono label on the left, value on the right. */
 function ResultRow({ label, children, align = 'baseline' }: { label: ReactNode; children: ReactNode; align?: 'baseline' | 'center' }) {
   return (
-    <div className={`flex justify-between gap-6 border-b border-rule py-2 [@media(max-height:52rem)]:py-1.5 ${align === 'center' ? 'items-center' : 'items-baseline'}`}>
+    <div className={`flex justify-between gap-6 border-b border-rule py-2 [@media(max-height:52rem)]:py-1 ${align === 'center' ? 'items-center' : 'items-baseline'}`}>
       <dt className="type-label shrink-0 text-muted">{label}</dt>
       <dd className="min-w-0 text-right">{children}</dd>
     </div>
@@ -625,7 +625,7 @@ export function Predict({ route }: { route: RouteMeta }) {
               title="Estimate and trust"
               plain="What the model estimates for this patient, what that means at the chosen cut-off, and how much to trust it."
             />
-            <div className="mt-4">
+            <div className="mt-4 [@media(max-height:52rem)]:mt-2">
               {predictError ? (
                 <EmptyState tone="error" title="Couldn't score this patient." body={predictError.message} />
               ) : (
@@ -633,7 +633,7 @@ export function Predict({ route }: { route: RouteMeta }) {
               )}
 
               {trustData && threshold !== undefined && (
-                <div className="mt-5 border-t border-rule pt-4 [@media(max-height:52rem)]:mt-3 [@media(max-height:52rem)]:pt-3">
+                <div className="mt-4 border-t border-rule pt-4 [@media(max-height:52rem)]:mt-2 [@media(max-height:52rem)]:pt-3">
                   <Slider
                     label={<Term term="decision threshold">Decision threshold</Term>}
                     value={threshold}
@@ -676,11 +676,11 @@ export function Predict({ route }: { route: RouteMeta }) {
                 </div>
               )}
 
-              <div className="mt-5 border-t border-rule pt-4 [@media(max-height:52rem)]:mt-3 [@media(max-height:52rem)]:pt-3" data-tour="trust-evidence">
+              <div className="mt-4 border-t border-rule pt-4 [@media(max-height:52rem)]:mt-2 [@media(max-height:52rem)]:pt-3" data-tour="trust-evidence">
                 <TrustList prediction={current} />
               </div>
 
-              <p className="type-label mt-2 text-muted" data-tour="trust-stats">
+              <p className="type-label mt-2 text-muted [@media(max-height:52rem)]:mt-1" data-tour="trust-stats">
                 {trustData ? (
                   <>
                     <Term term="abstain">Abstained</Term>{' '}
@@ -695,7 +695,7 @@ export function Predict({ route }: { route: RouteMeta }) {
                 )}
               </p>
 
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap gap-2">
                 <ButtonLink to="/explain" size="sm">
                   Why this estimate? →
                 </ButtonLink>
