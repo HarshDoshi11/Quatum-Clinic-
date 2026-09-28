@@ -3,6 +3,7 @@
  * comes through the API / mock layer. Imported by both UI and mocks.
  */
 import type { BackendId, BackendInfo, DatasetId, ModelId, ModelInfo } from '../types/common'
+import type { ModalityInfo } from '../types/crossModality'
 
 export const MODELS: Record<ModelId, ModelInfo> = {
   vqc: { id: 'vqc', name: 'VQC', longName: 'Variational Quantum Classifier', family: 'quantum' },
@@ -41,6 +42,11 @@ export interface DatasetMeta {
   lockedFeatures: string[]
   /** Caption above the what-if sliders on Explain; null for none. */
   explainCaption: string | null
+  /**
+   * Kinds of test the features come from. Cross-modality analysis runs when
+   * there are two or more; with one, every feature belongs to it.
+   */
+  modalities: ModalityInfo[]
 }
 
 export const DATASETS: Record<DatasetId, DatasetMeta> = {
@@ -58,6 +64,7 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     source: 'Wisconsin Diagnostic Breast Cancer, UCI ML Repository',
     lockedFeatures: [],
     explainCaption: 'These are measurements of the tumor sample, not things a patient can change. Use this to see what the model pays attention to.',
+    modalities: [{ id: 'cytology', label: 'Tumor cytology' }],
   },
   heart: {
     id: 'heart',
@@ -73,6 +80,13 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     source: 'Cleveland Heart Disease, UCI ML Repository',
     lockedFeatures: ['age', 'sex'],
     explainCaption: 'Age and sex are locked because they can’t be changed. Move the other sliders to see which factors shift the estimate. This is a simulation, not medical advice.',
+    modalities: [
+      { id: 'demographics', label: 'Demographics' },
+      { id: 'symptoms', label: 'Symptoms' },
+      { id: 'ecg', label: 'ECG' },
+      { id: 'exercise', label: 'Exercise Test' },
+      { id: 'labs', label: 'Blood Labs' },
+    ],
   },
 }
 

@@ -3,7 +3,7 @@ import { DATASETS, MODELS } from '../../lib/domain'
 import type { BackendId, DatasetId, Experiment, ExperimentKind, ModelId, NoiseParams } from '../../types'
 import { NOISE_PROFILES, SEEDS } from './canon'
 import { EXPERIMENT_IDS } from './ids'
-import { referenceConfig, referenceResult, result, type ModelConfig } from './results'
+import { DEFAULT_BACKEND, referenceConfig, referenceResult, result, type ModelConfig } from './results'
 
 /** Features kept after selection (see preprocessing). */
 export const SELECTED_FEATURES: Record<DatasetId, number> = { wdbc: 16, heart: 13 }
@@ -150,7 +150,7 @@ function datasetExperiments(dataset: DatasetId, schedule: Partial<Record<Schedul
   ]
   if (ids.crossModality) {
     list.push(
-      study({ id: ids.crossModality, dataset, kind: 'sweep', title: 'Cross-modality study · 5 signals', models: ['qsvm'], model: 'qsvm', backend: 'noisy-sim', qubits: 4, circuitDepth: 2, timestamp: at(schedule.crossModality ?? schedule.noiseSweep), notes: 'Each modality alone vs all combined.' }),
+      study({ id: ids.crossModality, dataset, kind: 'sweep', title: `Cross-modality study · ${DATASETS[dataset].modalities.length} signals`, models: ['qsvm'], model: 'qsvm', backend: DEFAULT_BACKEND.qsvm, qubits: 4, circuitDepth: 2, timestamp: at(schedule.crossModality ?? schedule.noiseSweep), notes: 'Each modality alone vs all combined.' }),
     )
   }
   return list

@@ -10,7 +10,7 @@
  * Heart keeps its harder profile (classical AUC ≈ 0.88–0.90, accuracy ≈ 80–81%).
  */
 import { DATASETS } from '../../lib/domain'
-import type { DatasetId, ExperimentMetrics, ModelId, NoiseParams } from '../../types'
+import type { DatasetId, ExperimentMetrics, ModalityId, ModelId, NoiseParams } from '../../types'
 import { logit, normCdf, normInv, round, sigmoid } from './math'
 
 // ─── Anchors ────────────────────────────────────────────────
@@ -49,6 +49,21 @@ export const BEST_QUANTUM: ModelId = 'qsvm'
 
 /** Abstained test patients (of the 30% test split). WDBC: 7 / 171 = 4.1%. */
 export const ABSTAINED: Record<DatasetId, number> = { wdbc: 7, heart: 4 }
+
+/**
+ * Benchmark QSVM trained on one modality's features only (5 seeds, same split).
+ * All modalities together is the benchmark QSVM itself, so it has no entry here.
+ * Only datasets whose config declares two or more modalities appear.
+ */
+export const MODALITY_ANCHORS: Partial<Record<DatasetId, Partial<Record<ModalityId, { auc: number; aucStd: number }>>>> = {
+  heart: {
+    demographics: { auc: 0.712, aucStd: 0.031 },
+    symptoms: { auc: 0.781, aucStd: 0.026 },
+    ecg: { auc: 0.758, aucStd: 0.028 },
+    exercise: { auc: 0.844, aucStd: 0.021 },
+    labs: { auc: 0.694, aucStd: 0.033 },
+  },
+}
 
 /** Sensitivity must stay at or above this to count as safe. */
 export const SAFE_SENSITIVITY = 0.85

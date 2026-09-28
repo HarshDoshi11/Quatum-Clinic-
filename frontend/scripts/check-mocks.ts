@@ -3,11 +3,11 @@
  * endpoint (one result per config key), and that every claim respects seed noise.
  * Run: npm run check:mocks
  */
-import { DATASETS, MODEL_ORDER, MODELS } from '../src/lib/domain'
+import { DATASET_IDS, DATASETS, MODEL_ORDER, MODELS } from '../src/lib/domain'
 import type { DatasetId, TrainRequest } from '../src/types'
 import { NOISE_PROFILES } from '../src/mocks/data/canon'
 import { compare } from '../src/mocks/data/compare'
-import { crossModality } from '../src/mocks/data/crossModality'
+import { combinedVerdict, crossModality } from '../src/mocks/data/crossModality'
 import { EXPERIMENTS, circuitSearchChild } from '../src/mocks/data/experiments'
 import { featureSchema } from '../src/mocks/data/features'
 import { HARDWARE_PROFILES, noiseRun } from '../src/mocks/data/hardware'
@@ -160,6 +160,37 @@ for (const d of ['wdbc', 'heart'] as const) {
   }
 }
 
+// ─── Cross-modality: dataset config + results store ─────────
+console.log('\nCross-Modality')
+for (const d of DATASET_IDS) {
+  const cm = crossModality(d)
+  const declared = DATASETS[d].modalities.length
+  eq(`${d}: available ⇔ config declares ≥ 2 modalities (${declared})`, cm.available, declared >= 2)
+  eq(`${d}: summary carries the config's modalities`, datasetSummary(d).modalities, DATASETS[d].modalities)
+  check(`${d}: every feature belongs to a declared modality`, featureSchema(d).features.every((f) => DATASETS[d].modalities.some((m) => m.id === f.modality)))
+  if (!cm.available) {
+    eq(`${d}: supported datasets come from the config`, cm.supportedDatasets, DATASET_IDS.filter((x) => DATASETS[x].modalities.length >= 2))
+    continue
+  }
+  problems.length = 0
+  problems.push(...checkResponseConsistency(cm, `cross-modality/${d}`))
+  problems.push(...checkResponseConsistency(compare(d), `compare/${d}`))
+  eq(`${d}: modality keys agree with every other endpoint`, problems, [])
+  eq(`${d}: combined = benchmark QSVM (same key and AUC)`, [cm.combined.configKey, cm.combined.auc.mean], [referenceResult(d, 'qsvm').key, referenceResult(d, 'qsvm').auc.mean])
+  eq(`${d}: one key per modality`, new Set(cm.modalities.map((m) => m.configKey)).size, cm.modalities.length)
+  check(`${d}: modality features partition the model's features`, cm.modalities.flatMap((m) => m.features).sort().join() === [...cm.combined.features].sort().join())
+  const best = cm.modalities.find((m) => m.id === cm.bestSingle)
+  if (best) {
+    const noise = Math.hypot(cm.combined.auc.std, best.auc.std)
+    eq(`${d}: verdict follows the combined-std rule`, cm.verdict, combinedVerdict(cm.combined.auc.mean - best.auc.mean, noise))
+    check(`${d}: takeaway wording matches the verdict (${cm.verdict})`, cm.takeaway.includes(cm.verdict === 'within-noise' ? 'within seed noise' : 'beyond seed noise'), cm.takeaway)
+  }
+}
+const cm = crossModality('heart')
+eq('Heart cross-modality: combined 0.896, +6.2%, beyond seed noise', cm.available ? [cm.combined.auc.mean, cm.gainPct, cm.verdict] : null, [0.896, 6.2, 'gain'])
+const cmW = crossModality('wdbc')
+eq('WDBC cross-modality: unavailable, points to Heart', cmW.available ? null : [cmW.reason, cmW.supportedDatasets], ['Cross-modality analysis uses the Heart Disease dataset.', ['heart']])
+
 // ─── Unchanged anchors ──────────────────────────────────────
 console.log('\nRegistry, trust, patient')
 const ov = overview('wdbc', EXPERIMENTS)
@@ -182,8 +213,6 @@ eq('trust: 7 of 171 abstained, 0 high-confidence misses', [tr.abstained, tr.test
 const schema = featureSchema('wdbc')
 eq('sample patient 0.82 · unusual abstains', [predict('wdbc', schema.samplePatient).probability, predict('wdbc', schema.unusualPatient).decision], [0.82, 'abstain'])
 eq('report agrees with prediction', patientReport('wdbc', schema.samplePatient, '').result.probability, 0.82)
-const cm = crossModality('heart')
-eq('Heart cross-modality: combined = QSVM, +6.2%', cm.available ? [cm.combined.mean, cm.gainPct] : null, [0.896, 6.2])
 const ids = new Set(EXPERIMENTS.map((e) => e.id))
 eq('experiment IDs unique', ids.size, EXPERIMENTS.length)
 const referenced = ['wdbc', 'heart'].flatMap((d) => [...overview(d as DatasetId, EXPERIMENTS).findings.map((f) => f.experimentId), ...compare(d as DatasetId).rows.map((r) => r.experimentId)])

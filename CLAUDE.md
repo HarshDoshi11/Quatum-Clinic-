@@ -2,8 +2,27 @@
 
 Hybrid quantum-classical ML platform for early disease detection (SIH problem statement 139).
 Research Mode is a lab dashboard; Patient Mode is a plain-language patient view.
-The full product spec lives in the original brief. This file holds the **standing rules** every change must follow.
+The full product spec lives in `docs/brief.md`. This file holds the **standing rules** every change must follow.
 
+## Spec & progress
+
+- The full product spec (all pages, Patient Mode, phases) is in `docs/brief.md`. Read it before starting any phase.
+  If the brief and this file disagree, this file wins.
+- Phases 1–5: done and approved.
+- Next: Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report.
+- Then: Phase 7 (Patient Mode), Phase 8 (polish).
+- After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
+  response shapes exactly, so switching USE_MOCK=false needs no UI changes.
+- Update this section at the end of every session.
+
+## Hardware Lab rules
+
+- Selecting a backend profile in the Hardware Reality Lab gives exactly the same metrics as that backend's
+  "You are here" point in the Failure Envelope at 0% corruption (same dataset, model, seeds, results store).
+- When "Custom" is selected, show its origin and edits, e.g. "BASED ON FAKEBACKEND-1 · EDITED: 2Q ERROR".
+- The QSVM kernel circuit renders U†(B) as the exact mirror of U(A): same gates in reverse order, inverse rotations
+  labelled on hover (e.g. "P(−2x)").
+  
 ## Workflow
 
 - Work in the agreed phases. After each phase, stop, summarise, and wait for approval.

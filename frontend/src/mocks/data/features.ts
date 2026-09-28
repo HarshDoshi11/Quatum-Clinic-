@@ -58,10 +58,14 @@ const HEART_FEATURES: Omit<ModelFeature, 'locked'>[] = [
   feature({ key: 'fbs', label: 'Fasting sugar > 120', plainLabel: 'High fasting blood sugar', unit: null, kind: 'binary', options: [{ value: 0, label: 'No' }, { value: 1, label: 'Yes' }], min: 0, max: 1, step: 1, mean: 0.15, sd: 0.36, weight: 0.05, group: 'Blood tests', modality: 'labs' }),
 ]
 
-const withLocks = (dataset: DatasetId, defs: Omit<ModelFeature, 'locked'>[]): ModelFeature[] =>
-  defs.map((f) => ({ ...f, locked: DATASETS[dataset].lockedFeatures.includes(f.key) }))
+/** Locks come from the config; with a single declared modality, every feature belongs to it. */
+const withConfig = (dataset: DatasetId, defs: Omit<ModelFeature, 'locked'>[]): ModelFeature[] => {
+  const { lockedFeatures, modalities } = DATASETS[dataset]
+  const only = modalities.length === 1 ? modalities[0].id : null
+  return defs.map((f) => ({ ...f, modality: f.modality ?? only, locked: lockedFeatures.includes(f.key) }))
+}
 
-export const MODEL_FEATURES: Record<DatasetId, ModelFeature[]> = { wdbc: withLocks('wdbc', WDBC_FEATURES), heart: withLocks('heart', HEART_FEATURES) }
+export const MODEL_FEATURES: Record<DatasetId, ModelFeature[]> = { wdbc: withConfig('wdbc', WDBC_FEATURES), heart: withConfig('heart', HEART_FEATURES) }
 
 /** Demo patient; the scoring model is calibrated so this patient scores SAMPLE_PROBABILITY. */
 export const SAMPLE_PATIENTS: Record<DatasetId, PatientInput> = {

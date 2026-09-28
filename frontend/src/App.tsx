@@ -11,6 +11,7 @@ import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { Overview } from '@/pages/research/Overview'
 import { PATIENT_ROUTES, RESEARCH_ROUTES, type RouteMeta } from '@/routes'
 import { DataVersionProvider } from '@/state/dataVersion'
+import { PatientProvider } from '@/state/patient'
 import { PlainLanguageProvider } from '@/state/plainLanguage'
 
 // Chart pages are code-split (Recharts is large); the Overview stays in the main bundle.
@@ -86,20 +87,22 @@ export function App() {
     // reducedMotion="user": transform/layout animations are skipped when the OS asks for reduced motion.
     <MotionConfig reducedMotion="user">
       <DataVersionProvider>
-        <PlainLanguageProvider>
-          <ToastProvider>
-            <ExperimentDrawerProvider>
-              <TourProvider>
-                <ShortcutsProvider>
-                  <AppShell>
-                    <AnimatedRoutes />
-                  </AppShell>
-                  <CommandPalette />
-                </ShortcutsProvider>
-              </TourProvider>
-            </ExperimentDrawerProvider>
-          </ToastProvider>
-        </PlainLanguageProvider>
+        <PatientProvider>
+          <PlainLanguageProvider>
+            <ToastProvider>
+              <ExperimentDrawerProvider>
+                <TourProvider>
+                  <ShortcutsProvider>
+                    <AppShell>
+                      <AnimatedRoutes />
+                    </AppShell>
+                    <CommandPalette />
+                  </ShortcutsProvider>
+                </TourProvider>
+              </ExperimentDrawerProvider>
+            </ToastProvider>
+          </PlainLanguageProvider>
+        </PatientProvider>
       </DataVersionProvider>
     </MotionConfig>
   )

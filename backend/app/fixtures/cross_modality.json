@@ -3,17 +3,22 @@
     "available": false,
     "dataset": "wdbc",
     "reason": "Cross-modality analysis uses the Heart Disease dataset.",
-    "supportedDataset": "heart"
+    "detail": "Breast Cancer (WDBC) has one kind of test, tumor cytology, so there is nothing to combine.",
+    "supportedDatasets": [
+      "heart"
+    ]
   },
   "heart": {
     "available": true,
     "dataset": "heart",
     "experimentId": "EXP-2036",
     "model": "qsvm",
+    "evaluation": "QSVM 4q · noisy sim · 5 seeds · held-out 30% · UCI",
     "modalities": [
       {
         "id": "demographics",
         "label": "Demographics",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim|only-demographics",
         "features": [
           "age",
           "sex",
@@ -27,6 +32,7 @@
       {
         "id": "symptoms",
         "label": "Symptoms",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim|only-symptoms",
         "features": [
           "cp"
         ],
@@ -38,6 +44,7 @@
       {
         "id": "ecg",
         "label": "ECG",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim|only-ecg",
         "features": [
           "restecg",
           "oldpeak",
@@ -51,6 +58,7 @@
       {
         "id": "exercise",
         "label": "Exercise Test",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim|only-exercise",
         "features": [
           "thalach",
           "exang",
@@ -65,6 +73,7 @@
       {
         "id": "labs",
         "label": "Blood Labs",
+        "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim|only-labs",
         "features": [
           "chol",
           "fbs"
@@ -76,11 +85,33 @@
       }
     ],
     "combined": {
-      "mean": 0.896,
-      "std": 0.015
+      "configKey": "heart|qsvm|4q|angle|d2|full|noisy-sim",
+      "label": "All combined",
+      "features": [
+        "age",
+        "sex",
+        "trestbps",
+        "cp",
+        "restecg",
+        "oldpeak",
+        "slope",
+        "thalach",
+        "exang",
+        "thal",
+        "ca",
+        "chol",
+        "fbs"
+      ],
+      "auc": {
+        "mean": 0.896,
+        "std": 0.015
+      }
     },
     "bestSingle": "exercise",
     "gainPct": 6.2,
-    "takeaway": "Together: +6.2% over the best single signal (Exercise Test)."
+    "difference": 0.052,
+    "noise": 0.0258,
+    "verdict": "gain",
+    "takeaway": "Together: +6.2% over the best single signal (Exercise Test), beyond seed noise."
   }
 }

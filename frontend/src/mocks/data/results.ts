@@ -8,8 +8,8 @@
  * config key is ever reported with two different values.
  */
 import { MODELS } from '../../lib/domain'
-import type { Ansatz, BackendId, ConfigKey, DatasetId, Encoding, Entanglement, ExperimentMetrics, MeanStd, ModelId, NoiseParams } from '../../types'
-import { ANCHORS, NOISE_PROFILES, SEEDS, metricsFor, metricsFromPoint, noiseDropPct, noisyOperatingPoint, noisySensitivityStd } from './canon'
+import type { Ansatz, BackendId, ConfigKey, DatasetId, Encoding, Entanglement, ExperimentMetrics, MeanStd, ModalityId, ModelId, NoiseParams } from '../../types'
+import { ANCHORS, MODALITY_ANCHORS, NOISE_PROFILES, SEEDS, metricsFor, metricsFromPoint, noiseDropPct, noisyOperatingPoint, noisySensitivityStd } from './canon'
 import { hashSeed, round, samplesWithStats } from './math'
 
 export interface ModelConfig {
@@ -20,6 +20,8 @@ export interface ModelConfig {
   circuitDepth: number | null
   entanglement: Entanglement | null
   backend: BackendId
+  /** Trained on this modality's features only (cross-modality study); absent = all features. */
+  modality?: ModalityId
 }
 
 export interface ConfigResult {
@@ -71,7 +73,8 @@ export function referenceConfig(dataset: DatasetId, model: ModelId): ModelConfig
 /** Normalise a requested config (QSVM ignores depth/encoding/entanglement: its feature map is fixed). */
 export function normalise(c: ModelConfig): ModelConfig {
   if (MODELS[c.model].family === 'classical') {
-    return { model: c.model, qubits: null, encoding: null, circuitDepth: null, entanglement: null, backend: 'cpu' }
+    const base: ModelConfig = { model: c.model, qubits: null, encoding: null, circuitDepth: null, entanglement: null, backend: 'cpu' }
+    return c.modality ? { ...base, modality: c.modality } : base
   }
   if (c.model === 'qsvm') return { ...c, encoding: 'angle', circuitDepth: QSVM_REPS, entanglement: 'full' }
   return c
@@ -79,8 +82,9 @@ export function normalise(c: ModelConfig): ModelConfig {
 
 export function configKey(dataset: DatasetId, raw: ModelConfig): ConfigKey {
   const c = normalise(raw)
-  if (c.qubits === null) return `${dataset}|${c.model}|${c.backend}`
-  return `${dataset}|${c.model}|${c.qubits}q|${c.encoding}|d${c.circuitDepth}|${c.entanglement}|${c.backend}`
+  const subset = c.modality ? `|only-${c.modality}` : ''
+  if (c.qubits === null) return `${dataset}|${c.model}|${c.backend}${subset}`
+  return `${dataset}|${c.model}|${c.qubits}q|${c.encoding}|d${c.circuitDepth}|${c.entanglement}|${c.backend}${subset}`
 }
 
 // ─── Parameter formulas ─────────────────────────────────────
@@ -195,9 +199,13 @@ export function result(dataset: DatasetId, raw: ModelConfig): ConfigResult {
   if (hit) return hit
 
   const a = ANCHORS[dataset][config.model]
-  const auc =
-    config.model === 'vqc' ? vqcAuc(dataset, config, key) : config.model === 'qsvm' ? qsvmAuc(dataset, config) : a.auc
-  const std = aucStd(dataset, config)
+  // A single-modality run reads its own anchor; everything else derives from the model anchor.
+  const subset = config.modality ? MODALITY_ANCHORS[dataset]?.[config.modality] : undefined
+  if (config.modality && !subset) throw new Error(`No ${config.modality}-only result for ${dataset}`)
+  const auc = subset
+    ? subset.auc
+    : config.model === 'vqc' ? vqcAuc(dataset, config, key) : config.model === 'qsvm' ? qsvmAuc(dataset, config) : a.auc
+  const std = subset ? subset.aucStd : aucStd(dataset, config)
   const q = config.qubits ?? 0
   const d = config.circuitDepth ?? 1
   const scale = config.model === 'vqc' ? (q / 8) ** 3.1 * (d / 3) : config.model === 'qsvm' ? (q / 4) ** 2 : 1
@@ -215,7 +223,7 @@ export function result(dataset: DatasetId, raw: ModelConfig): ConfigResult {
     trainTimeS,
     inferenceMs,
     metrics:
-      config.model === 'qsvm'
+      config.model === 'qsvm' && !subset
         ? qsvmMetrics(dataset, config, auc, std, trainTimeS, inferenceMs)
         : metricsFor(dataset, auc, std, trainTimeS, inferenceMs),
   }

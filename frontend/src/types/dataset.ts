@@ -1,4 +1,5 @@
 import type { DatasetId } from './common'
+import type { ModalityInfo } from './crossModality'
 
 export type ColumnType = 'numeric' | 'categorical' | 'binary'
 
@@ -64,6 +65,8 @@ export interface DatasetSummary {
   lockedFeatures: string[]
   /** Caption above the what-if sliders on Explain (from the dataset config); null for none. */
   explainCaption: string | null
+  /** Kinds of test the features come from (from the dataset config); two or more enable cross-modality analysis. */
+  modalities: ModalityInfo[]
 }
 
 export interface PreprocessingReport {

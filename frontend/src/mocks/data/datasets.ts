@@ -165,6 +165,7 @@ export function datasetSummary(dataset: DatasetId): DatasetSummary {
     },
     lockedFeatures: meta.lockedFeatures,
     explainCaption: meta.explainCaption,
+    modalities: meta.modalities,
   }
 }
 
@@ -233,9 +234,10 @@ export function profileCsv(fileName: string, text: string): UploadResponse {
       features: header.length - 1,
       target: target?.name ?? '',
       missingValues: cols.reduce((s, c) => s + c.missing, 0),
-      // An uploaded dataset has no config yet: nothing locked, no caption.
+      // An uploaded dataset has no config yet: nothing locked, no caption, no modalities.
       lockedFeatures: [],
       explainCaption: null,
+      modalities: [],
       classBalance: {
         positiveLabel,
         negativeLabel,

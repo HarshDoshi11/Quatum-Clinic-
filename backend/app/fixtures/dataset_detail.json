@@ -16,6 +16,12 @@
     },
     "lockedFeatures": [],
     "explainCaption": "These are measurements of the tumor sample, not things a patient can change. Use this to see what the model pays attention to.",
+    "modalities": [
+      {
+        "id": "cytology",
+        "label": "Tumor cytology"
+      }
+    ],
     "columns": [
       {
         "name": "diagnosis",
@@ -719,6 +725,28 @@
       "sex"
     ],
     "explainCaption": "Age and sex are locked because they can’t be changed. Move the other sliders to see which factors shift the estimate. This is a simulation, not medical advice.",
+    "modalities": [
+      {
+        "id": "demographics",
+        "label": "Demographics"
+      },
+      {
+        "id": "symptoms",
+        "label": "Symptoms"
+      },
+      {
+        "id": "ecg",
+        "label": "ECG"
+      },
+      {
+        "id": "exercise",
+        "label": "Exercise Test"
+      },
+      {
+        "id": "labs",
+        "label": "Blood Labs"
+      }
+    ],
     "columns": [
       {
         "name": "age",
