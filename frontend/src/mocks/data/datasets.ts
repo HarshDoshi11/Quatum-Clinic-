@@ -166,6 +166,7 @@ export function datasetSummary(dataset: DatasetId): DatasetSummary {
     lockedFeatures: meta.lockedFeatures,
     explainCaption: meta.explainCaption,
     modalities: meta.modalities,
+    condition: meta.condition,
   }
 }
 
@@ -238,6 +239,7 @@ export function profileCsv(fileName: string, text: string): UploadResponse {
       lockedFeatures: [],
       explainCaption: null,
       modalities: [],
+      condition: null,
       classBalance: {
         positiveLabel,
         negativeLabel,

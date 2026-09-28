@@ -316,6 +316,20 @@ for (const d of DATASET_IDS) {
   eq(`${d}: one missing input shows as imputed; the unusual patient has out-of-range inputs`, [missing, unusual > 0], ['imputed', true])
 }
 
+// ─── Patient Mode ───────────────────────────────────────────
+console.log('\nPatient Mode text has no research jargon')
+// Everything Patient Mode shows from the report (the letter hides each check's technical detail there).
+const JARGON = /AUC|qubit|QSVM|VQC|FakeBackend|EXP-\d|log-odds|PCA|\bseeds?\b|backend|simulat/i
+for (const d of DATASET_IDS) {
+  const sc = featureSchema(d)
+  for (const [name, input] of [['sample', sc.samplePatient], ['unusual', sc.unusualPatient]] as const) {
+    const r = patientReport(d, input, '')
+    const shown = JSON.stringify({ result: r.result, meaning: r.meaning, summary: r.reliability.summary, checks: r.reliability.points.map((p) => p.label), influences: r.influences, next: r.nextSteps, questions: r.questions, safety: r.safetyNote })
+    check(`${d} ${name}: no AUC, qubits, models, backends or experiments`, !JARGON.test(shown), shown.match(JARGON)?.[0])
+  }
+  check(`${d}: every input has a plain label for the patient form`, sc.features.every((f) => f.plainLabel.trim().length > 0))
+}
+
 // ─── Unchanged anchors ──────────────────────────────────────
 console.log('\nRegistry, trust, patient')
 const ov = overview('wdbc', EXPERIMENTS)

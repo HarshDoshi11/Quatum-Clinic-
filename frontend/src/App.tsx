@@ -28,6 +28,7 @@ const Predict = lazy(() => import('@/pages/research/Predict').then((m) => ({ def
 const CrossModality = lazy(() => import('@/pages/research/CrossModality').then((m) => ({ default: m.CrossModality })))
 const Report = lazy(() => import('@/pages/research/Report').then((m) => ({ default: m.Report })))
 const Failure = lazy(() => import('@/pages/research/Failure').then((m) => ({ default: m.Failure })))
+const PatientHome = lazy(() => import('@/pages/patient/Home').then((m) => ({ default: m.PatientHome })))
 
 /** Shown for the instant a code-split page is loading: the page frame, no spinner. */
 function PageFallback() {
@@ -75,6 +76,16 @@ function researchPage(route: RouteMeta) {
   }
 }
 
+/** Patient Mode pages; the rest render a placeholder until built. */
+function patientPage(route: RouteMeta) {
+  switch (route.id) {
+    case 'patient-home':
+      return lazyPage(<PatientHome route={route} />)
+    default:
+      return <PlaceholderPage route={route} variant="patient" />
+  }
+}
+
 function AnimatedRoutes() {
   const location = useLocation()
   return (
@@ -84,7 +95,7 @@ function AnimatedRoutes() {
           <Route key={route.id} path={route.path} element={researchPage(route)} />
         ))}
         {PATIENT_ROUTES.map((route) => (
-          <Route key={route.id} path={route.path} element={<PlaceholderPage route={route} variant="patient" />} />
+          <Route key={route.id} path={route.path} element={patientPage(route)} />
         ))}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

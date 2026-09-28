@@ -67,6 +67,8 @@ export interface DatasetSummary {
   explainCaption: string | null
   /** Kinds of test the features come from (from the dataset config); two or more enable cross-modality analysis. */
   modalities: ModalityInfo[]
+  /** Condition in patient-facing copy (from the dataset config), e.g. "heart disease"; null for an uploaded file. */
+  condition: string | null
 }
 
 export interface PreprocessingReport {
