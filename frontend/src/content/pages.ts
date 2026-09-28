@@ -105,15 +105,9 @@ export const PAGE_CONTENT: Record<ResearchRouteId | PatientRouteId, PageGuide> =
     matters: 'The more complete your answers, the more reliable the result.',
     read: 'The line at the top shows your progress. You can go back at any time.',
   },
-  'patient-result': {
-    plain: 'What your answers suggest, how sure the check is, and what to do next.',
-    shows: 'Your result in plain words, how reliable it is, and simple next steps.',
-    matters: 'A clear result, with its limits, helps you decide what to ask your doctor.',
-    read: 'Start with the words at the top. Your full report has more detail you can share.',
-  },
   'patient-report': {
     plain: 'Your result written as a short letter you can share with your doctor.',
-    shows: 'Your result, what it means, how reliable it is, and what to do next.',
+    shows: 'Your result as 100 people like you, how sure the check is, what influenced it, what to do next, and questions for your doctor.',
     matters: 'It gives you and your doctor the same clear starting point.',
     read: 'Read it like a letter. Download it as a PDF to bring to your appointment.',
   },

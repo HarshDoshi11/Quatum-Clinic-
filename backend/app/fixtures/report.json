@@ -11,7 +11,7 @@
         "riskBand": "high",
         "probability": 0.82,
         "headline": "Higher likelihood",
-        "frequency": "About 82 in 100 people with results like these have breast cancer.",
+        "frequency": "Out of 100 people with results like yours, about 82 have breast cancer.",
         "reasons": []
       },
       "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of breast cancer. This is a screening signal, not a diagnosis. Only your doctor can diagnose.",
@@ -59,21 +59,25 @@
       },
       "influences": [
         {
+          "feature": "radius_mean",
           "label": "Cell size (radius)",
           "direction": "increases",
           "plain": "Your sample’s cell size (radius) pushed the estimate up."
         },
         {
+          "feature": "perimeter_mean",
           "label": "Cell outline length",
           "direction": "increases",
           "plain": "Your sample’s cell outline length pushed the estimate up."
         },
         {
+          "feature": "concave_points_mean",
           "label": "Number of indentations",
           "direction": "increases",
           "plain": "Your sample’s number of indentations pushed the estimate up."
         },
         {
+          "feature": "area_mean",
           "label": "Cell area",
           "direction": "increases",
           "plain": "Your sample’s cell area pushed the estimate up."
@@ -81,9 +85,27 @@
       ],
       "nextSteps": [
         "Book an appointment with your doctor soon.",
-        "Bring this report and your original test results.",
-        "Ask about follow-up tests.",
-        "Note any new symptoms before your visit."
+        "Bring this report and your biopsy or cytology report.",
+        "Ask which follow-up tests or imaging you need.",
+        "Write down any changes you notice before your visit."
+      ],
+      "journey": [
+        {
+          "icon": "calendar-days",
+          "text": "Book an appointment with your doctor soon."
+        },
+        {
+          "icon": "file-text",
+          "text": "Bring this report and your biopsy or cytology report."
+        },
+        {
+          "icon": "test-tube",
+          "text": "Ask which follow-up tests or imaging you need."
+        },
+        {
+          "icon": "notebook-pen",
+          "text": "Write down any changes you notice before your visit."
+        }
       ],
       "questions": [
         "What do these results mean for me specifically?",
@@ -157,8 +179,22 @@
       "influences": [],
       "nextSteps": [
         "Book an appointment with your doctor.",
-        "Bring this report and your original test results.",
-        "Ask whether any tests should be repeated."
+        "Bring this report and your biopsy or cytology report.",
+        "Ask whether any measurements should be repeated."
+      ],
+      "journey": [
+        {
+          "icon": "calendar-days",
+          "text": "Book an appointment with your doctor."
+        },
+        {
+          "icon": "file-text",
+          "text": "Bring this report and your biopsy or cytology report."
+        },
+        {
+          "icon": "refresh-cw",
+          "text": "Ask whether any measurements should be repeated."
+        }
       ],
       "questions": [
         "What do these results mean for me specifically?",
@@ -181,7 +217,7 @@
         "riskBand": "high",
         "probability": 0.82,
         "headline": "Higher likelihood",
-        "frequency": "About 82 in 100 people with results like these have heart disease.",
+        "frequency": "Out of 100 people with results like yours, about 82 have heart disease.",
         "reasons": []
       },
       "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of heart disease. This is a screening signal, not a diagnosis. Only your doctor can diagnose.",
@@ -229,21 +265,25 @@
       },
       "influences": [
         {
+          "feature": "exang",
           "label": "Chest pain during exercise",
           "direction": "increases",
           "plain": "Your chest pain during exercise pushed the estimate up."
         },
         {
+          "feature": "thalach",
           "label": "Highest heart rate in exercise test",
           "direction": "increases",
           "plain": "Your highest heart rate in exercise test pushed the estimate up."
         },
         {
+          "feature": "cp",
           "label": "Type of chest pain",
           "direction": "increases",
           "plain": "Your type of chest pain pushed the estimate up."
         },
         {
+          "feature": "oldpeak",
           "label": "ECG change during exercise",
           "direction": "increases",
           "plain": "Your ecg change during exercise pushed the estimate up."
@@ -252,8 +292,26 @@
       "nextSteps": [
         "Book an appointment with your doctor soon.",
         "Bring this report and your original test results.",
-        "Ask about follow-up tests.",
-        "Note any new symptoms before your visit."
+        "Ask about follow-up heart tests.",
+        "Note any new symptoms, like chest pain or breathlessness, before your visit."
+      ],
+      "journey": [
+        {
+          "icon": "calendar-days",
+          "text": "Book an appointment with your doctor soon."
+        },
+        {
+          "icon": "file-text",
+          "text": "Bring this report and your original test results."
+        },
+        {
+          "icon": "test-tube",
+          "text": "Ask about follow-up heart tests."
+        },
+        {
+          "icon": "notebook-pen",
+          "text": "Note any new symptoms, like chest pain or breathlessness, before your visit."
+        }
       ],
       "questions": [
         "What do these results mean for me specifically?",
@@ -329,6 +387,20 @@
         "Book an appointment with your doctor.",
         "Bring this report and your original test results.",
         "Ask whether any tests should be repeated."
+      ],
+      "journey": [
+        {
+          "icon": "calendar-days",
+          "text": "Book an appointment with your doctor."
+        },
+        {
+          "icon": "file-text",
+          "text": "Bring this report and your original test results."
+        },
+        {
+          "icon": "refresh-cw",
+          "text": "Ask whether any tests should be repeated."
+        }
       ],
       "questions": [
         "What do these results mean for me specifically?",

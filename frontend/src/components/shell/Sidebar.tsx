@@ -93,14 +93,8 @@ export function Sidebar({ mode }: { mode: Mode }) {
           </div>
         ) : (
           <ul className="flex flex-col gap-1">
-            {PATIENT_ROUTES.filter((route) => !route.navParent).map((route) => (
-              <NavItem
-                key={route.id}
-                route={route}
-                // A flow page (the result) marks the page it belongs to.
-                active={isActive(route, pathname) || PATIENT_ROUTES.some((r) => r.navParent === route.id && isActive(r, pathname))}
-                markerId="patient-nav-marker"
-              />
+            {PATIENT_ROUTES.map((route) => (
+              <NavItem key={route.id} route={route} active={isActive(route, pathname)} markerId="patient-nav-marker" />
             ))}
           </ul>
         )}

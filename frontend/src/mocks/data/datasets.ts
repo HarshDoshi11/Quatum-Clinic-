@@ -168,7 +168,6 @@ export function datasetSummary(dataset: DatasetId): DatasetSummary {
     modalities: meta.modalities,
     condition: meta.condition,
     patientName: meta.patient.name,
-    patientGuidance: meta.patient.guidance,
   }
 }
 
@@ -243,7 +242,6 @@ export function profileCsv(fileName: string, text: string): UploadResponse {
       modalities: [],
       condition: null,
       patientName: null,
-      patientGuidance: [],
       classBalance: {
         positiveLabel,
         negativeLabel,

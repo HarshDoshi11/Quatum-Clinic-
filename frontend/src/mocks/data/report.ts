@@ -52,6 +52,7 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
         .filter((c) => c.value !== null)
         .slice(0, 4)
         .map((c) => ({
+          feature: c.feature,
           label: plainLabel(c.feature),
           direction: c.direction,
           plain:
@@ -75,6 +76,7 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
   const band = prediction.riskBand
   const p = prediction.probability
   const outside = prediction.trust.find((t) => t.id === 'distribution-shift')?.level === 'weak'
+  const journey = meta.patient.guidance[abstained || !band ? 'abstain' : band]
   reportCounter += 1
 
   return {
@@ -89,7 +91,7 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
       probability: p,
       headline: abstained || !band ? 'No reliable result' : `${RISK_WORD[band]} likelihood`,
       // A calibrated probability read as a natural frequency.
-      frequency: p === null ? null : `About ${Math.round(p * 100)} in 100 people with results like these have ${meta.condition}.`,
+      frequency: p === null ? null : `Out of 100 people with results like yours, about ${Math.round(p * 100)} have ${meta.patient.name}.`,
       reasons,
     },
     meaning: abstained
@@ -97,13 +99,9 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
       : `Compared with people whose tests look similar to yours, the model estimates a ${RISK_WORD[band ?? 'moderate'].toLowerCase()} likelihood of ${meta.condition}. This is a screening signal, not a diagnosis. Only your doctor can diagnose.`,
     reliability: { level, summary: reliabilitySummary(points, abstained), points },
     influences,
-    nextSteps: abstained
-      ? ['Book an appointment with your doctor.', 'Bring this report and your original test results.', 'Ask whether any tests should be repeated.']
-      : band === 'high'
-        ? ['Book an appointment with your doctor soon.', 'Bring this report and your original test results.', 'Ask about follow-up tests.', 'Note any new symptoms before your visit.']
-        : band === 'moderate'
-          ? ['Discuss this result at your next appointment.', 'Bring this report and your original test results.', 'Ask whether follow-up tests are needed.']
-          : ['Keep your routine check-ups.', 'Share this report at your next appointment.', 'Seek care sooner if symptoms appear.'],
+    // What to do next: the dataset config's journey for this outcome.
+    nextSteps: journey.map((s) => s.text),
+    journey,
     questions: [
       'What do these results mean for me specifically?',
       'Which follow-up tests would you recommend, and when?',

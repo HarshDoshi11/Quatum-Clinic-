@@ -65,7 +65,7 @@ function Checking() {
 
 /**
  * Patient Mode · Assessment ("Calm Clinic"): one group of questions per step (groups from the dataset
- * config), large tap-friendly answers with "Not sure", then a short check and the result page. The
+ * config), large tap-friendly answers with "Not sure", then a short check and My Report (the result). The
  * answers are the shared in-memory patient and go through the same pipeline as Research Mode.
  */
 export function Assessment({ route }: { route: RouteMeta }) {
@@ -93,7 +93,7 @@ export function Assessment({ route }: { route: RouteMeta }) {
   }
   useEffect(() => {
     if (!checking) return
-    const t = window.setTimeout(() => navigate(`${PATIENT_BASE}/result`), reduced ? 900 : CHECKING_MS)
+    const t = window.setTimeout(() => navigate(`${PATIENT_BASE}/report`), reduced ? 900 : CHECKING_MS)
     return () => window.clearTimeout(t)
   }, [checking, navigate, reduced])
 

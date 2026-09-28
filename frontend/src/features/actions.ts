@@ -93,6 +93,15 @@ export function useAppActions() {
     [toast, invalidate],
   )
 
+  /** Copies a line of text (e.g. a question for the doctor) and says so. */
+  const copyLine = useCallback(
+    async (text: string, what: string) => {
+      await copyText(text)
+      toast(`${what} copied`)
+    },
+    [toast],
+  )
+
   /** "Download PDF": the browser's print dialog, with print styles that keep only the letter. */
   const printReport = useCallback(
     (report: PatientReport) => {
@@ -122,5 +131,5 @@ export function useAppActions() {
     [toast],
   )
 
-  return { switchDataset, setTheme, toggleTheme, runPrediction, newExperiment, copyExperimentId, rerunExperiment, printReport, shareReport }
+  return { switchDataset, setTheme, toggleTheme, runPrediction, newExperiment, copyExperimentId, copyLine, rerunExperiment, printReport, shareReport }
 }

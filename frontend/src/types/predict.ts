@@ -26,6 +26,13 @@ export type PatientIcon =
   | 'sparkles'
   | 'scale'
   | 'orbit'
+  | 'calendar-days'
+  | 'calendar-check'
+  | 'file-text'
+  | 'test-tube'
+  | 'notebook-pen'
+  | 'stethoscope'
+  | 'refresh-cw'
 
 export type FeatureKind = 'continuous' | 'integer' | 'binary' | 'categorical'
 

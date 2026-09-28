@@ -32,14 +32,23 @@ export interface PatientFeatureInfo {
   question: string
 }
 
+/** One step of the "What to do next" journey. */
+export interface PatientStep {
+  icon: PatientIcon
+  text: string
+}
+
+/** The outcome a journey follows: the risk band, or no reliable result. */
+export type PatientOutcome = 'low' | 'moderate' | 'high' | 'abstain'
+
 /** Everything Patient Mode needs from a dataset. */
 export interface PatientConfig {
   /** What the check is about, in patient copy ("heart disease"). */
   name: string
   /** One entry per input. check:mocks asserts every model input has one. */
   features: Record<string, PatientFeatureInfo>
-  /** Short steps to read before starting (Part B shows them with the result). */
-  guidance: string[]
+  /** "What to do next", per outcome; the report's next steps come from here. */
+  guidance: Record<PatientOutcome, PatientStep[]>
 }
 
 export interface DatasetMeta {
@@ -104,11 +113,29 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
         symmetry_mean: { icon: 'scale', question: 'Symmetry' },
         fractal_dimension_mean: { icon: 'hexagon', question: 'Edge complexity' },
       },
-      guidance: [
-        'Have your biopsy or cytology report nearby: every answer comes from its measurements.',
-        'Answer what the report shows. Choose “Not sure” for anything it doesn’t.',
-        'Your answers stay on this device and are cleared when you close the page.',
-      ],
+      guidance: {
+        high: [
+          { icon: 'calendar-days', text: 'Book an appointment with your doctor soon.' },
+          { icon: 'file-text', text: 'Bring this report and your biopsy or cytology report.' },
+          { icon: 'test-tube', text: 'Ask which follow-up tests or imaging you need.' },
+          { icon: 'notebook-pen', text: 'Write down any changes you notice before your visit.' },
+        ],
+        moderate: [
+          { icon: 'calendar-days', text: 'Discuss this result at your next appointment.' },
+          { icon: 'file-text', text: 'Bring this report and your biopsy or cytology report.' },
+          { icon: 'test-tube', text: 'Ask whether follow-up tests are needed.' },
+        ],
+        low: [
+          { icon: 'calendar-check', text: 'Keep your routine check-ups and screenings.' },
+          { icon: 'file-text', text: 'Share this report at your next appointment.' },
+          { icon: 'stethoscope', text: 'See a doctor sooner if you notice any changes.' },
+        ],
+        abstain: [
+          { icon: 'calendar-days', text: 'Book an appointment with your doctor.' },
+          { icon: 'file-text', text: 'Bring this report and your biopsy or cytology report.' },
+          { icon: 'refresh-cw', text: 'Ask whether any measurements should be repeated.' },
+        ],
+      },
     },
   },
   heart: {
@@ -151,11 +178,29 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
         chol: { icon: 'droplet', question: 'Your cholesterol' },
         fbs: { icon: 'candy', question: 'High fasting blood sugar' },
       },
-      guidance: [
-        'Have your latest results nearby: blood pressure, cholesterol and any heart test reports.',
-        'Answer what you know. Choose “Not sure” for anything you don’t.',
-        'Your answers stay on this device and are cleared when you close the page.',
-      ],
+      guidance: {
+        high: [
+          { icon: 'calendar-days', text: 'Book an appointment with your doctor soon.' },
+          { icon: 'file-text', text: 'Bring this report and your original test results.' },
+          { icon: 'test-tube', text: 'Ask about follow-up heart tests.' },
+          { icon: 'notebook-pen', text: 'Note any new symptoms, like chest pain or breathlessness, before your visit.' },
+        ],
+        moderate: [
+          { icon: 'calendar-days', text: 'Discuss this result at your next appointment.' },
+          { icon: 'file-text', text: 'Bring this report and your original test results.' },
+          { icon: 'test-tube', text: 'Ask whether follow-up tests are needed.' },
+        ],
+        low: [
+          { icon: 'calendar-check', text: 'Keep your routine check-ups.' },
+          { icon: 'file-text', text: 'Share this report at your next appointment.' },
+          { icon: 'stethoscope', text: 'Seek care sooner if symptoms appear.' },
+        ],
+        abstain: [
+          { icon: 'calendar-days', text: 'Book an appointment with your doctor.' },
+          { icon: 'file-text', text: 'Bring this report and your original test results.' },
+          { icon: 'refresh-cw', text: 'Ask whether any tests should be repeated.' },
+        ],
+      },
     },
   },
 }

@@ -256,7 +256,7 @@ for (const d of DATASET_IDS) {
     if (p.decision === 'abstain') {
       eq(`${d} ${name}: abstain → no result, no frequency, no influences`, [r.result.headline, r.result.frequency, r.influences.length], ['No reliable result', null, 0])
     } else {
-      check(`${d} ${name}: frequency is the calibrated probability`, r.result.frequency?.startsWith(`About ${Math.round((p.probability ?? 0) * 100)} in 100`) ?? false, r.result.frequency ?? '')
+      check(`${d} ${name}: frequency is the calibrated probability`, r.result.frequency === `Out of 100 people with results like yours, about ${Math.round((p.probability ?? 0) * 100)} have ${DATASETS[d].patient.name}.`, r.result.frequency ?? '')
       const ex = explain(d, input)
       check(`${d} ${name}: influence directions match Explain`, r.influences.every((inf, i) => inf.direction === ex.contributions.filter((c) => c.value !== null)[i]?.direction))
       check(`${d} ${name}: influences use the config's wording (${DATASETS[d].reportSubject})`, r.influences.every((inf) => inf.plain.startsWith(`${DATASETS[d].reportSubject} `)))
@@ -318,20 +318,24 @@ for (const d of DATASET_IDS) {
 
 // ─── Patient Mode ───────────────────────────────────────────
 console.log('\nPatient Mode text has no research jargon')
-// Everything Patient Mode shows from the report (the letter hides each check's technical detail there).
+// Everything Patient Mode shows from the report (My Report never shows the checks' technical detail).
 const JARGON = /AUC|qubit|QSVM|VQC|FakeBackend|EXP-\d|log-odds|PCA|\bseeds?\b|backend|simulat/i
 for (const d of DATASET_IDS) {
   const sc = featureSchema(d)
   for (const [name, input] of [['sample', sc.samplePatient], ['unusual', sc.unusualPatient]] as const) {
     const r = patientReport(d, input, '')
-    const shown = JSON.stringify({ result: r.result, meaning: r.meaning, summary: r.reliability.summary, checks: r.reliability.points.map((p) => p.label), influences: r.influences, next: r.nextSteps, questions: r.questions, safety: r.safetyNote })
+    const shown = JSON.stringify({ result: r.result, meaning: r.meaning, summary: r.reliability.summary, checks: r.reliability.points.map((p) => p.label), influences: r.influences.map((i) => i.plain), next: r.journey, questions: r.questions, safety: r.safetyNote, asked: sc.features.map((f) => f.question) })
     check(`${d} ${name}: no AUC, qubits, models, backends or experiments`, !JARGON.test(shown), shown.match(JARGON)?.[0])
   }
   check(`${d}: every input has a plain label for the patient form`, sc.features.every((f) => f.plainLabel.trim().length > 0))
   const cfg = DATASETS[d].patient
   eq(`${d}: the patient config gives every input an icon and a question (and nothing extra)`, Object.keys(cfg.features).sort(), sc.features.map((f) => f.key).sort())
   check(`${d}: the schema carries the config's icons and questions`, sc.features.every((f) => f.icon === cfg.features[f.key]?.icon && f.question === cfg.features[f.key]?.question))
-  check(`${d}: patient name and guidance are set`, cfg.name.length > 0 && cfg.guidance.length > 0)
+  check(`${d}: patient name and a next-step journey for every outcome are set`, cfg.name.length > 0 && (['low', 'moderate', 'high', 'abstain'] as const).every((o) => cfg.guidance[o].length >= 3))
+  const sampleReport = patientReport(d, sc.samplePatient, '')
+  const unusualReport = patientReport(d, sc.unusualPatient, '')
+  eq(`${d}: next steps are the config's journey for the outcome (sample: ${sampleReport.result.riskBand}; unusual: abstain)`, [sampleReport.journey, unusualReport.journey], [cfg.guidance[sampleReport.result.riskBand ?? 'abstain'], cfg.guidance.abstain])
+  check(`${d}: influences name their input, so Patient Mode can show its icon`, sampleReport.influences.every((inf) => sc.features.some((f) => f.key === inf.feature)))
 }
 
 // ─── Unchanged anchors ──────────────────────────────────────

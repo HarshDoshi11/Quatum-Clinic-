@@ -10,7 +10,7 @@ const RELIABILITY_WORD: Record<TrustLevel, string> = { strong: 'High', partial: 
 const RELIABILITY_FILLED: Record<TrustLevel, number> = { strong: 3, partial: 2, weak: 1 }
 
 /** Three-segment reliability meter: shape and word carry the meaning, not colour. */
-export function ReliabilityMeter({ level }: { level: TrustLevel }) {
+function ReliabilityMeter({ level }: { level: TrustLevel }) {
   const filled = RELIABILITY_FILLED[level]
   return (
     <div className="flex items-center gap-4">
@@ -56,15 +56,13 @@ interface ReportLetterProps {
   report: PatientReport
   /** Research-only extras for the letterhead (e.g. an ExperimentTag); hidden when printed. */
   aside?: ReactNode
-  /** Patient Mode leaves out each check's technical detail (it names backends and seeds). */
-  audience?: 'research' | 'patient'
 }
 
 /**
  * The patient report as a numbered letter (01 Your result … 07 Safety note).
- * Shared by Research Mode (III.4) and Patient Mode (My Report).
+ * Research Mode (III.4); Patient Mode's My Report has its own Calm Clinic layout.
  */
-export function ReportLetter({ report: r, aside, audience = 'research' }: ReportLetterProps) {
+export function ReportLetter({ report: r, aside }: ReportLetterProps) {
   const abstained = r.result.decision === 'abstain'
   return (
     <article aria-label="Patient report" className="flex flex-col gap-16">
@@ -119,11 +117,9 @@ export function ReportLetter({ report: r, aside, audience = 'research' }: Report
                 <StatusMark level={p.level} className="mt-[0.4rem]" />
                 <div>
                   <p className="type-ui text-ink">{p.label}</p>
-                  {audience === 'research' && (
-                    <p className="type-small text-muted">
-                      <Glossed text={p.detail} skip={['sensitivity']} />
-                    </p>
-                  )}
+                  <p className="type-small text-muted">
+                    <Glossed text={p.detail} skip={['sensitivity']} />
+                  </p>
                 </div>
               </li>
             ))}

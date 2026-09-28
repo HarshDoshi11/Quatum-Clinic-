@@ -41,7 +41,7 @@ export function PageHeader({ route, headlineClassName, children, compact = false
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="type-label text-muted underline-offset-4 hover:text-ink hover:underline"
+            className="type-label text-muted underline-offset-4 hover:text-ink hover:underline print:hidden"
             aria-haspopup="dialog"
           >
             What is this? ↗

@@ -20,7 +20,7 @@ export type ResearchRouteId =
   | 'cross-modality'
   | 'report'
 
-export type PatientRouteId = 'patient-home' | 'patient-assessment' | 'patient-result' | 'patient-report'
+export type PatientRouteId = 'patient-home' | 'patient-assessment' | 'patient-report'
 
 export interface RouteMeta<Id extends string = string> {
   id: Id
@@ -33,8 +33,6 @@ export interface RouteMeta<Id extends string = string> {
   headline: string | readonly string[]
   /** The phase in which the real page is built (placeholder note until then). */
   phase: number
-  /** Reached from a flow, not listed in the sidebar or palette; the sidebar marks this route instead. */
-  navParent?: Id
 }
 
 export interface NavGroup {
@@ -192,15 +190,6 @@ export const PATIENT_ROUTES: readonly RouteMeta<PatientRouteId>[] = [
     section: 'Assessment',
     headline: 'A few questions, one step at a time.',
     phase: 7,
-  },
-  {
-    id: 'patient-result',
-    path: `${PATIENT_BASE}/result`,
-    label: 'Your result',
-    section: 'Your result',
-    headline: 'Your result, in plain words.',
-    phase: 7,
-    navParent: 'patient-assessment',
   },
   {
     id: 'patient-report',

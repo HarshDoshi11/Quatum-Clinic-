@@ -1,3 +1,4 @@
+import type { PatientStep } from '../lib/domain'
 import type { DatasetId, ExperimentId, ISODateTime } from './common'
 import type { Decision, PatientInput, RiskBand, TrustLevel, TrustSignalId } from './predict'
 
@@ -7,6 +8,8 @@ export interface ReportRequest {
 }
 
 export interface ReportInfluence {
+  /** Feature key, so Patient Mode can show the config's icon and plain question. */
+  feature: string
   label: string
   direction: 'increases' | 'decreases'
   /** One plain-language sentence. */
@@ -48,6 +51,8 @@ export interface PatientReport {
   /** Strongest influences; empty when the model abstains (there is no result to explain). */
   influences: ReportInfluence[]
   nextSteps: string[]
+  /** The same steps with their icons, from the dataset config's patient guidance for this outcome. */
+  journey: PatientStep[]
   questions: string[]
   safetyNote: string
 }

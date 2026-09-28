@@ -69,9 +69,8 @@ export interface DatasetSummary {
   modalities: ModalityInfo[]
   /** Condition in patient-facing copy (from the dataset config), e.g. "heart disease"; null for an uploaded file. */
   condition: string | null
-  /** Patient Mode (from the dataset config): what the check is about, and the steps to read first. */
+  /** Patient Mode (from the dataset config): what the check is about. */
   patientName: string | null
-  patientGuidance: string[]
 }
 
 export interface PreprocessingReport {
