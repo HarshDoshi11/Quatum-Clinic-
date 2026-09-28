@@ -9,12 +9,11 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - The full product spec (all pages, Patient Mode, phases) is in `docs/brief.md`. Read it before starting any phase.
   If the brief and this file disagree, this file wins.
 - Phases 1–6: done and approved (Phase 6 includes the Predict & Trust rework and the Explain workspace).
-- Phase 7 — Patient Mode: "Calm Clinic" redesign in progress. Part A (token layer, Home, step-by-step Assessment,
-  patient config) and Part B (My Report: guiding headline, ten figures, confidence, Your numbers / Learn / Plan your
-  visit, share with family, read aloud, two-page doctor PDF) are done; Part C is next. Pages in `src/pages/patient/`.
-  Patient Mode shows no AUC, qubits, models, experiments, backends or 3D on screen (the doctor's printed page is the
-  exception); `check:mocks` asserts no research jargon, full config coverage (icons, questions, learn cards, journeys
-  per outcome, valid ranges), the "N in 10" wording and the family summary. The assessment edits the in-memory patient.
+- Phase 7 — Patient Mode: rebuilt as a separate health app (three parts). Part A done: patient theme and shell,
+  editorial Home (3D hero, live ECG, docking "How it works"), safety check, one-question-per-screen assessment,
+  i18n + read-aloud infrastructure, config additions. Part B (result experience) and Part C (hi/mr content) are next;
+  My Report currently shows the earlier result layout inside the new shell. Pages in `src/pages/patient/`.
+  `check:mocks` asserts no research jargon in patient text, full patient-config coverage, and dictionary integrity.
 - Next: Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
@@ -198,21 +197,27 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   ≥ 4.5:1 in both themes); the plain `risk-*` colours are for marks and fills.
 - Never use purple, gradients (hard-stop slider fills excepted), glassmorphism, glows, emoji, icons in coloured
   circles, or two-tone headlines.
-- **Patient Mode ("Calm Clinic")** has its own token layer, `[data-mode='patient']` in `tokens.css` (AppShell sets
-  `data-mode`): the accent becomes sage (text-safe `--risk-low-text`), panels and buttons get 8px corners
-  (`rounded-panel`, `rounded-control`; Research keeps 4px / 2px), and `bg-accent-soft` tints selections. On patient
-  pages: `type-body-lg` as the default text, lines ≤ 60ch, sections ≥ 56px apart, mono only for report IDs and dates,
-  risk colours only for the risk word and the icon grid, motion 250–500ms eased (`tGentle`, `stepSlide`). Patient
-  copy (name, per-input icon and question, next-step journeys per outcome) comes from `DATASETS[id].patient`; icons
-  map through `features/patient/icons.ts`, never per dataset in a component. Patient section titles are Instrument
-  Serif `type-h2`, except the result headline, which is Fraunces (`type-headline-soft`, patient only). Soft
-  `bg-surface` + `rounded-panel` panels are allowed in Patient Mode only. Coral and amber (`--coral`, `--amber`, softer
-  in the patient layer) are only for the result figures and the reference-range bars. Numbers for patients are
-  "about N in 10" (`result.outOfTen`) with a row of ten figures; an abstained patient gets outlined figures with a
-  "?" and no number anywhere, and the page opens on the next steps. Reference ranges are general health ranges from
-  the config, always labelled as not what the model used. Anything shared with family (`familySummary`) has no
-  identifiers and no numbers beyond "N in 10" (asserted in check:mocks). Sections reveal once on scroll (`Reveal`,
-  which always prints visible); "Download for my doctor" prints the patient page plus a "For your doctor" page.
+- **Patient Mode** is a separate, calm health app, not a softer copy of the research pages.
+  - Tokens: `:root[data-mode='patient']` in `tokens.css` (AppShell sets `data-mode` on `<html>`, so portalled panels
+    follow): warm green-charcoal / warm-paper palette, teal accent, sage / amber / coral (`bg-sage`, `bg-amber`,
+    `bg-coral`; coral is the risk colour here), `bg-raised`, 16px cards (`rounded-panel`), 12px buttons
+    (`rounded-control`), `--shadow-soft` for hover lift. Headlines are Fraunces (the patient layer swaps `--font-serif`);
+    body is IBM Plex Sans at `type-body-lg`, ≤ 60ch; sections ≥ 64px apart; no mono except dates and IDs.
+  - Shell: no sidebar or status strip; `PatientTopBar` (wordmark, language, read aloud, theme, "Research view →").
+    Pages use `PatientPage` (crossfade + 12px slide); they don't use PageHeader, SectionHeader or mono labels.
+  - Design: editorial and asymmetric — one hero element per screen; never headline-left + decorative-right, rows of
+    three icon columns, "features" sections or centred templates. Motion is alive but calm (300–600ms, eased), and
+    everything has a reduced-motion path. Buttons may pull ≤ 6px toward the pointer (`Magnetic`); cards lift 2px.
+  - 3D is allowed in Patient Mode for the hero form (`features/patient/HeroScene`, via `lazyScene`/`SceneFrame`;
+    shape from the config's `heroShape`). A canvas inside a transformed container uses `resize={{ offsetSize: true }}`.
+  - Text: interface strings go through `useT()` (`src/content/patient/{en,hi,mr}.ts`; English is the source, the
+    others fall back). Dataset-specific text comes from `DATASETS[id].patient` (check label, headline, red flags,
+    emergency numbers, per-input icon / plain name / question / helper, ranges, learn cards, questions, journeys).
+    Each screen registers its main text for read aloud with `useSpeakable`.
+  - Safety first: the assessment opens with the config's red-flag check; any flag stops it on the urgent-care screen
+    with tap-to-call numbers.
+  - Numbers for patients are "about N in 10"; an abstained patient gets no number anywhere. Anything shared with family
+    (`familySummary`) has no identifiers and no numbers beyond "N in 10" (asserted in check:mocks).
 - Motion uses Framer Motion (`motion/react`). Keep it quick and precise (200–400ms), never bouncy. Share values via
   `src/lib/motion.ts`. Respect reduced motion (`MotionConfig reducedMotion="user"`, `useReducedMotion`).
 - Every data view has a skeleton loading state and an empty or error state (`Skeleton`, `EmptyState`).

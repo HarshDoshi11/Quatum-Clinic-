@@ -13,11 +13,11 @@ export interface ModelFeature extends FeatureSpec {
   weight: number
 }
 
-type Def = Omit<ModelFeature, 'options' | 'modality' | 'locked' | 'group' | 'plainLabel' | 'icon' | 'question'> &
+type Def = Omit<ModelFeature, 'options' | 'modality' | 'locked' | 'group' | 'plainLabel' | 'icon' | 'plainName' | 'question' | 'helper'> &
   Partial<Pick<ModelFeature, 'options' | 'modality' | 'group' | 'plainLabel'>>
 
 /** Locked, icon and question are never set per feature: they come from the dataset config. */
-const feature = (d: Def): Omit<ModelFeature, 'locked' | 'icon' | 'question'> => ({
+const feature = (d: Def): Omit<ModelFeature, 'locked' | 'icon' | 'plainName' | 'question' | 'helper'> => ({
   options: null,
   modality: null,
   group: 'Measurements',
@@ -27,7 +27,7 @@ const feature = (d: Def): Omit<ModelFeature, 'locked' | 'icon' | 'question'> => 
 
 // ─── WDBC: the ten "mean" cell-nucleus measurements ─────────
 
-const WDBC_FEATURES: Omit<ModelFeature, 'locked' | 'icon' | 'question'>[] = [
+const WDBC_FEATURES: Omit<ModelFeature, 'locked' | 'icon' | 'plainName' | 'question' | 'helper'>[] = [
   feature({ key: 'radius_mean', label: 'Radius', plainLabel: 'Cell size (radius)', unit: 'µm', kind: 'continuous', min: 6.98, max: 28.11, step: 0.01, mean: 14.13, sd: 3.52, weight: 0.9, group: 'Size' }),
   feature({ key: 'texture_mean', label: 'Texture', plainLabel: 'Texture variation', unit: null, kind: 'continuous', min: 9.71, max: 39.28, step: 0.01, mean: 19.29, sd: 4.3, weight: 0.45, group: 'Shape & texture' }),
   feature({ key: 'perimeter_mean', label: 'Perimeter', plainLabel: 'Cell outline length', unit: 'µm', kind: 'continuous', min: 43.79, max: 188.5, step: 0.1, mean: 91.97, sd: 24.3, weight: 0.8, group: 'Size' }),
@@ -42,7 +42,7 @@ const WDBC_FEATURES: Omit<ModelFeature, 'locked' | 'icon' | 'question'>[] = [
 
 // ─── Heart: the 13 Cleveland attributes ─────────────────────
 
-const HEART_FEATURES: Omit<ModelFeature, 'locked' | 'icon' | 'question'>[] = [
+const HEART_FEATURES: Omit<ModelFeature, 'locked' | 'icon' | 'plainName' | 'question' | 'helper'>[] = [
   feature({ key: 'age', label: 'Age', plainLabel: 'Age', unit: 'years', kind: 'integer', min: 29, max: 77, step: 1, mean: 54.4, sd: 9.0, weight: 0.25, group: 'About you', modality: 'demographics' }),
   feature({ key: 'sex', label: 'Sex', plainLabel: 'Sex', unit: null, kind: 'binary', options: [{ value: 0, label: 'Female' }, { value: 1, label: 'Male' }], min: 0, max: 1, step: 1, mean: 0.68, sd: 0.47, weight: 0.35, group: 'About you', modality: 'demographics' }),
   feature({ key: 'trestbps', label: 'Resting BP', plainLabel: 'Resting blood pressure', unit: 'mmHg', kind: 'integer', min: 94, max: 200, step: 1, mean: 131.7, sd: 17.6, weight: 0.2, group: 'About you', modality: 'demographics' }),
@@ -59,7 +59,7 @@ const HEART_FEATURES: Omit<ModelFeature, 'locked' | 'icon' | 'question'>[] = [
 ]
 
 /** Locks come from the config; with a single declared modality, every feature belongs to it. */
-const withConfig = (dataset: DatasetId, defs: Omit<ModelFeature, 'locked' | 'icon' | 'question'>[]): ModelFeature[] => {
+const withConfig = (dataset: DatasetId, defs: Omit<ModelFeature, 'locked' | 'icon' | 'plainName' | 'question' | 'helper'>[]): ModelFeature[] => {
   const { lockedFeatures, modalities, patient } = DATASETS[dataset]
   const only = modalities.length === 1 ? modalities[0].id : null
   return defs.map((f) => ({
@@ -68,7 +68,9 @@ const withConfig = (dataset: DatasetId, defs: Omit<ModelFeature, 'locked' | 'ico
     locked: lockedFeatures.includes(f.key),
     // A missing entry falls back to the plain label (check:mocks asserts the config covers every input).
     icon: patient.features[f.key]?.icon ?? 'circle-dot',
+    plainName: patient.features[f.key]?.plainName ?? f.plainLabel,
     question: patient.features[f.key]?.question ?? f.plainLabel,
+    helper: patient.features[f.key]?.helper ?? '',
   }))
 }
 

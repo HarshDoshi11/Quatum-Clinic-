@@ -25,6 +25,33 @@
     "condition": "breast cancer",
     "patient": {
       "name": "breast cancer",
+      "checkLabel": "Breast health check",
+      "minutes": 3,
+      "headline": {
+        "lines": [
+          "Let’s look at",
+          "your sample results,",
+          "together."
+        ],
+        "italic": "together."
+      },
+      "heroShape": "cells",
+      "redFlags": [
+        "A breast that is suddenly red, hot and very painful, with a fever",
+        "Bleeding that won’t stop",
+        "Severe breathlessness or chest pain",
+        "Fainting, or feeling like you might faint"
+      ],
+      "emergencyNumbers": [
+        {
+          "label": "Emergency",
+          "number": "112"
+        },
+        {
+          "label": "Ambulance",
+          "number": "108"
+        }
+      ],
       "ranges": {},
       "rangesNote": "These are measurements of cells from your tissue sample, made in a laboratory. There are no everyday “healthy ranges” for them: your doctor, or the specialist who examined your sample, is the best person to explain what they mean for you.",
       "learn": {
@@ -806,6 +833,33 @@
     "condition": "heart disease",
     "patient": {
       "name": "heart disease",
+      "checkLabel": "Heart health check",
+      "minutes": 3,
+      "headline": {
+        "lines": [
+          "Let’s look at",
+          "your heart health,",
+          "together."
+        ],
+        "italic": "together."
+      },
+      "heroShape": "heart",
+      "redFlags": [
+        "Chest pain or pressure while resting",
+        "Pain spreading to your arm, jaw, neck or back",
+        "Severe breathlessness",
+        "Fainting, or feeling like you might faint"
+      ],
+      "emergencyNumbers": [
+        {
+          "label": "Emergency",
+          "number": "112"
+        },
+        {
+          "label": "Ambulance",
+          "number": "108"
+        }
+      ],
       "ranges": {
         "trestbps": {
           "name": "Blood pressure",

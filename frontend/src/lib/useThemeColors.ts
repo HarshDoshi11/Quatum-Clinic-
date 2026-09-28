@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
+import { modeForPath } from '@/state/mode'
 import { useProjector } from '@/state/projector'
 import { useTheme } from '@/state/theme'
 
@@ -18,6 +20,8 @@ export interface ThemeColors {
   riskLow: RGBA
   riskMid: RGBA
   riskHigh: RGBA
+  /** Patient Mode's sage (falls back to the low-risk colour elsewhere). */
+  sage: RGBA
 }
 
 function parse(value: string): RGBA {
@@ -39,9 +43,12 @@ function parse(value: string): RGBA {
 export function useThemeColors(): ThemeColors {
   const { theme } = useTheme()
   const { projector } = useProjector()
+  // Patient Mode has its own palette, so the colours also depend on the mode.
+  const mode = modeForPath(useLocation().pathname)
   return useMemo(() => {
-    void theme // recompute when the theme or projector mode (and so the CSS variables) change
+    void theme // recompute when the theme, projector mode or view mode (and so the CSS variables) change
     void projector
+    void mode
     const style = getComputedStyle(document.documentElement)
     const read = (name: string) => parse(style.getPropertyValue(name))
     return {
@@ -54,6 +61,7 @@ export function useThemeColors(): ThemeColors {
       riskLow: read('--risk-low'),
       riskMid: read('--risk-mid'),
       riskHigh: read('--risk-high'),
+      sage: read('--sage'),
     }
-  }, [theme, projector])
+  }, [theme, projector, mode])
 }

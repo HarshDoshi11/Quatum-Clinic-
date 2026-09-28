@@ -16,7 +16,9 @@
         "step": 0.01,
         "locked": false,
         "icon": "circle-dot",
-        "question": "Cell size (radius)"
+        "plainName": "Cell size (radius)",
+        "question": "What is the cell size (radius)?",
+        "helper": "From your cytology report, for example 14.1 µm."
       },
       {
         "options": null,
@@ -32,7 +34,9 @@
         "step": 0.01,
         "locked": false,
         "icon": "grip",
-        "question": "Texture variation"
+        "plainName": "Texture variation",
+        "question": "What is the texture variation?",
+        "helper": "From your cytology report, for example 19.3."
       },
       {
         "options": null,
@@ -48,7 +52,9 @@
         "step": 0.1,
         "locked": false,
         "icon": "circle-dashed",
-        "question": "Cell outline length"
+        "plainName": "Cell outline length",
+        "question": "What is the cell outline length?",
+        "helper": "From your cytology report, for example 92.0 µm."
       },
       {
         "options": null,
@@ -64,7 +70,9 @@
         "step": 1,
         "locked": false,
         "icon": "square",
-        "question": "Cell area"
+        "plainName": "Cell area",
+        "question": "What is the cell area?",
+        "helper": "From your cytology report, for example 655 µm²."
       },
       {
         "options": null,
@@ -80,7 +88,9 @@
         "step": 0.0001,
         "locked": false,
         "icon": "spline",
-        "question": "Edge smoothness"
+        "plainName": "Edge smoothness",
+        "question": "What is the edge smoothness?",
+        "helper": "From your cytology report, for example 0.096."
       },
       {
         "options": null,
@@ -96,7 +106,9 @@
         "step": 0.0001,
         "locked": false,
         "icon": "shrink",
-        "question": "Compactness"
+        "plainName": "Compactness",
+        "question": "What is the compactness?",
+        "helper": "From your cytology report, for example 0.104."
       },
       {
         "options": null,
@@ -112,7 +124,9 @@
         "step": 0.0001,
         "locked": false,
         "icon": "orbit",
-        "question": "Depth of indentations"
+        "plainName": "Depth of indentations",
+        "question": "What is the depth of indentations?",
+        "helper": "From your cytology report, for example 0.089."
       },
       {
         "options": null,
@@ -128,7 +142,9 @@
         "step": 0.0001,
         "locked": false,
         "icon": "sparkles",
-        "question": "Number of indentations"
+        "plainName": "Number of indentations",
+        "question": "What is the number of indentations?",
+        "helper": "From your cytology report, for example 0.049."
       },
       {
         "options": null,
@@ -144,7 +160,9 @@
         "step": 0.0001,
         "locked": false,
         "icon": "scale",
-        "question": "Symmetry"
+        "plainName": "Symmetry",
+        "question": "What is the symmetry?",
+        "helper": "From your cytology report, for example 0.181."
       },
       {
         "options": null,
@@ -160,7 +178,9 @@
         "step": 0.0001,
         "locked": false,
         "icon": "hexagon",
-        "question": "Edge complexity"
+        "plainName": "Edge complexity",
+        "question": "What is the edge complexity?",
+        "helper": "From your cytology report, for example 0.063."
       }
     ],
     "samplePatient": {
@@ -205,7 +225,9 @@
         "step": 1,
         "locked": true,
         "icon": "cake",
-        "question": "Your age"
+        "plainName": "Your age",
+        "question": "How old are you?",
+        "helper": "In years, for example 54."
       },
       {
         "options": [
@@ -230,7 +252,9 @@
         "step": 1,
         "locked": true,
         "icon": "user",
-        "question": "Your sex"
+        "plainName": "Your sex",
+        "question": "What is your sex?",
+        "helper": "As written in your medical records."
       },
       {
         "options": null,
@@ -246,7 +270,9 @@
         "step": 1,
         "locked": false,
         "icon": "gauge",
-        "question": "Your blood pressure at rest"
+        "plainName": "Your blood pressure at rest",
+        "question": "What is your blood pressure at rest?",
+        "helper": "The top number, for example 128 mmHg."
       },
       {
         "options": [
@@ -279,7 +305,9 @@
         "step": 1,
         "locked": false,
         "icon": "heart-crack",
-        "question": "What kind of chest pain you have"
+        "plainName": "What kind of chest pain you have",
+        "question": "What kind of chest pain do you have?",
+        "helper": "Choose the closest match. Many people have none."
       },
       {
         "options": [
@@ -308,7 +336,9 @@
         "step": 1,
         "locked": false,
         "icon": "activity",
-        "question": "Your resting heart tracing (ECG)"
+        "plainName": "Your resting heart tracing (ECG)",
+        "question": "What did your resting ECG show?",
+        "helper": "It’s written on your ECG report."
       },
       {
         "options": null,
@@ -324,7 +354,9 @@
         "step": 0.1,
         "locked": false,
         "icon": "trending-down",
-        "question": "ECG change during exercise"
+        "plainName": "ECG change during exercise",
+        "question": "How much did your ECG change during exercise?",
+        "helper": "From your exercise test report, for example 1.0 mm."
       },
       {
         "options": [
@@ -353,7 +385,9 @@
         "step": 1,
         "locked": false,
         "icon": "trending-up",
-        "question": "ECG slope at peak exercise"
+        "plainName": "ECG slope at peak exercise",
+        "question": "What was the ECG slope at the peak of exercise?",
+        "helper": "From your exercise test report."
       },
       {
         "options": null,
@@ -369,7 +403,9 @@
         "step": 1,
         "locked": false,
         "icon": "heart-pulse",
-        "question": "Your highest heart rate in the exercise test"
+        "plainName": "Your highest heart rate in the exercise test",
+        "question": "What was your highest heart rate in the exercise test?",
+        "helper": "In beats per minute, for example 150."
       },
       {
         "options": [
@@ -394,7 +430,9 @@
         "step": 1,
         "locked": false,
         "icon": "footprints",
-        "question": "Chest pain when you exercise"
+        "plainName": "Chest pain when you exercise",
+        "question": "Did you get chest pain when you exercised?",
+        "helper": "During the exercise test, or when you’re active."
       },
       {
         "options": [
@@ -423,7 +461,9 @@
         "step": 1,
         "locked": false,
         "icon": "scan-line",
-        "question": "Your heart scan result"
+        "plainName": "Your heart scan result",
+        "question": "What did your heart scan show?",
+        "helper": "From your heart scan report."
       },
       {
         "options": null,
@@ -439,7 +479,9 @@
         "step": 1,
         "locked": false,
         "icon": "waypoints",
-        "question": "Narrowed vessels seen on your scan"
+        "plainName": "Narrowed vessels seen on your scan",
+        "question": "How many narrowed vessels did your scan show?",
+        "helper": "A number from 0 to 3, from your scan report."
       },
       {
         "options": null,
@@ -455,7 +497,9 @@
         "step": 1,
         "locked": false,
         "icon": "droplet",
-        "question": "Your cholesterol"
+        "plainName": "Your cholesterol",
+        "question": "What is your cholesterol?",
+        "helper": "Total cholesterol, for example 210 mg/dL."
       },
       {
         "options": [
@@ -480,7 +524,9 @@
         "step": 1,
         "locked": false,
         "icon": "candy",
-        "question": "High fasting blood sugar"
+        "plainName": "High fasting blood sugar",
+        "question": "Is your fasting blood sugar above 120 mg/dL?",
+        "helper": "From a blood test taken before eating."
       }
     ],
     "samplePatient": {

@@ -56,6 +56,6 @@ export const tGentle: Transition = { duration: 0.4, ease: easeGentle }
 /** Assessment steps slide horizontally with a crossfade; `direction` is +1 forward, −1 back. */
 export const stepSlide: Variants = {
   enter: (direction: number) => ({ opacity: 0, x: direction * 32 }),
-  center: { opacity: 1, x: 0, transition: { duration: 0.25, ease: easeGentle } },
-  exit: (direction: number) => ({ opacity: 0, x: direction * -32, transition: { duration: 0.25, ease: easeGentle } }),
+  center: { opacity: 1, x: 0, transition: { duration: 0.4, ease: easeGentle } },
+  exit: (direction: number) => ({ opacity: 0, x: direction * -32, transition: { duration: 0.3, ease: easeGentle } }),
 }

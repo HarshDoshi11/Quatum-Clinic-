@@ -91,7 +91,7 @@ export function YourNumbers({ features, input, ranges, note }: { features: Featu
                 <li key={f.key} className="flex items-center gap-3 type-body-lg text-ink">
                   <Icon size="1.125rem" strokeWidth={1.5} className="shrink-0 text-muted" aria-hidden="true" />
                   <span>
-                    {f.question} <span className="text-muted">· {value === null ? 'not recorded' : formatFeatureValue(f, value)}</span>
+                    {f.plainName} <span className="text-muted">· {value === null ? 'not recorded' : formatFeatureValue(f, value)}</span>
                   </span>
                 </li>
               )

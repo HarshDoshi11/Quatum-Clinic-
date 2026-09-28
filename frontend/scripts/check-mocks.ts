@@ -18,6 +18,9 @@ import { normInv } from '../src/mocks/data/math'
 import { overview } from '../src/mocks/data/overview'
 import { patientReport } from '../src/mocks/data/report'
 import { familySummary, readAloudScript } from '../src/lib/patientText'
+import { en } from '../src/content/patient/en'
+import { hi } from '../src/content/patient/hi'
+import { mr } from '../src/content/patient/mr'
 import { bestModel, checkResponseConsistency, referenceResult, result, trainableParameters } from '../src/mocks/data/results'
 import { evolutionSweep, failureEnvelopeSweep, scalabilitySweep, smallDataSweep } from '../src/mocks/data/sweeps'
 import { trainResponse } from '../src/mocks/data/train'
@@ -338,6 +341,10 @@ for (const d of DATASET_IDS) {
   eq(`${d}: next steps are the config's journey for the outcome (sample: ${sampleReport.result.riskBand}; unusual: abstain)`, [sampleReport.journey, unusualReport.journey], [cfg.guidance[sampleReport.result.riskBand ?? 'abstain'], cfg.guidance.abstain])
   check(`${d}: influences name their input, so Patient Mode can show its icon`, sampleReport.influences.every((inf) => sc.features.some((f) => f.key === inf.feature)))
   eq(`${d}: a learn card for every input`, Object.keys(cfg.learn).sort(), sc.features.map((f) => f.key).sort())
+  check(`${d}: every input has a plain name, a question and a helper line`, sc.features.every((f) => f.plainName.length > 0 && f.question.endsWith('?') && f.helper.length > 0))
+  check(`${d}: home headline's italic word is in it; check label and minutes set`, cfg.headline.lines.join(' ').split(' ').includes(cfg.headline.italic) && cfg.checkLabel.length > 0 && cfg.minutes > 0)
+  check(`${d}: a safety check with at least three red flags and emergency numbers to call`, cfg.redFlags.length >= 3 && cfg.emergencyNumbers.length > 0 && cfg.emergencyNumbers.every((e) => /^\d+$/.test(e.number)))
+  check(`${d}: hero shape is one the scene can draw`, ['heart', 'cells'].includes(cfg.heroShape))
   const numeric = new Set(sc.features.filter((f) => !f.options).map((f) => f.key))
   check(`${d}: reference ranges only for measured numbers, zones contiguous across the scale`, Object.entries(cfg.ranges).every(([k, r]) => numeric.has(k) && r.zones[0].from === r.scale[0] && r.zones[r.zones.length - 1].to === r.scale[1] && r.zones.every((z, i) => i === 0 || z.from === r.zones[i - 1].to) && r.source.length > 0))
   check(`${d}: with no ranges there is an explanation instead (and only then)`, (Object.keys(cfg.ranges).length === 0) === (cfg.rangesNote !== null))
@@ -350,6 +357,15 @@ for (const d of DATASET_IDS) {
     check(`${d} ${rep.result.decision}: family summary has no report ID, date or other numbers`, !text.includes(rep.reportId) && !/\d/.test(stripped), stripped.match(/.{0,20}\d.{0,20}/)?.[0])
     check(`${d} ${rep.result.decision}: read-aloud covers the headline, how sure, and every next step`, rep.journey.every((st) => readAloudScript(rep).includes(st.text)) && (rep.result.decision === 'abstain' || readAloudScript(rep).includes('How sure are we?')))
   }
+}
+
+// ─── Patient Mode dictionaries ──────────────────────────────
+console.log('\nPatient Mode dictionaries')
+for (const [lang, dict] of [['hi', hi], ['mr', mr]] as const) {
+  const unknown = Object.keys(dict).filter((k) => !(k in en))
+  eq(`${lang}: every key exists in English (missing ones fall back)`, unknown, [])
+  const vars = (t: string) => (t.match(/\{\w+\}/g) ?? []).sort().join(',')
+  check(`${lang}: translations keep the same {placeholders}`, Object.entries(dict).every(([k, v]) => vars(v ?? '') === vars(en[k as keyof typeof en])))
 }
 
 // ─── Unchanged anchors ──────────────────────────────────────
