@@ -280,12 +280,35 @@ for (const d of DATASET_IDS) {
     check(`${d} ${name}: report explains why in plain language`, r.result.reasons.length > 0 && r.influences.length === 0)
     const behaviour = p.trust.filter((t) => ['stability', 'calibration', 'input-sensitivity', 'hardware-sensitivity'].includes(t.id))
     check(`${d} ${name}: behaviour checks don't vouch for an abstained patient (all weak)`, behaviour.every((t) => t.level === 'weak'), behaviour.map((t) => `${t.id}=${t.level}`).join(', '))
+    const ev = p.evidence
+    eq(`${d} ${name}: evidence panels withhold the number (seeds, error range, calibration bin, backends)`, [ev.stability.seeds, ev.inputSensitivity.range, ev.calibration.bin, ev.hardware.map((h) => h.probability)], [null, null, null, ev.hardware.map(() => null)])
     // The withheld number must not leak through any text (trust reasons, report copy).
     const raw = ex.rawProbability * 100
     const leaks = [`${Math.round(raw)}%`, `${raw.toFixed(1)}%`, `~${Math.round(raw)}`]
-    const text = JSON.stringify({ trust: p.trust, report: r })
+    const text = JSON.stringify({ trust: p.trust, evidence: p.evidence, report: r })
     check(`${d} ${name}: the raw estimate (${raw.toFixed(1)}%) appears in no reported text`, leaks.every((l) => !text.includes(l)), leaks.filter((l) => text.includes(l)).join(', '))
   }
+}
+
+// ─── Trust evidence panels ──────────────────────────────────
+console.log('\nTrust evidence panels agree with the prediction')
+for (const d of DATASET_IDS) {
+  const sc = featureSchema(d)
+  const p = predict(d, sc.samplePatient)
+  const ev = p.evidence
+  const seeds = ev.stability.seeds ?? []
+  eq(`${d}: 5 seed estimates; their min and max are the reported 5-seed range`, [seeds.length, Math.min(...seeds).toFixed(3), Math.max(...seeds).toFixed(3)], [5, p.interval?.[0].toFixed(3), p.interval?.[1].toFixed(3)])
+  const deployedRow = ev.hardware.find((h) => h.deployed)
+  eq(`${d}: the deployed backend row is the page's backend and its estimate`, [deployedRow?.backend, deployedRow?.probability?.toFixed(3)], [p.backend, p.probability?.toFixed(3)])
+  const [lo, hi] = ev.inputSensitivity.range ?? [0, 0]
+  check(`${d}: input-error range brackets the estimate`, p.probability !== null && lo <= p.probability + 1e-3 && hi >= p.probability - 1e-3)
+  check(`${d}: calibration bin is one of the trust API's bins`, trust(d).calibration.some((b) => b.predicted === ev.calibration.bin))
+  eq(`${d}: data-quality fields cover every model input`, ev.dataQuality.fields.map((f) => f.key), sc.features.map((f) => f.key))
+  const shift = ev.distributionShift
+  check(`${d}: shift cutoffs ordered (typical training distance and "unusual" both below the OOD cutoff)`, shift.typical < shift.cutoff && shift.unusual < shift.cutoff, `${shift.typical} · ${shift.unusual} · ${shift.cutoff}`)
+  const missing = predict(d, { ...sc.samplePatient, [sc.features[0].key]: null }).evidence.dataQuality.fields[0].status
+  const unusual = predict(d, sc.unusualPatient).evidence.dataQuality.fields.filter((f) => f.status === 'out-of-range').length
+  eq(`${d}: one missing input shows as imputed; the unusual patient has out-of-range inputs`, [missing, unusual > 0], ['imputed', true])
 }
 
 // ─── Unchanged anchors ──────────────────────────────────────

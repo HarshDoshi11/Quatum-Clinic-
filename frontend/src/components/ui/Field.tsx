@@ -23,15 +23,17 @@ interface FeatureFieldProps {
 }
 
 /**
- * One patient input: underlined, with the valid training range in small mono.
+ * One patient input: underlined. The valid training range appears only while the field has focus, or when the
+ * value is outside it; it overlays the gap below, so showing it never moves the form.
  * Empty = missing. Values outside the range are allowed (the model will abstain) but flagged.
  */
 export function FeatureField({ feature: f, value, onChange }: FeatureFieldProps) {
   const id = useId()
+  const [focused, setFocused] = useState(false)
   const outside = value !== null && (value < f.min || value > f.max)
   // Bounds at full precision (area's minimum is 143.5 even though it steps by 1), as the abstain reasons print them.
   const bound = (v: number) => `${Number(v.toFixed(4))}${f.unit ? `\u00a0${f.unit}` : ''}`
-  const range = f.options ? `${f.options.length} options` : `Range ${bound(f.min)} – ${bound(f.max)}`
+  const range = f.options ? null : `${bound(f.min)} – ${bound(f.max)}`
   const line = outside ? 'border-ink' : 'border-rule-strong'
 
   let control: ReactNode
@@ -53,22 +55,22 @@ export function FeatureField({ feature: f, value, onChange }: FeatureFieldProps)
     control = <NumberInput id={id} value={value} step={f.step} onChange={onChange} className={`${INPUT} ${line}`} unit={f.unit} />
   }
 
+  const hint = outside ? (
+    <>
+      <span className="type-label">Outside training range</span> · {range}
+    </>
+  ) : focused && range ? (
+    <>Range {range}</>
+  ) : null
+
   return (
-    <div>
+    <div className="relative" onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>
       <label htmlFor={id} className="type-label text-muted">
         {f.label}
       </label>
       {control}
-      <p className={`num mt-1 type-small ${outside ? 'text-ink' : 'text-muted'}`} aria-live="polite">
-        {outside ? (
-          <>
-            <span className="type-label">Outside training range</span> · {range.replace('Range ', '')}
-          </>
-        ) : value === null ? (
-          <>Not recorded · {range.replace(/^Range /, 'range ')}</>
-        ) : (
-          range
-        )}
+      <p className={`num absolute top-full left-0 mt-0.5 whitespace-nowrap type-small ${outside ? 'text-ink' : 'text-muted'}`} aria-live="polite">
+        {hint}
       </p>
     </div>
   )

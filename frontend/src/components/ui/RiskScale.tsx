@@ -32,8 +32,9 @@ interface RiskScaleProps {
 
 /**
  * Horizontal 0–100% risk scale: muted low / moderate / high zones, the 5-seed range
- * as a darker strip, an ink marker with its value, and the decision threshold as a
- * tick labelled below. Sizes are rem, so projector mode scales it.
+ * as a see-through strip, an ink marker, and the decision threshold as an unlabelled tick.
+ * The numbers live beside it (the big estimate, the scrubber's threshold), so nothing is said twice.
+ * Sizes are rem, so projector mode scales it.
  */
 export function RiskScale({ value, interval, threshold, edges, className = '' }: RiskScaleProps) {
   const [moderate, high] = edges
@@ -45,8 +46,6 @@ export function RiskScale({ value, interval, threshold, edges, className = '' }:
   const stripWidth = useTransform([lo, hi], ([a, b]: number[]) => `${Math.max(0, b - a) * 100}%`)
   const t = useSprung(threshold)
   const tLeft = useTransform(t, (v) => `${v * 100}%`)
-  const valueShift = useTransform(pos, edgeShift)
-  const tShift = useTransform(t, edgeShift)
 
   // The zone the marker sits in (same rule as the risk band) renders at full strength.
   const active = value < moderate ? 0 : value < high ? 1 : 2
@@ -60,20 +59,13 @@ export function RiskScale({ value, interval, threshold, edges, className = '' }:
 
   return (
     <div className={`select-none ${className}`} role="img" aria-label={`Risk scale: estimate ${formatPercent(value)}, decision threshold ${Math.round(threshold * 100)}%`}>
-      {/* Marker value, then the triangle: stacked rows (no negative offsets), so the label never clips at any value or scale */}
-      <div className="pt-1" aria-hidden="true">
-        <div className="relative h-[1.3125rem]">
-          <motion.span className="num absolute top-0 whitespace-nowrap type-small text-ink" style={{ left, x: valueShift }}>
-            {formatPercent(value)}
-          </motion.span>
-        </div>
-        <div className="relative mt-0.5 h-[0.4375rem]">
-          <motion.span className="absolute top-0 block -translate-x-1/2" style={{ left }}>
-            <svg width="10" height="7" viewBox="0 0 10 7" className="block h-[0.4375rem] w-[0.625rem]">
-              <path d="M0 0 H10 L5 7 Z" fill="var(--ink)" />
-            </svg>
-          </motion.span>
-        </div>
+      {/* Marker triangle */}
+      <div className="relative h-[0.4375rem]" aria-hidden="true">
+        <motion.span className="absolute top-0 block -translate-x-1/2" style={{ left }}>
+          <svg width="10" height="7" viewBox="0 0 10 7" className="block h-[0.4375rem] w-[0.625rem]">
+            <path d="M0 0 H10 L5 7 Z" fill="var(--ink)" />
+          </svg>
+        </motion.span>
       </div>
 
       {/* Track: zones, seed-range overlay, threshold tick, marker line */}
@@ -92,7 +84,7 @@ export function RiskScale({ value, interval, threshold, edges, className = '' }:
       </div>
 
       {/* Axis tick labels */}
-      <div className="relative mt-1.5 h-[1.25rem]" aria-hidden="true">
+      <div className="relative mt-1 h-[1.25rem]" aria-hidden="true">
         {TICKS.map((v) => (
           <span key={v} className="type-label absolute top-0 text-muted" style={{ left: `${v * 100}%`, translate: edgeShift(v) }}>
             {Math.round(v * 100)}
@@ -100,12 +92,6 @@ export function RiskScale({ value, interval, threshold, edges, className = '' }:
         ))}
       </div>
 
-      {/* Threshold label on its own row below the axis, so it can never overlap a tick label */}
-      <div className="relative h-[1.25rem]" aria-hidden="true">
-        <motion.span className="type-label absolute top-0 whitespace-nowrap text-ink" style={{ left: tLeft, x: tShift }}>
-          Threshold {Math.round(threshold * 100)}%
-        </motion.span>
-      </div>
     </div>
   )
 }

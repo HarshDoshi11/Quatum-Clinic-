@@ -8,6 +8,7 @@ import { BACKENDS, DATASETS, MODELS, testSize } from '../../lib/domain'
 import { formatPercent } from '../../lib/format'
 import { operatingSentence } from '../../lib/safety'
 import type {
+  BackendId,
   CalibrationBin,
   DatasetId,
   EncodedComponent,
@@ -18,6 +19,7 @@ import type {
   RiskBand,
   ThresholdPoint,
   TrustLevel,
+  TrustEvidence,
   TrustResponse,
   TrustSignal,
 } from '../../types'
@@ -25,7 +27,7 @@ import { ABSTAINED, BEST_QUANTUM, SAFE_SENSITIVITY, SEEDS, dPrime, operatingPoin
 import { EXPERIMENT_IDS } from './ids'
 import { referenceResult, result } from './results'
 import { MODEL_FEATURES, SAMPLE_PATIENTS, SAMPLE_PROBABILITY, type ModelFeature } from './features'
-import { gaussian, logit, rng, round, sigmoid } from './math'
+import { gaussian, logit, normInv, rng, round, sigmoid } from './math'
 import { PCA, PCA_MEANING, preprocess } from './pipeline'
 
 const MODEL = BEST_QUANTUM
@@ -65,11 +67,27 @@ function modelSetting(dataset: DatasetId): string {
  * How much FakeBackend-1 noise shrinks the model's separation (d′), read from the
  * results store: the same FakeBackend-1 result the Hardware Lab shows.
  */
-export function hardwareSeparationScale(dataset: DatasetId): number {
+export function hardwareSeparationScale(dataset: DatasetId, backend: BackendId = 'fake-backend-1'): number {
   const ref = referenceResult(dataset, MODEL)
-  const fb1 = result(dataset, { ...ref.config, backend: 'fake-backend-1' })
-  return dPrime(fb1.auc.mean) / dPrime(ref.auc.mean)
+  const other = result(dataset, { ...ref.config, backend })
+  return dPrime(other.auc.mean) / dPrime(ref.auc.mean)
 }
+
+/** Backends a patient is re-scored on for the hardware-sensitivity panel, around the deployed one. */
+const hardwareComparison = (deployedBackend: BackendId): BackendId[] => [...new Set<BackendId>(['ideal-sim', deployedBackend, 'fake-backend-1'])]
+
+/** The five seed estimates, in logit space around the score: the extremes are the reported ±1.96σ interval. */
+const SEED_OFFSETS = [-1.96, -0.55, 0, 0.55, 1.96]
+
+/** Distribution-shift cutoffs (SD from the training average): partial from UNUSUAL_Z, weak from OOD_Z. */
+const UNUSUAL_Z = 2.5
+const OOD_Z = 3.5
+
+/** Distance below which 95% of training patients fall: the max of |z| over d independent standard-normal inputs. */
+const typicalDistance = (d: number): number => normInv((1 + 0.95 ** (1 / d)) / 2)
+
+/** Measurement error used for input sensitivity, in SD of each continuous input. */
+const ERROR_SD = 0.1
 
 /** Risk band from the probability alone, with the edges declared on the dataset config. */
 export function riskBand(dataset: DatasetId, p: number): RiskBand {
@@ -129,7 +147,13 @@ const levelOf = (value: number, strongBelow: number, partialBelow: number): Trus
  * Six checks on one estimate. When the system abstains, no reason may reveal the
  * withheld number (e.g. "At ~86% predicted…"), so those reasons switch to wording without it.
  */
-function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck, threshold: number, abstain: boolean): TrustSignal[] {
+function trustSignals(
+  dataset: DatasetId,
+  input: PatientInput,
+  check: InputCheck,
+  threshold: number,
+  abstain: boolean,
+): { signals: TrustSignal[]; evidence: TrustEvidence } {
   const features = MODEL_FEATURES[dataset]
   const l = scoreLogit(dataset, input)
   const p = sigmoid(l)
@@ -140,24 +164,28 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
   const spread = hi - lo
   const crosses = lo < threshold && hi >= threshold
 
-  // Input sensitivity: ±0.1 SD measurement error on each continuous feature.
+  // Input sensitivity: ±ERROR_SD measurement error on each continuous feature.
   let maxDelta = 0
+  let [qLow, qHigh] = [p, p]
   let flips = false
   const flagged = p >= threshold
   for (const f of features) {
     const x = input[f.key] ?? null
     if (x === null || f.kind !== 'continuous') continue
     for (const dir of [-1, 1]) {
-      const perturbed = { ...input, [f.key]: x + dir * 0.1 * f.sd }
+      const perturbed = { ...input, [f.key]: x + dir * ERROR_SD * f.sd }
       const q = probability(dataset, perturbed)
       maxDelta = Math.max(maxDelta, Math.abs(q - p))
+      qLow = Math.min(qLow, q)
+      qHigh = Math.max(qHigh, q)
       if (q >= threshold !== flagged) flips = true
     }
   }
 
   // Hardware sensitivity: FakeBackend-1 noise flattens the kernel, pulling the score toward the base rate.
   const bias = CALIBRATION[dataset].bias
-  const pNoisy = sigmoid(bias + (l - bias) * hardwareSeparationScale(dataset))
+  const onBackend = (b: BackendId) => sigmoid(bias + (l - bias) * hardwareSeparationScale(dataset, b))
+  const pNoisy = onBackend('fake-backend-1')
   const hwDelta = Math.abs(pNoisy - p)
   const hwFlip = pNoisy >= threshold !== flagged
 
@@ -175,7 +203,37 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
   const FILLED = 'Not meaningful: too much of this patient’s information is filled in with averages.'
   const pts = (x: number) => (x * 100).toFixed(1)
 
-  return [
+  const deployedBackend = referenceResult(dataset, MODEL).config.backend
+  const outOfRangeKeys = new Set(check.outOfRange.map((o) => o.feature.key))
+  const missingKeys = new Set(check.missing.map((f) => f.key))
+  // Nothing that reveals the withheld number leaves the API when abstaining.
+  const evidence: TrustEvidence = {
+    stability: { seeds: abstain ? null : SEED_OFFSETS.map((z) => round(sigmoid(l + z * sigma))) },
+    dataQuality: {
+      fields: features.map((f) => ({
+        key: f.key,
+        label: f.label,
+        status: outOfRangeKeys.has(f.key) ? 'out-of-range' : missingKeys.has(f.key) ? 'imputed' : 'present',
+      })),
+    },
+    distributionShift: {
+      distance: round(check.maxAbsZ, 2),
+      feature: check.maxZFeature?.label ?? null,
+      typical: round(typicalDistance(n), 2),
+      unusual: UNUSUAL_Z,
+      cutoff: OOD_Z,
+      outOfRange: check.outOfRange.length,
+    },
+    calibration: { bin: abstain ? null : bin.predicted },
+    inputSensitivity: { range: abstain ? null : [round(qLow, 4), round(qHigh, 4)], errorSd: ERROR_SD },
+    hardware: hardwareComparison(deployedBackend).map((b) => ({
+      backend: b,
+      probability: abstain ? null : round(b === deployedBackend ? p : onBackend(b), 4),
+      deployed: b === deployedBackend,
+    })),
+  }
+
+  const signals: TrustSignal[] = [
     {
       id: 'stability',
       label: 'Prediction stability',
@@ -204,13 +262,13 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
     {
       id: 'distribution-shift',
       label: 'Distribution shift (OOD)',
-      level: check.outOfRange.length > 0 ? 'weak' : filledIn ? 'partial' : levelOf(check.maxAbsZ, 2.5, 3.5),
+      level: check.outOfRange.length > 0 ? 'weak' : filledIn ? 'partial' : levelOf(check.maxAbsZ, UNUSUAL_Z, OOD_Z),
       reason:
         check.outOfRange.length > 0
           ? `${check.outOfRange.length} value${check.outOfRange.length > 1 ? 's' : ''} outside anything seen in training.`
           : filledIn
             ? `Only ${presentCount} of ${n} values to compare with the training population.`
-            : check.maxAbsZ < 2.5
+            : check.maxAbsZ < UNUSUAL_Z
             ? 'Patient resembles the training population.'
             : `${check.maxZFeature?.label ?? 'One value'} is unusual (${check.maxAbsZ.toFixed(1)} SD from average).`,
       short:
@@ -218,7 +276,7 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
           ? `${check.outOfRange.length} outside training range`
           : filledIn
             ? `Only ${presentCount} of ${n} values to compare`
-            : check.maxAbsZ < 2.5
+            : check.maxAbsZ < UNUSUAL_Z
             ? 'Resembles training data'
             : `${check.maxZFeature?.label ?? 'One value'} ${check.maxAbsZ.toFixed(1)} SD out`,
     },
@@ -265,6 +323,7 @@ function trustSignals(dataset: DatasetId, input: PatientInput, check: InputCheck
       short: extrapolating ? 'Untested out of range' : filledIn ? 'Filled-in values' : hwFlip ? 'Hardware noise would flip it' : `Moves ${pts(hwDelta)} pts on FakeBackend-1`,
     },
   ]
+  return { signals, evidence }
 }
 
 // ─── Public builders ────────────────────────────────────────
@@ -281,7 +340,7 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
   const threshold = thresholdIn ?? defaultThreshold(dataset)
   const check = checkInput(dataset, input)
   const abstain = abstains(check)
-  const trust = trustSignals(dataset, input, check, threshold, abstain)
+  const { signals: trust, evidence } = trustSignals(dataset, input, check, threshold, abstain)
 
   predictionCounter += 1
   const base = {
@@ -294,6 +353,7 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
     riskBandEdges: DATASETS[dataset].riskBandEdges,
     threshold,
     trust,
+    evidence,
   }
 
   // Abstaining: no probability, interval, band or decision leaves the API.

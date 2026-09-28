@@ -1,24 +1,21 @@
-import { TriangleAlert } from 'lucide-react'
+import { Check, Ellipsis, TriangleAlert } from 'lucide-react'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react'
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
 import { HairlineTable, type Column } from '@/components/ui/HairlineTable'
-import { SegmentedToggle, type SegmentOption } from '@/components/ui/SegmentedToggle'
+import { Tooltip } from '@/components/ui/Tooltip'
 import { formatPercent, formatPoints } from '@/lib/format'
 import { tQuick } from '@/lib/motion'
 import { safetyStatus } from '@/lib/safety'
+import { useDismiss } from '@/lib/useDismiss'
 import { useElementSize } from '@/lib/useElementSize'
+import { SHORT_VIEWPORT, useMediaQuery } from '@/lib/useMediaQuery'
 import type { ThresholdPoint } from '@/types'
 import { C, TICK, useChartUnits } from './chartTheme'
 import { resolveLabelOffsets } from './directLabels'
 
 type View = 'chart' | 'table'
-const VIEW_OPTIONS: readonly SegmentOption<View>[] = [
-  { value: 'chart', label: 'Chart' },
-  { value: 'table', label: 'Table' },
-]
 
 const X_TICKS = [0, 0.25, 0.5, 0.75, 1]
-const Y_LINES = [0.5, 1]
 /** Dragging within this distance of the default or a safe-range edge lands on it. */
 const SNAP = 0.015
 /** Light spring for the handle, dots and readout. */
@@ -47,6 +44,72 @@ function safeRange(curve: ThresholdPoint[], safe: number, min: number, max: numb
   return ok.length ? [ok[0].threshold, ok[ok.length - 1].threshold] : null
 }
 
+/** "⋯" menu holding the Chart / Table switch (menuitemradio; arrows move, Enter picks, Esc closes). */
+function ViewMenu({ view, onChange }: { view: View; onChange: (v: View) => void }) {
+  const [open, setOpen] = useState(false)
+  const wrap = useRef<HTMLDivElement>(null)
+  const items = useRef<(HTMLButtonElement | null)[]>([])
+  const [refs] = useState(() => [wrap])
+  useDismiss(refs, open, () => setOpen(false))
+  useEffect(() => {
+    if (open) items.current[view === 'chart' ? 0 : 1]?.focus()
+  }, [open, view])
+  const options: { value: View; label: string }[] = [
+    { value: 'chart', label: 'Show as chart' },
+    { value: 'table', label: 'Show as table' },
+  ]
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
+    e.preventDefault()
+    const i = items.current.findIndex((el) => el === document.activeElement)
+    items.current[(i + (e.key === 'ArrowDown' ? 1 : -1) + options.length) % options.length]?.focus()
+  }
+  return (
+    <div ref={wrap} className="relative">
+      <button
+        type="button"
+        aria-label="Threshold chart options"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="inline-flex h-6 w-6 items-center justify-center rounded-[2px] text-muted hover:bg-ink/[0.07] hover:text-ink"
+      >
+        <Ellipsis size="1rem" strokeWidth={1.5} aria-hidden="true" />
+      </button>
+      {open && (
+        <div
+          role="menu"
+          aria-label="View"
+          onKeyDown={onKeyDown}
+          className="absolute top-full right-0 z-20 mt-1 min-w-[10rem] rounded-[2px] border border-rule bg-surface py-1 shadow-float"
+        >
+          {options.map((o, i) => (
+            <button
+              key={o.value}
+              ref={(el) => {
+                items.current[i] = el
+              }}
+              type="button"
+              role="menuitemradio"
+              aria-checked={view === o.value}
+              onClick={() => {
+                onChange(o.value)
+                setOpen(false)
+              }}
+              className="flex h-8 w-full items-center gap-2 px-3 text-left type-ui text-ink outline-none hover:bg-ink/[0.07] focus-visible:bg-ink/[0.07]"
+            >
+              <span className="inline-flex w-3.5 justify-center" aria-hidden="true">
+                {view === o.value && <Check size="0.875rem" strokeWidth={1.5} className="text-accent" />}
+              </span>
+              {o.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 interface ThresholdScrubberProps {
   label: ReactNode
   curve: ThresholdPoint[]
@@ -61,10 +124,13 @@ interface ThresholdScrubberProps {
 }
 
 /**
- * Sensitivity and specificity across decision thresholds, and the slider that picks one:
- * drag or click anywhere on the chart, or use the keyboard. The safe range is where mean
- * sensitivity reaches the safety line; the status under the chart uses the shared
- * noise-aware safety rule. Sizes are rem-based, so projector mode scales it.
+ * Sensitivity and specificity across decision thresholds, and the control that picks one:
+ * drag or click anywhere on the chart, or use the keyboard. Every label has its own lane,
+ * so nothing collides: the readout chip above the plot, the safe-range label in a band at
+ * the top of the shaded zone, the safety label in the left gutter, end labels in the right
+ * gutter, and the default as a triangle under the axis (labelled on hover). The safe range
+ * is where mean sensitivity reaches the safety line; the status under the chart uses the
+ * shared noise-aware safety rule. Sizes are rem-based, so projector mode scales it.
  */
 export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensitivity, min, max, onChange, onReset }: ThresholdScrubberProps) {
   const id = useId()
@@ -72,20 +138,25 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
   const units = useChartUnits()
   const [view, setView] = useState<View>('chart')
   const [boxRef, { width }] = useElementSize<HTMLDivElement>()
+  const short = useMediaQuery(SHORT_VIEWPORT)
 
-  // ── Geometry (px, from rem so projector mode scales it)
+  // ── Geometry (px, from rem so projector mode scales it); shorter on short viewports
   const rem = units.rem
-  const height = rem * 8.75
-  const top = rem * 0.625
-  const axis = rem * 1.375
-  const left = rem * 2.5
+  const height = rem * (short ? 9 : 10.5)
+  const chipLane = rem * 1.625
+  const band = rem * 1.25
+  const axis = rem * 1.875
+  const left = rem * 6
   const right = rem * 6.25
+  const plotTop = chipLane + band
   const plotW = Math.max(1, width - left - right)
-  const plotH = height - top - axis
+  const plotH = height - plotTop - axis
   const x = (v: number) => left + v * plotW
-  const y = (v: number) => top + (1 - v) * plotH
+  const y = (v: number) => plotTop + (1 - v) * plotH
   const bottom = y(0)
   const invert = (px: number) => Math.min(max, Math.max(min, (px - left) / plotW))
+  const labelChar = rem * 0.8125 * 0.66
+  const textWidth = (text: string) => text.length * labelChar
 
   const inRange = curve.filter((p) => p.threshold >= min - 1e-9 && p.threshold <= max + 1e-9)
   const range = safeRange(curve, safeSensitivity, min, max)
@@ -93,35 +164,37 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
   const status = point ? safetyStatus(point.sensitivity, point.sensitivityStd, safeSensitivity) : 'safe'
   const unsafe = status === 'unsafe'
   const isDefault = value === defaultValue
-
   const readout = (v: number) => `Sens ${formatPercent(at(curve, 'sensitivity', v))} · Spec ${formatPercent(at(curve, 'specificity', v))}`
 
-  // ── Spring-driven handle: the dots and readout ride the same value
+  // ── Spring-driven handle: the dots and the chip ride the same value
   const spring = useSpring(value, HANDLE_SPRING)
   useEffect(() => {
     if (reduced) spring.jump(value)
     else spring.set(value)
   }, [value, reduced, spring])
   const hx = useTransform(spring, (v) => left + v * plotW)
-  const sensY = useTransform(spring, (v) => top + (1 - at(curve, 'sensitivity', v)) * plotH)
-  const specY = useTransform(spring, (v) => top + (1 - at(curve, 'specificity', v)) * plotH)
+  const sensY = useTransform(spring, (v) => plotTop + (1 - at(curve, 'sensitivity', v)) * plotH)
+  const specY = useTransform(spring, (v) => plotTop + (1 - at(curve, 'specificity', v)) * plotH)
   const grip = rem * 0.5
   const gripX = useTransform(hx, (px) => px - grip / 2)
-  // The readout sits right of the handle, and flips left where it would run off the edge.
-  // Mono text, so its width follows from its length (label size, 0.06em tracking, px-1.5 and the border).
-  const labelChar = rem * 0.8125 * 0.66
-  const readoutWidth = (text: string) => text.length * labelChar + rem * 0.75 + 2
-  const flip = (px: number, w: number) => px + rem * 0.5 + w > width
-  const room = useMotionValue(0)
-  useEffect(() => room.set(width - rem * 0.5 - readoutWidth(readout(value))))
-  const readoutShift = useTransform([hx, room], ([px, r]: number[]) => (px > r ? `calc(-100% - ${rem * 0.5}px)` : `${rem * 0.5}px`))
+  // The chip is centred on the handle and clamped inside the chart, so it never clips at the ends.
+  const chipW = (text: string) => textWidth(text) + rem * 0.75 + 2
+  const chipClamp = (px: number, w: number) => Math.min(Math.max(px - w / 2, 0), Math.max(0, width - w))
+  // Motion values, so the spring-driven transform always sees the current chip and chart widths.
+  const chipWidth = useMotionValue(0)
+  const chartWidth = useMotionValue(width)
+  useEffect(() => {
+    chipWidth.set(chipW(readout(value)))
+    chartWidth.set(width)
+  })
+  const chipLeft = useTransform([hx, chipWidth, chartWidth], ([px, w, total]: number[]) => Math.min(Math.max(px - w / 2, 0), Math.max(0, total - w)))
 
   // ── Pointer: drag anywhere, click jumps, hover previews
   const [dragging, setDragging] = useState(false)
   const [ghost, setGhost] = useState<number | null>(null)
   const [pulse, setPulse] = useState<{ key: number; at: number } | null>(null)
   const snapped = useRef<number | null>(null)
-  const snapTargets = [defaultValue, ...(range ? range : [])].filter((t) => t > min + 1e-9 && t < max - 1e-9)
+  const snapTargets = [defaultValue, ...(range ?? [])].filter((t) => t > min + 1e-9 && t < max - 1e-9)
 
   const fromPointer = (e: PointerEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -179,35 +252,49 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
 
   // ── Paths
   const line = (key: 'sensitivity' | 'specificity') => inRange.map((p, i) => `${i ? 'L' : 'M'}${x(p.threshold)},${y(p[key])}`).join('')
-  const band = (key: 'sensitivity' | 'specificity', std: 'sensitivityStd' | 'specificityStd') => {
+  const bandPath = (key: 'sensitivity' | 'specificity', std: 'sensitivityStd' | 'specificityStd') => {
     const upper = inRange.map((p) => `${x(p.threshold)},${y(Math.min(1, p[key] + p[std]))}`)
     const lower = [...inRange].reverse().map((p) => `${x(p.threshold)},${y(Math.max(0, p[key] - p[std]))}`)
     return `M${upper.join('L')}L${lower.join('L')}Z`
   }
 
-  // ── Direct labels in the right gutter, pushed apart where they would touch
+  // ── Gutter labels, pushed apart where they would touch
   const end = inRange[inRange.length - 1]
-  const labelTargets = end
-    ? [
-        { key: 'sens', value: end.sensitivity },
-        { key: 'spec', value: end.specificity },
-        { key: 'safe', value: safeSensitivity },
-      ]
-    : []
-  const offsets = resolveLabelOffsets(labelTargets, [0, 1], plotH, units.labelGap)
-  const labelY = (key: string, v: number) => y(v) + (offsets[key] ?? 0)
+  const rightOffsets = end
+    ? resolveLabelOffsets(
+        [
+          { key: 'sens', value: end.sensitivity },
+          { key: 'spec', value: end.specificity },
+        ],
+        [0, 1],
+        plotH,
+        units.labelGap,
+      )
+    : {}
+  // The left labels may rise into the band above the plot (the domain is stretched by the band's height), so
+  // "100%" and the safety label never stack when the chart is short.
+  const leftOffsets = resolveLabelOffsets(
+    [
+      { key: '1', value: 1 },
+      { key: 'safe', value: safeSensitivity },
+      { key: '0.5', value: 0.5 },
+    ],
+    [0, 1 + band / plotH],
+    plotH + band,
+    units.labelGap,
+  )
+  const ly = (offsets: Record<string, number>, key: string, v: number) => y(v) + (offsets[key] ?? 0)
 
-  // ── X ticks: a tick label that would touch the default label is left out (its tick mark stays)
-  const charW = rem * 0.8125 * 0.62
-  const defaultText = `DEFAULT ${pct(defaultValue)}`
-  const defaultHalf = (defaultText.length * charW) / 2
-  const tickVisible = (t: number) => Math.abs(x(t) - x(defaultValue)) > defaultHalf + (pct(t).length * charW) / 2 + rem * 0.5
-  const tickAnchor = (t: number) => (t === 0 ? 'start' : t === 1 ? 'end' : 'middle')
+  // The safe-range label sits in the band at the top-left of the zone; a narrow zone gets the short form.
+  const zoneW = range ? x(range[1]) - x(range[0]) : 0
+  const rangeText = range ? `${Math.round(range[0] * 100)}–${pct(range[1])}` : ''
+  const zoneLabel = textWidth(`Safe range ${rangeText}`) + rem * 0.75 <= zoneW ? `Safe range ${rangeText}` : `Safe ${rangeText}`
 
+  const showGhost = ghost !== null && ghost !== value && !dragging
+  const ghostText = showGhost ? `${pct(ghost)} → ${readout(ghost)}` : ''
   const valueText = point
     ? `${pct(value)}: sensitivity ${formatPercent(point.sensitivity)}, specificity ${formatPercent(point.specificity)}${unsafe ? ', unsafe' : ''}`
     : pct(value)
-  const showGhost = ghost !== null && ghost !== value && !dragging
 
   const tableColumns: Column<ThresholdPoint>[] = [
     {
@@ -228,30 +315,38 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
   }, [view, rem])
   const tableRows = inRange.filter((p) => Math.round(p.threshold * 100) % 5 === 0 || p.threshold === defaultValue || p.threshold === value)
 
+  const tone = unsafe ? C.riskHigh : C.ink
+
   return (
     <div ref={boxRef}>
-      <div className="flex items-center justify-between gap-3">
-        <p id={`${id}-label`} className="flex items-baseline gap-3">
+      <div className="flex h-6 items-center justify-between gap-3">
+        <p id={`${id}-label`} className="flex items-baseline gap-2">
           <span className="type-label text-muted">{label}</span>
-          <span className={`num type-small ${unsafe ? 'text-risk-high-text' : 'text-ink'}`}>{pct(value)}</span>
+          <span className={`num type-label ${unsafe ? 'text-risk-high-text' : 'text-ink'}`}>{pct(value)}</span>
         </p>
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={onReset}
-            title={`Default ${pct(defaultValue)} · the benchmark operating point`}
-            className={`type-label text-ink underline-offset-4 hover:underline ${isDefault ? 'invisible' : ''}`}
-            tabIndex={isDefault ? -1 : 0}
-            aria-hidden={isDefault}
-          >
-            Reset to default
-          </button>
-          <SegmentedToggle<View> options={VIEW_OPTIONS} value={view} onChange={setView} layoutId={`${id}-view`} ariaLabel="Threshold view" size="xs" />
+          {!isDefault && (
+            <button
+              type="button"
+              onClick={onReset}
+              title={`Back to the default, ${pct(defaultValue)}: the benchmark operating point`}
+              className="type-label text-ink underline-offset-4 hover:underline"
+            >
+              Reset to default
+            </button>
+          )}
+          <ViewMenu view={view} onChange={setView} />
         </div>
       </div>
 
       {view === 'table' ? (
-        <div ref={tableRef} className="relative mt-2 overflow-y-auto" style={{ height }} tabIndex={0} aria-label="Sensitivity and specificity by threshold, scrollable">
+        <div
+          ref={tableRef}
+          className="relative mt-1 overflow-y-auto"
+          style={{ height }}
+          tabIndex={0}
+          aria-label="Sensitivity and specificity by threshold, scrollable"
+        >
           <HairlineTable columns={tableColumns} rows={tableRows} rowKey={(p) => String(p.threshold)} caption="Sensitivity and specificity by threshold" />
         </div>
       ) : (
@@ -269,93 +364,90 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
           onPointerUp={endDrag}
           onPointerCancel={endDrag}
           onPointerLeave={() => setGhost(null)}
-          className={`relative mt-2 touch-pan-y select-none outline-none focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-accent ${dragging ? 'cursor-grabbing' : 'cursor-ew-resize'}`}
+          className={`relative mt-1 touch-pan-y select-none outline-none focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-accent ${dragging ? 'cursor-grabbing' : 'cursor-ew-resize'}`}
           style={{ height }}
         >
           {width > 0 && (
             <svg width={width} height={height} className="block overflow-visible" aria-hidden="true">
-              {/* Safe range: where mean sensitivity reaches the safety line */}
+              {/* Safe range: shaded from the label band down to the axis */}
               {range && (
                 <>
-                  <rect x={x(range[0])} y={top} width={x(range[1]) - x(range[0])} height={plotH} fill={C.riskLow} fillOpacity={0.12} />
+                  <rect x={x(range[0])} y={chipLane} width={zoneW} height={bottom - chipLane} fill={C.riskLow} fillOpacity={0.13} />
                   {zonePulse > 0 && (
                     <motion.rect
                       key={zonePulse}
                       x={x(range[0])}
-                      y={top}
-                      width={x(range[1]) - x(range[0])}
-                      height={plotH}
+                      y={chipLane}
+                      width={zoneW}
+                      height={bottom - chipLane}
                       fill={C.riskLow}
-                      initial={{ fillOpacity: 0.35 }}
+                      initial={{ fillOpacity: 0.4 }}
                       animate={{ fillOpacity: 0 }}
                       transition={{ duration: 0.6, ease: 'easeOut' }}
                     />
                   )}
+                  <text x={x(range[0]) + rem * 0.375} y={chipLane + band / 2} dy="0.35em" {...TICK} fill={C.ink} letterSpacing="0.06em">
+                    {zoneLabel.toUpperCase()}
+                  </text>
                 </>
               )}
 
-              {/* Minimal axes: 50% and 100% hairlines, the baseline, round x ticks */}
-              {Y_LINES.map((v) => (
+              {/* Left gutter: 100% and 50% hairline labels, and the safety line's label at its left end */}
+              {[1, 0.5].map((v) => (
                 <g key={v}>
                   <line x1={x(0)} x2={x(1)} y1={y(v)} y2={y(v)} stroke={C.rule} />
-                  <text x={left - rem * 0.375} y={y(v)} dy="0.35em" textAnchor="end" {...TICK}>
+                  <text x={left - rem * 0.5} y={ly(leftOffsets, String(v), v)} dy="0.35em" textAnchor="end" {...TICK}>
                     {pct(v)}
                   </text>
                 </g>
               ))}
+              <line x1={x(0)} x2={x(1)} y1={y(safeSensitivity)} y2={y(safeSensitivity)} stroke={C.riskHigh} strokeDasharray="4 4" />
+              <text
+                x={left - rem * 0.5}
+                y={ly(leftOffsets, 'safe', safeSensitivity)}
+                dy="0.35em"
+                textAnchor="end"
+                {...TICK}
+                fill="var(--risk-high-text)"
+                letterSpacing="0.06em"
+              >
+                {`${pct(safeSensitivity)} SAFETY`}
+              </text>
+
+              {/* Axis: baseline and round ticks */}
               <line x1={x(0)} x2={x(1)} y1={bottom} y2={bottom} stroke={C.ruleStrong} />
               {X_TICKS.map((t) => (
                 <g key={t}>
                   <line x1={x(t)} x2={x(t)} y1={bottom} y2={bottom + rem * 0.25} stroke={C.ruleStrong} />
-                  {tickVisible(t) && (
-                    <text x={x(t)} y={bottom + rem * 0.9} textAnchor={tickAnchor(t)} {...TICK}>
-                      {Math.round(t * 100)}
-                    </text>
-                  )}
+                  <text x={x(t)} y={bottom + rem * 1.45} textAnchor="middle" {...TICK}>
+                    {Math.round(t * 100)}
+                  </text>
                 </g>
               ))}
-              <line x1={x(defaultValue)} x2={x(defaultValue)} y1={bottom} y2={bottom + rem * 0.375} stroke={C.ink} strokeWidth={1.5} />
-              <text x={x(defaultValue)} y={bottom + rem * 0.9} textAnchor="middle" {...TICK} fill={C.ink} letterSpacing="0.06em">
-                {defaultText}
-              </text>
-
-              {/* 85% safety line */}
-              <line x1={x(0)} x2={x(1)} y1={y(safeSensitivity)} y2={y(safeSensitivity)} stroke={C.riskHigh} strokeDasharray="4 4" />
 
               {/* ±1 std bands (neutral), then the curves: sensitivity is the safety metric, so it is the stronger line */}
-              <path d={band('specificity', 'specificityStd')} fill={C.ink} fillOpacity={0.07} />
-              <path d={band('sensitivity', 'sensitivityStd')} fill={C.ink} fillOpacity={0.07} />
+              <path d={bandPath('specificity', 'specificityStd')} fill={C.ink} fillOpacity={0.07} />
+              <path d={bandPath('sensitivity', 'sensitivityStd')} fill={C.ink} fillOpacity={0.07} />
               <path d={line('specificity')} fill="none" stroke={C.muted} strokeWidth={1.5} />
               <path d={line('sensitivity')} fill="none" stroke={C.accent} strokeWidth={2} />
 
-              {/* Direct labels at the right end */}
+              {/* Right gutter: end labels */}
               {end && (
-                <g {...TICK}>
-                  <text x={x(1) + rem * 0.5} y={labelY('sens', end.sensitivity)} dy="0.35em" fill={C.ink}>
+                <g {...TICK} fill={C.ink}>
+                  <text x={x(1) + rem * 0.5} y={ly(rightOffsets, 'sens', end.sensitivity)} dy="0.35em">
                     Sensitivity
                   </text>
-                  <text x={x(1) + rem * 0.5} y={labelY('spec', end.specificity)} dy="0.35em" fill={C.ink}>
+                  <text x={x(1) + rem * 0.5} y={ly(rightOffsets, 'spec', end.specificity)} dy="0.35em">
                     Specificity
-                  </text>
-                  <text x={x(1) + rem * 0.5} y={labelY('safe', safeSensitivity)} dy="0.35em" fill={C.ink} letterSpacing="0.06em">
-                    {pct(safeSensitivity)} SAFETY
                   </text>
                 </g>
               )}
 
               {/* Hover preview */}
-              {showGhost && <line x1={x(ghost)} x2={x(ghost)} y1={top} y2={bottom} stroke={C.ruleStrong} strokeDasharray="3 3" />}
+              {showGhost && <line x1={x(ghost)} x2={x(ghost)} y1={chipLane} y2={bottom} stroke={C.ruleStrong} strokeDasharray="3 3" />}
 
-              {/* Handle: line, grip, and the dots riding both curves */}
-              <motion.line
-                x1={hx}
-                x2={hx}
-                y1={top}
-                y2={bottom}
-                stroke={unsafe ? C.riskHigh : C.ink}
-                strokeWidth={1.5}
-                style={{ transition: 'stroke 200ms' }}
-              />
+              {/* Handle: line from the chip lane to the axis, grip, and the dots riding both curves */}
+              <motion.line x1={hx} x2={hx} y1={chipLane} y2={bottom} stroke={tone} strokeWidth={1.5} style={{ transition: 'stroke 200ms' }} />
               {pulse && (
                 <motion.circle
                   key={pulse.key}
@@ -375,38 +467,38 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
                 width={grip}
                 height={grip}
                 rx={1}
-                fill={unsafe ? C.riskHigh : C.ink}
+                fill={tone}
                 stroke={C.bg}
                 strokeWidth={1}
                 style={{ transition: 'fill 200ms' }}
               />
-              {/* Drawn over the handle with a background halo, so the handle never cuts through it */}
-              {range && (
-                <text
-                  x={x(range[0]) + rem * 0.375}
-                  y={bottom - rem * 0.375}
-                  {...TICK}
-                  fill={C.ink}
-                  stroke={C.bg}
-                  strokeWidth={4}
-                  paintOrder="stroke"
-                  letterSpacing="0.06em"
-                >
-                  SAFE RANGE {Math.round(range[0] * 100)}–{pct(range[1])}
-                </text>
-              )}
               <motion.circle cx={hx} cy={specY} r={4} fill={C.bg} stroke={C.muted} strokeWidth={2} />
               <motion.circle cx={hx} cy={sensY} r={4} fill={C.bg} stroke={C.accent} strokeWidth={2} />
             </svg>
           )}
 
-          {/* Readouts: the handle's values, and a muted preview under the pointer */}
+          {/* Default: a triangle under the axis, labelled on hover */}
+          {width > 0 && (
+            <Tooltip
+              label={`Default ${pct(defaultValue)}`}
+              content="The benchmark operating point: the threshold behind the sensitivity shown on every other page."
+              width={260}
+            >
+              <span className="absolute block -translate-x-1/2 px-1" style={{ left: x(defaultValue), top: bottom + 2 }}>
+                <svg width="10" height="7" viewBox="0 0 10 7" className="block h-[0.4375rem] w-[0.625rem]" aria-hidden="true">
+                  <path d="M5 0 L10 7 H0 Z" fill={C.ink} />
+                </svg>
+              </span>
+            </Tooltip>
+          )}
+
+          {/* Chip lane above the plot: the handle's values, or a preview under the pointer */}
           {width > 0 && (
             <motion.div
-              className={`num type-label pointer-events-none absolute whitespace-nowrap rounded-[2px] border bg-bg px-1.5 transition-colors duration-200 ${
-                unsafe ? 'border-risk-high text-risk-high-text' : 'border-rule text-ink'
+              className={`num type-label pointer-events-none absolute top-0 whitespace-nowrap rounded-[2px] border bg-bg px-1.5 transition-[opacity,color,border-color] duration-200 ${
+                unsafe ? 'border-risk-high text-risk-high-text' : 'border-rule-strong text-ink'
               }`}
-              style={{ left: hx, top: 0, x: readoutShift }}
+              style={{ left: chipLeft, opacity: showGhost ? 0 : 1 }}
               aria-hidden="true"
             >
               {readout(value)}
@@ -414,22 +506,18 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
           )}
           {showGhost && (
             <div
-              className="num type-label pointer-events-none absolute whitespace-nowrap rounded-[2px] border border-dashed border-rule-strong bg-bg px-1.5 text-muted"
-              style={{
-                left: x(ghost),
-                top: rem * 1.625,
-                translate: flip(x(ghost), readoutWidth(`${pct(ghost)} · ${readout(ghost)}`)) ? `calc(-100% - ${rem * 0.5}px)` : `${rem * 0.5}px`,
-              }}
+              className="num type-label pointer-events-none absolute top-0 whitespace-nowrap rounded-[2px] border border-dashed border-rule-strong bg-bg px-1.5 text-muted"
+              style={{ left: chipClamp(x(ghost), chipW(ghostText)) }}
               aria-hidden="true"
             >
-              {pct(ghost)} · {readout(ghost)}
+              {ghostText}
             </div>
           )}
         </div>
       )}
 
       {/* One status line, always present, so the column keeps its height as the threshold moves */}
-      <div className="mt-1.5 min-h-[1.3125rem]" aria-live="polite">
+      <div className="mt-1 min-h-[1.3125rem]" aria-live="polite">
         <AnimatePresence mode="wait" initial={false}>
           {point && (
             <motion.p

@@ -11,9 +11,9 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - Phases 1–5: done and approved.
 - Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report: built; review fixes applied (abstain
   consistency, shared Select, first-screen Predict layout, chart fixes, page backend), awaiting approval.
-- Predict & Trust rework, Part 1 done: threshold scrubber (`components/charts/ThresholdScrubber`) replaces the slider;
-  the bottom Model trust section is gone (calibration data stays in the trust API). Part 2 (calibration inside the
-  trust evidence rows) is next, and must restore the first-screen fit: the scrubber added ~110px to the right column.
+- Predict & Trust rework done (Parts 1–2): compact one-line header; one result block with the risk scale under it;
+  threshold scrubber (`components/charts/ThresholdScrubber`, threshold shown only in its header, Chart/Table in a ⋯ menu);
+  expandable trust evidence (`features/predict/TrustEvidence`, panels read `PredictResponse.evidence`). Awaiting approval.
 - Next: Phase 7 (Patient Mode; reuse `features/report/ReportLetter` for My Report), then Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
@@ -101,10 +101,11 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 ## Demo-critical layout
 
 - **Key results fit the first screen** on demo-critical pages, without scrolling, at 1366×768 and 1440×900
-  (browser viewport). On Predict & Trust that is the result, the decision threshold, the trust evidence and the
-  stats line, in a sticky column that starts at the top of the page beside the headline and scrolling form (the
-  whole column, buttons included, at 1440×900); secondary charts go in tabs below. Verify by measuring
-  element positions in a headless browser, in every state (normal, abstain, cleared form).
+  (browser viewport). On Predict & Trust that is the result block and risk scale, the threshold scrubber and the
+  collapsed trust evidence list, in a sticky column beside the scrolling form, under a one-line header (≤ 120px);
+  details live in expandable rows, not extra sections. Short viewports compact via `SHORT_VIEWPORT`
+  (`lib/useMediaQuery.ts`) / `[@media(max-height:52rem)]:`. Verify by measuring element positions in a headless
+  browser, in every state (normal, abstain, cleared form).
 
 ## Beginner-friendly layer (required on every page)
 
@@ -113,7 +114,7 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
    `src/content/pages.ts` with `plain`, `shows`, `matters` and `read`. Add it in the same change that adds the page.
 2. **Section headers.** Every section uses `<SectionHeader index title plain="…" />`. The `plain` prop is required: one
    sentence, no jargon, and no result numbers. It appears as "In simple words: …" when the top-bar Plain language
-   toggle is on.
+   toggle is on. Dense demo-critical pages (Predict & Trust) use `plainAs="popover"`: a small "?" beside the label.
 3. **Glossary.** Wrap every technical term in UI copy in `<Term>` (`<Term>AUC</Term>`, `<Term term="gate error">…</Term>`).
    Render API-provided text (takeaways, summaries) through `<Glossed text={…} />`, which wraps glossary words automatically.
    If a new technical word appears, add it to `src/lib/glossary.ts` with a one-line plain definition, and add its

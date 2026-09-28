@@ -74,6 +74,37 @@ export interface PredictRequest {
 
 export type Decision = 'predict' | 'abstain'
 
+export type FieldStatus = 'present' | 'imputed' | 'out-of-range'
+
+/**
+ * The data behind each trust signal, for its expanded panel. Anything that would reveal
+ * the withheld number is null when the system abstains (CLAUDE.md, results rule 6).
+ */
+export interface TrustEvidence {
+  /** The five seed estimates; their min and max are the reported interval. */
+  stability: { seeds: number[] | null }
+  /** Every model input, as the pipeline sees it (missing values are imputed with the training average). */
+  dataQuality: { fields: { key: string; label: string; status: FieldStatus }[] }
+  /** Largest distance from the training average, in SD, against the training population and the cutoffs. */
+  distributionShift: {
+    distance: number
+    feature: string | null
+    /** 95% of training patients sit below this distance. */
+    typical: number
+    /** At or above: "unusual" (partial). */
+    unusual: number
+    /** At or above: out of distribution (weak). */
+    cutoff: number
+    outOfRange: number
+  }
+  /** Predicted value of this patient's calibration bin (bins come from the trust API); null when abstaining. */
+  calibration: { bin: number | null }
+  /** Lowest and highest estimate under ±errorSd measurement error on each continuous input. */
+  inputSensitivity: { range: [number, number] | null; errorSd: number }
+  /** The same patient scored on each backend; probability null when abstaining. */
+  hardware: { backend: BackendId; probability: number | null; deployed: boolean }[]
+}
+
 export interface PredictResponse extends DeployedSetting {
   predictionId: string
   dataset: DatasetId
@@ -94,6 +125,7 @@ export interface PredictResponse extends DeployedSetting {
   flagged: boolean | null
   abstainReasons: string[]
   trust: TrustSignal[]
+  evidence: TrustEvidence
 }
 
 // ─── Model-level trust ──────────────────────────────────────

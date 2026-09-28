@@ -57,6 +57,106 @@
           "short": "Moves 10.7 pts on FakeBackend-1"
         }
       ],
+      "evidence": {
+        "stability": {
+          "seeds": [
+            0.806,
+            0.816,
+            0.82,
+            0.824,
+            0.833
+          ]
+        },
+        "dataQuality": {
+          "fields": [
+            {
+              "key": "radius_mean",
+              "label": "Radius",
+              "status": "present"
+            },
+            {
+              "key": "texture_mean",
+              "label": "Texture",
+              "status": "present"
+            },
+            {
+              "key": "perimeter_mean",
+              "label": "Perimeter",
+              "status": "present"
+            },
+            {
+              "key": "area_mean",
+              "label": "Area",
+              "status": "present"
+            },
+            {
+              "key": "smoothness_mean",
+              "label": "Smoothness",
+              "status": "present"
+            },
+            {
+              "key": "compactness_mean",
+              "label": "Compactness",
+              "status": "present"
+            },
+            {
+              "key": "concavity_mean",
+              "label": "Concavity",
+              "status": "present"
+            },
+            {
+              "key": "concave_points_mean",
+              "label": "Concave points",
+              "status": "present"
+            },
+            {
+              "key": "symmetry_mean",
+              "label": "Symmetry",
+              "status": "present"
+            },
+            {
+              "key": "fractal_dimension_mean",
+              "label": "Fractal dimension",
+              "status": "present"
+            }
+          ]
+        },
+        "distributionShift": {
+          "distance": 0.88,
+          "feature": "Concave points",
+          "typical": 2.8,
+          "unusual": 2.5,
+          "cutoff": 3.5,
+          "outOfRange": 0
+        },
+        "calibration": {
+          "bin": 0.86
+        },
+        "inputSensitivity": {
+          "range": [
+            0.8125,
+            0.8272
+          ],
+          "errorSd": 0.1
+        },
+        "hardware": [
+          {
+            "backend": "ideal-sim",
+            "probability": 0.8312,
+            "deployed": false
+          },
+          {
+            "backend": "noisy-sim",
+            "probability": 0.82,
+            "deployed": true
+          },
+          {
+            "backend": "fake-backend-1",
+            "probability": 0.713,
+            "deployed": false
+          }
+        ]
+      },
       "decision": "predict",
       "probability": 0.82,
       "interval": [
@@ -124,6 +224,97 @@
           "short": "Untested out of range"
         }
       ],
+      "evidence": {
+        "stability": {
+          "seeds": null
+        },
+        "dataQuality": {
+          "fields": [
+            {
+              "key": "radius_mean",
+              "label": "Radius",
+              "status": "present"
+            },
+            {
+              "key": "texture_mean",
+              "label": "Texture",
+              "status": "imputed"
+            },
+            {
+              "key": "perimeter_mean",
+              "label": "Perimeter",
+              "status": "present"
+            },
+            {
+              "key": "area_mean",
+              "label": "Area",
+              "status": "out-of-range"
+            },
+            {
+              "key": "smoothness_mean",
+              "label": "Smoothness",
+              "status": "out-of-range"
+            },
+            {
+              "key": "compactness_mean",
+              "label": "Compactness",
+              "status": "present"
+            },
+            {
+              "key": "concavity_mean",
+              "label": "Concavity",
+              "status": "present"
+            },
+            {
+              "key": "concave_points_mean",
+              "label": "Concave points",
+              "status": "present"
+            },
+            {
+              "key": "symmetry_mean",
+              "label": "Symmetry",
+              "status": "present"
+            },
+            {
+              "key": "fractal_dimension_mean",
+              "label": "Fractal dimension",
+              "status": "present"
+            }
+          ]
+        },
+        "distributionShift": {
+          "distance": 10.22,
+          "feature": "Area",
+          "typical": 2.8,
+          "unusual": 2.5,
+          "cutoff": 3.5,
+          "outOfRange": 2
+        },
+        "calibration": {
+          "bin": null
+        },
+        "inputSensitivity": {
+          "range": null,
+          "errorSd": 0.1
+        },
+        "hardware": [
+          {
+            "backend": "ideal-sim",
+            "probability": null,
+            "deployed": false
+          },
+          {
+            "backend": "noisy-sim",
+            "probability": null,
+            "deployed": true
+          },
+          {
+            "backend": "fake-backend-1",
+            "probability": null,
+            "deployed": false
+          }
+        ]
+      },
       "decision": "abstain",
       "probability": null,
       "interval": null,
@@ -194,6 +385,121 @@
           "short": "Moves 9.4 pts on FakeBackend-1"
         }
       ],
+      "evidence": {
+        "stability": {
+          "seeds": [
+            0.783,
+            0.81,
+            0.82,
+            0.83,
+            0.852
+          ]
+        },
+        "dataQuality": {
+          "fields": [
+            {
+              "key": "age",
+              "label": "Age",
+              "status": "present"
+            },
+            {
+              "key": "sex",
+              "label": "Sex",
+              "status": "present"
+            },
+            {
+              "key": "trestbps",
+              "label": "Resting BP",
+              "status": "present"
+            },
+            {
+              "key": "cp",
+              "label": "Chest pain type",
+              "status": "present"
+            },
+            {
+              "key": "restecg",
+              "label": "Resting ECG",
+              "status": "present"
+            },
+            {
+              "key": "oldpeak",
+              "label": "ST depression",
+              "status": "present"
+            },
+            {
+              "key": "slope",
+              "label": "ST slope",
+              "status": "present"
+            },
+            {
+              "key": "thalach",
+              "label": "Max heart rate",
+              "status": "present"
+            },
+            {
+              "key": "exang",
+              "label": "Exercise angina",
+              "status": "present"
+            },
+            {
+              "key": "thal",
+              "label": "Thallium scan",
+              "status": "present"
+            },
+            {
+              "key": "ca",
+              "label": "Major vessels",
+              "status": "present"
+            },
+            {
+              "key": "chol",
+              "label": "Cholesterol",
+              "status": "present"
+            },
+            {
+              "key": "fbs",
+              "label": "Fasting sugar > 120",
+              "status": "present"
+            }
+          ]
+        },
+        "distributionShift": {
+          "distance": 1.43,
+          "feature": "Exercise angina",
+          "typical": 2.88,
+          "unusual": 2.5,
+          "cutoff": 3.5,
+          "outOfRange": 0
+        },
+        "calibration": {
+          "bin": 0.856
+        },
+        "inputSensitivity": {
+          "range": [
+            0.8154,
+            0.8245
+          ],
+          "errorSd": 0.1
+        },
+        "hardware": [
+          {
+            "backend": "ideal-sim",
+            "probability": 0.8288,
+            "deployed": false
+          },
+          {
+            "backend": "noisy-sim",
+            "probability": 0.82,
+            "deployed": true
+          },
+          {
+            "backend": "fake-backend-1",
+            "probability": 0.7257,
+            "deployed": false
+          }
+        ]
+      },
       "decision": "predict",
       "probability": 0.82,
       "interval": [
@@ -261,6 +567,112 @@
           "short": "Untested out of range"
         }
       ],
+      "evidence": {
+        "stability": {
+          "seeds": null
+        },
+        "dataQuality": {
+          "fields": [
+            {
+              "key": "age",
+              "label": "Age",
+              "status": "present"
+            },
+            {
+              "key": "sex",
+              "label": "Sex",
+              "status": "present"
+            },
+            {
+              "key": "trestbps",
+              "label": "Resting BP",
+              "status": "out-of-range"
+            },
+            {
+              "key": "cp",
+              "label": "Chest pain type",
+              "status": "present"
+            },
+            {
+              "key": "restecg",
+              "label": "Resting ECG",
+              "status": "present"
+            },
+            {
+              "key": "oldpeak",
+              "label": "ST depression",
+              "status": "present"
+            },
+            {
+              "key": "slope",
+              "label": "ST slope",
+              "status": "present"
+            },
+            {
+              "key": "thalach",
+              "label": "Max heart rate",
+              "status": "imputed"
+            },
+            {
+              "key": "exang",
+              "label": "Exercise angina",
+              "status": "present"
+            },
+            {
+              "key": "thal",
+              "label": "Thallium scan",
+              "status": "present"
+            },
+            {
+              "key": "ca",
+              "label": "Major vessels",
+              "status": "present"
+            },
+            {
+              "key": "chol",
+              "label": "Cholesterol",
+              "status": "out-of-range"
+            },
+            {
+              "key": "fbs",
+              "label": "Fasting sugar > 120",
+              "status": "present"
+            }
+          ]
+        },
+        "distributionShift": {
+          "distance": 7.01,
+          "feature": "Cholesterol",
+          "typical": 2.88,
+          "unusual": 2.5,
+          "cutoff": 3.5,
+          "outOfRange": 2
+        },
+        "calibration": {
+          "bin": null
+        },
+        "inputSensitivity": {
+          "range": null,
+          "errorSd": 0.1
+        },
+        "hardware": [
+          {
+            "backend": "ideal-sim",
+            "probability": null,
+            "deployed": false
+          },
+          {
+            "backend": "noisy-sim",
+            "probability": null,
+            "deployed": true
+          },
+          {
+            "backend": "fake-backend-1",
+            "probability": null,
+            "deployed": false
+          }
+        ]
+      },
       "decision": "abstain",
       "probability": null,
       "interval": null,

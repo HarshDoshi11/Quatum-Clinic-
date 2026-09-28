@@ -10,8 +10,13 @@ interface PageHeaderProps {
   route: RouteMeta
   /** Override the headline's size class (used by the Overview hero). */
   headlineClassName?: string
-  /** Extra content under the headline (e.g. an experiment tag). */
+  /** Extra content under the headline (e.g. an experiment tag); right-aligned beside it when compact. */
   children?: ReactNode
+  /**
+   * Compact (dense tool pages): the headline at type-h2 on one line with `children` on the same row, and
+   * the plain-language line moved into the "What is this?" panel, so the header stays under ~120px.
+   */
+  compact?: boolean
 }
 
 const PARTS = [
@@ -24,7 +29,7 @@ const PARTS = [
  * Section label + question headline + "What is this? ↗" + plain-language line.
  * Every page uses it so the beginner layer is never forgotten (see CLAUDE.md).
  */
-export function PageHeader({ route, headlineClassName, children }: PageHeaderProps) {
+export function PageHeader({ route, headlineClassName, children, compact = false }: PageHeaderProps) {
   const [open, setOpen] = useState(false)
   const guide = PAGE_CONTENT[route.id as keyof typeof PAGE_CONTENT]
 
@@ -43,11 +48,22 @@ export function PageHeader({ route, headlineClassName, children }: PageHeaderPro
           </button>
         )}
       </div>
-      <Headline size={headlineClassName ? 'custom' : 'display'} className={`mt-6 ${headlineClassName ?? ''}`}>
-        {route.headline}
-      </Headline>
-      {guide && <PlainLine className="mt-2">{guide.plain}</PlainLine>}
-      {children}
+      {compact ? (
+        <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
+          <Headline size="custom" className="type-h2 whitespace-nowrap">
+            {route.headline}
+          </Headline>
+          {children}
+        </div>
+      ) : (
+        <>
+          <Headline size={headlineClassName ? 'custom' : 'display'} className={`mt-6 ${headlineClassName ?? ''}`}>
+            {route.headline}
+          </Headline>
+          {guide && <PlainLine className="mt-2">{guide.plain}</PlainLine>}
+          {children}
+        </>
+      )}
 
       {guide && (
         <Drawer open={open} onClose={() => setOpen(false)} label={`What is this? ${route.label}`} width={500}>
