@@ -104,7 +104,7 @@
  * small tabular mono numbers. Uppercase tracking never exceeds 0.06em.
  */
 /* Patient Mode's Fraunces: soft corners and optical sizing (Research never matches). */
-:root[data-mode='patient'] :is(.font-serif, [class*='type-display'], [class*='type-h2'], [class*='type-headline-soft']) {
+:root[data-mode='patient'] :is(.font-serif, [class*='type-display'], [class*='type-h2'], [class*='type-headline-soft'], [class*='type-question']) {
   font-variation-settings: 'SOFT' 100, 'WONK' 0;
   font-optical-sizing: auto;
 }
@@ -130,6 +130,16 @@
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.01em;
+  font-optical-sizing: auto;
+}
+
+/* Patient Mode's assessment question: one large, soft Fraunces question per screen. */
+@utility type-question {
+  font-family: var(--font-fraunces);
+  font-size: var(--type-question);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
   font-optical-sizing: auto;
 }
 

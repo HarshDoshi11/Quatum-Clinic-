@@ -25,12 +25,57 @@
     "condition": "breast cancer",
     "patient": {
       "home": {
-        "eyebrow": "Breast health check",
-        "headline": "Got a biopsy report? Let’s make sense of it.",
-        "subtext": "Answer what your report shows. You get a clear answer, how sure it is, and what to do next.",
         "hero": "cells"
       },
-      "urgent": null,
+      "safetyCheck": false,
+      "assessment": {
+        "steps": [
+          {
+            "id": "size",
+            "fromReport": true,
+            "features": [
+              "radius_mean",
+              "perimeter_mean",
+              "area_mean"
+            ]
+          },
+          {
+            "id": "shape",
+            "fromReport": true,
+            "features": [
+              "texture_mean",
+              "smoothness_mean",
+              "compactness_mean",
+              "concavity_mean",
+              "concave_points_mean",
+              "symmetry_mean",
+              "fractal_dimension_mean"
+            ]
+          }
+        ],
+        "report": [
+          {
+            "id": "size",
+            "features": [
+              "radius_mean",
+              "perimeter_mean",
+              "area_mean"
+            ]
+          },
+          {
+            "id": "shape",
+            "features": [
+              "texture_mean",
+              "smoothness_mean",
+              "compactness_mean",
+              "concavity_mean",
+              "concave_points_mean",
+              "symmetry_mean",
+              "fractal_dimension_mean"
+            ]
+          }
+        ]
+      },
       "name": "breast cancer",
       "ranges": {},
       "rangesNote": "These are measurements of cells from your tissue sample, made in a laboratory. There are no everyday “healthy ranges” for them: your doctor, or the specialist who examined your sample, is the best person to explain what they mean for you.",
@@ -131,21 +176,82 @@
     "condition": "heart disease",
     "patient": {
       "home": {
-        "eyebrow": "Heart health check",
-        "headline": "Got a heart test report? Let’s make sense of it.",
-        "subtext": "Answer what you know from your latest results. You get a clear answer, how sure it is, and what to do next.",
         "hero": "heart"
       },
-      "urgent": {
-        "symptoms": "chest pain right now, trouble breathing, or fainting",
-        "numbers": [
+      "safetyCheck": true,
+      "assessment": {
+        "steps": [
           {
-            "number": "112",
-            "label": "Emergency"
+            "id": "about",
+            "fromReport": false,
+            "features": [
+              "age",
+              "sex"
+            ]
           },
           {
-            "number": "108",
-            "label": "Ambulance"
+            "id": "feeling",
+            "fromReport": false,
+            "features": [
+              "cp",
+              "exang"
+            ]
+          },
+          {
+            "id": "report",
+            "fromReport": true,
+            "features": [
+              "trestbps",
+              "chol",
+              "fbs",
+              "thalach",
+              "restecg",
+              "oldpeak",
+              "slope",
+              "thal",
+              "ca"
+            ]
+          }
+        ],
+        "report": [
+          {
+            "id": "vitals",
+            "features": [
+              "trestbps"
+            ]
+          },
+          {
+            "id": "blood",
+            "features": [
+              "chol",
+              "fbs"
+            ]
+          },
+          {
+            "id": "ecg",
+            "features": [
+              "restecg"
+            ]
+          },
+          {
+            "id": "stress",
+            "features": [
+              "thalach",
+              "oldpeak",
+              "slope"
+            ]
+          },
+          {
+            "id": "scan",
+            "features": [
+              "thal"
+            ]
+          },
+          {
+            "id": "angio",
+            "features": [
+              "ca"
+            ]
           }
         ]
       },

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion, useScroll } from 'motion/react'
 import { useLayoutEffect, useRef, type ReactNode } from 'react'
+import { fill, usePatientStrings } from '@/i18n/patient'
 import { easeGentle } from '@/lib/motion'
 
 /** Small line illustrations: ink hairlines on a soft panel, the teal accent only where the eye should land. */
@@ -43,23 +44,8 @@ function NextStepsArt() {
   )
 }
 
-const BEATS: { title: string; body: string; art: ReactNode }[] = [
-  {
-    title: 'Answer what you know',
-    body: 'A few short questions about your latest test results. If you don’t know one, choose “Not sure”. That’s fine.',
-    art: <AnswerArt />,
-  },
-  {
-    title: 'We read it carefully',
-    body: 'Your answers are compared with the results of many past patients. If something looks incomplete or unusual, we say so instead of guessing.',
-    art: <ReadArt />,
-  },
-  {
-    title: 'You get a clear answer and next steps',
-    body: 'What the result means in plain words, how sure it is, and what to ask your doctor. You can download it for your visit.',
-    art: <NextStepsArt />,
-  },
-]
+/** One illustration per beat, in the order of the beats in the i18n file. */
+const ART: ReactNode[] = [<AnswerArt key="answer" />, <ReadArt key="read" />, <NextStepsArt key="next" />]
 
 /**
  * "How it works": three beats down a vertical line that fills as you scroll, alternating left and right.
@@ -67,6 +53,7 @@ const BEATS: { title: string; body: string; art: ReactNode }[] = [
  */
 export function HowItWorks() {
   const reduced = useReducedMotion() ?? false
+  const t = usePatientStrings().home
   const list = useRef<HTMLOListElement>(null)
   // The page scrolls inside the shell's <main>, not the window.
   const container = useRef<HTMLElement | null>(null)
@@ -78,7 +65,7 @@ export function HowItWorks() {
   return (
     <section aria-labelledby="how-it-works">
       <h2 id="how-it-works" className="type-body-lg text-muted lg:text-center">
-        How it works
+        {t.howItWorks}
       </h2>
       <div className="relative mt-14">
         {/* The line the story runs down; it fills with teal as you scroll */}
@@ -86,11 +73,11 @@ export function HowItWorks() {
           <motion.div className="h-full w-full origin-top bg-accent" style={{ scaleY: reduced ? 1 : scrollYProgress }} />
         </div>
       <ol ref={list} className="relative flex flex-col gap-20 lg:gap-28">
-        {BEATS.map((beat, i) => {
+        {t.beats.map((beat, i) => {
           const artFirst = i % 2 === 1
           const text = (
             <div className={`max-w-[34rem] ${artFirst ? 'lg:order-3' : 'lg:order-1 lg:justify-self-end lg:text-right'}`}>
-              <p className="type-body text-accent">Step {i + 1}</p>
+              <p className="type-body text-accent">{fill(t.step, { n: i + 1 })}</p>
               <h3 className="mt-2 type-h2 text-ink">
                 {beat.title}
               </h3>
@@ -99,7 +86,7 @@ export function HowItWorks() {
           )
           const art = (
             <div className={`w-full max-w-[20rem] rounded-panel bg-surface p-8 text-ink ${artFirst ? 'lg:order-1 lg:justify-self-end' : 'lg:order-3'}`}>
-              {beat.art}
+              {ART[i]}
             </div>
           )
           return (

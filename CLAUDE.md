@@ -13,10 +13,13 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
   patient config) and Part B (My Report: guiding headline, ten figures, confidence, Your numbers / Learn / Plan your
   visit, share with family, read aloud, two-page doctor PDF) are done. Part A1 (own shell and top bar, green-charcoal /
   cream theme with a teal accent, Fraunces headlines, editorial Home with the 3D heart + ECG, How it works, urgent strip)
-  is done; next: the Safety check page (the urgent strip links to it once it exists), then Part C. Pages in `src/pages/patient/`.
+  is done. Part A2 (Assessment as a guided conversation: safety check, report yes/no, one question per screen,
+  "Where do I find this?", review) is done; Part C is next. Pages in `src/pages/patient/`.
   Patient Mode shows no AUC, qubits, models, experiments, backends or 3D on screen (the doctor's printed page is the
   exception); `check:mocks` asserts no research jargon, full config coverage (icons, questions, learn cards, journeys
-  per outcome, valid ranges), the "N in 10" wording and the family summary. The assessment edits the in-memory patient.
+  per outcome, valid ranges), the "N in 10" wording, the family summary, and i18n coverage for the assessment
+  (every input asked once, every answer card labelled, every report value findable). The assessment edits the
+  in-memory patient.
 - Next: Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
@@ -115,6 +118,7 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 1. **Page header.** Every page renders `<PageHeader route={route} />`. It provides the section label, the question
    headline, the **"What is this? ↗"** panel and the plain-language line. Every route needs an entry in
    `src/content/pages.ts` with `plain`, `shows`, `matters` and `read`. Add it in the same change that adds the page.
+   Exception: Patient Home and the Assessment open with their own heading (the hero, or the question on screen).
 2. **Section headers.** Every section uses `<SectionHeader index title plain="…" />`. The `plain` prop is required: one
    sentence, no jargon, and no result numbers. It appears as "In simple words: …" when the top-bar Plain language
    toggle is on. **The Plain language toggle works on every page; no page opts out.** Demo-critical pages (Predict &
@@ -147,6 +151,7 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 | `type-small` | 14px, lh 1.5 | IBM Plex Sans | Secondary text, hints, tooltips |
 | `type-label` | 13px, uppercase, 0.06em | IBM Plex Mono | Section labels, table headers, tags, kbd |
 | `type-micro` | 12px, uppercase, 0.06em | IBM Plex Mono | **Status strip only** |
+| `type-question` | clamp(32px, …, 48px), lh 1.12 | Fraunces | **Patient assessment question only** |
 
 - Nothing may render below 12px. Uppercase tracking is at most 0.06em. Don't add `leading-*` overrides to text that
   uses a `type-*` utility, because the token already sets line-height.
@@ -208,9 +213,17 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   Palette: warm cream / deep green-charcoal (light), green-charcoal / cream (dark), a calm teal accent, soft coral only
   for risk states; no cobalt, and Fraunces (soft, optical size) replaces Instrument Serif everywhere, with clamp()
   headline sizes. Panels 14px and controls 10px (`rounded-panel`, `rounded-control`; Research keeps 4px / 2px), and
-  `bg-accent-soft` tints selections. "Decision support, not a diagnosis" appears once, in `PatientFooter`. Home copy
-  (eyebrow, headline, subtext, hero shape) and the "Is this urgent?" strip (symptoms, numbers to call) come from
-  `DATASETS[id].patient.home` / `.urgent`. The Home hero is a lazy 3D form (`HeroVisual`: still SVG fallback, static
+  `bg-accent-soft` tints selections. "Decision support, not a diagnosis" appears once, in `PatientFooter`.
+  **Patient words live in the i18n files** (`src/i18n/patient/en/`: `common.ts` plus one file per dataset, read with
+  `usePatientStrings()`; hi/mr slots fall back to English). The dataset config keeps only structure: the hero shape,
+  `safetyCheck`, and `assessment` (steps in order, which are `fromReport`, and the sample report's sections). Never
+  write patient copy in a component. The Assessment is a conversation, not a form: a safety check first when
+  `safetyCheck` (any sign → a screen with only the numbers to call), "Do you have your report?" (No skips the
+  `fromReport` steps), then one question per screen (`type-question`, a one-line why, the answer as cards with plain
+  labels, never raw codes or a native select; "I'm not sure" / "It's not on my report" is an equal answer; Enter
+  advances), "Where do I find this?" for report values, and a review with every answer editable. Out-of-range answers
+  get a gentle note and are kept as entered, never clamped, so the trust checks can abstain. Each screen fits 1366×768
+  without scrolling. The Home hero is a lazy 3D form (`HeroVisual`: still SVG fallback, static
   under reduced motion) with an ECG line on the same 60 bpm clock (`features/patient/heartbeat.ts`); no icon-column
   grids, centred hero + button, or concentric circles. On patient
   pages: `type-body-lg` as the default text, lines ≤ 60ch, sections ≥ 56px apart, mono only for report IDs and dates,

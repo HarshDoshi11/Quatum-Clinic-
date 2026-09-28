@@ -185,6 +185,7 @@
    */
   --type-display: clamp(3.5rem, 6vw, 6rem); /* 56–96px · serif · page headlines */
   --type-h2: 2.25rem; /* 36px · serif */
+  --type-question: clamp(2rem, 1.2rem + 1.9vw, 3rem); /* 32–48px · Fraunces · Patient Mode assessment question only */
   --type-metric-xl: 4.5rem; /* 72px · mono */
   --type-metric: 2rem; /* 32px · mono */
   --type-body-lg: 1.125rem; /* 18px · sans */

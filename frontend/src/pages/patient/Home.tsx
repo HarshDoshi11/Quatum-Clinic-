@@ -10,6 +10,7 @@ import { HowItWorks } from '@/features/patient/HowItWorks'
 import { PatientFooter } from '@/features/patient/PatientFooter'
 import { QuestionsSheet } from '@/features/patient/QuestionsSheet'
 import { UrgentStrip } from '@/features/patient/UrgentStrip'
+import { usePatientStrings } from '@/i18n/patient'
 import { PATIENT_BASE, type RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import { useDataVersion } from '@/state/dataVersion'
@@ -17,7 +18,8 @@ import { useDataVersion } from '@/state/dataVersion'
 /**
  * Patient Mode · Home: an editorial hero (the question, one line, two ways in) beside a living 3D heart
  * with its ECG line, then how the check works as a short story down the page, and what to do if it's
- * urgent. All copy comes from the dataset config; no numbers, models or machines.
+ * urgent. The words come from the patient i18n files, the structure from the dataset config; no numbers,
+ * models or machines.
  */
 export function PatientHome({ route }: { route: RouteMeta }) {
   const { datasetId } = useDataset()
@@ -25,6 +27,8 @@ export function PatientHome({ route }: { route: RouteMeta }) {
   const datasets = useResource((signal) => api.listDatasets({ signal }), [version])
   const schema = useResource((signal) => api.getFeatureSchema(datasetId, { signal }), [datasetId, version])
   const patient = datasets.data?.find((d) => d.id === datasetId)?.patient ?? null
+  const t = usePatientStrings()
+  const words = t.datasets[datasetId]
   const home = patient?.home ?? null
   const [asking, setAsking] = useState(false)
 
@@ -33,15 +37,15 @@ export function PatientHome({ route }: { route: RouteMeta }) {
       <div className="mx-auto max-w-[84rem]">
         {/* Hero: text left (55%), the heart right */}
         <section
-          aria-label="Welcome"
+          aria-label={t.home.welcome}
           className="grid min-h-[min(calc(100svh-var(--topbar-h)),52rem)] grid-cols-1 items-center gap-x-12 gap-y-10 py-12 lg:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]"
         >
           <PageItem>
             {home ? (
               <>
-                <p className="type-body-lg text-accent">{home.eyebrow}</p>
-                <Headline className="mt-5 max-w-[14ch]">{home.headline}</Headline>
-                <p className="mt-6 max-w-[44ch] type-body-lg text-muted">{home.subtext}</p>
+                <p className="type-body-lg text-accent">{words.home.eyebrow}</p>
+                <Headline className="mt-5 max-w-[14ch]">{words.home.headline}</Headline>
+                <p className="mt-6 max-w-[44ch] type-body-lg text-muted">{words.home.subtext}</p>
               </>
             ) : (
               <div className="flex flex-col gap-5">
@@ -52,13 +56,13 @@ export function PatientHome({ route }: { route: RouteMeta }) {
             )}
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <ButtonLink to={`${PATIENT_BASE}/assessment`} className="px-7">
-                Start the check
+                {t.home.start}
               </ButtonLink>
               <Button variant="ghost" onClick={() => setAsking(true)} aria-haspopup="dialog" className="text-ink underline-offset-4 hover:underline">
-                What will you ask me?
+                {t.home.whatWillYouAsk}
               </Button>
             </div>
-            <p className="mt-6 type-body text-muted">Takes a few minutes. Nothing is saved after you close the page.</p>
+            <p className="mt-6 type-body text-muted">{t.home.note}</p>
           </PageItem>
 
           <PageItem className="mx-auto flex w-full max-w-[34rem] flex-col items-center">
@@ -71,16 +75,22 @@ export function PatientHome({ route }: { route: RouteMeta }) {
           <HowItWorks />
         </PageItem>
 
-        {patient?.urgent && (
+        {patient?.safetyCheck && words.urgent && (
           <PageItem className="mt-28">
-            <UrgentStrip urgent={patient.urgent} />
+            <UrgentStrip symptoms={words.urgent.strip} />
           </PageItem>
         )}
 
         <PatientFooter />
       </div>
 
-      <QuestionsSheet open={asking} onClose={() => setAsking(false)} features={schema.data?.features ?? null} />
+      <QuestionsSheet
+        open={asking}
+        onClose={() => setAsking(false)}
+        features={schema.data?.features ?? null}
+        assessment={patient?.assessment ?? null}
+        strings={words}
+      />
     </Page>
   )
 }
