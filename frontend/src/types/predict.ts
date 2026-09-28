@@ -1,6 +1,32 @@
 import type { BackendId, ConfigKey, DatasetId, ExperimentId, MeanStd, ModelId } from './common'
 import type { ModalityId } from './crossModality'
 
+/** Icon names Patient Mode may use (lucide); the UI maps them to components, so the config stays plain data. */
+export type PatientIcon =
+  | 'user'
+  | 'cake'
+  | 'gauge'
+  | 'heart-crack'
+  | 'activity'
+  | 'trending-down'
+  | 'trending-up'
+  | 'heart-pulse'
+  | 'footprints'
+  | 'scan-line'
+  | 'waypoints'
+  | 'droplet'
+  | 'candy'
+  | 'circle-dot'
+  | 'circle-dashed'
+  | 'square'
+  | 'grip'
+  | 'spline'
+  | 'shrink'
+  | 'hexagon'
+  | 'sparkles'
+  | 'scale'
+  | 'orbit'
+
 export type FeatureKind = 'continuous' | 'integer' | 'binary' | 'categorical'
 
 export interface FeatureOption {
@@ -25,6 +51,9 @@ export interface FeatureSpec {
   /** Step group for the patient assessment form. */
   group: string
   modality: ModalityId | null
+  /** Patient Mode (from the dataset config): icon and the question in plain words, e.g. "Your age". */
+  icon: PatientIcon
+  question: string
 }
 
 /** Feature key → value; null = missing. */

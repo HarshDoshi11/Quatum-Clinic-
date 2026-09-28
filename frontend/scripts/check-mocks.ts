@@ -328,6 +328,10 @@ for (const d of DATASET_IDS) {
     check(`${d} ${name}: no AUC, qubits, models, backends or experiments`, !JARGON.test(shown), shown.match(JARGON)?.[0])
   }
   check(`${d}: every input has a plain label for the patient form`, sc.features.every((f) => f.plainLabel.trim().length > 0))
+  const cfg = DATASETS[d].patient
+  eq(`${d}: the patient config gives every input an icon and a question (and nothing extra)`, Object.keys(cfg.features).sort(), sc.features.map((f) => f.key).sort())
+  check(`${d}: the schema carries the config's icons and questions`, sc.features.every((f) => f.icon === cfg.features[f.key]?.icon && f.question === cfg.features[f.key]?.question))
+  check(`${d}: patient name and guidance are set`, cfg.name.length > 0 && cfg.guidance.length > 0)
 }
 
 // ─── Unchanged anchors ──────────────────────────────────────

@@ -21,6 +21,13 @@
         "id": "cytology",
         "label": "Tumor cytology"
       }
+    ],
+    "condition": "breast cancer",
+    "patientName": "breast cancer",
+    "patientGuidance": [
+      "Have your biopsy or cytology report nearby: every answer comes from its measurements.",
+      "Answer what the report shows. Choose “Not sure” for anything it doesn’t.",
+      "Your answers stay on this device and are cleared when you close the page."
     ]
   },
   {
@@ -64,6 +71,13 @@
         "id": "labs",
         "label": "Blood Labs"
       }
+    ],
+    "condition": "heart disease",
+    "patientName": "heart disease",
+    "patientGuidance": [
+      "Have your latest results nearby: blood pressure, cholesterol and any heart test reports.",
+      "Answer what you know. Choose “Not sure” for anything you don’t.",
+      "Your answers stay on this device and are cleared when you close the page."
     ]
   }
 ]

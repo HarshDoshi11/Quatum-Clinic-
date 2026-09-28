@@ -4,6 +4,7 @@
  */
 import type { BackendId, BackendInfo, DatasetId, ModelId, ModelInfo } from '../types/common'
 import type { ModalityInfo } from '../types/crossModality'
+import type { PatientIcon } from '../types/predict'
 
 export const MODELS: Record<ModelId, ModelInfo> = {
   vqc: { id: 'vqc', name: 'VQC', longName: 'Variational Quantum Classifier', family: 'quantum' },
@@ -23,6 +24,22 @@ export const BACKENDS: Record<BackendId, BackendInfo> = {
   'fake-backend-2': { id: 'fake-backend-2', name: 'FakeBackend-2' },
   'ibm-qpu': { id: 'ibm-qpu', name: 'IBM QPU' },
   cpu: { id: 'cpu', name: 'CPU' },
+}
+
+/** How Patient Mode presents one input: an icon, and the question in plain words ("Your age"). */
+export interface PatientFeatureInfo {
+  icon: PatientIcon
+  question: string
+}
+
+/** Everything Patient Mode needs from a dataset. */
+export interface PatientConfig {
+  /** What the check is about, in patient copy ("heart disease"). */
+  name: string
+  /** One entry per input. check:mocks asserts every model input has one. */
+  features: Record<string, PatientFeatureInfo>
+  /** Short steps to read before starting (Part B shows them with the result). */
+  guidance: string[]
 }
 
 export interface DatasetMeta {
@@ -51,6 +68,8 @@ export interface DatasetMeta {
   reportSubject: string
   /** Probability where the risk band turns moderate, then high: [moderate, high]. The band depends only on the probability. */
   riskBandEdges: [number, number]
+  /** Patient Mode: name, per-input icon and question, guidance. */
+  patient: PatientConfig
 }
 
 export const DATASETS: Record<DatasetId, DatasetMeta> = {
@@ -71,6 +90,26 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     modalities: [{ id: 'cytology', label: 'Tumor cytology' }],
     reportSubject: 'Your sample’s',
     riskBandEdges: [0.3, 0.6],
+    patient: {
+      name: 'breast cancer',
+      features: {
+        radius_mean: { icon: 'circle-dot', question: 'Cell size (radius)' },
+        texture_mean: { icon: 'grip', question: 'Texture variation' },
+        perimeter_mean: { icon: 'circle-dashed', question: 'Cell outline length' },
+        area_mean: { icon: 'square', question: 'Cell area' },
+        smoothness_mean: { icon: 'spline', question: 'Edge smoothness' },
+        compactness_mean: { icon: 'shrink', question: 'Compactness' },
+        concavity_mean: { icon: 'orbit', question: 'Depth of indentations' },
+        concave_points_mean: { icon: 'sparkles', question: 'Number of indentations' },
+        symmetry_mean: { icon: 'scale', question: 'Symmetry' },
+        fractal_dimension_mean: { icon: 'hexagon', question: 'Edge complexity' },
+      },
+      guidance: [
+        'Have your biopsy or cytology report nearby: every answer comes from its measurements.',
+        'Answer what the report shows. Choose “Not sure” for anything it doesn’t.',
+        'Your answers stay on this device and are cleared when you close the page.',
+      ],
+    },
   },
   heart: {
     id: 'heart',
@@ -95,6 +134,29 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     ],
     reportSubject: 'Your',
     riskBandEdges: [0.3, 0.6],
+    patient: {
+      name: 'heart disease',
+      features: {
+        age: { icon: 'cake', question: 'Your age' },
+        sex: { icon: 'user', question: 'Your sex' },
+        trestbps: { icon: 'gauge', question: 'Your blood pressure at rest' },
+        cp: { icon: 'heart-crack', question: 'What kind of chest pain you have' },
+        restecg: { icon: 'activity', question: 'Your resting heart tracing (ECG)' },
+        oldpeak: { icon: 'trending-down', question: 'ECG change during exercise' },
+        slope: { icon: 'trending-up', question: 'ECG slope at peak exercise' },
+        thalach: { icon: 'heart-pulse', question: 'Your highest heart rate in the exercise test' },
+        exang: { icon: 'footprints', question: 'Chest pain when you exercise' },
+        thal: { icon: 'scan-line', question: 'Your heart scan result' },
+        ca: { icon: 'waypoints', question: 'Narrowed vessels seen on your scan' },
+        chol: { icon: 'droplet', question: 'Your cholesterol' },
+        fbs: { icon: 'candy', question: 'High fasting blood sugar' },
+      },
+      guidance: [
+        'Have your latest results nearby: blood pressure, cholesterol and any heart test reports.',
+        'Answer what you know. Choose “Not sure” for anything you don’t.',
+        'Your answers stay on this device and are cleared when you close the page.',
+      ],
+    },
   },
 }
 

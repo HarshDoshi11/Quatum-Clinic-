@@ -9,10 +9,11 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - The full product spec (all pages, Patient Mode, phases) is in `docs/brief.md`. Read it before starting any phase.
   If the brief and this file disagree, this file wins.
 - Phases 1–6: done and approved (Phase 6 includes the Predict & Trust rework and the Explain workspace).
-- Phase 7 — Patient Mode: built, awaiting approval. Pages in `src/pages/patient/` (Home, Assessment, MyReport).
+- Phase 7 — Patient Mode: built. Calm Clinic redesign Part A done (token layer, Home, step-by-step Assessment →
+  `/patient/result`, patient config); Part B (Result and My Report) is next. Pages in `src/pages/patient/`.
   Patient Mode shows no AUC, qubits, models, experiments, backends or 3D: `ReportLetter audience="patient"` hides
-  each check's technical detail, form fields use `plainLabel` (`<FeatureField plain />`), and `check:mocks` asserts
-  the patient-facing report text has no research jargon. The assessment edits the shared in-memory patient.
+  each check's technical detail, and `check:mocks` asserts the patient-facing report text has no research jargon and
+  that the patient config covers every input. The assessment edits the shared in-memory patient.
 - Next: Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
@@ -196,6 +197,13 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   ≥ 4.5:1 in both themes); the plain `risk-*` colours are for marks and fills.
 - Never use purple, gradients (hard-stop slider fills excepted), glassmorphism, glows, emoji, icons in coloured
   circles, or two-tone headlines.
+- **Patient Mode ("Calm Clinic")** has its own token layer, `[data-mode='patient']` in `tokens.css` (AppShell sets
+  `data-mode`): the accent becomes sage (text-safe `--risk-low-text`), panels and buttons get 8px corners
+  (`rounded-panel`, `rounded-control`; Research keeps 4px / 2px), and `bg-accent-soft` tints selections. On patient
+  pages: `type-body-lg` as the default text, lines ≤ 60ch, sections ≥ 56px apart, mono only for report IDs and dates,
+  risk colours only for the risk word and the icon grid, motion 250–500ms eased (`tGentle`, `stepSlide`). Patient
+  copy (name, per-input icon and question, guidance) comes from `DATASETS[id].patient`; icons map through
+  `features/patient/icons.ts`, never per dataset in a component.
 - Motion uses Framer Motion (`motion/react`). Keep it quick and precise (200–400ms), never bouncy. Share values via
   `src/lib/motion.ts`. Respect reduced motion (`MotionConfig reducedMotion="user"`, `useReducedMotion`).
 - Every data view has a skeleton loading state and an empty or error state (`Skeleton`, `EmptyState`).

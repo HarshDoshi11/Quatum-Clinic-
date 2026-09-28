@@ -1,77 +1,80 @@
+import { ListChecks, ScanSearch, ShieldCheck } from 'lucide-react'
 import { api, useResource } from '@/api'
 import { ButtonLink } from '@/components/ui/Button'
 import { Page, PageItem } from '@/components/ui/Page'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { BreathingCircle } from '@/features/patient/BreathingCircle'
+import { PatientFooter } from '@/features/patient/PatientFooter'
 import { PATIENT_BASE, type RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
 import { useDataVersion } from '@/state/dataVersion'
 
 /**
- * Patient Mode · Home: what this check is, in everyday words, and one way forward.
- * No numbers, models or machines: just what it checks, how reliable it is, and what comes next.
- * (The status strip carries "Decision support, not a diagnosis." on every Patient Mode page.)
+ * Patient Mode · Home ("Calm Clinic"): the question, one warm sentence, a breathing visual,
+ * one way forward, and three plain points. No numbers, models or machines.
  */
 export function PatientHome({ route }: { route: RouteMeta }) {
   const { datasetId } = useDataset()
   const { version } = useDataVersion()
   const datasets = useResource((signal) => api.listDatasets({ signal }), [version])
-  const condition = datasets.data?.find((d) => d.id === datasetId)?.condition ?? null
-  const groups = useResource((signal) => api.getFeatureSchema(datasetId, { signal }), [datasetId, version])
-  const steps = groups.data ? [...new Set(groups.data.features.map((f) => f.group))] : []
+  const name = datasets.data?.find((d) => d.id === datasetId)?.patientName ?? null
 
   const points = [
     {
+      icon: ScanSearch,
       title: 'What it checks',
-      body: `It looks at test results you already have and estimates how likely ${condition ?? 'the condition'} is for people with results like yours${
-        steps.length > 0 ? `, in ${steps.length} short steps` : ''
-      }.`,
+      body: `It reads the test results you already have and estimates how likely ${name ?? 'the condition'} is for people with results like yours.`,
     },
     {
-      title: 'How reliable it is',
-      body: 'Every result comes with its own reliability check. If your information is incomplete or unusual, it tells you so instead of guessing.',
+      icon: ShieldCheck,
+      title: 'How sure it is',
+      body: 'Every result says how sure it is. If your information is incomplete or unusual, it tells you so instead of guessing.',
     },
     {
+      icon: ListChecks,
       title: 'What to do next',
-      body: 'You get clear next steps and questions to bring to your doctor, and a short report you can download and share.',
+      body: 'You get simple next steps, questions for your doctor, and a short report you can download and share.',
     },
   ]
 
   return (
     <Page label={route.label}>
-      <PageItem as="header" className="max-w-[48rem]">
-        <PageHeader route={route} />
-      </PageItem>
+      <div className="grid grid-cols-1 items-center gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+        <PageItem as="header">
+          <PageHeader route={route} />
+          <p className="mt-8 max-w-[60ch] type-body-lg text-ink">
+            {name ? (
+              <>
+                A short, private check about {name}. Answer a few questions at your own pace, and get a clear answer in plain words, with what to do
+                next.
+              </>
+            ) : (
+              <Skeleton width="100%" height="3.5rem" />
+            )}
+          </p>
+          <div className="mt-10">
+            <ButtonLink to={`${PATIENT_BASE}/assessment`}>Start assessment →</ButtonLink>
+          </div>
+        </PageItem>
+        <PageItem className="mx-auto w-full max-w-[22rem]">
+          <BreathingCircle />
+        </PageItem>
+      </div>
 
-      <PageItem className="mt-10 max-w-[44rem]">
-        <p className="type-body-lg text-ink">
-          {condition ? (
-            <>
-              This is a short, private check about <span className="whitespace-nowrap">{condition}</span>. You answer a few questions about your
-              test results, one group at a time, and get your result in plain words.
-            </>
-          ) : (
-            <Skeleton width="90%" height="3.5rem" />
-          )}
-        </p>
-        <div className="mt-10">
-          <ButtonLink to={`${PATIENT_BASE}/assessment`}>Start assessment →</ButtonLink>
-        </div>
-      </PageItem>
-
-      <PageItem as="section" className="mt-24 max-w-[64rem]" aria-label="About this check">
-        <ol className="grid grid-cols-1 gap-x-12 gap-y-10 border-t border-rule pt-8 md:grid-cols-3">
-          {points.map((p, i) => (
-            <li key={p.title}>
-              <p className="type-label text-muted">
-                <span className="text-ink">{String(i + 1).padStart(2, '0')}</span> — {p.title}
-              </p>
-              <p className="mt-4 type-body-lg text-ink">{p.body}</p>
+      <PageItem as="section" className="mt-16" aria-label="About this check">
+        <ul className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-3">
+          {points.map(({ icon: Icon, title, body }) => (
+            <li key={title} className="max-w-[60ch]">
+              <Icon size="1.5rem" strokeWidth={1.5} className="text-accent" aria-hidden="true" />
+              <p className="mt-4 type-body-lg font-medium text-ink">{title}</p>
+              <p className="mt-2 type-body-lg text-muted">{body}</p>
             </li>
           ))}
-        </ol>
+        </ul>
       </PageItem>
 
+      <PatientFooter />
     </Page>
   )
 }

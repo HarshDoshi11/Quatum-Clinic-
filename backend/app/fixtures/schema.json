@@ -14,7 +14,9 @@
         "min": 6.98,
         "max": 28.11,
         "step": 0.01,
-        "locked": false
+        "locked": false,
+        "icon": "circle-dot",
+        "question": "Cell size (radius)"
       },
       {
         "options": null,
@@ -28,7 +30,9 @@
         "min": 9.71,
         "max": 39.28,
         "step": 0.01,
-        "locked": false
+        "locked": false,
+        "icon": "grip",
+        "question": "Texture variation"
       },
       {
         "options": null,
@@ -42,7 +46,9 @@
         "min": 43.79,
         "max": 188.5,
         "step": 0.1,
-        "locked": false
+        "locked": false,
+        "icon": "circle-dashed",
+        "question": "Cell outline length"
       },
       {
         "options": null,
@@ -56,7 +62,9 @@
         "min": 143.5,
         "max": 2501,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "square",
+        "question": "Cell area"
       },
       {
         "options": null,
@@ -70,7 +78,9 @@
         "min": 0.0526,
         "max": 0.1634,
         "step": 0.0001,
-        "locked": false
+        "locked": false,
+        "icon": "spline",
+        "question": "Edge smoothness"
       },
       {
         "options": null,
@@ -84,7 +94,9 @@
         "min": 0.0194,
         "max": 0.3454,
         "step": 0.0001,
-        "locked": false
+        "locked": false,
+        "icon": "shrink",
+        "question": "Compactness"
       },
       {
         "options": null,
@@ -98,7 +110,9 @@
         "min": 0,
         "max": 0.4268,
         "step": 0.0001,
-        "locked": false
+        "locked": false,
+        "icon": "orbit",
+        "question": "Depth of indentations"
       },
       {
         "options": null,
@@ -112,7 +126,9 @@
         "min": 0,
         "max": 0.2012,
         "step": 0.0001,
-        "locked": false
+        "locked": false,
+        "icon": "sparkles",
+        "question": "Number of indentations"
       },
       {
         "options": null,
@@ -126,7 +142,9 @@
         "min": 0.106,
         "max": 0.304,
         "step": 0.0001,
-        "locked": false
+        "locked": false,
+        "icon": "scale",
+        "question": "Symmetry"
       },
       {
         "options": null,
@@ -140,7 +158,9 @@
         "min": 0.05,
         "max": 0.0974,
         "step": 0.0001,
-        "locked": false
+        "locked": false,
+        "icon": "hexagon",
+        "question": "Edge complexity"
       }
     ],
     "samplePatient": {
@@ -183,7 +203,9 @@
         "min": 29,
         "max": 77,
         "step": 1,
-        "locked": true
+        "locked": true,
+        "icon": "cake",
+        "question": "Your age"
       },
       {
         "options": [
@@ -206,7 +228,9 @@
         "min": 0,
         "max": 1,
         "step": 1,
-        "locked": true
+        "locked": true,
+        "icon": "user",
+        "question": "Your sex"
       },
       {
         "options": null,
@@ -220,7 +244,9 @@
         "min": 94,
         "max": 200,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "gauge",
+        "question": "Your blood pressure at rest"
       },
       {
         "options": [
@@ -251,7 +277,9 @@
         "min": 0,
         "max": 3,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "heart-crack",
+        "question": "What kind of chest pain you have"
       },
       {
         "options": [
@@ -278,7 +306,9 @@
         "min": 0,
         "max": 2,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "activity",
+        "question": "Your resting heart tracing (ECG)"
       },
       {
         "options": null,
@@ -292,7 +322,9 @@
         "min": 0,
         "max": 6.2,
         "step": 0.1,
-        "locked": false
+        "locked": false,
+        "icon": "trending-down",
+        "question": "ECG change during exercise"
       },
       {
         "options": [
@@ -319,7 +351,9 @@
         "min": 0,
         "max": 2,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "trending-up",
+        "question": "ECG slope at peak exercise"
       },
       {
         "options": null,
@@ -333,7 +367,9 @@
         "min": 71,
         "max": 202,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "heart-pulse",
+        "question": "Your highest heart rate in the exercise test"
       },
       {
         "options": [
@@ -356,7 +392,9 @@
         "min": 0,
         "max": 1,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "footprints",
+        "question": "Chest pain when you exercise"
       },
       {
         "options": [
@@ -383,7 +421,9 @@
         "min": 0,
         "max": 2,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "scan-line",
+        "question": "Your heart scan result"
       },
       {
         "options": null,
@@ -397,7 +437,9 @@
         "min": 0,
         "max": 3,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "waypoints",
+        "question": "Narrowed vessels seen on your scan"
       },
       {
         "options": null,
@@ -411,7 +453,9 @@
         "min": 126,
         "max": 564,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "droplet",
+        "question": "Your cholesterol"
       },
       {
         "options": [
@@ -434,7 +478,9 @@
         "min": 0,
         "max": 1,
         "step": 1,
-        "locked": false
+        "locked": false,
+        "icon": "candy",
+        "question": "High fasting blood sugar"
       }
     ],
     "samplePatient": {

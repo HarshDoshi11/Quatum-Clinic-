@@ -20,8 +20,6 @@ interface FeatureFieldProps {
   feature: FeatureSpec
   value: number | null
   onChange: (value: number | null) => void
-  /** Patient Mode: the plain label, and "I don't know" for an empty choice. */
-  plain?: boolean
 }
 
 /**
@@ -29,7 +27,7 @@ interface FeatureFieldProps {
  * value is outside it; it overlays the gap below, so showing it never moves the form.
  * Empty = missing. Values outside the range are allowed (the model will abstain) but flagged.
  */
-export function FeatureField({ feature: f, value, onChange, plain = false }: FeatureFieldProps) {
+export function FeatureField({ feature: f, value, onChange }: FeatureFieldProps) {
   const id = useId()
   const [focused, setFocused] = useState(false)
   const outside = value !== null && (value < f.min || value > f.max)
@@ -41,7 +39,7 @@ export function FeatureField({ feature: f, value, onChange, plain = false }: Fea
   let control: ReactNode
   if (f.options) {
     // "Not recorded" is a real choice (the value is missing), listed last and muted.
-    const options: SelectOption<string>[] = [...f.options.map((o) => ({ value: String(o.value), label: o.label })), { value: '', label: plain ? 'I don’t know' : 'Not recorded', muted: true }]
+    const options: SelectOption<string>[] = [...f.options.map((o) => ({ value: String(o.value), label: o.label })), { value: '', label: 'Not recorded', muted: true }]
     control = (
       <div className="mt-1">
         <Select
@@ -67,8 +65,8 @@ export function FeatureField({ feature: f, value, onChange, plain = false }: Fea
 
   return (
     <div className="relative" onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>
-      <label htmlFor={id} className={plain ? 'type-ui text-ink' : 'type-label text-muted'}>
-        {plain ? f.plainLabel : f.label}
+      <label htmlFor={id} className="type-label text-muted">
+        {f.label}
       </label>
       {control}
       <p className={`num absolute top-full left-0 mt-0.5 whitespace-nowrap type-small ${outside ? 'text-ink' : 'text-muted'}`} aria-live="polite">

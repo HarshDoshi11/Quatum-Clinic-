@@ -37,6 +37,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div
+      // Patient Mode swaps in its token layer ([data-mode='patient'] in tokens.css).
+      data-mode={mode}
       // Printing (Download PDF) keeps only the page content: no chrome, no scroll container.
       className="grid h-full min-w-[1024px] overflow-hidden bg-bg text-ink print:block print:h-auto print:min-w-0 print:overflow-visible"
       style={{

@@ -233,7 +233,7 @@ export function CommandPalette() {
                   ))
                 ) : (
                   <Command.Group heading="Pages" className={groupClass}>
-                    {PATIENT_ROUTES.map((route) => (
+                    {PATIENT_ROUTES.filter((route) => !route.navParent).map((route) => (
                       <Item key={route.id} value={`Go to ${route.label}`} onSelect={() => run(() => navigate(route.path))}>
                         {route.label}
                       </Item>

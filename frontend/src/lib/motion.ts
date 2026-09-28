@@ -46,3 +46,16 @@ export const springEstimate = { type: 'spring', stiffness: 200, damping: 26 } as
 
 /** Bars resizing and re-sorting as inputs change. */
 export const springBar: Transition = { type: 'spring', stiffness: 260, damping: 30 }
+
+// ─── Patient Mode: gentler and slower (250–500ms), eased, never bouncy ─────
+
+export const easeGentle: [number, number, number, number] = [0.4, 0, 0.2, 1]
+
+export const tGentle: Transition = { duration: 0.4, ease: easeGentle }
+
+/** Assessment steps slide horizontally with a crossfade; `direction` is +1 forward, −1 back. */
+export const stepSlide: Variants = {
+  enter: (direction: number) => ({ opacity: 0, x: direction * 32 }),
+  center: { opacity: 1, x: 0, transition: { duration: 0.25, ease: easeGentle } },
+  exit: (direction: number) => ({ opacity: 0, x: direction * -32, transition: { duration: 0.25, ease: easeGentle } }),
+}
