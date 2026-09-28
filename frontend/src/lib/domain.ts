@@ -47,6 +47,8 @@ export interface DatasetMeta {
    * there are two or more; with one, every feature belongs to it.
    */
   modalities: ModalityInfo[]
+  /** How the patient report refers to the inputs: "Your" values, or "Your sample’s" when they measure a tissue sample. */
+  reportSubject: string
 }
 
 export const DATASETS: Record<DatasetId, DatasetMeta> = {
@@ -65,6 +67,7 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     lockedFeatures: [],
     explainCaption: 'These are measurements of the tumor sample, not things a patient can change. Use this to see what the model pays attention to.',
     modalities: [{ id: 'cytology', label: 'Tumor cytology' }],
+    reportSubject: 'Your sample’s',
   },
   heart: {
     id: 'heart',
@@ -87,6 +90,7 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
       { id: 'exercise', label: 'Exercise Test' },
       { id: 'labs', label: 'Blood Labs' },
     ],
+    reportSubject: 'Your',
   },
 }
 

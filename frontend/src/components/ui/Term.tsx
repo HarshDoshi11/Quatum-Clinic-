@@ -22,7 +22,7 @@ export function Term({ term, children }: TermProps) {
     <Tooltip label={entry.name} content={entry.definition}>
       <span
         tabIndex={0}
-        className="cursor-help underline decoration-muted decoration-dotted decoration-1 underline-offset-[3px] hover:decoration-ink"
+        className="cursor-help underline decoration-muted decoration-dotted decoration-1 underline-offset-[3px] hover:decoration-ink print:no-underline"
       >
         {children}
       </span>

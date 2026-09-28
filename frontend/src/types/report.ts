@@ -1,5 +1,5 @@
 import type { DatasetId, ExperimentId, ISODateTime } from './common'
-import type { Decision, PatientInput, RiskBand, TrustLevel } from './predict'
+import type { Decision, PatientInput, RiskBand, TrustLevel, TrustSignalId } from './predict'
 
 export interface ReportRequest {
   dataset: DatasetId
@@ -13,6 +13,14 @@ export interface ReportInfluence {
   plain: string
 }
 
+/** One trust check, in plain words (label) with the technical reason (detail). */
+export interface ReliabilityPoint {
+  id: TrustSignalId
+  level: TrustLevel
+  label: string
+  detail: string
+}
+
 export interface PatientReport {
   reportId: string
   dataset: DatasetId
@@ -23,14 +31,19 @@ export interface PatientReport {
     decision: Decision
     riskBand: RiskBand | null
     probability: number | null
+    /** "Higher likelihood" / "No reliable result". */
     headline: string
+    /** Natural-frequency reading of the calibrated probability; null when abstaining. */
+    frequency: string | null
   }
   meaning: string
   reliability: {
     level: TrustLevel
+    /** Computed from the checks: how many passed and which were less certain. */
     summary: string
-    points: string[]
+    points: ReliabilityPoint[]
   }
+  /** Strongest influences; empty when the model abstains (there is no result to explain). */
   influences: ReportInfluence[]
   nextSteps: string[]
   questions: string[]

@@ -121,3 +121,37 @@
     --page-pad-x: 2.5rem;
   }
 }
+
+/*
+ * Print (Download PDF): always the light palette on white paper, whatever the
+ * screen theme or projector mode, so the letter reads the same for the doctor.
+ */
+@media print {
+  :root,
+  :root[data-theme='light'],
+  :root[data-theme='dark'],
+  :root[data-projector='on'][data-theme='light'],
+  :root[data-projector='on'][data-theme='dark'] {
+    font-size: 100%;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --ink: #0d0d0d;
+    --muted: #4a4a4a;
+    --rule: rgba(13, 13, 13, 0.2);
+    --rule-strong: rgba(13, 13, 13, 0.4);
+    --accent: #2340ff;
+    --risk-low: #5e8c61;
+    --risk-mid: #c8912b;
+    --risk-high: #b23a2e;
+    color-scheme: light;
+  }
+  html,
+  body,
+  #root {
+    height: auto;
+  }
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

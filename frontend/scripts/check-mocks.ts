@@ -222,6 +222,31 @@ for (const d of DATASET_IDS) {
   eq(`${d}: unusual patient abstains with reasons`, [predict(d, sc.unusualPatient).decision, predict(d, sc.unusualPatient).abstainReasons.length > 0], ['abstain', true])
 }
 
+// ─── Patient Report ─────────────────────────────────────────
+console.log('\nPatient Report')
+for (const d of DATASET_IDS) {
+  const sc = featureSchema(d)
+  for (const [name, input] of [['sample', sc.samplePatient], ['unusual', sc.unusualPatient]] as const) {
+    const r = patientReport(d, input, '')
+    const p = predict(d, input)
+    eq(`${d} ${name}: report = prediction (decision, band, probability)`, [r.result.decision, r.result.riskBand, r.result.probability], [p.decision, p.riskBand, p.probability])
+    eq(`${d} ${name}: one reliability point per trust check, same levels`, r.reliability.points.map((x) => [x.id, x.level]), p.trust.map((t) => [t.id, t.level]))
+    const weak = p.trust.filter((t) => t.level === 'weak').length
+    const partial = p.trust.filter((t) => t.level === 'partial').length
+    const expected = p.decision === 'abstain' || weak > 0 ? 'weak' : partial > 1 ? 'partial' : 'strong'
+    eq(`${d} ${name}: reliability level follows the checks`, r.reliability.level, expected)
+    if (p.decision === 'abstain') {
+      eq(`${d} ${name}: abstain → no result, no frequency, no influences`, [r.result.headline, r.result.frequency, r.influences.length], ['No reliable result', null, 0])
+    } else {
+      check(`${d} ${name}: frequency is the calibrated probability`, r.result.frequency?.startsWith(`About ${Math.round((p.probability ?? 0) * 100)} in 100`) ?? false, r.result.frequency ?? '')
+      const ex = explain(d, input)
+      check(`${d} ${name}: influence directions match Explain`, r.influences.every((inf, i) => inf.direction === ex.contributions.filter((c) => c.value !== null)[i]?.direction))
+      check(`${d} ${name}: influences use the config's wording (${DATASETS[d].reportSubject})`, r.influences.every((inf) => inf.plain.startsWith(`${DATASETS[d].reportSubject} `)))
+      check(`${d} ${name}: summary counts the checks`, weak > 0 || r.reliability.summary.includes(partial > 0 ? `${p.trust.length - partial} of ${p.trust.length} checks passed` : `All ${p.trust.length} checks passed`), r.reliability.summary)
+    }
+  }
+}
+
 // ─── Unchanged anchors ──────────────────────────────────────
 console.log('\nRegistry, trust, patient')
 const ov = overview('wdbc', EXPERIMENTS)

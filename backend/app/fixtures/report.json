@@ -10,41 +10,72 @@
         "decision": "predict",
         "riskBand": "high",
         "probability": 0.82,
-        "headline": "Higher likelihood"
+        "headline": "Higher likelihood",
+        "frequency": "About 82 in 100 people with results like these have breast cancer."
       },
-      "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of breast cancer. This is a screening signal, not a diagnosis — only your doctor can diagnose.",
+      "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of breast cancer. This is a screening signal, not a diagnosis. Only your doctor can diagnose.",
       "reliability": {
         "level": "strong",
-        "summary": "The model was consistent and your information was complete.",
+        "summary": "5 of 6 checks passed. Less certain: robustness on a real quantum computer.",
         "points": [
-          "Prediction stability: 5 seeds agree within ±1.4 points.",
-          "Data quality: All 10 inputs present and within valid ranges.",
-          "Distribution shift (OOD): Patient resembles the training population.",
-          "Calibration: At ~86% predicted, 84% of similar test patients were positive.",
-          "Input sensitivity: Small errors in the entered values move the result by at most 0.7 points.",
-          "Hardware sensitivity: On FakeBackend-1 noise the result moves 10.7 points; decision unchanged."
+          {
+            "id": "stability",
+            "level": "strong",
+            "label": "Consistency each time the model is trained",
+            "detail": "5 seeds agree within ±1.4 points."
+          },
+          {
+            "id": "data-quality",
+            "level": "strong",
+            "label": "Completeness of your information",
+            "detail": "All 10 inputs present and within valid ranges."
+          },
+          {
+            "id": "distribution-shift",
+            "level": "strong",
+            "label": "How closely you resemble the people the model learned from",
+            "detail": "Patient resembles the training population."
+          },
+          {
+            "id": "calibration",
+            "level": "strong",
+            "label": "Whether its percentages come true for people like you",
+            "detail": "At ~86% predicted, 84% of similar test patients were positive."
+          },
+          {
+            "id": "input-sensitivity",
+            "level": "strong",
+            "label": "Steadiness under small errors in your values",
+            "detail": "Small errors in the entered values move the result by at most 0.7 points."
+          },
+          {
+            "id": "hardware-sensitivity",
+            "level": "partial",
+            "label": "Robustness on a real quantum computer",
+            "detail": "On FakeBackend-1 noise the result moves 10.7 points; decision unchanged."
+          }
         ]
       },
       "influences": [
         {
           "label": "Cell size (radius)",
           "direction": "increases",
-          "plain": "Your cell size (radius) pushed the estimate up."
+          "plain": "Your sample’s cell size (radius) pushed the estimate up."
         },
         {
           "label": "Cell outline length",
           "direction": "increases",
-          "plain": "Your cell outline length pushed the estimate up."
+          "plain": "Your sample’s cell outline length pushed the estimate up."
         },
         {
           "label": "Number of indentations",
           "direction": "increases",
-          "plain": "Your number of indentations pushed the estimate up."
+          "plain": "Your sample’s number of indentations pushed the estimate up."
         },
         {
           "label": "Cell area",
           "direction": "increases",
-          "plain": "Your cell area pushed the estimate up."
+          "plain": "Your sample’s cell area pushed the estimate up."
         }
       ],
       "nextSteps": [
@@ -71,43 +102,53 @@
         "decision": "abstain",
         "riskBand": null,
         "probability": null,
-        "headline": "No reliable result"
+        "headline": "No reliable result",
+        "frequency": null
       },
       "meaning": "We couldn't give a reliable result from this information. Some of your values are unlike anything the model learned from, so any number would be a guess.",
       "reliability": {
         "level": "weak",
-        "summary": "Several reliability checks did not pass.",
+        "summary": "We couldn’t check this result, because some of your information is missing or outside what the model learned from.",
         "points": [
-          "Prediction stability: Seed agreement means little when the model is extrapolating.",
-          "Data quality: 9 of 10 inputs present; missing: texture.",
-          "Distribution shift (OOD): 2 values outside anything seen in training.",
-          "Calibration: Calibration was only measured on patients within the training range.",
-          "Input sensitivity: Out-of-range inputs make the result unpredictable under small changes.",
-          "Hardware sensitivity: Hardware robustness was only tested within the training range."
+          {
+            "id": "stability",
+            "level": "weak",
+            "label": "Consistency each time the model is trained",
+            "detail": "Seed agreement means little when the model is extrapolating."
+          },
+          {
+            "id": "data-quality",
+            "level": "partial",
+            "label": "Completeness of your information",
+            "detail": "9 of 10 inputs present; missing: texture."
+          },
+          {
+            "id": "distribution-shift",
+            "level": "weak",
+            "label": "How closely you resemble the people the model learned from",
+            "detail": "2 values outside anything seen in training."
+          },
+          {
+            "id": "calibration",
+            "level": "weak",
+            "label": "Whether its percentages come true for people like you",
+            "detail": "Calibration was only measured on patients within the training range."
+          },
+          {
+            "id": "input-sensitivity",
+            "level": "weak",
+            "label": "Steadiness under small errors in your values",
+            "detail": "Out-of-range inputs make the result unpredictable under small changes."
+          },
+          {
+            "id": "hardware-sensitivity",
+            "level": "weak",
+            "label": "Robustness on a real quantum computer",
+            "detail": "Hardware robustness was only tested within the training range."
+          }
         ]
       },
-      "influences": [
-        {
-          "label": "Cell area",
-          "direction": "increases",
-          "plain": "Your cell area pushed the estimate up."
-        },
-        {
-          "label": "Edge smoothness",
-          "direction": "increases",
-          "plain": "Your edge smoothness pushed the estimate up."
-        },
-        {
-          "label": "Cell size (radius)",
-          "direction": "increases",
-          "plain": "Your cell size (radius) pushed the estimate up."
-        },
-        {
-          "label": "Cell outline length",
-          "direction": "increases",
-          "plain": "Your cell outline length pushed the estimate up."
-        }
-      ],
+      "influences": [],
       "nextSteps": [
         "Book an appointment with your doctor.",
         "Bring this report and your original test results.",
@@ -133,19 +174,50 @@
         "decision": "predict",
         "riskBand": "high",
         "probability": 0.82,
-        "headline": "Higher likelihood"
+        "headline": "Higher likelihood",
+        "frequency": "About 82 in 100 people with results like these have heart disease."
       },
-      "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of heart disease. This is a screening signal, not a diagnosis — only your doctor can diagnose.",
+      "meaning": "Compared with people whose tests look similar to yours, the model estimates a higher likelihood of heart disease. This is a screening signal, not a diagnosis. Only your doctor can diagnose.",
       "reliability": {
         "level": "strong",
-        "summary": "The model was consistent and your information was complete.",
+        "summary": "5 of 6 checks passed. Less certain: robustness on a real quantum computer.",
         "points": [
-          "Prediction stability: 5 seeds agree within ±3.5 points.",
-          "Data quality: All 13 inputs present and within valid ranges.",
-          "Distribution shift (OOD): Patient resembles the training population.",
-          "Calibration: At ~86% predicted, 84% of similar test patients were positive.",
-          "Input sensitivity: Small errors in the entered values move the result by at most 0.5 points.",
-          "Hardware sensitivity: On FakeBackend-1 noise the result moves 9.4 points; decision unchanged."
+          {
+            "id": "stability",
+            "level": "strong",
+            "label": "Consistency each time the model is trained",
+            "detail": "5 seeds agree within ±3.5 points."
+          },
+          {
+            "id": "data-quality",
+            "level": "strong",
+            "label": "Completeness of your information",
+            "detail": "All 13 inputs present and within valid ranges."
+          },
+          {
+            "id": "distribution-shift",
+            "level": "strong",
+            "label": "How closely you resemble the people the model learned from",
+            "detail": "Patient resembles the training population."
+          },
+          {
+            "id": "calibration",
+            "level": "strong",
+            "label": "Whether its percentages come true for people like you",
+            "detail": "At ~86% predicted, 84% of similar test patients were positive."
+          },
+          {
+            "id": "input-sensitivity",
+            "level": "strong",
+            "label": "Steadiness under small errors in your values",
+            "detail": "Small errors in the entered values move the result by at most 0.5 points."
+          },
+          {
+            "id": "hardware-sensitivity",
+            "level": "partial",
+            "label": "Robustness on a real quantum computer",
+            "detail": "On FakeBackend-1 noise the result moves 9.4 points; decision unchanged."
+          }
         ]
       },
       "influences": [
@@ -194,43 +266,53 @@
         "decision": "abstain",
         "riskBand": null,
         "probability": null,
-        "headline": "No reliable result"
+        "headline": "No reliable result",
+        "frequency": null
       },
       "meaning": "We couldn't give a reliable result from this information. Some of your values are unlike anything the model learned from, so any number would be a guess.",
       "reliability": {
         "level": "weak",
-        "summary": "Several reliability checks did not pass.",
+        "summary": "We couldn’t check this result, because some of your information is missing or outside what the model learned from.",
         "points": [
-          "Prediction stability: Seed agreement means little when the model is extrapolating.",
-          "Data quality: 12 of 13 inputs present; missing: max heart rate.",
-          "Distribution shift (OOD): 2 values outside anything seen in training.",
-          "Calibration: Calibration was only measured on patients within the training range.",
-          "Input sensitivity: Out-of-range inputs make the result unpredictable under small changes.",
-          "Hardware sensitivity: Hardware robustness was only tested within the training range."
+          {
+            "id": "stability",
+            "level": "weak",
+            "label": "Consistency each time the model is trained",
+            "detail": "Seed agreement means little when the model is extrapolating."
+          },
+          {
+            "id": "data-quality",
+            "level": "partial",
+            "label": "Completeness of your information",
+            "detail": "12 of 13 inputs present; missing: max heart rate."
+          },
+          {
+            "id": "distribution-shift",
+            "level": "weak",
+            "label": "How closely you resemble the people the model learned from",
+            "detail": "2 values outside anything seen in training."
+          },
+          {
+            "id": "calibration",
+            "level": "weak",
+            "label": "Whether its percentages come true for people like you",
+            "detail": "Calibration was only measured on patients within the training range."
+          },
+          {
+            "id": "input-sensitivity",
+            "level": "weak",
+            "label": "Steadiness under small errors in your values",
+            "detail": "Out-of-range inputs make the result unpredictable under small changes."
+          },
+          {
+            "id": "hardware-sensitivity",
+            "level": "weak",
+            "label": "Robustness on a real quantum computer",
+            "detail": "Hardware robustness was only tested within the training range."
+          }
         ]
       },
-      "influences": [
-        {
-          "label": "Resting blood pressure",
-          "direction": "increases",
-          "plain": "Your resting blood pressure pushed the estimate up."
-        },
-        {
-          "label": "Cholesterol",
-          "direction": "increases",
-          "plain": "Your cholesterol pushed the estimate up."
-        },
-        {
-          "label": "Chest pain during exercise",
-          "direction": "increases",
-          "plain": "Your chest pain during exercise pushed the estimate up."
-        },
-        {
-          "label": "Type of chest pain",
-          "direction": "increases",
-          "plain": "Your type of chest pain pushed the estimate up."
-        }
-      ],
+      "influences": [],
       "nextSteps": [
         "Book an appointment with your doctor.",
         "Bring this report and your original test results.",

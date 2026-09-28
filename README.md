@@ -78,11 +78,20 @@ const overview = useResource((signal) => api.getOverview(datasetId, { signal }),
 - **HTTP mode** (`VITE_USE_MOCK=false`): `src/api/http.ts` calls the FastAPI backend at `VITE_API_URL`.
 
 **One source of truth.** Only a handful of anchor values are hand-written, in
-`src/mocks/data/canon.ts`: each model's AUC ± std per dataset, the noise profiles, and the safety
-threshold. Everything else is derived from them: sensitivity and specificity (equal-variance binormal ROC),
-noise tolerance, learning curves, the circuit search, calibration, the cross-modality gain, and the abstain
-rate. `npm run check:mocks` asserts the headline numbers (XGBoost 0.921, QSVM 0.914 ±0.012, VQC 0.909,
-EXP-2044…2048, Δ −0.007, 1.2%, 4.1%, +6.2%) and that every experiment ID referenced anywhere resolves.
+`src/mocks/data/canon.ts`: each model's AUC ± std per dataset, each modality's AUC ± std (Heart), the noise
+profiles, and the safety threshold. Everything else is derived from them by the results store
+(`src/mocks/data/results.ts`, keyed by dataset + model + config): sensitivity and specificity (equal-variance
+binormal ROC), noise tolerance, learning curves, the circuit search, calibration, the threshold curve, the
+cross-modality gain, and the abstain rate. `npm run check:mocks` asserts realistic per-dataset results, one
+value per config key across every endpoint, noise-aware wording for every claim, Predict = Explain = Report
+for the same patient, and that every experiment ID referenced anywhere resolves.
+
+**Per-dataset behaviour** (locked what-if inputs, the Explain caption, which kinds of test exist for the
+cross-modality study, how the report words its influences) is declared on the dataset config (`DATASETS` in
+`src/lib/domain.ts`). No page or mock special-cases a dataset ID.
+
+**The patient being assessed** is set on Predict & Trust and read by Explain and the Patient Report
+(`src/state/patient.tsx`). It is held in memory only and never written to storage.
 
 ### Global features
 
@@ -99,6 +108,8 @@ EXP-2044…2048, Δ −0.007, 1.2%, 4.1%, +6.2%) and that every experiment ID re
   Standing rules for new pages are in [CLAUDE.md](CLAUDE.md).
 - **Readability:** one rem-based type scale (`type-*` utilities, nothing under 12px), muted text ≥ 4.5:1 in both
   themes. **Projector mode** (`Shift P`, or the palette) scales the UI 115% and boosts contrast.
+- **Patient report:** *Download PDF for your doctor* opens the print dialog; print styles keep only the letter,
+  on white paper. *Share* uses the Web Share API where available, otherwise copies a text summary.
 - **Keyboard:** `Ctrl K` palette · `Shift T` theme · `Shift L` plain language · `Shift P` projector · `?` all shortcuts.
 
 ## Backend
@@ -145,6 +156,6 @@ CORS allows any `localhost` port; add deployed origins with `CORS_ORIGINS=https:
 - [x] Phase 3 — Overview + global features
 - [x] Phase 4 — Data, Train, and research pages (section I)
 - [x] Phase 5 — Hardware Reality Lab, Failure Envelope
-- [ ] Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report
+- [x] Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report
 - [ ] Phase 7 — Patient Mode
 - [ ] Phase 8 — Polish

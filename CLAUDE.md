@@ -9,8 +9,8 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - The full product spec (all pages, Patient Mode, phases) is in `docs/brief.md`. Read it before starting any phase.
   If the brief and this file disagree, this file wins.
 - Phases 1–5: done and approved.
-- Next: Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report.
-- Then: Phase 7 (Patient Mode), Phase 8 (polish).
+- Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report: built, awaiting approval.
+- Next: Phase 7 (Patient Mode; reuse `features/report/ReportLetter` for My Report), then Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
 - Update this section at the end of every session.
@@ -52,6 +52,8 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 - Per-dataset behaviour is declared on the dataset config (`DATASETS` in `src/lib/domain.ts`, e.g. `lockedFeatures`,
   `explainCaption`) and reaches pages through the API. Never special-case a dataset ID in a page or mock; a new
   dataset defines its own behaviour by adding a config entry.
+- The patient being assessed lives in `useCurrentPatient` (`src/state/patient.tsx`): Predict sets it, Explain and
+  the Report read it. It is patient data, so it stays in memory and is never written to storage.
 - Every patient input, including what-if changes, goes through the one training pipeline
   (`src/mocks/data/pipeline.ts`: impute → clip → standardise → PCA → angle encoding) before the model sees it.
   What-if controls always edit the original features, never PCA components.

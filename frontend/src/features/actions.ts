@@ -10,7 +10,8 @@ import { BACKENDS, DATASETS } from '@/lib/domain'
 import { useDataVersion } from '@/state/dataVersion'
 import { useDataset } from '@/state/dataset'
 import { useTheme, type Theme } from '@/state/theme'
-import type { DatasetId, Experiment } from '@/types'
+import { reportSummaryText } from '@/features/report/reportText'
+import type { DatasetId, Experiment, PatientReport } from '@/types'
 
 async function copyText(text: string): Promise<void> {
   try {
@@ -92,5 +93,34 @@ export function useAppActions() {
     [toast, invalidate],
   )
 
-  return { switchDataset, setTheme, toggleTheme, runPrediction, newExperiment, copyExperimentId, rerunExperiment }
+  /** "Download PDF": the browser's print dialog, with print styles that keep only the letter. */
+  const printReport = useCallback(
+    (report: PatientReport) => {
+      toast(`${report.reportId} · choose “Save as PDF” to download`)
+      window.print()
+    },
+    [toast],
+  )
+
+  /** Shares a plain-text summary (Web Share where available, otherwise the clipboard). */
+  const shareReport = useCallback(
+    async (report: PatientReport) => {
+      const text = reportSummaryText(report)
+      if (typeof navigator.share === 'function') {
+        try {
+          await navigator.share({ title: `Screening report ${report.reportId}`, text })
+          toast(`${report.reportId} shared`)
+          return
+        } catch (error) {
+          // Closing the share sheet is not a failure; anything else falls back to copying.
+          if (error instanceof DOMException && error.name === 'AbortError') return
+        }
+      }
+      await copyText(text)
+      toast(`${report.reportId} summary copied`)
+    },
+    [toast],
+  )
+
+  return { switchDataset, setTheme, toggleTheme, runPrediction, newExperiment, copyExperimentId, rerunExperiment, printReport, shareReport }
 }

@@ -37,7 +37,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className="grid h-full min-w-[1024px] overflow-hidden bg-bg text-ink"
+      // Printing (Download PDF) keeps only the page content: no chrome, no scroll container.
+      className="grid h-full min-w-[1024px] overflow-hidden bg-bg text-ink print:block print:h-auto print:min-w-0 print:overflow-visible"
       style={{
         gridTemplateColumns: 'var(--sidebar-w) minmax(0, 1fr)',
         gridTemplateRows: 'var(--topbar-h) minmax(0, 1fr) var(--strip-h)',
@@ -50,14 +51,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
 
-      <div className="border-r border-b border-rule">
+      <div className="border-r border-b border-rule print:hidden">
         <Logo mode={mode} />
       </div>
-      <div className="border-b border-rule">
+      <div className="border-b border-rule print:hidden">
         <TopBar />
       </div>
 
-      <aside className="relative overflow-hidden border-r border-rule">
+      <aside className="relative overflow-hidden border-r border-rule print:hidden">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={mode}
@@ -72,11 +73,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         </AnimatePresence>
       </aside>
 
-      <main id="main" ref={mainRef} tabIndex={-1} className="relative overflow-y-auto overflow-x-hidden">
+      <main id="main" ref={mainRef} tabIndex={-1} className="relative overflow-y-auto overflow-x-hidden print:overflow-visible">
         {children}
       </main>
 
-      <div className="col-span-2">
+      <div className="col-span-2 print:hidden">
         <StatusStrip mode={mode} />
       </div>
     </div>
