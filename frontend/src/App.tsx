@@ -29,6 +29,7 @@ const CrossModality = lazy(() => import('@/pages/research/CrossModality').then((
 const Report = lazy(() => import('@/pages/research/Report').then((m) => ({ default: m.Report })))
 const Failure = lazy(() => import('@/pages/research/Failure').then((m) => ({ default: m.Failure })))
 const PatientHome = lazy(() => import('@/pages/patient/Home').then((m) => ({ default: m.PatientHome })))
+const Assessment = lazy(() => import('@/pages/patient/Assessment').then((m) => ({ default: m.Assessment })))
 
 /** Shown for the instant a code-split page is loading: the page frame, no spinner. */
 function PageFallback() {
@@ -81,6 +82,8 @@ function patientPage(route: RouteMeta) {
   switch (route.id) {
     case 'patient-home':
       return lazyPage(<PatientHome route={route} />)
+    case 'patient-assessment':
+      return lazyPage(<Assessment route={route} />)
     default:
       return <PlaceholderPage route={route} variant="patient" />
   }
