@@ -22,7 +22,7 @@
       "status": "safe",
       "takeaway": "On Ideal Sim, sensitivity is 95.6% — the noiseless reference — and stays above the 85% threshold beyond seed noise.",
       "t2Takeaway": "Across 20–500 µs, T2 alone never pushes sensitivity below the 85% threshold with these settings.",
-      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
+      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · WDBC",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -93,7 +93,7 @@
       "status": "unsafe",
       "takeaway": "On FakeBackend-1, sensitivity falls from 95.6% to 82.6% (±1.8) and sits below the 85% threshold beyond seed noise.",
       "t2Takeaway": "Even at T2 = 500 µs sensitivity does not clear the 85% threshold beyond noise — other noise sources dominate.",
-      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
+      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · WDBC",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -164,7 +164,7 @@
       "status": "safe",
       "takeaway": "On FakeBackend-2, sensitivity falls from 95.6% to 88.6% (±1.6) and stays above the 85% threshold beyond seed noise.",
       "t2Takeaway": "Across 20–500 µs, T2 alone never pushes sensitivity below the 85% threshold with these settings.",
-      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
+      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · WDBC",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -235,7 +235,7 @@
       "status": "safe",
       "takeaway": "On these custom settings, sensitivity falls from 95.6% to 88.6% (±1.6) and stays above the 85% threshold beyond seed noise.",
       "t2Takeaway": "Across 20–500 µs, T2 alone never pushes sensitivity below the 85% threshold with these settings.",
-      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
+      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · WDBC",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -308,7 +308,7 @@
       "status": "safe",
       "takeaway": "On Ideal Sim, sensitivity is 88.4% — the noiseless reference — and stays above the 85% threshold beyond seed noise.",
       "t2Takeaway": "Across 20–500 µs, T2 alone never pushes sensitivity below the 85% threshold with these settings.",
-      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
+      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · UCI",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -379,7 +379,7 @@
       "status": "unsafe",
       "takeaway": "On FakeBackend-1, sensitivity falls from 88.4% to 75.4% (±1.8) and sits below the 85% threshold beyond seed noise.",
       "t2Takeaway": "Even at T2 = 500 µs sensitivity does not clear the 85% threshold beyond noise — other noise sources dominate.",
-      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
+      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · UCI",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -450,7 +450,7 @@
       "status": "unsafe",
       "takeaway": "On FakeBackend-2, sensitivity falls from 88.4% to 81.4% (±1.6) and sits below the 85% threshold beyond seed noise.",
       "t2Takeaway": "Even at T2 = 500 µs sensitivity does not clear the 85% threshold beyond noise — other noise sources dominate.",
-      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
+      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · UCI",
       "sensitivityVsT2": [
         {
           "t2Us": 20,
@@ -521,7 +521,7 @@
       "status": "unsafe",
       "takeaway": "On these custom settings, sensitivity falls from 88.4% to 81.4% (±1.6) and sits below the 85% threshold beyond seed noise.",
       "t2Takeaway": "Even at T2 = 500 µs sensitivity does not clear the 85% threshold beyond noise — other noise sources dominate.",
-      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
+      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · UCI",
       "sensitivityVsT2": [
         {
           "t2Us": 20,

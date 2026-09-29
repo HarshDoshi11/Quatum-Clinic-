@@ -4,22 +4,22 @@
       "predictionId": "PRD-WDBC-0001",
       "dataset": "wdbc",
       "model": "qsvm",
-      "experimentId": "EXP-2047",
-      "evaluation": "QSVM 4q · noisy sim · same pipeline as training · WDBC",
-      "backend": "noisy-sim",
+      "experimentId": "REAL-WDBC-QSVM",
+      "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · WDBC",
+      "backend": "ideal-sim",
       "qubits": 4,
       "riskBandEdges": [
         0.3,
         0.6
       ],
-      "threshold": 0.32,
+      "threshold": 0.5,
       "trust": [
         {
           "id": "stability",
           "label": "Prediction stability",
-          "level": "strong",
-          "reason": "5 seeds agree within ±1.4 points.",
-          "short": "±1.4 pts across 5 seeds"
+          "level": "weak",
+          "reason": "5 seeds agree within ±10.4 points.",
+          "short": "±10.4 pts across 5 seeds"
         },
         {
           "id": "data-quality",
@@ -39,32 +39,32 @@
           "id": "calibration",
           "label": "Calibration",
           "level": "strong",
-          "reason": "At ~86% predicted, 84% of similar test patients were positive.",
-          "short": "86% predicted → 84% observed"
+          "reason": "At ~75% predicted, 72% of similar test patients were positive.",
+          "short": "75% predicted → 72% observed"
         },
         {
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "strong",
-          "reason": "Small errors in the entered values move the result by at most 0.7 points.",
-          "short": "≤ 0.7 pts from small errors"
+          "reason": "Small errors in the entered values move the result by at most 2.8 points.",
+          "short": "≤ 2.8 pts from small errors"
         },
         {
           "id": "hardware-sensitivity",
           "label": "Hardware sensitivity",
           "level": "partial",
-          "reason": "On FakeBackend-1 noise the result moves 10.7 points; decision unchanged.",
-          "short": "Moves 10.7 pts on FakeBackend-1"
+          "reason": "Not measured yet: the real model has only run on the noiseless simulator.",
+          "short": "Ideal simulator only"
         }
       ],
       "evidence": {
         "stability": {
           "seeds": [
-            0.806,
-            0.816,
-            0.82,
-            0.824,
-            0.833
+            0.7938,
+            0.8743,
+            0.6662,
+            0.6932,
+            0.8098
           ]
         },
         "dataQuality": {
@@ -124,44 +124,34 @@
         "distributionShift": {
           "distance": 0.88,
           "feature": "Concave points",
-          "typical": 2.8,
+          "typical": 3.09,
           "unusual": 2.5,
           "cutoff": 3.5,
           "outOfRange": 0
         },
         "calibration": {
-          "bin": 0.86
+          "bin": 0.7456
         },
         "inputSensitivity": {
           "range": [
-            0.8125,
-            0.8272
+            0.7391,
+            0.7958
           ],
           "errorSd": 0.1
         },
         "hardware": [
           {
             "backend": "ideal-sim",
-            "probability": 0.8312,
-            "deployed": false
-          },
-          {
-            "backend": "noisy-sim",
-            "probability": 0.82,
+            "probability": 0.7675,
             "deployed": true
-          },
-          {
-            "backend": "fake-backend-1",
-            "probability": 0.713,
-            "deployed": false
           }
         ]
       },
       "decision": "predict",
-      "probability": 0.82,
+      "probability": 0.7675,
       "interval": [
-        0.806,
-        0.833
+        0.6662,
+        0.8743
       ],
       "riskBand": "high",
       "flagged": true,
@@ -171,15 +161,15 @@
       "predictionId": "PRD-WDBC-0002",
       "dataset": "wdbc",
       "model": "qsvm",
-      "experimentId": "EXP-2047",
-      "evaluation": "QSVM 4q · noisy sim · same pipeline as training · WDBC",
-      "backend": "noisy-sim",
+      "experimentId": "REAL-WDBC-QSVM",
+      "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · WDBC",
+      "backend": "ideal-sim",
       "qubits": 4,
       "riskBandEdges": [
         0.3,
         0.6
       ],
-      "threshold": 0.32,
+      "threshold": 0.5,
       "trust": [
         {
           "id": "stability",
@@ -285,7 +275,7 @@
         "distributionShift": {
           "distance": 10.22,
           "feature": "Area",
-          "typical": 2.8,
+          "typical": 3.09,
           "unusual": 2.5,
           "cutoff": 3.5,
           "outOfRange": 2
@@ -301,17 +291,7 @@
           {
             "backend": "ideal-sim",
             "probability": null,
-            "deployed": false
-          },
-          {
-            "backend": "noisy-sim",
-            "probability": null,
             "deployed": true
-          },
-          {
-            "backend": "fake-backend-1",
-            "probability": null,
-            "deployed": false
           }
         ]
       },
@@ -332,22 +312,22 @@
       "predictionId": "PRD-HEART-0003",
       "dataset": "heart",
       "model": "qsvm",
-      "experimentId": "EXP-2029",
-      "evaluation": "QSVM 4q · noisy sim · same pipeline as training · UCI",
-      "backend": "noisy-sim",
+      "experimentId": "REAL-UCI-QSVM",
+      "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · UCI",
+      "backend": "ideal-sim",
       "qubits": 4,
       "riskBandEdges": [
         0.3,
         0.6
       ],
-      "threshold": 0.35,
+      "threshold": 0.5,
       "trust": [
         {
           "id": "stability",
           "label": "Prediction stability",
-          "level": "strong",
-          "reason": "5 seeds agree within ±3.5 points.",
-          "short": "±3.5 pts across 5 seeds"
+          "level": "weak",
+          "reason": "Seeds disagree on the side of the threshold (48–81%).",
+          "short": "Seeds straddle the threshold"
         },
         {
           "id": "data-quality",
@@ -366,33 +346,33 @@
         {
           "id": "calibration",
           "label": "Calibration",
-          "level": "strong",
-          "reason": "At ~86% predicted, 84% of similar test patients were positive.",
-          "short": "86% predicted → 84% observed"
+          "level": "weak",
+          "reason": "At ~65% predicted, 83% of similar test patients were positive.",
+          "short": "65% predicted → 83% observed"
         },
         {
           "id": "input-sensitivity",
           "label": "Input sensitivity",
           "level": "strong",
-          "reason": "Small errors in the entered values move the result by at most 0.5 points.",
-          "short": "≤ 0.5 pts from small errors"
+          "reason": "Small errors in the entered values move the result by at most 0.8 points.",
+          "short": "≤ 0.8 pts from small errors"
         },
         {
           "id": "hardware-sensitivity",
           "label": "Hardware sensitivity",
           "level": "partial",
-          "reason": "On FakeBackend-1 noise the result moves 9.4 points; decision unchanged.",
-          "short": "Moves 9.4 pts on FakeBackend-1"
+          "reason": "Not measured yet: the real model has only run on the noiseless simulator.",
+          "short": "Ideal simulator only"
         }
       ],
       "evidence": {
         "stability": {
           "seeds": [
-            0.783,
-            0.81,
-            0.82,
-            0.83,
-            0.852
+            0.5755,
+            0.7942,
+            0.8143,
+            0.759,
+            0.483
           ]
         },
         "dataQuality": {
@@ -465,46 +445,36 @@
           ]
         },
         "distributionShift": {
-          "distance": 1.43,
+          "distance": 1.44,
           "feature": "Exercise angina",
-          "typical": 2.88,
+          "typical": 2.73,
           "unusual": 2.5,
           "cutoff": 3.5,
           "outOfRange": 0
         },
         "calibration": {
-          "bin": 0.856
+          "bin": 0.6535
         },
         "inputSensitivity": {
           "range": [
-            0.8154,
-            0.8245
+            0.6774,
+            0.6888
           ],
           "errorSd": 0.1
         },
         "hardware": [
           {
             "backend": "ideal-sim",
-            "probability": 0.8288,
-            "deployed": false
-          },
-          {
-            "backend": "noisy-sim",
-            "probability": 0.82,
+            "probability": 0.6852,
             "deployed": true
-          },
-          {
-            "backend": "fake-backend-1",
-            "probability": 0.7257,
-            "deployed": false
           }
         ]
       },
       "decision": "predict",
-      "probability": 0.82,
+      "probability": 0.6852,
       "interval": [
-        0.783,
-        0.852
+        0.483,
+        0.8143
       ],
       "riskBand": "high",
       "flagged": true,
@@ -514,15 +484,15 @@
       "predictionId": "PRD-HEART-0004",
       "dataset": "heart",
       "model": "qsvm",
-      "experimentId": "EXP-2029",
-      "evaluation": "QSVM 4q · noisy sim · same pipeline as training · UCI",
-      "backend": "noisy-sim",
+      "experimentId": "REAL-UCI-QSVM",
+      "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · UCI",
+      "backend": "ideal-sim",
       "qubits": 4,
       "riskBandEdges": [
         0.3,
         0.6
       ],
-      "threshold": 0.35,
+      "threshold": 0.5,
       "trust": [
         {
           "id": "stability",
@@ -641,9 +611,9 @@
           ]
         },
         "distributionShift": {
-          "distance": 7.01,
+          "distance": 7.03,
           "feature": "Cholesterol",
-          "typical": 2.88,
+          "typical": 2.73,
           "unusual": 2.5,
           "cutoff": 3.5,
           "outOfRange": 2
@@ -659,17 +629,7 @@
           {
             "backend": "ideal-sim",
             "probability": null,
-            "deployed": false
-          },
-          {
-            "backend": "noisy-sim",
-            "probability": null,
             "deployed": true
-          },
-          {
-            "backend": "fake-backend-1",
-            "probability": null,
-            "deployed": false
           }
         ]
       },

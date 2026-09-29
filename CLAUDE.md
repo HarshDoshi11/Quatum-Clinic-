@@ -29,6 +29,12 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - Next: Phase 8 (polish).
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
+- ML track, first cut: `ml/run_pipeline.py` trains the six models for real (5 seeds, PennyLane lightning.qubit for
+  VQC/QSVM) and writes `ml/results/real_results.json`; `ml/export_to_fixtures.py` merges it into the backend fixtures
+  for Advantage Observatory and Predict & Trust only (compare, trust, predict + REAL-* experiment records). Real
+  configs carry their own configKeys (`…|real-pca4`, `…|ideal-sim|real`); real `evaluation` labels start "real ·",
+  every other fixture's start "simulated ·". Re-run the exporter after `npm run export:fixtures`. Never tune a model
+  on the test split or favour quantum; if quantum loses, the fixtures say so. See `ml/README.md`.
 - Update this section at the end of every session.
 
 ## Hardware Lab rules
