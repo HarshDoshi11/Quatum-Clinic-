@@ -408,7 +408,11 @@
     "takeaway": "VQC trails LogReg by 0.0148 AUC, more than the combined seed noise (±0.0146), so the classical lead is real on WDBC. On all 10 input features, XGBoost reaches 0.988 ± 0.007 AUC.",
     "resourcesTakeaway": "The best quantum design (VQC, 4 qubits × 2 layers) reaches 0.967 AUC; both real quantum designs use 4 qubits, so this run says nothing yet about circuit size.",
     "stabilityTakeaway": "LogReg is the most stable (±0.009); QSVM varies most between seeds (±0.049).",
-    "evaluation": "real · 5 seeds · held-out 20% · WDBC"
+    "evaluation": "5 seeds · held-out 20% · WDBC",
+    "source": {
+      "kind": "real",
+      "seeds": 5
+    }
   },
   "heart": {
     "dataset": "heart",
@@ -819,6 +823,10 @@
     "takeaway": "VQC and LogReg differ by 0.005 AUC, within seed noise (±0.042), so neither is clearly better. On all 13 input features, Random Forest reaches 0.907 ± 0.028 AUC.",
     "resourcesTakeaway": "The best quantum design (VQC, 4 qubits × 2 layers) reaches 0.904 AUC; both real quantum designs use 4 qubits, so this run says nothing yet about circuit size.",
     "stabilityTakeaway": "SVM is the most stable (±0.025); QSVM varies most between seeds (±0.059).",
-    "evaluation": "real · 5 seeds · held-out 20% · UCI"
+    "evaluation": "5 seeds · held-out 20% · UCI",
+    "source": {
+      "kind": "real",
+      "seeds": 5
+    }
   }
 }

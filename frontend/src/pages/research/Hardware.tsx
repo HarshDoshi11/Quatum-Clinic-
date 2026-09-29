@@ -243,7 +243,7 @@ export function Hardware({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={run?.source}>
           <div className="mt-6">{run && <ExperimentTag id={run.experimentId} detail="QSVM · noise sweep" />}</div>
         </PageHeader>
       </PageItem>

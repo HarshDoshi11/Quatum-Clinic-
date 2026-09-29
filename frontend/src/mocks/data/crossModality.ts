@@ -7,7 +7,7 @@
 import { BACKENDS, DATASETS, DATASET_IDS, MODELS } from '../../lib/domain'
 import { formatDelta } from '../../lib/format'
 import type { CombinedVerdict, CrossModalityResponse, DatasetId, Modality, ModalityResult } from '../../types'
-import { BEST_QUANTUM, SEEDS } from './canon'
+import { BEST_QUANTUM, SEEDS, SIMULATED } from './canon'
 import { MODEL_FEATURES } from './features'
 import { EXPERIMENT_IDS } from './ids'
 import { referenceConfig, result } from './results'
@@ -42,6 +42,7 @@ export function crossModality(dataset: DatasetId): CrossModalityResponse {
     const supportedDatasets = DATASET_IDS.filter(supportsCrossModality)
     const only = meta.modalities[0]
     return {
+      source: SIMULATED,
       available: false,
       dataset,
       reason: `Cross-modality analysis uses the ${supportedDatasets.map((d) => DATASETS[d].name).join(' or ')} dataset.`,
@@ -69,6 +70,7 @@ export function crossModality(dataset: DatasetId): CrossModalityResponse {
   const gainPct = round((difference / best.auc.mean) * 100, 1)
 
   return {
+    source: SIMULATED,
     available: true,
     dataset,
     experimentId: EXPERIMENT_IDS[dataset].crossModality ?? EXPERIMENT_IDS[dataset].benchmark,

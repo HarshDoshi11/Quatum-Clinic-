@@ -1,9 +1,13 @@
 {
   "wdbc": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "dataset": "wdbc",
     "model": "qsvm",
     "experimentId": "EXP-2047",
-    "evaluation": "simulated · QSVM 4q · angle encoding · same pipeline as training · WDBC",
+    "evaluation": "QSVM 4q · angle encoding · same pipeline as training · WDBC",
     "backend": "noisy-sim",
     "qubits": 4,
     "decision": "predict",
@@ -158,10 +162,14 @@
     "takeaway": "Radius and perimeter push the estimate up the most; nothing pulls it down."
   },
   "heart": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "dataset": "heart",
     "model": "qsvm",
     "experimentId": "EXP-2029",
-    "evaluation": "simulated · QSVM 4q · angle encoding · same pipeline as training · UCI",
+    "evaluation": "QSVM 4q · angle encoding · same pipeline as training · UCI",
     "backend": "noisy-sim",
     "qubits": 4,
     "decision": "predict",

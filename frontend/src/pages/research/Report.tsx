@@ -38,7 +38,7 @@ export function Report({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header" className="print:hidden">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={data?.source}>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             {data && <ExperimentTag id={data.experimentId} detail="QSVM · report" />}
             {patient && (

@@ -5,7 +5,11 @@
     "experimentId": "REAL-WDBC-QSVM",
     "backend": "ideal-sim",
     "qubits": 4,
-    "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · held-out 20% · WDBC",
+    "evaluation": "QSVM 4q · ideal sim (lightning) · 5 seeds · held-out 20% · WDBC",
+    "source": {
+      "kind": "real",
+      "seeds": 5
+    },
     "calibration": [
       {
         "predicted": 0.0787,
@@ -793,7 +797,11 @@
     "experimentId": "REAL-UCI-QSVM",
     "backend": "ideal-sim",
     "qubits": 4,
-    "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · held-out 20% · UCI",
+    "evaluation": "QSVM 4q · ideal sim (lightning) · 5 seeds · held-out 20% · UCI",
+    "source": {
+      "kind": "real",
+      "seeds": 5
+    },
     "calibration": [
       {
         "predicted": 0.2475,

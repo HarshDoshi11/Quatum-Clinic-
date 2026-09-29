@@ -1,6 +1,10 @@
 {
   "wdbc": {
     "sample": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "reportId": "RPT-WDBC-0001",
       "dataset": "wdbc",
       "condition": "breast cancer",
@@ -118,6 +122,10 @@
       "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
     },
     "unusual": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "reportId": "RPT-WDBC-0002",
       "dataset": "wdbc",
       "condition": "breast cancer",
@@ -211,6 +219,10 @@
   },
   "heart": {
     "sample": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "reportId": "RPT-HEART-0003",
       "dataset": "heart",
       "condition": "heart disease",
@@ -328,6 +340,10 @@
       "safetyNote": "This report comes from a research decision-support tool. It is not a diagnosis and must not replace advice from a qualified clinician. If you feel unwell, seek medical care."
     },
     "unusual": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "reportId": "RPT-HEART-0004",
       "dataset": "heart",
       "condition": "heart disease",

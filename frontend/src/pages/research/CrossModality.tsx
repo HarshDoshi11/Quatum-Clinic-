@@ -192,7 +192,7 @@ export function CrossModality({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={res.data?.source}>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             {available && <ExperimentTag id={available.experimentId} detail={`${available.modalities.length} signals · 5 seeds`} />}
             {available && <BackendNote backend={available.backend} model={available.model} qubits={available.qubits} />}

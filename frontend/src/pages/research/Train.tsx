@@ -182,7 +182,7 @@ export function Train({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={(result ?? compare.data)?.source}>
           <div className="mt-6">
             {result ? <ExperimentTag id={result.experimentId} detail={`${seeds} seed${seeds > 1 ? 's' : ''} · this run`} /> : compare.data && <ExperimentTag id={compare.data.experimentId} detail="last benchmark" />}
           </div>

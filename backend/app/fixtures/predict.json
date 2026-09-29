@@ -1,11 +1,15 @@
 {
   "wdbc": {
     "sample": {
+      "source": {
+        "kind": "real",
+        "seeds": 5
+      },
       "predictionId": "PRD-WDBC-0001",
       "dataset": "wdbc",
       "model": "qsvm",
       "experimentId": "REAL-WDBC-QSVM",
-      "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · WDBC",
+      "evaluation": "QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · WDBC",
       "backend": "ideal-sim",
       "qubits": 4,
       "riskBandEdges": [
@@ -158,11 +162,15 @@
       "abstainReasons": []
     },
     "unusual": {
+      "source": {
+        "kind": "real",
+        "seeds": 5
+      },
       "predictionId": "PRD-WDBC-0002",
       "dataset": "wdbc",
       "model": "qsvm",
       "experimentId": "REAL-WDBC-QSVM",
-      "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · WDBC",
+      "evaluation": "QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · WDBC",
       "backend": "ideal-sim",
       "qubits": 4,
       "riskBandEdges": [
@@ -309,11 +317,15 @@
   },
   "heart": {
     "sample": {
+      "source": {
+        "kind": "real",
+        "seeds": 5
+      },
       "predictionId": "PRD-HEART-0003",
       "dataset": "heart",
       "model": "qsvm",
       "experimentId": "REAL-UCI-QSVM",
-      "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · UCI",
+      "evaluation": "QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · UCI",
       "backend": "ideal-sim",
       "qubits": 4,
       "riskBandEdges": [
@@ -481,11 +493,15 @@
       "abstainReasons": []
     },
     "unusual": {
+      "source": {
+        "kind": "real",
+        "seeds": 5
+      },
       "predictionId": "PRD-HEART-0004",
       "dataset": "heart",
       "model": "qsvm",
       "experimentId": "REAL-UCI-QSVM",
-      "evaluation": "real · QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · UCI",
+      "evaluation": "QSVM 4q · ideal sim (lightning) · 5 seeds · same pipeline as training · UCI",
       "backend": "ideal-sim",
       "qubits": 4,
       "riskBandEdges": [

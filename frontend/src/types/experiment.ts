@@ -1,15 +1,4 @@
-import type {
-  BackendId,
-  DatasetId,
-  Encoding,
-  Entanglement,
-  ExperimentId,
-  ISODateTime,
-  MeanStd,
-  ModelFamily,
-  ModelId,
-  NoiseParams,
-} from './common'
+import type { BackendId, DatasetId, DataSource, Encoding, Entanglement, ExperimentId, ISODateTime, MeanStd, ModelFamily, ModelId, NoiseParams } from './common'
 
 export type ExperimentKind = 'run' | 'benchmark' | 'sweep'
 export type ExperimentStatus = 'complete' | 'running' | 'failed'
@@ -102,6 +91,8 @@ export interface TrainModelResult {
 }
 
 export interface TrainResponse {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   jobId: string
   experimentId: ExperimentId
   epochs: number

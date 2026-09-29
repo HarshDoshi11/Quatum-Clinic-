@@ -7,8 +7,8 @@ What it writes (backend/app/fixtures/):
 - trust.json     Predict & Trust: calibration, threshold curve and operating point of the real QSVM.
 - predict.json   Predict & Trust: the app's sample and unusual patients scored by the real QSVM (5 seed models).
 - experiment_children.json   the REAL-* experiment records those pages' tags open (resolvable, never listed).
-Every other fixture stays simulated, and its `evaluation` label (the mono subtitle under each chart) is
-prefixed "simulated ·"; the real ones start "real ·".
+Each merged response gets `source: {"kind": "real", "seeds": 5}`; every other fixture keeps the
+`{"kind": "simulated"}` source the mocks export. The frontend's <SourceBadge> reads it next to the page title.
 
 The shapes are exactly the mock API's (frontend/src/types). Real configs get their own configKeys
 (`…|real-pca4`, `…|ideal-sim|real`), so they never collide with a simulated config's number.
@@ -32,7 +32,6 @@ REAL = ROOT / "ml" / "results" / "real_results.json"
 MODEL_ORDER = ["vqc", "qsvm", "logreg", "svm", "rf", "xgboost"]
 MODEL_NAMES = {"vqc": "VQC", "qsvm": "QSVM", "logreg": "LogReg", "svm": "SVM", "rf": "Random Forest", "xgboost": "XGBoost"}
 METRICS = ("accuracy", "sensitivity", "specificity", "auc", "trainTimeS", "inferenceMs")
-REAL_FILES = ("compare", "trust", "predict")
 UNUSUAL_Z = 2.5
 OOD_Z = 3.5
 THRESHOLD = 0.5
@@ -144,7 +143,8 @@ def build_compare(ds: str, code: str, rows_in: list[dict], full_rows: list[dict]
         "takeaway": takeaway,
         "resourcesTakeaway": resources_takeaway,
         "stabilityTakeaway": stability_takeaway,
-        "evaluation": f"real · {n_seeds} seeds · held-out 20% · {code}",
+        "evaluation": f"{n_seeds} seeds · held-out 20% · {code}",
+        "source": {"kind": "real", "seeds": n_seeds},
     }
 
 
@@ -239,7 +239,8 @@ def build_trust(ds: str, code: str, deployed: dict, qsvm_row: dict, old: dict) -
         "experimentId": exp_id(code, "qsvm"),
         "backend": "ideal-sim",
         "qubits": qsvm_row["qubits"],
-        "evaluation": f"real · QSVM {qsvm_row['qubits']}q · ideal sim (lightning) · {n_seeds} seeds · held-out 20% · {code}",
+        "evaluation": f"QSVM {qsvm_row['qubits']}q · ideal sim (lightning) · {n_seeds} seeds · held-out 20% · {code}",
+        "source": {"kind": "real", "seeds": n_seeds},
         "calibration": bins,
         "ece": r4(ece),
         "calibrationBias": r4(bias),
@@ -376,7 +377,8 @@ def build_predict(ds: str, code: str, kind: str, base: dict, schema: dict, deplo
         **base,
         "model": "qsvm",
         "experimentId": exp_id(code, "qsvm"),
-        "evaluation": f"real · QSVM {qsvm_row['qubits']}q · ideal sim (lightning) · {len(seeds)} seeds · same pipeline as training · {code}",
+        "evaluation": f"QSVM {qsvm_row['qubits']}q · ideal sim (lightning) · {len(seeds)} seeds · same pipeline as training · {code}",
+        "source": {"kind": "real", "seeds": len(seeds)},
         "backend": "ideal-sim",
         "qubits": qsvm_row["qubits"],
         "threshold": t,
@@ -439,25 +441,6 @@ def experiment_records(ds: str, code: str, rows: list[dict], generated: str, n_s
     return recs
 
 
-# ─── Labels ─────────────────────────────────────────────────
-
-
-def label_simulated(node: Any) -> int:
-    """Prefix every `evaluation` label with "simulated ·" (idempotent). Returns how many were changed."""
-    changed = 0
-    if isinstance(node, dict):
-        ev = node.get("evaluation")
-        if isinstance(ev, str) and not ev.lower().startswith(("real ·", "simulated ·")):
-            node["evaluation"] = f"simulated · {ev}"
-            changed += 1
-        for v in node.values():
-            changed += label_simulated(v)
-    elif isinstance(node, list):
-        for v in node:
-            changed += label_simulated(v)
-    return changed
-
-
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")  # Windows consoles default to cp1252
     if not REAL.exists():
@@ -487,21 +470,9 @@ def main() -> None:
         done.append(code)
 
     for name, data in (("compare", compare), ("trust", trust), ("predict", predict)):
-        label_simulated(data)  # datasets without a real run stay labelled simulated
         save(name, data)
     save("experiment_children", children)
-
-    relabelled = 0
-    for path in sorted(FIXTURES.glob("*.json")):
-        if path.stem in (*REAL_FILES, "experiment_children"):
-            continue
-        data = load(path.stem)
-        n = label_simulated(data)
-        if n:
-            save(path.stem, data)
-            relabelled += n
     print(f"Real results merged for {', '.join(done)} into compare.json, trust.json, predict.json (+ REAL-* experiment records).")
-    print(f"Simulated labels added to {relabelled} evaluation strings in the other fixtures.")
 
 
 if __name__ == "__main__":

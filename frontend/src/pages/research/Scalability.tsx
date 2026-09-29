@@ -133,7 +133,7 @@ export function Scalability({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={data?.source}>
           <div className="mt-6">{data && <ExperimentTag id={data.experimentId} detail={`${MODELS[data.model].name} · 4→12 qubits`} />}</div>
         </PageHeader>
       </PageItem>

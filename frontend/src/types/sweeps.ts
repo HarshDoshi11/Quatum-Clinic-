@@ -1,9 +1,11 @@
-import type { Ansatz, ConfigKey, DatasetId, Encoding, Entanglement, ExperimentId, MeanStd, ModelFamily, ModelId } from './common'
+import type { Ansatz, ConfigKey, DatasetId, DataSource, Encoding, Entanglement, ExperimentId, MeanStd, ModelFamily, ModelId } from './common'
 import type { HardwareProfileId } from './hardware'
 
 export type SweepType = 'small-data' | 'scalability' | 'evolution' | 'failure-envelope'
 
 interface SweepBase {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   dataset: DatasetId
   experimentId: ExperimentId
   takeaway: string

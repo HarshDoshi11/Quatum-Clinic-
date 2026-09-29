@@ -1,4 +1,4 @@
-import type { BackendId, ConfigKey, DatasetId, ExperimentId, MeanStd, ModelId } from './common'
+import type { BackendId, ConfigKey, DatasetId, DataSource, ExperimentId, MeanStd, ModelId } from './common'
 
 export type ModalityId = 'demographics' | 'symptoms' | 'ecg' | 'exercise' | 'labs' | 'cytology'
 
@@ -28,6 +28,8 @@ export interface Modality extends ModalityResult {
 export type CombinedVerdict = 'gain' | 'within-noise' | 'loss'
 
 export interface CrossModalityAvailable {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   available: true
   dataset: DatasetId
   experimentId: ExperimentId
@@ -50,6 +52,8 @@ export interface CrossModalityAvailable {
 }
 
 export interface CrossModalityUnavailable {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   available: false
   dataset: DatasetId
   /** e.g. "Cross-modality analysis uses the Heart Disease dataset." */

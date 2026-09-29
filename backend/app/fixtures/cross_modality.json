@@ -1,5 +1,9 @@
 {
   "wdbc": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "available": false,
     "dataset": "wdbc",
     "reason": "Cross-modality analysis uses the Heart Disease dataset.",
@@ -9,13 +13,17 @@
     ]
   },
   "heart": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "available": true,
     "dataset": "heart",
     "experimentId": "EXP-2036",
     "model": "qsvm",
     "backend": "noisy-sim",
     "qubits": 4,
-    "evaluation": "simulated · QSVM 4q · noisy sim · 5 seeds · held-out 30% · UCI",
+    "evaluation": "QSVM 4q · noisy sim · 5 seeds · held-out 30% · UCI",
     "modalities": [
       {
         "id": "demographics",

@@ -310,7 +310,7 @@ export function Explain({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label} className="!pt-6">
       <PageItem as="header">
-        <PageHeader route={route} compact>
+        <PageHeader route={route} source={originalData?.source} compact>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {originalData && <ExperimentTag id={originalData.experimentId} detail="QSVM · explanation" />}
             {originalData && <BackendNote backend={originalData.backend} model={originalData.model} qubits={originalData.qubits} />}

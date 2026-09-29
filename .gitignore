@@ -11,4 +11,3 @@ venv/
 # ML track: raw data (download, see ml/README.md) and scratch outputs
 ml/data/*
 !ml/data/.gitkeep
-ml/results/smoke.json

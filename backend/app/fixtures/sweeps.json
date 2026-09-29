@@ -1,10 +1,14 @@
 {
   "small-data": {
     "wdbc": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "small-data",
       "dataset": "wdbc",
       "experimentId": "EXP-2038",
-      "evaluation": "simulated · 5 seeds per size · held-out 30% · benchmark backends · WDBC",
+      "evaluation": "5 seeds per size · held-out 30% · benchmark backends · WDBC",
       "sizes": [
         25,
         50,
@@ -208,10 +212,14 @@
       "takeaway": "With 25 training patients QSVM leads SVM by 4.3 AUC points (beyond seed noise); SVM overtakes at ~161 patients, where the bands separate again."
     },
     "heart": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "small-data",
       "dataset": "heart",
       "experimentId": "EXP-2032",
-      "evaluation": "simulated · 5 seeds per size · held-out 30% · benchmark backends · UCI",
+      "evaluation": "5 seeds per size · held-out 30% · benchmark backends · UCI",
       "sizes": [
         25,
         50,
@@ -412,10 +420,14 @@
   },
   "scalability": {
     "wdbc": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "scalability",
       "dataset": "wdbc",
       "experimentId": "EXP-2039",
-      "evaluation": "simulated · 5 seeds · held-out 30% · ideal sim · WDBC",
+      "evaluation": "5 seeds · held-out 30% · ideal sim · WDBC",
       "model": "vqc",
       "points": [
         {
@@ -480,10 +492,14 @@
       "takeaway": "AUC stays flat within seed noise from 4 to 12 qubits (0.965–0.972); training time keeps rising, ×30 overall."
     },
     "heart": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "scalability",
       "dataset": "heart",
       "experimentId": "EXP-2033",
-      "evaluation": "simulated · 5 seeds · held-out 30% · ideal sim · UCI",
+      "evaluation": "5 seeds · held-out 30% · ideal sim · UCI",
       "model": "vqc",
       "points": [
         {
@@ -550,10 +566,14 @@
   },
   "evolution": {
     "wdbc": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "evolution",
       "dataset": "wdbc",
       "experimentId": "EXP-2040",
-      "evaluation": "simulated · 5 seeds · held-out 30% · ideal sim · WDBC",
+      "evaluation": "5 seeds · held-out 30% · ideal sim · WDBC",
       "model": "vqc",
       "configs": [
         {
@@ -866,10 +886,14 @@
       "takeaway": "C16 reaches 0.966 AUC at depth 2 — 0.006 below the best (within seed noise) with 8 fewer trainable parameters."
     },
     "heart": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "evolution",
       "dataset": "heart",
       "experimentId": "EXP-2034",
-      "evaluation": "simulated · 5 seeds · held-out 30% · ideal sim · UCI",
+      "evaluation": "5 seeds · held-out 30% · ideal sim · UCI",
       "model": "vqc",
       "configs": [
         {
@@ -1184,10 +1208,14 @@
   },
   "failure-envelope": {
     "wdbc": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "failure-envelope",
       "dataset": "wdbc",
       "experimentId": "EXP-2041",
-      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · WDBC",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · WDBC",
       "model": "qsvm",
       "noiseAxis": {
         "label": "Two-qubit gate error",
@@ -2461,10 +2489,14 @@
       "takeaway": "With the threshold at 85%, 24% of tested conditions are safe beyond seed noise and 12% are borderline; FakeBackend-1 (82.6% ±1.8) sits below the 85% threshold beyond seed noise."
     },
     "heart": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "failure-envelope",
       "dataset": "heart",
       "experimentId": "EXP-2035",
-      "evaluation": "simulated · 5 seeds · held-out 30% · QSVM 4q · UCI",
+      "evaluation": "5 seeds · held-out 30% · QSVM 4q · UCI",
       "model": "qsvm",
       "noiseAxis": {
         "label": "Two-qubit gate error",

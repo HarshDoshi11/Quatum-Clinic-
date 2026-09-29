@@ -178,7 +178,7 @@ export function Evolution({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={data?.source}>
           <div className="mt-6">{data && <ExperimentTag id={data.experimentId} detail={`${data.configs.length} designs · ${MODELS[data.model].name}`} />}</div>
         </PageHeader>
       </PageItem>

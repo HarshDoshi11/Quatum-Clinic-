@@ -182,7 +182,7 @@ export function SmallData({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={data?.source}>
           <div className="mt-6">{data && <ExperimentTag id={data.experimentId} detail="5 seeds per size" />}</div>
         </PageHeader>
       </PageItem>

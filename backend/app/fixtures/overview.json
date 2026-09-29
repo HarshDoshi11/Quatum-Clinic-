@@ -1,5 +1,9 @@
 {
   "wdbc": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "dataset": "wdbc",
     "status": {
       "dataset": "wdbc",
@@ -175,6 +179,10 @@
     ]
   },
   "heart": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "dataset": "heart",
     "status": {
       "dataset": "heart",

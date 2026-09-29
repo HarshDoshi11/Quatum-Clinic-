@@ -268,7 +268,7 @@ export function Predict({ route }: { route: RouteMeta }) {
     <Page label={route.label} className="!pt-6 [@media(max-height:52rem)]:!pt-4">
       {/* One-line header: the question, with the experiment and backend on the same row */}
       <PageItem as="header">
-        <PageHeader route={route} compact>
+        <PageHeader route={route} source={trustData?.source} compact>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {trustData && <ExperimentTag id={trustData.experimentId} detail="5 seeds" />}
             {trustData && <BackendNote backend={trustData.backend} model={trustData.model} qubits={trustData.qubits} />}

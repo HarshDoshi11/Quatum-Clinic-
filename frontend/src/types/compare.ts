@@ -1,4 +1,4 @@
-import type { BackendId, ConfigKey, DatasetId, ExperimentId, ModelFamily, ModelId, QuantumModelId } from './common'
+import type { BackendId, ConfigKey, DatasetId, DataSource, ExperimentId, ModelFamily, ModelId, QuantumModelId } from './common'
 import type { ExperimentMetrics } from './experiment'
 
 export type MetricKey = keyof ExperimentMetrics
@@ -37,6 +37,8 @@ export interface SeedPoint {
 }
 
 export interface CompareResponse {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   dataset: DatasetId
   experimentId: ExperimentId
   seeds: number

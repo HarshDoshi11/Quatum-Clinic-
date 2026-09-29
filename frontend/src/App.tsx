@@ -7,15 +7,14 @@ import { CommandPalette } from '@/features/command/CommandPalette'
 import { ExperimentDrawerProvider } from '@/features/experiments/ExperimentDrawer'
 import { ShortcutsProvider } from '@/features/shortcuts/Shortcuts'
 import { TourProvider } from '@/features/tour/Tour'
-import { PlaceholderPage } from '@/pages/PlaceholderPage'
-import { Overview } from '@/pages/research/Overview'
-import { LIVE_PATIENT_ROUTES, PATIENT_BASE, PATIENT_MODE_ENABLED, RESEARCH_ROUTES, type RouteMeta } from '@/routes'
+import { LIVE_PATIENT_ROUTES, PATIENT_BASE, PATIENT_MODE_ENABLED, RESEARCH_ROUTES, type PatientRouteId, type ResearchRouteId, type RouteMeta } from '@/routes'
 import { DataVersionProvider } from '@/state/dataVersion'
 import { PageBackendProvider } from '@/state/pageBackend'
 import { PatientProvider } from '@/state/patient'
 import { PlainLanguageProvider } from '@/state/plainLanguage'
 
-// Chart pages are code-split (Recharts is large); the Overview stays in the main bundle.
+// Every page is code-split, so the shell paints first and each page loads only when visited.
+const Overview = lazy(() => import('@/pages/research/Overview').then((m) => ({ default: m.Overview })))
 const Data = lazy(() => import('@/pages/research/Data').then((m) => ({ default: m.Data })))
 const Train = lazy(() => import('@/pages/research/Train').then((m) => ({ default: m.Train })))
 const Advantage = lazy(() => import('@/pages/research/Advantage').then((m) => ({ default: m.Advantage })))
@@ -45,11 +44,11 @@ function PageFallback() {
 
 const lazyPage = (node: ReactNode) => <Suspense fallback={<PageFallback />}>{node}</Suspense>
 
-/** Built pages; everything else renders a placeholder until its phase. */
-function researchPage(route: RouteMeta) {
+/** Research pages, one per route id (exhaustive: a new id without a page fails to compile). */
+function researchPage(route: RouteMeta<ResearchRouteId>) {
   switch (route.id) {
     case 'overview':
-      return <Overview route={route} />
+      return lazyPage(<Overview route={route} />)
     case 'data':
       return lazyPage(<Data route={route} />)
     case 'train':
@@ -74,13 +73,15 @@ function researchPage(route: RouteMeta) {
       return lazyPage(<Report route={route} />)
     case 'explain':
       return lazyPage(<Explain route={route} />)
-    default:
-      return <PlaceholderPage route={route} />
+    default: {
+      const unhandled: never = route.id
+      throw new Error(`No page for route ${String(unhandled)}`)
+    }
   }
 }
 
-/** Patient Mode pages; the rest render a placeholder until built. */
-function patientPage(route: RouteMeta) {
+/** Patient Mode pages (exhaustive, like the research pages). */
+function patientPage(route: RouteMeta<PatientRouteId>) {
   switch (route.id) {
     case 'patient-home':
       return lazyPage(<PatientHome route={route} />)
@@ -90,8 +91,10 @@ function patientPage(route: RouteMeta) {
       return lazyPage(<MyReport route={route} />)
     case 'patient-soon':
       return lazyPage(<ComingSoon route={route} />)
-    default:
-      return <PlaceholderPage route={route} variant="patient" />
+    default: {
+      const unhandled: never = route.id
+      throw new Error(`No page for route ${String(unhandled)}`)
+    }
   }
 }
 

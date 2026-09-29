@@ -2,7 +2,6 @@ import { Fragment, type ReactNode } from 'react'
 import { api, useResource } from '@/api'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Term } from '@/components/ui/Term'
-import { USE_MOCK } from '@/config'
 import { MODELS } from '@/lib/domain'
 import { formatAuc, formatDate, formatTime } from '@/lib/format'
 import { useDataVersion } from '@/state/dataVersion'
@@ -90,14 +89,6 @@ export function StatusStrip({ mode }: { mode: Mode }) {
       {projector && (
         <span className="shrink-0 rounded-[2px] bg-ink px-1.5 py-px text-bg" title="Projector mode (Shift+P)">
           Projector
-        </span>
-      )}
-      {USE_MOCK && (
-        <span
-          className="shrink-0 rounded-[2px] border border-rule-strong px-1.5 py-px text-ink"
-          title="Showing mock data — set VITE_USE_MOCK=false to call the backend"
-        >
-          Mock data
         </span>
       )}
     </footer>
