@@ -1,4 +1,4 @@
-# Q/Clinical — Early Signal Lab
+#JEEVSETU
 
 A hybrid quantum-classical machine-learning platform for early disease detection
 (Smart India Hackathon, problem statement 139). Two views:
