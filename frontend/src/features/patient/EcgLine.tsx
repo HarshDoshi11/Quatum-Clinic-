@@ -12,7 +12,7 @@ const GAP_PX = 18
  * so each spike passes the head as the heart pulses. The previous sweep stays faintly ahead of the head.
  * Reduced motion: the whole trace, still.
  */
-export function EcgLine({ className = '' }: { className?: string }) {
+export function EcgLine({ className = '', running = true }: { className?: string; running?: boolean }) {
   const reduced = useReducedMotion() ?? false
   const box = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState({ w: 0, h: 0 })
@@ -47,7 +47,7 @@ export function EcgLine({ className = '' }: { className?: string }) {
   }, [size.w, y])
 
   useEffect(() => {
-    if (reduced || !size.w) return
+    if (reduced || !running || !size.w) return
     let raf = 0
     const tick = () => {
       const sweep = (performance.now() % (beats * BEAT_MS)) / BEAT_MS // beats into this sweep
@@ -61,7 +61,7 @@ export function EcgLine({ className = '' }: { className?: string }) {
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [reduced, size.w, beats, beatW, y])
+  }, [reduced, running, size.w, beats, beatW, y])
 
   return (
     <div ref={box} className={`h-16 w-full text-accent ${className}`} aria-hidden="true">

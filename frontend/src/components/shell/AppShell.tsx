@@ -2,10 +2,11 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { tBase } from '@/lib/motion'
-import { PATIENT_ROUTES, RESEARCH_ROUTES } from '@/routes'
+import { LIVE_PATIENT_ROUTES, PATIENT_MODE_ENABLED, RESEARCH_ROUTES } from '@/routes'
 import { useMode } from '@/state/mode'
 import { Logo } from './Logo'
 import { PatientTopBar } from './PatientTopBar'
+import { TeaserTopBar } from './TeaserTopBar'
 import { Sidebar } from './Sidebar'
 import { StatusStrip } from './StatusStrip'
 import { TopBar } from './TopBar'
@@ -36,7 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   // "Hardware Reality Lab — Q/Clinical"; the Overview keeps the product name.
   useEffect(() => {
-    const route = [...RESEARCH_ROUTES, ...PATIENT_ROUTES].find((r) => r.path === pathname)
+    const route = [...RESEARCH_ROUTES, ...LIVE_PATIENT_ROUTES].find((r) => r.path === pathname)
     document.title = !route || route.id === 'overview' ? 'Q/Clinical — Early Signal Lab' : `${route.label} — Q/Clinical`
   }, [pathname])
 
@@ -51,7 +52,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           Skip to content
         </a>
         <div className="border-b border-rule print:hidden">
-          <PatientTopBar />
+          {PATIENT_MODE_ENABLED ? <PatientTopBar /> : <TeaserTopBar />}
         </div>
         <main id="main" ref={mainRef} tabIndex={-1} className="relative overflow-y-auto overflow-x-hidden print:overflow-visible">
           {children}

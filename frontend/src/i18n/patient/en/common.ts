@@ -1,5 +1,53 @@
 /** Patient Mode, English: words shared by every dataset. Placeholders are {name}. */
 export const common = {
+  /** The "Coming soon" teaser shown while Patient Mode is switched off (PATIENT_MODE_ENABLED). */
+  teaser: {
+    modes: { research: 'Research', patient: 'Patient' },
+    modeLabel: 'View mode',
+    welcome: 'Patient Mode, coming soon',
+    eyebrow: 'Patient Mode · Coming in the Grand Finale',
+    headline: 'The same model, explained for the person it’s about.',
+    subtext: 'Turning a heart test report into a clear answer, how sure it is, and what to do next.',
+    seeMore: 'See what’s coming',
+    backToResearch: 'Back to research view',
+    comingTitle: 'What’s coming',
+    comingIntro: 'Everything a patient needs, from the moment they open their report to the visit with their doctor.',
+    beats: [
+      {
+        title: 'Before the check',
+        body: 'Safe first, then simple.',
+        items: [
+          { id: 'safety', title: 'Safety check first', body: 'Urgent symptoms go straight to 112 or 108, before any questions.' },
+          { id: 'guided', title: 'Guided check', body: 'One question at a time, in plain words, with “I’m not sure” always allowed.' },
+          { id: 'finder', title: 'Report finder', body: 'Shows where each value sits on a typical lab report.' },
+        ],
+      },
+      {
+        title: 'Your result',
+        body: 'Clear, and honest about how sure it is.',
+        items: [
+          { id: 'result', title: 'Honest result', body: 'A row of ten people, a confidence meter, and “not sure” instead of a guess.' },
+          { id: 'numbers', title: 'Your numbers', body: 'Each value on a healthy-range bar, kept apart from what the model used.' },
+        ],
+      },
+      {
+        title: 'After the result',
+        body: 'Ready for the conversation that matters.',
+        items: [
+          { id: 'visit', title: 'Plan your visit', body: 'Questions for your doctor, your notes, a calendar reminder and a PDF.' },
+          { id: 'share', title: 'Share with family', body: 'A short summary to send on WhatsApp or as a link.' },
+          { id: 'language', title: 'Hindi and Marathi', body: 'The whole check in three languages, with read-aloud.' },
+        ],
+      },
+    ],
+    engineTitle: 'Built on the same engine you saw in Research Mode',
+    engineBody: 'The same data, models and trust checks, with nothing added for show.',
+    stats: {
+      datasets: 'datasets, each with its own trusted results',
+      models: 'models compared on the same held-out patients',
+      abstain: 'of test patients get “not sure” instead of a guess ({dataset})',
+    },
+  },
   shell: {
     home: 'Q/Clinical, home',
     stepsLabel: 'Steps',

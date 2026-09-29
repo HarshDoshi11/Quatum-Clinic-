@@ -93,6 +93,12 @@ export const PAGE_CONTENT: Record<ResearchRouteId | PatientRouteId, PageGuide> =
     matters: 'Patients deserve an explanation they can understand, with clear limits on what the tool can say.',
     read: 'Read it top to bottom like a letter. Download it as a PDF for your doctor.',
   },
+  'patient-soon': {
+    plain: 'Patient Mode is on its way: the same model, explained for the person it is about.',
+    shows: 'What Patient Mode will do before the check, with your result and after it.',
+    matters: 'A result only helps if the person it is about can understand it and act on it.',
+    read: 'Scroll through what is coming, or go back to the research view.',
+  },
   'patient-home': {
     plain: 'A short, private check that explains a screening result in everyday words.',
     shows: 'What the assessment checks, how reliable it is, and what to do next.',

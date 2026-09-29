@@ -20,7 +20,7 @@ export type ResearchRouteId =
   | 'cross-modality'
   | 'report'
 
-export type PatientRouteId = 'patient-home' | 'patient-assessment' | 'patient-report'
+export type PatientRouteId = 'patient-home' | 'patient-assessment' | 'patient-report' | 'patient-soon'
 
 export interface RouteMeta<Id extends string = string> {
   id: Id
@@ -174,6 +174,22 @@ export const RESEARCH_GROUPS: readonly NavGroup[] = [
 
 export const RESEARCH_ROUTES: readonly RouteMeta<ResearchRouteId>[] = RESEARCH_GROUPS.flatMap((g) => g.routes)
 
+/**
+ * Patient Mode is a "Coming soon" teaser until the Grand Finale. Its full pages (Home, Assessment, My Report)
+ * stay in the code; set this to true to bring them back (the teaser route then goes away).
+ */
+export const PATIENT_MODE_ENABLED = false
+
+/** The teaser: the one Patient Mode page while PATIENT_MODE_ENABLED is false. */
+export const PATIENT_TEASER_ROUTE: RouteMeta<PatientRouteId> = {
+  id: 'patient-soon',
+  path: PATIENT_BASE,
+  label: 'Patient Mode',
+  section: 'Coming soon',
+  headline: 'The same model, explained for the person it’s about.',
+  phase: 7,
+}
+
 export const PATIENT_ROUTES: readonly RouteMeta<PatientRouteId>[] = [
   {
     id: 'patient-home',
@@ -200,3 +216,6 @@ export const PATIENT_ROUTES: readonly RouteMeta<PatientRouteId>[] = [
     phase: 7,
   },
 ]
+
+/** The Patient Mode routes the app serves: the full pages, or only the teaser. */
+export const LIVE_PATIENT_ROUTES: readonly RouteMeta<PatientRouteId>[] = PATIENT_MODE_ENABLED ? PATIENT_ROUTES : [PATIENT_TEASER_ROUTE]
