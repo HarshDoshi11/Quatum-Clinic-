@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import type { PatientHome } from '@/lib/domain'
 import { useThemeColors } from '@/lib/useThemeColors'
 import { beatPhase, pulseScale } from './heartbeat'
+import { SCENE_DPR, useSceneActivity } from '@/components/three/useSceneActivity'
 
 /**
  * A low-poly heart: an icosphere whose every vertex is pushed out along its direction onto the classic
@@ -112,13 +113,15 @@ export interface HeroSceneProps {
  * theme tokens (--hero-form, --hero-light).
  */
 export default function HeroScene({ shape, animate }: HeroSceneProps) {
+  const scene = useSceneActivity<HTMLCanvasElement>()
   const colors = useThemeColors()
   return (
     <Canvas
-      dpr={[1, 2]}
+      ref={scene.ref}
+      dpr={SCENE_DPR}
       camera={{ position: [0, 0, 5.4], fov: 32 }}
       gl={{ antialias: true, alpha: true }}
-      frameloop={animate ? 'always' : 'demand'}
+      frameloop={!scene.active ? 'never' : animate ? 'always' : 'demand'}
       aria-hidden="true"
     >
       {/* Sky: the warm light; ground: the form's own colour, so the underside stays warm in both themes */}
