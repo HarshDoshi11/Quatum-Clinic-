@@ -61,7 +61,11 @@ export function ChartFigure<Row>({ label, subtitle, takeaway, caption, note, asi
   const id = useId()
 
   return (
-    <figure aria-labelledby={`${id}-label`} className="flex flex-col">
+    <figure aria-labelledby={`${id}-label`} aria-describedby={`${id}-summary`} className="flex flex-col">
+      {/* What the chart shows, for screen readers: its name, its one-line reading, and where the exact values are. */}
+      <p id={`${id}-summary`} className="sr-only">
+        {`${label} chart.${takeaway ? ` ${takeaway}` : ''}${table ? ' The Table view lists the exact values.' : ''}`}
+      </p>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p id={`${id}-label`} className="type-label text-ink">
