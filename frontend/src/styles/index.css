@@ -273,3 +273,34 @@
     transition-duration: 0ms !important;
   }
 }
+
+/*
+ * Projector mode: thicker chart lines, axes and gridlines so they survive a projector. CSS beats the SVG
+ * presentation attributes the charts set, and dash patterns are untouched.
+ */
+:root[data-projector='on'] :is(.recharts-line-curve, .chart-line) {
+  stroke-width: 2.5px;
+}
+:root[data-projector='on'] :is(.recharts-line-curve, .chart-line-strong)[stroke='var(--accent)'] {
+  stroke-width: 3px;
+}
+:root[data-projector='on'] :is(.recharts-cartesian-axis-line, .recharts-reference-line-line, .recharts-errorBar line) {
+  stroke-width: 1.75px;
+}
+:root[data-projector='on'] .recharts-cartesian-grid line {
+  stroke-width: 1.25px;
+}
+
+/* Predict & Trust in projector mode on a short screen: tighter gaps so the result, scale, threshold scrubber
+   and trust evidence stay on the first screen. */
+@media (max-height: 52rem) {
+  :root[data-projector='on'] .predict-page {
+    padding-top: 0.5rem !important;
+  }
+  :root[data-projector='on'] .predict-group-rule {
+    margin-block: 0.125rem;
+  }
+  :root[data-projector='on'] .predict-page [data-tour='trust-stats'] {
+    margin-top: 0.25rem;
+  }
+}
