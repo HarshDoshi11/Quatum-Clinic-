@@ -137,7 +137,7 @@ export function Overview({ route }: { route: RouteMeta }) {
       <div className="grid-12 gap-y-16">
         <PageItem as="header" className="@container col-span-12 flex flex-col xl:col-span-7">
           {/* Fits the three forced lines to the column (container units), within the display range. */}
-          <PageHeader route={route} source={overview.data?.source} headlineClassName="[font-size:clamp(56px,10cqi,96px)]" />
+          <PageHeader route={route} source={overview.data?.source} headlineClassName="[font-size:clamp(3.5rem,10cqi,6rem)]" />
           <div className="mt-16">
             {overview.status === 'error' ? (
               <EmptyState tone="error" title="Couldn't load results." body={overview.error.message} />

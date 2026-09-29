@@ -75,7 +75,7 @@ function LearningCurves({ sweep }: { sweep: SmallDataSweep }) {
             height={X_AXIS_H}
             label={{ value: 'Training patients (log scale)', position: 'insideBottom', offset: -2, fill: C.muted, fontSize: '0.8125rem', fontFamily: 'var(--font-mono)' }}
           />
-          <YAxis {...AXIS} domain={domain} ticks={ticks} tickFormatter={(v: number) => v.toFixed(2)} width={56} />
+          <YAxis {...AXIS} domain={domain} ticks={ticks} tickFormatter={formatAuc} width={64} />
           <Tooltip
             cursor={{ stroke: C.ruleStrong, strokeWidth: 1 }}
             content={({ active, payload }) => {

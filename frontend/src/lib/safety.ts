@@ -6,6 +6,7 @@
  */
 import type { SafetyStatus } from '../types/hardware'
 import { formatPercent } from './format'
+import { formatPercentStd } from '@/lib/format'
 
 export function safetyStatus(value: number, std: number, threshold: number): SafetyStatus {
   if (value - std >= threshold) return 'safe'
@@ -44,7 +45,7 @@ export function operatingSentence(
   isDefault: boolean,
 ): string {
   const at = `${isDefault ? 'At the default decision threshold of' : 'At a decision threshold of'} ${Math.round(threshold * 100)}%`
-  const pm = (x: number) => `±${(x * 100).toFixed(1)}`
+  const pm = formatPercentStd
   return `${at}, sensitivity is ${formatPercent(point.sensitivity)} (${pm(point.sensitivityStd)}) and specificity ${formatPercent(point.specificity)} (${pm(point.specificityStd)}); sensitivity ${safetyPhrase(point.sensitivity, point.sensitivityStd, safeSensitivity)}.`
 }
 
@@ -53,7 +54,7 @@ export function noiseRunSentence(where: string, reference: number, value: number
   const t = `${Math.round(threshold * 100)}%`
   const status = safetyStatus(value, std, threshold)
   if (value >= reference - 1e-9) return `On ${where}, sensitivity is ${formatPercent(value)} — the noiseless reference — and ${STATUS_PHRASE[status](t)}.`
-  return `On ${where}, sensitivity falls from ${formatPercent(reference)} to ${formatPercent(value)} (±${(std * 100).toFixed(1)}) and ${STATUS_PHRASE[status](t)}.`
+  return `On ${where}, sensitivity falls from ${formatPercent(reference)} to ${formatPercent(value)} (${formatPercentStd(std)}) and ${STATUS_PHRASE[status](t)}.`
 }
 
 export interface EnvelopeCounts {

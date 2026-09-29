@@ -19,7 +19,7 @@
           theme = localStorage.getItem('qc.theme');
         } catch (e) {}
         if (theme !== 'light' && theme !== 'dark') {
-          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          theme = 'dark'; // default until the user picks a theme
         }
         document.documentElement.dataset.theme = theme;
         try {

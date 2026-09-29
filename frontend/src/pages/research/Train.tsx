@@ -16,7 +16,7 @@ import { Slider } from '@/components/ui/Slider'
 import { Term } from '@/components/ui/Term'
 import { useToast } from '@/components/ui/Toast'
 import { BACKENDS, MODEL_ORDER, MODELS } from '@/lib/domain'
-import { formatAuc, formatStd } from '@/lib/format'
+import { formatAuc, formatNumber, formatStd } from '@/lib/format'
 import { easePrecise } from '@/lib/motion'
 import type { RouteMeta } from '@/routes'
 import { useDataVersion } from '@/state/dataVersion'
@@ -61,7 +61,7 @@ function LossChart({ points, epochs }: { points: LossPoint[]; epochs: number }) 
       <LineChart data={points} margin={{ top: 16, right: Math.round(labelGutter * 0.6), bottom: 4, left: 4 }}>
         <CartesianGrid vertical={false} stroke={C.rule} />
         <XAxis {...AXIS} dataKey="epoch" type="number" domain={[1, epochs]} ticks={[1, 10, 20, 30, 40, 50].filter((t) => t <= epochs)} height={30} />
-        <YAxis {...AXIS} domain={[0.2, Math.ceil(lossMax * 10) / 10]} tickCount={5} tickFormatter={(v: number) => v.toFixed(2)} width={52} />
+        <YAxis {...AXIS} domain={[0.2, Math.ceil(lossMax * 10) / 10]} tickCount={5} tickFormatter={(v: number) => formatNumber(v, 2)} width={52} />
         <Tooltip
           cursor={{ stroke: C.ruleStrong }}
           content={({ active, payload }) => {
@@ -71,8 +71,8 @@ function LossChart({ points, epochs }: { points: LossPoint[]; epochs: number }) 
               <ChartTooltipCard
                 title={`Epoch ${p.epoch}`}
                 rows={[
-                  { key: 'l', color: C.accent, label: 'Training loss', value: p.loss.toFixed(3) },
-                  { key: 'v', color: C.accent, dashed: true, label: 'Validation loss', value: p.valLoss.toFixed(3) },
+                  { key: 'l', color: C.accent, label: 'Training loss', value: formatNumber(p.loss, 3) },
+                  { key: 'v', color: C.accent, dashed: true, label: 'Validation loss', value: formatNumber(p.valLoss, 3) },
                 ]}
               />
             )

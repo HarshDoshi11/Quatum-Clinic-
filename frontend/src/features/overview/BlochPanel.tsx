@@ -7,7 +7,7 @@ import { SegmentedToggle, type SegmentOption } from '@/components/ui/SegmentedTo
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Slider } from '@/components/ui/Slider'
 import { Term } from '@/components/ui/Term'
-import { formatPercent } from '@/lib/format'
+import { formatNumber, formatPercent } from '@/lib/format'
 import { springPrecise } from '@/lib/motion'
 import type { PcaComponent } from '@/types'
 
@@ -88,8 +88,8 @@ export function BlochPanel({ pca, sampleEncoding }: BlochPanelProps) {
 
   // Written straight to the DOM ~10×/s so the caption never re-renders the canvas.
   const onAngles = useCallback((t: number, phi: number) => {
-    if (thetaRef.current) thetaRef.current.textContent = t.toFixed(2)
-    if (phiRef.current) phiRef.current.textContent = phi.toFixed(2)
+    if (thetaRef.current) thetaRef.current.textContent = formatNumber(t, 2)
+    if (phiRef.current) phiRef.current.textContent = formatNumber(phi, 2)
   }, [])
 
   const setX = (v: number) => setValues((prev) => prev.map((old, i) => (i === index ? v : old)))
@@ -119,7 +119,7 @@ export function BlochPanel({ pca, sampleEncoding }: BlochPanelProps) {
         </SceneFrame>
       </div>
       <figcaption className="type-label text-center text-muted">
-        Drag to inspect · θ = <span ref={thetaRef} className="text-ink">{theta.toFixed(2)}</span> · φ ={' '}
+        Drag to inspect · θ = <span ref={thetaRef} className="text-ink">{formatNumber(theta, 2)}</span> · φ ={' '}
         <span ref={phiRef} className="text-ink">0.48</span>
       </figcaption>
 
@@ -139,12 +139,12 @@ export function BlochPanel({ pca, sampleEncoding }: BlochPanelProps) {
           max={1}
           step={0.01}
           onChange={setX}
-          format={(v) => v.toFixed(2)}
+          format={(v) => formatNumber(v, 2)}
           tone="accent"
           disabled={!ready}
           hint={
             <span className="num type-small">
-              <Term term="encoding">Angle encoding</Term> · θ = x · π = {x.toFixed(2)} · π = {theta.toFixed(2)} rad
+              <Term term="encoding">Angle encoding</Term> · θ = x · π = {formatNumber(x, 2)} · π = {formatNumber(theta, 2)} rad
             </span>
           }
         />
@@ -174,7 +174,7 @@ export function BlochPanel({ pca, sampleEncoding }: BlochPanelProps) {
               <span className="block">Noise pulls the qubit toward pure randomness.</span>
               <span className="mt-1 flex flex-wrap items-baseline justify-between gap-x-4">
                 <span className="num type-small">
-                  Vector length r = 1 − noise = <span className="text-ink">{(1 - noise).toFixed(2)}</span>
+                  Vector length r = 1 − noise = <span className="text-ink">{formatNumber(1 - noise, 2)}</span>
                 </span>
                 <Link to="/hardware" className="type-label text-ink underline-offset-4 hover:underline">
                   Explore in Hardware Reality Lab ↗

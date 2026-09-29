@@ -2,6 +2,7 @@ import { AnimatePresence, MotionConfig } from 'motion/react'
 import { lazy, Suspense, type ReactNode } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AppShell } from '@/components/shell/AppShell'
+import { RouteErrorBoundary } from '@/components/ui/RouteErrorBoundary'
 import { ToastProvider } from '@/components/ui/Toast'
 import { CommandPalette } from '@/features/command/CommandPalette'
 import { ExperimentDrawerProvider } from '@/features/experiments/ExperimentDrawer'
@@ -42,7 +43,11 @@ function PageFallback() {
   )
 }
 
-const lazyPage = (node: ReactNode) => <Suspense fallback={<PageFallback />}>{node}</Suspense>
+const lazyPage = (node: ReactNode) => (
+  <RouteErrorBoundary>
+    <Suspense fallback={<PageFallback />}>{node}</Suspense>
+  </RouteErrorBoundary>
+)
 
 /** Research pages, one per route id (exhaustive: a new id without a page fails to compile). */
 function researchPage(route: RouteMeta<ResearchRouteId>) {

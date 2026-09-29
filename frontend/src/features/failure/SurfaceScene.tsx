@@ -21,6 +21,7 @@ import * as THREE from 'three'
 import { SAFETY_RANK, safetyStatus } from '@/lib/safety'
 import { useThemeColors } from '@/lib/useThemeColors'
 import type { EnvelopeProfile, FailureEnvelopeSweep, SafetyStatus } from '@/types'
+import { formatPercent } from '@/lib/format'
 
 const SIZE = 4
 const H = SIZE / 2
@@ -140,7 +141,7 @@ function ThresholdPlane({ threshold, s, animate }: { threshold: number; s: Scale
       {/* Right of the rightmost plane corner (+x, −z): nothing else lives there. */}
       <Html position={[H, 0, -H]} zIndexRange={[10, 0]}>
         <span className={`${TICK} rounded-[2px] px-1`} style={{ color: colors.accent.hex, background: colors.bg.hex, transform: 'translate(0.625rem, -50%)' }}>
-          {(threshold * 100).toFixed(1)}% threshold
+          {formatPercent(threshold)} threshold
         </span>
       </Html>
     </group>
@@ -295,7 +296,7 @@ function YouAreHere({ profile, s }: { profile: EnvelopeProfile; s: Scales }) {
       </mesh>
       <Html position={[x, y, z]} zIndexRange={[20, 0]}>
         <span className={`${TICK} rounded-[2px] px-1.5 py-0.5`} style={{ color: colors.bg.hex, background: colors.ink.hex, transform: 'translate(0.75rem, -130%)' }}>
-          You are here · {(sensitivity * 100).toFixed(1)}%
+          You are here · {formatPercent(sensitivity)}
         </span>
       </Html>
     </group>

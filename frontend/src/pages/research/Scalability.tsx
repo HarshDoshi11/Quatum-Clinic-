@@ -69,7 +69,7 @@ function SmallMultiple({ sweep, panel }: { sweep: ScalabilitySweep; panel: Panel
               ticks={ticks}
               width={panel.key === 'runtimeS' ? 64 : 56}
               tickFormatter={(v: number) =>
-                panel.key === 'auc' ? v.toFixed(3) : panel.key === 'runtimeS' ? (v === 0 ? '00:00' : formatDuration(v)) : String(Math.round(v))
+                panel.key === 'auc' ? formatAuc(v) : panel.key === 'runtimeS' ? (v === 0 ? '00:00' : formatDuration(v)) : String(Math.round(v))
               }
             />
             <Tooltip

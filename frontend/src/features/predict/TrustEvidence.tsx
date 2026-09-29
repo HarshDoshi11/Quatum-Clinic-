@@ -7,7 +7,7 @@ import { Glossed } from '@/components/ui/Glossed'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { StatusMark, TRUST_LABEL } from '@/components/ui/StatusMark'
 import { BACKENDS } from '@/lib/domain'
-import { formatDelta, formatPercent, formatPoints } from '@/lib/format'
+import { formatDelta, formatNumber, formatPercent, formatPoints } from '@/lib/format'
 import { easePrecise } from '@/lib/motion'
 import { useElementSize } from '@/lib/useElementSize'
 import type { FieldStatus, PredictResponse, TrustEvidence as Evidence, TrustLevel, TrustResponse, TrustSignal, TrustSignalId } from '@/types'
@@ -118,16 +118,16 @@ function ShiftPanel({ distance, feature, typical, cutoff, outOfRange }: Evidence
               <rect x={0} y={trackY - 3} width={width} height={6} fill={C.rule} />
               <rect x={0} y={trackY - 3} width={x(typical)} height={6} fill={C.ink} fillOpacity={0.3} />
               <text x={0} y={trackY - rem * 0.75} {...TICK}>
-                95% of training ≤ {typical.toFixed(1)} SD
+                95% of training ≤ {formatNumber(typical, 1)} SD
               </text>
               <line x1={x(cutoff)} x2={x(cutoff)} y1={trackY - rem * 0.6} y2={trackY + rem * 0.6} stroke={C.ink} strokeDasharray="3 2" />
               <text x={x(cutoff)} y={trackY - rem * 0.75} textAnchor="end" {...text}>
-                OOD cutoff {cutoff.toFixed(1)} SD
+                OOD cutoff {formatNumber(cutoff, 1)} SD
               </text>
               <path d={`M${x(distance)},${trackY + 4} l4,6 h-8 Z`} fill={C.accent} />
               <line x1={x(distance)} x2={x(distance)} y1={trackY - 5} y2={trackY + 5} stroke={C.accent} strokeWidth={2} />
               <text x={x(distance)} y={trackY + rem * 1.55} textAnchor={anchor(x(distance), width, rem * 14)} {...text}>
-                This patient {distance.toFixed(1)} SD{feature ? ` · ${feature}` : ''}
+                This patient {formatNumber(distance, 1)} SD{feature ? ` · ${feature}` : ''}
               </text>
             </>
           )

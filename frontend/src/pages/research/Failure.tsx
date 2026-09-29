@@ -14,7 +14,7 @@ import { SegmentedToggle, type SegmentOption } from '@/components/ui/SegmentedTo
 import { Slider } from '@/components/ui/Slider'
 import { Term } from '@/components/ui/Term'
 import { Heatmap } from '@/features/failure/Heatmap'
-import { formatAuc, formatPercent } from '@/lib/format'
+import { formatAuc, formatPercent, formatPercentStd, formatPoints } from '@/lib/format'
 import { envelopeCounts, envelopeSentence, safetyStatus, SAFETY_LABEL } from '@/lib/safety'
 import type { RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
@@ -101,7 +101,7 @@ export function Failure({ route }: { route: RouteMeta }) {
         header: `${x}%`,
         align: 'right',
         mono: true,
-        render: (r) => (profile ? (profile.sensitivity[r.j][i] * 100).toFixed(1) : ''),
+        render: (r) => (profile ? formatPoints(profile.sensitivity[r.j][i]) : ''),
       })),
   ]
 
@@ -225,7 +225,7 @@ export function Failure({ route }: { route: RouteMeta }) {
                   </dt>
                   <dd className="num type-ui text-ink">
                     {formatPercent(here.sensitivity)}
-                    <span className="ml-1.5 type-small text-muted">±{(here.std * 100).toFixed(1)}</span>
+                    <span className="ml-1.5 type-small text-muted">{formatPercentStd(here.std)}</span>
                   </dd>
                 </div>
                 <div className="flex min-h-11 items-center justify-between border-b border-rule py-2">

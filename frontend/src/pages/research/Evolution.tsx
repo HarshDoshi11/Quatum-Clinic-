@@ -101,7 +101,7 @@ function DesignScatter({ sweep }: { sweep: EvolutionSweep }) {
           height={44}
           label={{ value: 'Circuit depth (layers) · more layers = more complex', position: 'insideBottom', offset: -2, fill: C.muted, fontSize: '0.8125rem', fontFamily: 'var(--font-mono)' }}
         />
-        <YAxis {...AXIS} type="number" dataKey="auc" domain={domain} ticks={ticks} tickFormatter={(v: number) => v.toFixed(3)} width={64} allowDataOverflow />
+        <YAxis {...AXIS} type="number" dataKey="auc" domain={domain} ticks={ticks} tickFormatter={formatAuc} width={64} allowDataOverflow />
         <Tooltip
           cursor={false}
           content={({ active, payload }) => {
@@ -204,7 +204,7 @@ export function Evolution({ route }: { route: RouteMeta }) {
                 { key: 'l', label: 'Pareto front', color: C.accent },
                 { key: 'r', label: 'Recommended (knee point)', color: C.ink, shape: 'ring' },
               ]}
-              note={data ? `Axis zoomed · ${data.aucRange[0].toFixed(2)}–${data.aucRange[1].toFixed(2)}` : undefined}
+              note={data ? `Axis zoomed · ${formatAuc(data.aucRange[0])}–${formatAuc(data.aucRange[1])}` : undefined}
               loading={!data}
               height="30rem"
               table={{ columns, rows: sorted, rowKey: (c) => c.id, caption: 'Tested circuit designs' }}

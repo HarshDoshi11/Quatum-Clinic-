@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ChartTooltipCard } from '@/components/charts/ChartTooltip'
-import { formatPercent } from '@/lib/format'
+import { formatPercent, formatPercentStd } from '@/lib/format'
 import { SAFETY_LABEL, safetyStatus } from '@/lib/safety'
 import type { EnvelopeProfile, FailureEnvelopeSweep, SafetyStatus } from '@/types'
 
@@ -83,7 +83,7 @@ export function Heatmap({ sweep, profile, threshold }: HeatmapProps) {
             <ChartTooltipCard
               title={`${xs[hover.i]}% gate error · ${zs[hover.j]}% corruption`}
               rows={[
-                { key: 's', label: 'Sensitivity', value: `${formatPercent(sens[hover.j][hover.i])} ±${(std[hover.j][hover.i] * 100).toFixed(1)}` },
+                { key: 's', label: 'Sensitivity', value: `${formatPercent(sens[hover.j][hover.i])} ${formatPercentStd(std[hover.j][hover.i])}` },
                 { key: 'c', label: 'Status', value: SAFETY_LABEL[safetyStatus(sens[hover.j][hover.i], std[hover.j][hover.i], threshold)] },
               ]}
             />
