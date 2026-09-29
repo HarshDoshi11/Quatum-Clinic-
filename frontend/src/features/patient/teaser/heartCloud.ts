@@ -43,6 +43,10 @@ export interface HeartCloud {
   size: Float32Array
   /** A few coral points among the teal. */
   coral: Uint8Array
+  /** 1 = settled into the heart; 0 = still drifting, waiting to be placed. */
+  settled: Uint8Array
+  /** Where a waiting point drifts: loosely outside its place on the heart. */
+  drift: Float32Array
 }
 
 export const FORM_DELAY_MAX = 0.35
@@ -74,13 +78,19 @@ function evenUV(r: () => number): [number, number] {
   }
 }
 
-export function makeHeartCloud(count: number, seed = 7): HeartCloud {
+/**
+ * `settledFraction` of the points settle into the heart, built up from the tip (lowest first, with a ragged
+ * edge); the rest drift loosely outside where they will go.
+ */
+export function makeHeartCloud(count: number, settledFraction = 1, seed = 7): HeartCloud {
   const r = seeded(seed)
   const start = new Float32Array(count * 3)
   const target = new Float32Array(count * 3)
   const delay = new Float32Array(count)
   const size = new Float32Array(count)
   const coral = new Uint8Array(count)
+  const settled = new Uint8Array(count)
+  const drift = new Float32Array(count * 3)
   const gauss = () => (r() + r() + r() - 1.5) / 1.5
   for (let i = 0; i < count; i++) {
     const [x, y, z] = heartSurface(...evenUV(r))
@@ -92,5 +102,41 @@ export function makeHeartCloud(count: number, seed = 7): HeartCloud {
     size[i] = 0.6 + 0.8 * r() ** 2
     coral[i] = r() < 0.06 ? 1 : 0
   }
-  return { count, start, target, delay, size, coral }
+  // Build from the tip upward: rank by height (plus a little noise for a ragged edge).
+  const height = Array.from({ length: count }, (_, i) => target[i * 3 + 1] + 0.12 * (r() - 0.5))
+  const order = Array.from({ length: count }, (_, i) => i).sort((i, j) => height[i] - height[j])
+  const nSettled = Math.round(count * Math.min(1, Math.max(0, settledFraction)))
+  order.forEach((idx, rank) => {
+    settled[idx] = rank < nSettled ? 1 : 0
+    const k = idx * 3
+    const out = 1.06 + 0.16 * r()
+    drift.set([target[k] * out + gauss() * 0.12, target[k + 1] * out + gauss() * 0.1, target[k + 2] * out + gauss() * 0.2], k)
+  })
+  return { count, start, target, delay, size, coral, settled, drift }
+}
+
+/**
+ * Hairline links between a few nearby settled points (a wireframe feel): every `stride`-th settled point
+ * joins its nearest settled neighbour within `maxDist`. Returns segment endpoints (6 floats per link).
+ */
+export function wireLinks(cloud: HeartCloud, stride = 7, maxDist = 0.2): Float32Array {
+  const pts: number[] = []
+  for (let i = 0; i < cloud.count; i++) if (cloud.settled[i]) pts.push(i)
+  const out: number[] = []
+  const t = cloud.target
+  for (let a = 0; a < pts.length; a += stride) {
+    const i = pts[a]
+    let best = -1
+    let bestD = maxDist
+    for (const j of pts) {
+      if (j === i) continue
+      const d = Math.hypot(t[i * 3] - t[j * 3], t[i * 3 + 1] - t[j * 3 + 1], t[i * 3 + 2] - t[j * 3 + 2])
+      if (d > 0.06 && d < bestD) {
+        bestD = d
+        best = j
+      }
+    }
+    if (best >= 0) out.push(t[i * 3], t[i * 3 + 1], t[i * 3 + 2], t[best * 3], t[best * 3 + 1], t[best * 3 + 2])
+  }
+  return new Float32Array(out)
 }

@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import { useThemeColors } from '@/lib/useThemeColors'
 import { useTheme } from '@/state/theme'
 import { beatPhase, pulseScale } from '../heartbeat'
-import { FORM_DELAY_MAX, makeHeartCloud } from './heartCloud'
+import { FORM_DELAY_MAX, makeHeartCloud, wireLinks } from './heartCloud'
 
 const COUNT = 3000
 /** Scattered → heart. */
@@ -20,6 +20,8 @@ const vertexShader = /* glsl */ `
   uniform float uSize;
   uniform float uFade;
   attribute vec3 aStart;
+  attribute vec3 aDrift;
+  attribute float aSettled;
   attribute float aDelay;
   attribute float aSize;
   attribute vec3 aColor;
@@ -30,7 +32,10 @@ const vertexShader = /* glsl */ `
     // Each point sets off after its delay and eases (in-out cubic) from the cloud onto the heart.
     float p = clamp((uProgress - aDelay) / (1.0 - ${FORM_DELAY_MAX.toFixed(2)}), 0.0, 1.0);
     float e = p < 0.5 ? 4.0 * p * p * p : 1.0 - pow(-2.0 * p + 2.0, 3.0) / 2.0;
-    vec3 pos = mix(aStart, position * uBeat, e);
+    // Settled points take their place on the heart (and breathe with it); the others wait nearby, drifting slowly.
+    vec3 waiting = aDrift + 0.09 * vec3(sin(uTime * 0.35 + aDelay * 37.0), cos(uTime * 0.28 + aDelay * 23.0), sin(uTime * 0.22 + aDelay * 29.0));
+    vec3 home = aSettled > 0.5 ? position * uBeat : waiting;
+    vec3 pos = mix(aStart, home, e);
     // While scattered, the cloud drifts a little.
     pos += (1.0 - e) * 0.06 * vec3(sin(uTime * 0.6 + aDelay * 40.0), cos(uTime * 0.5 + aDelay * 31.0), 0.0);
 
@@ -43,9 +48,9 @@ const vertexShader = /* glsl */ `
     mv.xy += normalize(d + vec2(1e-5)) * uHover * smoothstep(0.26, 0.0, dist) * 0.12;
 
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = aSize * uSize / -mv.z;
+    gl_PointSize = aSize * uSize * (aSettled > 0.5 ? 1.0 : 0.8) / -mv.z;
     vColor = aColor;
-    vAlpha = (0.45 + 0.4 * e) * uFade;
+    vAlpha = (aSettled > 0.5 ? 0.45 + 0.4 * e : 0.3) * uFade;
   }
 `
 
@@ -60,8 +65,17 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-function Cloud({ animate, teal, coral, additive }: { animate: boolean; teal: string; coral: string; additive: boolean }) {
-  const cloud = useMemo(() => makeHeartCloud(COUNT), [])
+function Cloud({ animate, teal, coral, additive, settledFraction }: { animate: boolean; teal: string; coral: string; additive: boolean; settledFraction: number }) {
+  const cloud = useMemo(() => makeHeartCloud(COUNT, settledFraction), [settledFraction])
+  const wire = useRef<THREE.Group>(null)
+  const lineMaterial = useRef<THREE.LineBasicMaterial>(null)
+  const lineOpacity = additive ? 0.32 : 0.4
+  const lines = useMemo(() => {
+    const g = new THREE.BufferGeometry()
+    g.setAttribute('position', new THREE.BufferAttribute(wireLinks(cloud), 3))
+    return g
+  }, [cloud])
+  useEffect(() => () => lines.dispose(), [lines])
   const group = useRef<THREE.Group>(null)
   const material = useRef<THREE.ShaderMaterial>(null)
   const began = useRef<number | null>(null)
@@ -72,6 +86,8 @@ function Cloud({ animate, teal, coral, additive }: { animate: boolean; teal: str
     const g = new THREE.BufferGeometry()
     g.setAttribute('position', new THREE.BufferAttribute(cloud.target, 3))
     g.setAttribute('aStart', new THREE.BufferAttribute(cloud.start, 3))
+    g.setAttribute('aDrift', new THREE.BufferAttribute(cloud.drift, 3))
+    g.setAttribute('aSettled', new THREE.BufferAttribute(new Float32Array(cloud.settled), 1))
     g.setAttribute('aDelay', new THREE.BufferAttribute(cloud.delay, 1))
     g.setAttribute('aSize', new THREE.BufferAttribute(cloud.size, 1))
     g.setAttribute('aColor', new THREE.BufferAttribute(new Float32Array(COUNT * 3), 3))
@@ -135,6 +151,9 @@ function Cloud({ animate, teal, coral, additive }: { animate: boolean; teal: str
     // Breathing at 60 bpm on the shared clock (in step with the ECG line), once the heart has formed.
     const formed = Math.max(0, (progress - 0.8) / 0.2)
     u.uBeat.value = 1 + (pulseScale(beatPhase(now)) - 1) * formed
+    // The wireframe links appear once the settled part has formed, and breathe with it.
+    wire.current?.scale.setScalar(u.uBeat.value)
+    if (lineMaterial.current) lineMaterial.current.opacity = lineOpacity * formed
     // The cursor over the heart, in the canvas's own coordinates.
     const rect = gl.domElement.getBoundingClientRect()
     const p = pointer.current
@@ -151,6 +170,11 @@ function Cloud({ animate, teal, coral, additive }: { animate: boolean; teal: str
 
   return (
     <group ref={group} rotation={[0.05, 0, 0]}>
+      <group ref={wire}>
+        <lineSegments geometry={lines}>
+          <lineBasicMaterial ref={lineMaterial} color={teal} transparent opacity={animate ? 0 : lineOpacity} depthWrite={false} />
+        </lineSegments>
+      </group>
       <points geometry={geometry}>
         <shaderMaterial
           key={additive ? 'add' : 'normal'}
@@ -168,6 +192,8 @@ function Cloud({ animate, teal, coral, additive }: { animate: boolean; teal: str
 }
 
 export interface ParticleHeartSceneProps {
+  /** Share of the points that settle into the heart (ready features / all, from the roadmap). */
+  settledFraction: number
   /** False: the formed heart, still (reduced motion). */
   animate: boolean
   /** Off-screen: stop rendering. */
@@ -175,11 +201,12 @@ export interface ParticleHeartSceneProps {
 }
 
 /**
- * The teaser's particle heart (lazy-loaded via lazyScene): about 3000 soft points drift in as a data cloud, then
- * ease into a 3D heart over ~2.5s, and breathe at 60 bpm with a slow turn, a little parallax, and points that
- * step aside near the cursor. Additive glow on the dark theme; plain soft points on the light one.
+ * The teaser's particle heart, under construction (lazy-loaded via lazyScene): about 3000 soft points drift in as
+ * a data cloud; only the share of features that are ready settles into the heart (built up from the tip, joined by
+ * a few hairline links), while the rest drift loosely around it, waiting to be placed. The settled part breathes
+ * at 60 bpm; the whole turns slowly, leans toward the pointer, and points step aside near the cursor. Additive glow on the dark theme; plain soft points on the light one.
  */
-export default function ParticleHeartScene({ animate, visible }: ParticleHeartSceneProps) {
+export default function ParticleHeartScene({ animate, visible, settledFraction }: ParticleHeartSceneProps) {
   const colors = useThemeColors()
   const { theme } = useTheme()
   return (
@@ -190,7 +217,7 @@ export default function ParticleHeartScene({ animate, visible }: ParticleHeartSc
       frameloop={!animate ? 'demand' : visible ? 'always' : 'never'}
       aria-hidden="true"
     >
-      <Cloud animate={animate} teal={colors.accent.hex} coral={colors.coral.hex} additive={theme === 'dark'} />
+      <Cloud animate={animate} teal={colors.accent.hex} coral={colors.coral.hex} additive={theme === 'dark'} settledFraction={settledFraction} />
     </Canvas>
   )
 }

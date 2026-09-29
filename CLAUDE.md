@@ -15,9 +15,11 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
   cream theme with a teal accent, Fraunces headlines, editorial Home with the 3D heart + ECG, How it works, urgent strip)
   is done. Part A2 (Assessment as a guided conversation: safety check, report yes/no, one question per screen,
   "Where do I find this?", review) is done. **Patient Mode is now a "Coming soon" teaser for the Grand Finale:**
-  `PATIENT_MODE_ENABLED = false` in `routes.ts` serves only `/patient` (`pages/patient/ComingSoon.tsx`: particle heart
-  + ECG hero, "What's coming" in three beats, engine stats from the API) and redirects other `/patient/*` addresses
-  there. Home, Assessment and My Report stay in the code; set the flag to true to bring them back (Part C then
+  `PATIENT_MODE_ENABLED = false` in `routes.ts` serves only `/patient` (`pages/patient/ComingSoon.tsx`: status chip,
+  build counter, an unfinished particle heart, the build log with wireframe previews, a blurred "first look") and
+  redirects other `/patient/*` addresses there. One array, `features/patient/teaser/roadmap.ts`, drives the counter,
+  the log and how much of the heart has settled; update a feature's status there and all three follow. The teaser's
+  copy was agreed word for word: keep it verbatim, no icons on the page, no feature-card grids. Home, Assessment and My Report stay in the code; set the flag to true to bring them back (Part C then
   resumes). Pages in `src/pages/patient/`.
   Patient Mode shows no AUC, qubits, models, experiments, backends or 3D on screen (the doctor's printed page is the
   exception); `check:mocks` asserts no research jargon, full config coverage (icons, questions, learn cards, journeys
@@ -230,9 +232,11 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   without scrolling. The Home hero is a lazy 3D form (`HeroVisual`: still SVG fallback, static
   under reduced motion) with an ECG line on the same 60 bpm clock (`features/patient/heartbeat.ts`); no icon-column
   grids, centred hero + button, or concentric circles. While the flag is off, the teaser uses `TeaserTopBar` (wordmark,
-  the Research / Patient toggle, the theme toggle, nothing else) and a lazy particle heart (`features/patient/teaser/`:
-  ~3000 points, data cloud → heart, 60 bpm on the shared clock, DPR ≤ 1.5, paused off-screen, dotted SVG fallback,
-  formed and still under reduced motion); its stats come from the API, never hand-written. On patient
+  the Research / Patient toggle, a worded theme toggle, nothing else) and a lazy particle heart (`features/patient/teaser/`:
+  ~3000 points; the ready share settles from the tip up with hairline links and breathes at 60 bpm, the rest drift
+  nearby; the ECG is dashed past what has started; DPR ≤ 1.5, paused off-screen, dotted SVG fallback, still under
+  reduced motion). Mono status tags and the counter are allowed on the teaser (READY teal, IN PROGRESS ochre outline,
+  PLANNED muted outline). On patient
   pages: `type-body-lg` as the default text, lines ≤ 60ch, sections ≥ 56px apart, mono only for report IDs and dates,
   risk colours only for the risk word and the icon grid, motion 250–500ms eased (`tGentle`, `stepSlide`). Patient
   copy (name, per-input icon and question, next-step journeys per outcome) comes from `DATASETS[id].patient`; icons
