@@ -7,7 +7,7 @@ import { formatPercent, formatPoints } from '@/lib/format'
 import { tQuick } from '@/lib/motion'
 import { safetyStatus } from '@/lib/safety'
 import { useElementSize } from '@/lib/useElementSize'
-import { SHORT_VIEWPORT, useMediaQuery } from '@/lib/useMediaQuery'
+import { PROJECTOR_COMPACT_VIEWPORT, SHORT_VIEWPORT, useMediaQuery } from '@/lib/useMediaQuery'
 import { useProjector } from '@/state/projector'
 import type { ThresholdPoint } from '@/types'
 import { C, TICK, useChartUnits } from './chartTheme'
@@ -72,11 +72,12 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
   const [view, setView] = useState<View>('chart')
   const [boxRef, { width }] = useElementSize<HTMLDivElement>()
   const short = useMediaQuery(SHORT_VIEWPORT)
+  const projectorCompact = useMediaQuery(PROJECTOR_COMPACT_VIEWPORT)
   const { projector } = useProjector()
 
   // ── Geometry (px, from rem so projector mode scales it); shorter on short viewports
   const rem = units.rem
-  const height = rem * (short ? (projector ? 7.5 : 9) : 10.5)
+  const height = rem * (projector && projectorCompact ? 7.5 : short ? 9 : 10.5)
   const chipLane = rem * 1.625
   const band = rem * 1.25
   const axis = rem * 1.875

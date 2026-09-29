@@ -85,9 +85,9 @@
 :root[data-projector='on'] {
   font-size: 115%;
 }
-/* On short screens (≤ 832px tall, e.g. a 1366×768 projector) the type grows less, so demo-critical pages
+/* On screens up to 960px tall (1366×768, 1440×900 projectors) the type grows less, so demo-critical pages
    still fit the first screen; contrast and line weight get the full projector boost. */
-@media (max-height: 52rem) {
+@media (max-height: 60rem) {
   :root[data-projector='on'] {
     font-size: 106.25%;
   }

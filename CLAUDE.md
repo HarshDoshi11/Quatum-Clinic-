@@ -26,14 +26,17 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
   per outcome, valid ranges), the "N in 10" wording, the family summary, and i18n coverage for the assessment
   (every input asked once, every answer card labelled, every report value findable). The assessment edits the
   in-memory patient.
-- Next: Phase 8 (polish).
+- Phase 8 (polish for submission): done. Every results page shows a `SourceBadge` (REAL · 5 SEEDS / SIMULATED)
+  beside its section label, driven by the typed `source` field on each API response; route switches are exhaustive;
+  every page sits in a `RouteErrorBoundary`; the default theme is dark; vendor chunks are split in `vite.config.ts`.
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
 - ML track, first cut: `ml/run_pipeline.py` trains the six models for real (5 seeds, PennyLane lightning.qubit for
   VQC/QSVM) and writes `ml/results/real_results.json`; `ml/export_to_fixtures.py` merges it into the backend fixtures
   for Advantage Observatory and Predict & Trust only (compare, trust, predict + REAL-* experiment records). Real
-  configs carry their own configKeys (`…|real-pca4`, `…|ideal-sim|real`); real `evaluation` labels start "real ·",
-  every other fixture's start "simulated ·". Re-run the exporter after `npm run export:fixtures`. Never tune a model
+  configs carry their own configKeys (`…|real-pca4`, `…|ideal-sim|real`); merged responses carry
+  `source: { kind: 'real', seeds }`, everything from the mocks `{ kind: 'simulated' }` (never label strings by hand).
+  Re-run the exporter after `npm run export:fixtures`. Never tune a model
   on the test split or favour quantum; if quantum loses, the fixtures say so. See `ml/README.md`.
 - Update this section at the end of every session.
 
@@ -154,7 +157,7 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 | Utility | Size | Face | Use |
 | --- | --- | --- | --- |
 | `type-display` | clamp(56px, 6vw, 96px), lh 1.0 | Instrument Serif | Page headlines only |
-| `type-h2` | 36px, lh 1.1 | Instrument Serif | Panel / drawer / card titles |
+| `type-h2` | clamp(30px, …, 36px), lh 1.1 | Instrument Serif | Panel / drawer / card titles |
 | `type-metric-xl` | 72px | IBM Plex Mono | Hero metrics |
 | `type-metric` | 32px | IBM Plex Mono | Metrics, finding values |
 | `type-body-lg` | 18px, lh 1.6 | IBM Plex Sans | Lead text, plain-English readouts |
@@ -168,8 +171,9 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 - Nothing may render below 12px. Uppercase tracking is at most 0.06em. Don't add `leading-*` overrides to text that
   uses a `type-*` utility, because the token already sets line-height.
 - For mono numbers at a sans size, combine the classes: `num type-small`.
-- All sizes are rem, so **projector mode** (Shift+P: 115% root size, stronger contrast) scales everything. Size
-  chrome in rem too.
+- All sizes are rem, so **projector mode** (Shift+P: 115% root size, stronger contrast, thicker chart lines) scales
+  everything. On screens up to 960px tall it uses 106.25% and Predict tightens its gaps, so demo-critical first screens
+  still fit at 1366×768 and 1440×900. Size chrome in rem too.
 - **Contrast.** `--muted` must be at least 4.5:1 on `--bg` and `--surface` in both themes. Hairlines can stay
   subtle, but text never can. Don't lower contrast with opacity on text.
 - **Measure.** Running text is capped at about 70ch (the `measure` utility).
@@ -194,7 +198,10 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   Nothing may overlap, clip or scroll horizontally. Chrome that competes for space (the top bar and status strip)
   compacts with rem-based container queries (`@container`, `@min-[68rem]:…`), not viewport breakpoints.
 - **3D.** Every React Three Fiber scene is code-split with `lazyScene(() => import(...))` and rendered inside
-  `<SceneFrame>` (`src/components/three/LazyScene.tsx`), so pages paint instantly.
+  `<SceneFrame>` (`src/components/three/LazyScene.tsx`), so pages paint instantly. Every `<Canvas>` uses
+  `dpr={SCENE_DPR}` and `useSceneActivity()` (pause off-screen / hidden tab), and memoized geometries use `useDisposable`.
+- **Scripts.** Files imported by `check:mocks` / `export:fixtures` (src/lib, src/mocks, src/types) use relative
+  imports at runtime; `tsx` does not resolve the `@/` alias.
 - **Titles.** `document.title` is set per route ("Hardware Reality Lab — Q/Clinical") from `routes.ts`, so new
   routes get it automatically.
 - **Shortcuts.** Global shortcuts live in `SHORTCUTS` (`src/features/shortcuts/Shortcuts.tsx`), which drives both

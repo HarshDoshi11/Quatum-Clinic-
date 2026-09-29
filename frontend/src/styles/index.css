@@ -291,9 +291,9 @@
   stroke-width: 1.25px;
 }
 
-/* Predict & Trust in projector mode on a short screen: tighter gaps so the result, scale, threshold scrubber
-   and trust evidence stay on the first screen. */
-@media (max-height: 52rem) {
+/* Predict & Trust in projector mode on screens up to 960px tall: tighter gaps so the result, scale, threshold
+   scrubber and trust evidence stay on the first screen. */
+@media (max-height: 60rem) {
   :root[data-projector='on'] .predict-page {
     padding-top: 0.5rem !important;
   }

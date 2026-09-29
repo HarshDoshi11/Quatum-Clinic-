@@ -5,8 +5,7 @@
  * Relative imports only — the mocks and scripts use this file too.
  */
 import type { SafetyStatus } from '../types/hardware'
-import { formatPercent } from './format'
-import { formatPercentStd } from '@/lib/format'
+import { formatPercent, formatPercentStd } from './format'
 
 export function safetyStatus(value: number, std: number, threshold: number): SafetyStatus {
   if (value - std >= threshold) return 'safe'

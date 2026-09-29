@@ -2,6 +2,8 @@ import { useSyncExternalStore } from 'react'
 
 /** Short viewports (e.g. 1366×768): demo-critical pages compact to keep key results on the first screen. Matches `[@media(max-height:52rem)]:`. */
 export const SHORT_VIEWPORT = '(max-height: 52rem)'
+/** Screens where projector mode compacts (1366×768 and 1440×900 projectors). */
+export const PROJECTOR_COMPACT_VIEWPORT = '(max-height: 60rem)'
 
 /** Whether a media query currently matches; updates when it changes. */
 export function useMediaQuery(query: string): boolean {
