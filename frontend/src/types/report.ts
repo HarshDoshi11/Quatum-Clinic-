@@ -1,5 +1,5 @@
 import type { PatientStep } from '../lib/domain'
-import type { DatasetId, ExperimentId, ISODateTime } from './common'
+import type { DatasetId, DataSource, ExperimentId, ISODateTime } from './common'
 import type { Decision, PatientInput, RiskBand, TrustLevel, TrustSignalId } from './predict'
 
 export interface ReportRequest {
@@ -25,6 +25,8 @@ export interface ReliabilityPoint {
 }
 
 export interface PatientReport {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   reportId: string
   dataset: DatasetId
   condition: string

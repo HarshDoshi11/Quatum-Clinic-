@@ -10,7 +10,7 @@
  * Heart keeps its harder profile (classical AUC ≈ 0.88–0.90, accuracy ≈ 80–81%).
  */
 import { DATASETS } from '../../lib/domain'
-import type { DatasetId, ExperimentMetrics, ModalityId, ModelId, NoiseParams } from '../../types'
+import type { DataSource, DatasetId, ExperimentMetrics, ModalityId, ModelId, NoiseParams } from '../../types'
 import { logit, normCdf, normInv, round, sigmoid } from './math'
 
 // ─── Anchors ────────────────────────────────────────────────
@@ -44,6 +44,9 @@ export const ANCHORS: Record<DatasetId, Record<ModelId, ModelAnchor>> = {
 }
 
 export const SEEDS = 5
+
+/** Every mock response is simulated; the real pipeline (ml/) marks its own fixtures `real`. */
+export const SIMULATED: DataSource = { kind: 'simulated', seeds: SEEDS }
 /** The quantum model the patient-facing pages deploy (the best quantum model on both datasets). */
 export const BEST_QUANTUM: ModelId = 'qsvm'
 

@@ -1,5 +1,9 @@
 {
   "wdbc": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "dataset": "wdbc",
     "model": "qsvm",
     "experimentId": "EXP-2047",
@@ -158,6 +162,10 @@
     "takeaway": "Radius and perimeter push the estimate up the most; nothing pulls it down."
   },
   "heart": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "dataset": "heart",
     "model": "qsvm",
     "experimentId": "EXP-2029",

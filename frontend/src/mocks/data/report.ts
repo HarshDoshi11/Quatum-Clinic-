@@ -3,6 +3,7 @@ import { DATASETS } from '../../lib/domain'
 import type { DatasetId, PatientInput, PatientReport, ReliabilityPoint, RiskBand, TrustLevel, TrustSignalId } from '../../types'
 import { MODEL_FEATURES } from './features'
 import { abstains, checkInput, explain, fmt, predict } from './model'
+import { SIMULATED } from './canon'
 
 const RISK_WORD: Record<RiskBand, string> = { low: 'Lower', moderate: 'Moderate', high: 'Higher' }
 /** Patient Mode's headline: guiding, not alarming. */
@@ -93,6 +94,7 @@ export function patientReport(dataset: DatasetId, input: PatientInput, generated
   reportCounter += 1
 
   return {
+    source: SIMULATED,
     reportId: `RPT-${dataset.toUpperCase()}-${String(reportCounter).padStart(4, '0')}`,
     dataset,
     condition: meta.condition,

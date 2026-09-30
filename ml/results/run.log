@@ -1,0 +1,37 @@
+[00:05:04] WDBC: 569 rows, 212 positive, 10 features. WDBC: sklearn load_breast_cancer, 569 rows, the app's 10 'mean' features (sklearn provides 30).
+[00:05:05] state-vector kernel vs overlap circuit: max |Δk| = 3.47e-17 on 12 random pairs
+[00:07:00] WDBC seed 0: QSVM AUC 0.840 (1.3s) · VQC AUC 0.962 (110.3s) · best classical (PCA-4) 0.984
+[00:08:39] WDBC seed 1: QSVM AUC 0.825 (1.3s) · VQC AUC 0.975 (95.8s) · best classical (PCA-4) 0.988
+[00:09:53] WDBC seed 2: QSVM AUC 0.761 (1.3s) · VQC AUC 0.966 (70.9s) · best classical (PCA-4) 0.972
+[00:12:37] WDBC seed 3: QSVM AUC 0.729 (5.6s) · VQC AUC 0.981 (154.6s) · best classical (PCA-4) 0.995
+[00:16:33] WDBC seed 4: QSVM AUC 0.750 (2.3s) · VQC AUC 0.951 (229.4s) · best classical (PCA-4) 0.978
+[00:16:33] HEART: 303 rows, 139 positive, 13 features. Heart: processed.cleveland.data, 303 rows. cp recoded 1-4 → 0-3. slope recoded 1-3 → 0-2. thal recoded 3/6/7 → 0/1/2 (normal / fixed / reversible). Missing ca: 4, thal: 2 (imputed with the training-split mode).
+[00:18:30] HEART seed 0: QSVM AUC 0.751 (3.0s) · VQC AUC 0.926 (112.1s) · best classical (PCA-4) 0.935
+[00:20:48] HEART seed 1: QSVM AUC 0.698 (2.4s) · VQC AUC 0.871 (132.7s) · best classical (PCA-4) 0.886
+[00:21:29] HEART seed 2: QSVM AUC 0.663 (0.7s) · VQC AUC 0.922 (39.2s) · best classical (PCA-4) 0.915
+[00:22:18] HEART seed 3: QSVM AUC 0.803 (0.7s) · VQC AUC 0.866 (47.0s) · best classical (PCA-4) 0.878
+[00:22:59] HEART seed 4: QSVM AUC 0.786 (0.7s) · VQC AUC 0.936 (38.6s) · best classical (PCA-4) 0.935
+[00:22:59] Wrote C:\Users\harrs\OneDrive\Desktop\qclinical\ml\results\real_results.json in 17.9 min.
+
+dataset model    features             AUC        accuracy              F1     sensitivity      train s
+------------------------------------------------------------------------------------------------------
+heart   vqc      pca4       0.904 ± 0.033   0.830 ± 0.064   0.809 ± 0.071   0.786 ± 0.067  73.9 ± 45.0
+heart   qsvm     pca4       0.740 ± 0.059   0.682 ± 0.030   0.600 ± 0.024   0.521 ± 0.060    1.5 ± 1.1
+heart   logreg   pca4       0.909 ± 0.026   0.849 ± 0.029   0.834 ± 0.029   0.821 ± 0.025    0.0 ± 0.0
+heart   svm      pca4       0.898 ± 0.025   0.859 ± 0.044   0.846 ± 0.045   0.836 ± 0.041    0.0 ± 0.0
+heart   rf       pca4       0.891 ± 0.038   0.843 ± 0.051   0.826 ± 0.050   0.807 ± 0.032    0.4 ± 0.2
+heart   xgboost  pca4       0.889 ± 0.037   0.810 ± 0.038   0.789 ± 0.046   0.779 ± 0.064    0.1 ± 0.0
+heart   logreg   full       0.903 ± 0.028   0.833 ± 0.029   0.814 ± 0.027   0.793 ± 0.016    0.0 ± 0.0
+heart   svm      full       0.894 ± 0.023   0.833 ± 0.045   0.819 ± 0.042   0.814 ± 0.016    0.0 ± 0.0
+heart   rf       full       0.907 ± 0.028   0.852 ± 0.035   0.832 ± 0.033   0.793 ± 0.030    0.4 ± 0.2
+heart   xgboost  full       0.853 ± 0.045   0.790 ± 0.081   0.765 ± 0.083   0.736 ± 0.065    0.1 ± 0.0
+wdbc    vqc      pca4       0.967 ± 0.012   0.905 ± 0.016   0.874 ± 0.022   0.895 ± 0.046 132.2 ± 62.3
+wdbc    qsvm     pca4       0.781 ± 0.049   0.737 ± 0.046   0.605 ± 0.069   0.548 ± 0.067    2.4 ± 1.9
+wdbc    logreg   pca4       0.982 ± 0.009   0.932 ± 0.019   0.904 ± 0.027   0.876 ± 0.039    0.0 ± 0.0
+wdbc    svm      pca4       0.981 ± 0.011   0.926 ± 0.013   0.900 ± 0.018   0.895 ± 0.040    0.0 ± 0.0
+wdbc    rf       pca4       0.974 ± 0.015   0.923 ± 0.019   0.896 ± 0.024   0.900 ± 0.031    0.5 ± 0.3
+wdbc    xgboost  pca4       0.973 ± 0.012   0.928 ± 0.017   0.902 ± 0.023   0.900 ± 0.039    0.2 ± 0.3
+wdbc    logreg   full       0.984 ± 0.007   0.935 ± 0.018   0.911 ± 0.026   0.900 ± 0.039    0.0 ± 0.0
+wdbc    svm      full       0.985 ± 0.009   0.940 ± 0.025   0.918 ± 0.033   0.905 ± 0.038    0.0 ± 0.0
+wdbc    rf       full       0.982 ± 0.009   0.932 ± 0.020   0.909 ± 0.026   0.924 ± 0.031    0.5 ± 0.3
+wdbc    xgboost  full       0.988 ± 0.007   0.944 ± 0.013   0.923 ± 0.018   0.919 ± 0.036    0.1 ± 0.1

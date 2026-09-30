@@ -68,25 +68,36 @@ export interface LearnCard {
   body: string
 }
 
-/** The Home hero: copy, and which form the 3D hero draws. */
+/** The Home hero: which form the 3D hero draws (its words live in the patient i18n files). */
 export interface PatientHome {
-  eyebrow: string
-  headline: string
-  subtext: string
   /** 'heart' draws the beating heart with a live ECG line; 'cells' a slow cluster of cells, no ECG. */
   hero: 'heart' | 'cells'
 }
 
-/** "Is this urgent?": the symptoms that need care now, and who to call. Null when the condition has none. */
-export interface PatientUrgent {
-  symptoms: string
-  numbers: { number: string; label: string }[]
+/** One step of the assessment conversation: the inputs it asks, in order. */
+export interface AssessmentStep {
+  id: string
+  /** Asked only when the patient has their report with them. */
+  fromReport: boolean
+  features: string[]
+}
+
+/**
+ * The shape of the assessment (its words live in the patient i18n files): the steps in order (every
+ * input exactly once, asserted by check:mocks), and the sections of the illustrated sample report that
+ * "Where do I find this?" highlights (every report input in exactly one section).
+ */
+export interface PatientAssessment {
+  steps: AssessmentStep[]
+  report: { id: string; features: string[] }[]
 }
 
 /** Everything Patient Mode needs from a dataset. */
 export interface PatientConfig {
   home: PatientHome
-  urgent: PatientUrgent | null
+  /** Some symptoms of this condition need care now: Home shows "Is this urgent?" and the check opens with a safety question. */
+  safetyCheck: boolean
+  assessment: PatientAssessment
   /** What the check is about, in patient copy ("heart disease"). */
   name: string
   /** One entry per input. check:mocks asserts every model input has one. */
@@ -152,13 +163,22 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     reportSubject: 'Your sample’s',
     riskBandEdges: [0.3, 0.6],
     patient: {
-      home: {
-        eyebrow: 'Breast health check',
-        headline: 'Got a biopsy report? Let’s make sense of it.',
-        subtext: 'Answer what your report shows. You get a clear answer, how sure it is, and what to do next.',
-        hero: 'cells',
+      home: { hero: 'cells' },
+      safetyCheck: false,
+      assessment: {
+        steps: [
+          { id: 'size', fromReport: true, features: ['radius_mean', 'perimeter_mean', 'area_mean'] },
+          {
+            id: 'shape',
+            fromReport: true,
+            features: ['texture_mean', 'smoothness_mean', 'compactness_mean', 'concavity_mean', 'concave_points_mean', 'symmetry_mean', 'fractal_dimension_mean'],
+          },
+        ],
+        report: [
+          { id: 'size', features: ['radius_mean', 'perimeter_mean', 'area_mean'] },
+          { id: 'shape', features: ['texture_mean', 'smoothness_mean', 'compactness_mean', 'concavity_mean', 'concave_points_mean', 'symmetry_mean', 'fractal_dimension_mean'] },
+        ],
       },
-      urgent: null,
       name: 'breast cancer',
       features: {
         radius_mean: { icon: 'circle-dot', question: 'Cell size (radius)' },
@@ -244,17 +264,21 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
     reportSubject: 'Your',
     riskBandEdges: [0.3, 0.6],
     patient: {
-      home: {
-        eyebrow: 'Heart health check',
-        headline: 'Got a heart test report? Let’s make sense of it.',
-        subtext: 'Answer what you know from your latest results. You get a clear answer, how sure it is, and what to do next.',
-        hero: 'heart',
-      },
-      urgent: {
-        symptoms: 'chest pain right now, trouble breathing, or fainting',
-        numbers: [
-          { number: '112', label: 'Emergency' },
-          { number: '108', label: 'Ambulance' },
+      home: { hero: 'heart' },
+      safetyCheck: true,
+      assessment: {
+        steps: [
+          { id: 'about', fromReport: false, features: ['age', 'sex'] },
+          { id: 'feeling', fromReport: false, features: ['cp', 'exang'] },
+          { id: 'report', fromReport: true, features: ['trestbps', 'chol', 'fbs', 'thalach', 'restecg', 'oldpeak', 'slope', 'thal', 'ca'] },
+        ],
+        report: [
+          { id: 'vitals', features: ['trestbps'] },
+          { id: 'blood', features: ['chol', 'fbs'] },
+          { id: 'ecg', features: ['restecg'] },
+          { id: 'stress', features: ['thalach', 'oldpeak', 'slope'] },
+          { id: 'scan', features: ['thal'] },
+          { id: 'angio', features: ['ca'] },
         ],
       },
       name: 'heart disease',

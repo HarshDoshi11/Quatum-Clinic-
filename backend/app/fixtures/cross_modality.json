@@ -1,5 +1,9 @@
 {
   "wdbc": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "available": false,
     "dataset": "wdbc",
     "reason": "Cross-modality analysis uses the Heart Disease dataset.",
@@ -9,6 +13,10 @@
     ]
   },
   "heart": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "available": true,
     "dataset": "heart",
     "experimentId": "EXP-2036",

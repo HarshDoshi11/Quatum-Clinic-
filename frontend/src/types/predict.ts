@@ -1,4 +1,4 @@
-import type { BackendId, ConfigKey, DatasetId, ExperimentId, MeanStd, ModelId } from './common'
+import type { BackendId, ConfigKey, DatasetId, DataSource, ExperimentId, MeanStd, ModelId } from './common'
 import type { ModalityId } from './crossModality'
 
 /** Icon names Patient Mode may use (lucide); the UI maps them to components, so the config stays plain data. */
@@ -142,6 +142,8 @@ export interface TrustEvidence {
 }
 
 export interface PredictResponse extends DeployedSetting {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   predictionId: string
   dataset: DatasetId
   model: ModelId
@@ -192,6 +194,8 @@ export interface DefaultOperatingPoint {
 }
 
 export interface TrustResponse extends DeployedSetting {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   dataset: DatasetId
   model: ModelId
   experimentId: ExperimentId
@@ -259,6 +263,8 @@ export interface EncodedComponent {
 }
 
 export interface ExplainResponse extends DeployedSetting {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   dataset: DatasetId
   model: ModelId
   experimentId: ExperimentId

@@ -20,7 +20,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { Slider } from '@/components/ui/Slider'
 import { Term } from '@/components/ui/Term'
 import { useToast } from '@/components/ui/Toast'
-import { formatAuc, formatPercent } from '@/lib/format'
+import { formatAuc, formatDelta, formatNumber, formatPercent, formatPercentStd, formatPoints } from '@/lib/format'
 import { SAFETY_LABEL } from '@/lib/safety'
 import type { RouteMeta } from '@/routes'
 import { useDataset } from '@/state/dataset'
@@ -68,12 +68,12 @@ function ProfileSpecs({ p }: { p: HardwareProfile }) {
 // ─── Before → after metrics ─────────────────────────────────
 
 function DeltaMetric({ label, before, after, kind }: { label: ReactNode; before: number; after: number; kind: 'pct' | 'auc' }) {
-  const fmt = (v: number) => (kind === 'pct' ? (v * 100).toFixed(1) : formatAuc(v))
+  const fmt = (v: number) => (kind === 'pct' ? formatPoints(v) : formatAuc(v))
   // The delta is computed from the displayed values, so "95.6 → 82.6" always reads −13.0.
   // Both displays round to 3 decimals of the fraction (1 decimal of a percentage).
   const shown = (v: number) => Math.round(v * 1000) / 1000
   const delta = shown(after) - shown(before)
-  const deltaText = kind === 'pct' ? `${delta < 0 ? '−' : '+'}${Math.abs(delta * 100).toFixed(1)} pts` : `${delta < 0 ? '−' : '+'}${Math.abs(delta).toFixed(3)}`
+  const deltaText = kind === 'pct' ? `${formatDelta(delta * 100, 1)} pts` : formatDelta(delta)
   return (
     <div className="border-t border-rule py-4">
       <p className="type-label text-muted">{label}</p>
@@ -228,7 +228,7 @@ export function Hardware({ route }: { route: RouteMeta }) {
   const t2Columns: Column<NoiseRunResponse['sensitivityVsT2'][number]>[] = [
     { key: 't', header: 'T2', mono: true, render: (p) => `${p.t2Us} µs` },
     { key: 's', header: 'Sensitivity', align: 'right', mono: true, render: (p) => formatPercent(p.sensitivity) },
-    { key: 'd', header: '± std', align: 'right', mono: true, render: (p) => `±${(p.std * 100).toFixed(1)}` },
+    { key: 'd', header: '± std', align: 'right', mono: true, render: (p) => formatPercentStd(p.std) },
   ]
 
   if (profiles.status === 'error') {
@@ -243,7 +243,7 @@ export function Hardware({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={run?.source}>
           <div className="mt-6">{run && <ExperimentTag id={run.experimentId} detail="QSVM · noise sweep" />}</div>
         </PageHeader>
       </PageItem>
@@ -356,7 +356,7 @@ export function Hardware({ route }: { route: RouteMeta }) {
                   max={SHOTS.length - 1}
                   step={1}
                   onChange={(i) => edit({ shots: SHOTS[i] })}
-                  format={(i) => (noise.shots === null ? 'exact (statevector)' : SHOTS[i].toLocaleString('en-US'))}
+                  format={(i) => (noise.shots === null ? 'exact (statevector)' : formatNumber(SHOTS[i]))}
                   tone="accent"
                 />
               </div>
@@ -380,7 +380,7 @@ export function Hardware({ route }: { route: RouteMeta }) {
                   <span className={`block h-[10px] w-[10px] shrink-0 ${STATUS_MARK[run.status]}`} aria-hidden="true" />
                   {SAFETY_LABEL[run.status]}
                   <span className="num type-small text-muted">
-                    vs {Math.round(run.threshold * 100)}% · ±{(run.sensitivityStd * 100).toFixed(1)} std
+                    vs {Math.round(run.threshold * 100)}% · {formatPercentStd(run.sensitivityStd)} std
                   </span>
                 </p>
                 <p className="measure mt-3 type-body text-ink">

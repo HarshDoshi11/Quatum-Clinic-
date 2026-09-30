@@ -38,7 +38,7 @@ export function HeroStill({ shape }: { shape: PatientHome['hero'] }) {
   )
 }
 
-function hasWebGL(): boolean {
+export function hasWebGL(): boolean {
   try {
     const c = document.createElement('canvas')
     return Boolean(c.getContext('webgl2') ?? c.getContext('webgl'))
@@ -48,7 +48,7 @@ function hasWebGL(): boolean {
 }
 
 /** If the 3D scene fails (no GPU, a lost context), the still picture takes its place. */
-class HeroBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
+export class HeroBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
   state = { failed: false }
   static getDerivedStateFromError() {
     return { failed: true }

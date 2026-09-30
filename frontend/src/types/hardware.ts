@@ -1,4 +1,4 @@
-import type { DatasetId, ExperimentId, ModelId, NoiseParams } from './common'
+import type { DatasetId, DataSource, ExperimentId, ModelId, NoiseParams } from './common'
 
 export type HardwareProfileId = 'ideal-sim' | 'fake-backend-1' | 'fake-backend-2' | 'custom'
 
@@ -31,6 +31,8 @@ export interface OperatingPoint {
 }
 
 export interface NoiseRunResponse {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   dataset: DatasetId
   experimentId: ExperimentId
   model: ModelId

@@ -11,6 +11,7 @@ import { useReducedMotion } from 'motion/react'
 import { useMemo, useRef, type MutableRefObject } from 'react'
 import * as THREE from 'three'
 import { useThemeColors, type RGBA } from '@/lib/useThemeColors'
+import { SCENE_DPR, useDisposable, useSceneActivity } from '@/components/three/useSceneActivity'
 
 const MERIDIANS = 8
 const PARALLELS = 6
@@ -45,6 +46,7 @@ function blochToVec(theta: number, phi: number): THREE.Vector3 {
 
 function Polyline({ points, color, opacity }: { points: THREE.Vector3[]; color: string; opacity: number }) {
   const geometry = useMemo(() => new THREE.BufferGeometry().setFromPoints(points), [points])
+  useDisposable(geometry)
   return (
     <lineSegments geometry={geometry}>
       <lineBasicMaterial color={color} transparent opacity={opacity} depthWrite={false} />
@@ -195,6 +197,7 @@ function StateVector({ accent, classical, targetTheta, noise, animate, live, onA
 function Projection({ accent, live }: { accent: RGBA; live: MutableRefObject<LiveState> }) {
   const line = useRef<THREE.LineSegments>(null)
   const geometry = useMemo(() => new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), [])
+  useDisposable(geometry)
   useFrame(() => {
     const { theta, phi, r } = live.current
     const tip = blochToVec(theta, phi).multiplyScalar(r)
@@ -221,13 +224,16 @@ export interface BlochSphereProps {
 }
 
 export default function BlochSphere({ theta, noise, onAngles }: BlochSphereProps) {
+  const scene = useSceneActivity<HTMLCanvasElement>()
   const colors = useThemeColors()
   const reduced = useReducedMotion() ?? false
   const live = useRef<LiveState>({ theta, phi: PHI_START, r: 1 - noise })
 
   return (
     <Canvas
-      dpr={[1, 2]}
+      ref={scene.ref}
+      dpr={SCENE_DPR}
+      frameloop={scene.active ? 'always' : 'never'}
       camera={{ position: CAMERA_POSITION, fov: 32, near: 0.1, far: 50 }}
       gl={{ antialias: true, alpha: true }}
       aria-label="Interactive Bloch sphere showing one qubit"

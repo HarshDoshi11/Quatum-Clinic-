@@ -62,7 +62,7 @@ function UploadZone({ onFile, busy }: { onFile: (file: File) => void; busy: bool
         One row per patient, one column per measurement, plus a target column (e.g. <span className="num">diagnosis</span> or{' '}
         <span className="num">target</span>). Files stay in your browser in mock mode.
       </p>
-      <input ref={input} type="file" accept=".csv,text/csv" className="sr-only" tabIndex={-1} onChange={(e) => take(e.target.files)} />
+      <input ref={input} type="file" accept=".csv,text/csv" className="sr-only" tabIndex={-1} aria-label="Upload a CSV file" onChange={(e) => take(e.target.files)} />
     </div>
   )
 }

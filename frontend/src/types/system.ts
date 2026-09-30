@@ -1,4 +1,4 @@
-import type { BackendId, DatasetId, ExperimentId, ISODateTime, MeanStd, ModelId } from './common'
+import type { BackendId, DatasetId, DataSource, ExperimentId, ISODateTime, MeanStd, ModelId } from './common'
 import type { ExperimentSummary } from './experiment'
 
 export interface Health {
@@ -49,6 +49,8 @@ export interface Finding {
 }
 
 export interface OverviewResponse {
+  /** Where the numbers come from: the real pipeline (ml/) or the simulated results store. */
+  source: DataSource
   dataset: DatasetId
   status: SystemStatus
   findings: Finding[]

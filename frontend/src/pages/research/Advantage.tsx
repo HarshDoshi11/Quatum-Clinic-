@@ -15,7 +15,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader'
 import { Term } from '@/components/ui/Term'
 import { useExperimentDrawer } from '@/features/experiments/ExperimentDrawer'
 import { MODEL_ORDER, MODELS } from '@/lib/domain'
-import { durationColumn, formatAuc, formatMs, formatPercent, formatStd } from '@/lib/format'
+import { durationColumn, formatAuc, formatMs, formatPercent, formatPercentStd, formatStd } from '@/lib/format'
 import { useElementSize } from '@/lib/useElementSize'
 import { resolveLabelOffsets } from '@/components/charts/directLabels'
 import type { RouteMeta } from '@/routes'
@@ -32,13 +32,13 @@ interface MetricSpec {
   format: (m: MeanStd, time: (s: number) => string) => [string, string]
 }
 
-const pct = (m: MeanStd): [string, string] => [formatPercent(m.mean), `±${(m.std * 100).toFixed(1)}`]
+const pct = (m: MeanStd): [string, string] => [formatPercent(m.mean), formatPercentStd(m.std)]
 
 const METRICS: MetricSpec[] = [
   { key: 'accuracy', header: 'Accuracy', better: 'high', format: pct },
   { key: 'sensitivity', header: <Term>Sensitivity</Term>, better: 'high', format: pct },
   { key: 'specificity', header: <Term>Specificity</Term>, better: 'high', format: pct },
-  { key: 'auc', header: <Term term="auc">ROC-AUC</Term>, better: 'high', format: (m) => [formatAuc(m.mean), formatStd(m.std)] },
+  { key: 'auc', header: <Term term="auc">AUC</Term>, better: 'high', format: (m) => [formatAuc(m.mean), formatStd(m.std)] },
   { key: 'trainTimeS', header: 'Train time', better: 'low', format: (m, time) => [time(m.mean), `±${time(m.std)}`] },
   { key: 'inferenceMs', header: 'Inference', better: 'low', format: (m) => [formatMs(m.mean), `±${formatMs(m.std)}`] },
 ]
@@ -162,7 +162,7 @@ function ResourceScatter({ data }: { data: CompareResponse }) {
           height={SCATTER_X_AXIS}
           label={{ value: 'Quantum resources · qubits × circuit layers', position: 'insideBottom', offset: -2, fill: C.muted, fontSize: '0.8125rem', fontFamily: 'var(--font-mono)' }}
         />
-        <YAxis {...AXIS} type="number" dataKey="auc" domain={domain} ticks={ticks} tickFormatter={(v: number) => v.toFixed(3)} width={64} />
+        <YAxis {...AXIS} type="number" dataKey="auc" domain={domain} ticks={ticks} tickFormatter={formatAuc} width={64} />
         <Tooltip
           cursor={{ stroke: C.ruleStrong, strokeDasharray: '3 3' }}
           content={({ active, payload }) => {
@@ -236,7 +236,7 @@ function StabilityStrip({ data }: { data: CompareResponse }) {
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChart margin={{ top: 8, right: 24, bottom: 8, left: 8 }}>
         <CartesianGrid horizontal={false} stroke={C.rule} />
-        <XAxis {...AXIS} type="number" dataKey="auc" domain={domain} ticks={ticks} tickFormatter={(v: number) => v.toFixed(3)} height={36} />
+        <XAxis {...AXIS} type="number" dataKey="auc" domain={domain} ticks={ticks} tickFormatter={formatAuc} height={36} />
         <YAxis
           {...AXIS}
           type="number"
@@ -304,7 +304,7 @@ export function Advantage({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={data?.source}>
           <div className="mt-6">{data && <ExperimentTag id={data.experimentId} detail={`${data.seeds} seeds`} />}</div>
         </PageHeader>
       </PageItem>

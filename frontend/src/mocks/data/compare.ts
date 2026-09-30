@@ -1,7 +1,7 @@
 /** Advantage Observatory benchmark: every number comes from the results store. */
 import { DATASETS, MODEL_ORDER, MODELS } from '../../lib/domain'
 import type { CompareResponse, ComparisonRow, DatasetId, ResourcePoint, SeedPoint } from '../../types'
-import { SEEDS } from './canon'
+import { SEEDS, SIMULATED } from './canon'
 import { EXPERIMENT_IDS, runIdFor } from './ids'
 import { DEFAULT_BACKEND, bestModel, referenceConfig, referenceResult, result } from './results'
 import { evolutionSweep } from './sweeps'
@@ -85,6 +85,7 @@ export function compare(dataset: DatasetId): CompareResponse {
       : `${MODELS[steadiest].name} is the most stable (±${lo.toFixed(3)}); ${MODELS[noisiest].name} varies most between seeds (±${hi.toFixed(3)}).`
 
   return {
+    source: SIMULATED,
     dataset,
     experimentId: ids.benchmark,
     seeds: SEEDS,

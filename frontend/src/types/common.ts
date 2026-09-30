@@ -21,6 +21,13 @@ export type ExperimentId = string
  */
 export type ConfigKey = string
 
+/** Provenance of a response's numbers, shown by <SourceBadge> next to the page title. */
+export interface DataSource {
+  kind: 'real' | 'simulated'
+  /** Seeds the numbers are averaged over. */
+  seeds: number
+}
+
 /** Variational ansatz family; decides the trainable-parameter formula. */
 export type Ansatz = 'strongly-entangling' | 'real-amplitudes' | 'zz-kernel'
 

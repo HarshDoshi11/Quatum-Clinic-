@@ -23,7 +23,7 @@ import type {
   SmallDataSweep,
 } from '../../types'
 import { envelopeSentence } from '../../lib/safety'
-import { NOISE_PROFILES, SAFE_SENSITIVITY, SEEDS, noisyOperatingPoint, noisySensitivityStd } from './canon'
+import { NOISE_PROFILES, noisyOperatingPoint, noisySensitivityStd, SAFE_SENSITIVITY, SEEDS, SIMULATED } from './canon'
 import { EXPERIMENT_IDS } from './ids'
 import { round } from './math'
 import { bestModel, referenceConfig, referenceResult, result } from './results'
@@ -92,6 +92,7 @@ export function smallDataSweep(dataset: DatasetId): SmallDataSweep {
         : `The quantum and classical curves overlap within seed noise at every training size.`
 
   return {
+    source: SIMULATED,
     type: 'small-data',
     dataset,
     experimentId: EXPERIMENT_IDS[dataset].smallData,
@@ -154,6 +155,7 @@ export function scalabilitySweep(dataset: DatasetId): ScalabilitySweep {
     : `AUC peaks at ${top.qubits} qubits, beyond seed noise; ${bottleneck ? `from ${bottleneck.qubits} qubits cost grows faster than accuracy.` : 'cost rises throughout.'}`
 
   return {
+    source: SIMULATED,
     type: 'scalability',
     dataset,
     experimentId: EXPERIMENT_IDS[dataset].scalability,
@@ -250,6 +252,7 @@ export function evolutionSweep(dataset: DatasetId): EvolutionSweep {
 
   const aucs = configs.map((c) => c.auc)
   return {
+    source: SIMULATED,
     type: 'evolution',
     dataset,
     experimentId: sweepId,
@@ -307,6 +310,7 @@ export function failureEnvelopeSweep(dataset: DatasetId): FailureEnvelopeSweep {
   const defaultProfile = profiles.find((p) => p.profileId === 'fake-backend-1') ?? profiles[0]
 
   return {
+    source: SIMULATED,
     type: 'failure-envelope',
     dataset,
     experimentId: EXPERIMENT_IDS[dataset].noiseSweep,

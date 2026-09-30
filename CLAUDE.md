@@ -13,13 +13,31 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
   patient config) and Part B (My Report: guiding headline, ten figures, confidence, Your numbers / Learn / Plan your
   visit, share with family, read aloud, two-page doctor PDF) are done. Part A1 (own shell and top bar, green-charcoal /
   cream theme with a teal accent, Fraunces headlines, editorial Home with the 3D heart + ECG, How it works, urgent strip)
-  is done; next: the Safety check page (the urgent strip links to it once it exists), then Part C. Pages in `src/pages/patient/`.
+  is done. Part A2 (Assessment as a guided conversation: safety check, report yes/no, one question per screen,
+  "Where do I find this?", review) is done. **Patient Mode is now a "Coming soon" teaser for the Grand Finale:**
+  `PATIENT_MODE_ENABLED = false` in `routes.ts` serves only `/patient` (`pages/patient/ComingSoon.tsx`: status chip,
+  build counter, an unfinished particle heart, the build log with wireframe previews, a blurred "first look") and
+  redirects other `/patient/*` addresses there. One array, `features/patient/teaser/roadmap.ts`, drives the counter,
+  the log and how much of the heart has settled; update a feature's status there and all three follow. The teaser's
+  copy was agreed word for word: keep it verbatim, no icons on the page, no feature-card grids. Home, Assessment and My Report stay in the code; set the flag to true to bring them back (Part C then
+  resumes). Pages in `src/pages/patient/`.
   Patient Mode shows no AUC, qubits, models, experiments, backends or 3D on screen (the doctor's printed page is the
   exception); `check:mocks` asserts no research jargon, full config coverage (icons, questions, learn cards, journeys
-  per outcome, valid ranges), the "N in 10" wording and the family summary. The assessment edits the in-memory patient.
-- Next: Phase 8 (polish).
+  per outcome, valid ranges), the "N in 10" wording, the family summary, and i18n coverage for the assessment
+  (every input asked once, every answer card labelled, every report value findable). The assessment edits the
+  in-memory patient.
+- Phase 8 (polish for submission): done. Every results page shows a `SourceBadge` (REAL · 5 SEEDS / SIMULATED)
+  beside its section label, driven by the typed `source` field on each API response; route switches are exhaustive;
+  every page sits in a `RouteErrorBoundary`; the default theme is dark; vendor chunks are split in `vite.config.ts`.
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
+- ML track, first cut: `ml/run_pipeline.py` trains the six models for real (5 seeds, PennyLane lightning.qubit for
+  VQC/QSVM) and writes `ml/results/real_results.json`; `ml/export_to_fixtures.py` merges it into the backend fixtures
+  for Advantage Observatory and Predict & Trust only (compare, trust, predict + REAL-* experiment records). Real
+  configs carry their own configKeys (`…|real-pca4`, `…|ideal-sim|real`); merged responses carry
+  `source: { kind: 'real', seeds }`, everything from the mocks `{ kind: 'simulated' }` (never label strings by hand).
+  Re-run the exporter after `npm run export:fixtures`. Never tune a model
+  on the test split or favour quantum; if quantum loses, the fixtures say so. See `ml/README.md`.
 - Update this section at the end of every session.
 
 ## Hardware Lab rules
@@ -115,6 +133,7 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 1. **Page header.** Every page renders `<PageHeader route={route} />`. It provides the section label, the question
    headline, the **"What is this? ↗"** panel and the plain-language line. Every route needs an entry in
    `src/content/pages.ts` with `plain`, `shows`, `matters` and `read`. Add it in the same change that adds the page.
+   Exception: Patient Home and the Assessment open with their own heading (the hero, or the question on screen).
 2. **Section headers.** Every section uses `<SectionHeader index title plain="…" />`. The `plain` prop is required: one
    sentence, no jargon, and no result numbers. It appears as "In simple words: …" when the top-bar Plain language
    toggle is on. **The Plain language toggle works on every page; no page opts out.** Demo-critical pages (Predict &
@@ -138,7 +157,7 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 | Utility | Size | Face | Use |
 | --- | --- | --- | --- |
 | `type-display` | clamp(56px, 6vw, 96px), lh 1.0 | Instrument Serif | Page headlines only |
-| `type-h2` | 36px, lh 1.1 | Instrument Serif | Panel / drawer / card titles |
+| `type-h2` | clamp(30px, …, 36px), lh 1.1 | Instrument Serif | Panel / drawer / card titles |
 | `type-metric-xl` | 72px | IBM Plex Mono | Hero metrics |
 | `type-metric` | 32px | IBM Plex Mono | Metrics, finding values |
 | `type-body-lg` | 18px, lh 1.6 | IBM Plex Sans | Lead text, plain-English readouts |
@@ -147,12 +166,14 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
 | `type-small` | 14px, lh 1.5 | IBM Plex Sans | Secondary text, hints, tooltips |
 | `type-label` | 13px, uppercase, 0.06em | IBM Plex Mono | Section labels, table headers, tags, kbd |
 | `type-micro` | 12px, uppercase, 0.06em | IBM Plex Mono | **Status strip only** |
+| `type-question` | clamp(32px, …, 48px), lh 1.12 | Fraunces | **Patient assessment question only** |
 
 - Nothing may render below 12px. Uppercase tracking is at most 0.06em. Don't add `leading-*` overrides to text that
   uses a `type-*` utility, because the token already sets line-height.
 - For mono numbers at a sans size, combine the classes: `num type-small`.
-- All sizes are rem, so **projector mode** (Shift+P: 115% root size, stronger contrast) scales everything. Size
-  chrome in rem too.
+- All sizes are rem, so **projector mode** (Shift+P: 115% root size, stronger contrast, thicker chart lines) scales
+  everything. On screens up to 960px tall it uses 106.25% and Predict tightens its gaps, so demo-critical first screens
+  still fit at 1366×768 and 1440×900. Size chrome in rem too.
 - **Contrast.** `--muted` must be at least 4.5:1 on `--bg` and `--surface` in both themes. Hairlines can stay
   subtle, but text never can. Don't lower contrast with opacity on text.
 - **Measure.** Running text is capped at about 70ch (the `measure` utility).
@@ -177,7 +198,10 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   Nothing may overlap, clip or scroll horizontally. Chrome that competes for space (the top bar and status strip)
   compacts with rem-based container queries (`@container`, `@min-[68rem]:…`), not viewport breakpoints.
 - **3D.** Every React Three Fiber scene is code-split with `lazyScene(() => import(...))` and rendered inside
-  `<SceneFrame>` (`src/components/three/LazyScene.tsx`), so pages paint instantly.
+  `<SceneFrame>` (`src/components/three/LazyScene.tsx`), so pages paint instantly. Every `<Canvas>` uses
+  `dpr={SCENE_DPR}` and `useSceneActivity()` (pause off-screen / hidden tab), and memoized geometries use `useDisposable`.
+- **Scripts.** Files imported by `check:mocks` / `export:fixtures` (src/lib, src/mocks, src/types) use relative
+  imports at runtime; `tsx` does not resolve the `@/` alias.
 - **Titles.** `document.title` is set per route ("Hardware Reality Lab — Q/Clinical") from `routes.ts`, so new
   routes get it automatically.
 - **Shortcuts.** Global shortcuts live in `SHORTCUTS` (`src/features/shortcuts/Shortcuts.tsx`), which drives both
@@ -208,11 +232,24 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   Palette: warm cream / deep green-charcoal (light), green-charcoal / cream (dark), a calm teal accent, soft coral only
   for risk states; no cobalt, and Fraunces (soft, optical size) replaces Instrument Serif everywhere, with clamp()
   headline sizes. Panels 14px and controls 10px (`rounded-panel`, `rounded-control`; Research keeps 4px / 2px), and
-  `bg-accent-soft` tints selections. "Decision support, not a diagnosis" appears once, in `PatientFooter`. Home copy
-  (eyebrow, headline, subtext, hero shape) and the "Is this urgent?" strip (symptoms, numbers to call) come from
-  `DATASETS[id].patient.home` / `.urgent`. The Home hero is a lazy 3D form (`HeroVisual`: still SVG fallback, static
+  `bg-accent-soft` tints selections. "Decision support, not a diagnosis" appears once, in `PatientFooter`.
+  **Patient words live in the i18n files** (`src/i18n/patient/en/`: `common.ts` plus one file per dataset, read with
+  `usePatientStrings()`; hi/mr slots fall back to English). The dataset config keeps only structure: the hero shape,
+  `safetyCheck`, and `assessment` (steps in order, which are `fromReport`, and the sample report's sections). Never
+  write patient copy in a component. The Assessment is a conversation, not a form: a safety check first when
+  `safetyCheck` (any sign → a screen with only the numbers to call), "Do you have your report?" (No skips the
+  `fromReport` steps), then one question per screen (`type-question`, a one-line why, the answer as cards with plain
+  labels, never raw codes or a native select; "I'm not sure" / "It's not on my report" is an equal answer; Enter
+  advances), "Where do I find this?" for report values, and a review with every answer editable. Out-of-range answers
+  get a gentle note and are kept as entered, never clamped, so the trust checks can abstain. Each screen fits 1366×768
+  without scrolling. The Home hero is a lazy 3D form (`HeroVisual`: still SVG fallback, static
   under reduced motion) with an ECG line on the same 60 bpm clock (`features/patient/heartbeat.ts`); no icon-column
-  grids, centred hero + button, or concentric circles. On patient
+  grids, centred hero + button, or concentric circles. While the flag is off, the teaser uses `TeaserTopBar` (wordmark,
+  the Research / Patient toggle, a worded theme toggle, nothing else) and a lazy particle heart (`features/patient/teaser/`:
+  ~3000 points; the ready share settles from the tip up with hairline links and breathes at 60 bpm, the rest drift
+  nearby; the ECG is dashed past what has started; DPR ≤ 1.5, paused off-screen, dotted SVG fallback, still under
+  reduced motion). Mono status tags and the counter are allowed on the teaser (READY teal, IN PROGRESS ochre outline,
+  PLANNED muted outline). On patient
   pages: `type-body-lg` as the default text, lines ≤ 60ch, sections ≥ 56px apart, mono only for report IDs and dates,
   risk colours only for the risk word and the icon grid, motion 250–500ms eased (`tGentle`, `stepSlide`). Patient
   copy (name, per-input icon and question, next-step journeys per outcome) comes from `DATASETS[id].patient`; icons

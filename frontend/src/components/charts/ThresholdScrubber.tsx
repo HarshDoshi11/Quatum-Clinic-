@@ -7,7 +7,8 @@ import { formatPercent, formatPoints } from '@/lib/format'
 import { tQuick } from '@/lib/motion'
 import { safetyStatus } from '@/lib/safety'
 import { useElementSize } from '@/lib/useElementSize'
-import { SHORT_VIEWPORT, useMediaQuery } from '@/lib/useMediaQuery'
+import { PROJECTOR_COMPACT_VIEWPORT, SHORT_VIEWPORT, useMediaQuery } from '@/lib/useMediaQuery'
+import { useProjector } from '@/state/projector'
 import type { ThresholdPoint } from '@/types'
 import { C, TICK, useChartUnits } from './chartTheme'
 import { resolveLabelOffsets } from './directLabels'
@@ -71,10 +72,12 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
   const [view, setView] = useState<View>('chart')
   const [boxRef, { width }] = useElementSize<HTMLDivElement>()
   const short = useMediaQuery(SHORT_VIEWPORT)
+  const projectorCompact = useMediaQuery(PROJECTOR_COMPACT_VIEWPORT)
+  const { projector } = useProjector()
 
   // ── Geometry (px, from rem so projector mode scales it); shorter on short viewports
   const rem = units.rem
-  const height = rem * (short ? 9 : 10.5)
+  const height = rem * (projector && projectorCompact ? 7.5 : short ? 9 : 10.5)
   const chipLane = rem * 1.625
   const band = rem * 1.25
   const axis = rem * 1.875
@@ -360,8 +363,8 @@ export function ThresholdScrubber({ label, curve, value, defaultValue, safeSensi
               {/* ±1 std bands (neutral), then the curves: sensitivity is the safety metric, so it is the stronger line */}
               <path d={bandPath('specificity', 'specificityStd')} fill={C.ink} fillOpacity={0.07} />
               <path d={bandPath('sensitivity', 'sensitivityStd')} fill={C.ink} fillOpacity={0.07} />
-              <path d={line('specificity')} fill="none" stroke={C.muted} strokeWidth={1.5} />
-              <path d={line('sensitivity')} fill="none" stroke={C.accent} strokeWidth={2} />
+              <path d={line('specificity')} fill="none" stroke={C.muted} strokeWidth={1.5} className="chart-line" />
+              <path d={line('sensitivity')} fill="none" stroke={C.accent} strokeWidth={2} className="chart-line chart-line-strong" />
 
               {/* Right gutter: end labels */}
               {end && (

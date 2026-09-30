@@ -19,7 +19,7 @@ import { Tabs } from '@/components/ui/Tabs'
 import { Term } from '@/components/ui/Term'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { InfluenceBars, type InfluenceRow } from '@/features/explain/InfluenceBars'
-import { formatDelta, formatPercent } from '@/lib/format'
+import { formatDelta, formatNumber, formatPercent } from '@/lib/format'
 import { easePrecise, springEstimate } from '@/lib/motion'
 import { useDebouncedValue } from '@/lib/useDebouncedValue'
 import type { RouteMeta } from '@/routes'
@@ -196,7 +196,7 @@ function EncodingPanel({ now, original }: { now: ExplainResponse | null; origina
                           <span className="type-small text-ink">
                             <span className="num text-muted">Q{k}</span> {c.label}
                           </span>
-                          <span className="num type-small text-accent">{c.value.toFixed(2)}</span>
+                          <span className="num type-small text-accent">{formatNumber(c.value, 2)}</span>
                         </div>
                         <div className="relative mt-1.5 h-[0.375rem] bg-rule" aria-hidden="true">
                           <motion.div className="absolute inset-y-0 left-0 bg-accent" initial={false} animate={{ width: `${c.value * 100}%` }} transition={reduced ? { duration: 0 } : { duration: 0.3, ease: easePrecise }} />
@@ -310,7 +310,7 @@ export function Explain({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label} className="!pt-6">
       <PageItem as="header">
-        <PageHeader route={route} compact>
+        <PageHeader route={route} source={originalData?.source} compact>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {originalData && <ExperimentTag id={originalData.experimentId} detail="QSVM · explanation" />}
             {originalData && <BackendNote backend={originalData.backend} model={originalData.model} qubits={originalData.qubits} />}

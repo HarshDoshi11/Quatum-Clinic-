@@ -17,6 +17,9 @@ export const formatPercent = (fraction: number, dp = 1): string => `${(fraction 
 /** 0.842 → "84.2" */
 export const formatPoints = (fraction: number, dp = 1): string => (fraction * 100).toFixed(dp)
 
+/** Seed spread of a rate, in percentage points: 0.012 → "±1.2". */
+export const formatPercentStd = (fraction: number, dp = 1): string => `±${(fraction * 100).toFixed(dp)}`
+
 /** Negative numbers with a true minus sign. */
 export const formatNumber = (x: number, dp = 0): string => (x < 0 ? `${MINUS}${Math.abs(x).toFixed(dp)}` : x.toFixed(dp))
 

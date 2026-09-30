@@ -1,6 +1,10 @@
 {
   "wdbc": {
     "ideal-sim": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "dataset": "wdbc",
       "experimentId": "EXP-2041",
       "model": "qsvm",
@@ -72,6 +76,10 @@
       ]
     },
     "fake-backend-1": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "dataset": "wdbc",
       "experimentId": "EXP-2041",
       "model": "qsvm",
@@ -143,6 +151,10 @@
       ]
     },
     "fake-backend-2": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "dataset": "wdbc",
       "experimentId": "EXP-2041",
       "model": "qsvm",
@@ -214,6 +226,10 @@
       ]
     },
     "custom": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "dataset": "wdbc",
       "experimentId": "EXP-2041",
       "model": "qsvm",
@@ -287,6 +303,10 @@
   },
   "heart": {
     "ideal-sim": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "dataset": "heart",
       "experimentId": "EXP-2035",
       "model": "qsvm",
@@ -358,6 +378,10 @@
       ]
     },
     "fake-backend-1": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "dataset": "heart",
       "experimentId": "EXP-2035",
       "model": "qsvm",
@@ -429,6 +453,10 @@
       ]
     },
     "fake-backend-2": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "dataset": "heart",
       "experimentId": "EXP-2035",
       "model": "qsvm",
@@ -500,6 +528,10 @@
       ]
     },
     "custom": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "dataset": "heart",
       "experimentId": "EXP-2035",
       "model": "qsvm",

@@ -1,0 +1,6 @@
+numpy>=1.26
+pandas>=2.1
+scikit-learn>=1.4
+xgboost>=2.0
+pennylane>=0.38
+pennylane-lightning>=0.38

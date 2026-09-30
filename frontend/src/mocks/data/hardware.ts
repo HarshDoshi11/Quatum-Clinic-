@@ -2,7 +2,7 @@
 import { DATASETS } from '../../lib/domain'
 import { noiseRunSentence, safetyStatus } from '../../lib/safety'
 import type { BackendId, BackendStatus, HardwareProfile, HardwareProfileId, NoiseParams, NoiseRunRequest, NoiseRunResponse, OperatingPoint } from '../../types'
-import { NOISE_PROFILES, SAFE_SENSITIVITY, SEEDS, noisyOperatingPoint, noisySensitivityStd } from './canon'
+import { NOISE_PROFILES, noisyOperatingPoint, noisySensitivityStd, SAFE_SENSITIVITY, SEEDS, SIMULATED } from './canon'
 import { EXPERIMENT_IDS } from './ids'
 import { round } from './math'
 import { referenceConfig, result } from './results'
@@ -77,6 +77,7 @@ export function noiseRun(req: NoiseRunRequest): NoiseRunResponse {
         : `Even at T2 = ${T2_SWEEP[T2_SWEEP.length - 1]} µs sensitivity does not clear the ${t} threshold beyond noise — other noise sources dominate.`
 
   return {
+    source: SIMULATED,
     dataset,
     experimentId: EXPERIMENT_IDS[dataset].noiseSweep,
     model: 'qsvm',

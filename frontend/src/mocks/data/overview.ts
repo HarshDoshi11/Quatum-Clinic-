@@ -1,7 +1,7 @@
 /** Overview page: status strip values, findings, backends, recent runs. */
 import { MODELS, testSize } from '../../lib/domain'
 import type { DatasetId, Experiment, ExperimentSummary, Finding, OverviewResponse, SystemStatus } from '../../types'
-import { ABSTAINED, SAFE_SENSITIVITY, SEEDS, toleranceGateError2q } from './canon'
+import { ABSTAINED, SAFE_SENSITIVITY, SEEDS, SIMULATED, toleranceGateError2q } from './canon'
 import { BACKEND_STATUS } from './hardware'
 import { EXPERIMENT_IDS, runIdFor } from './ids'
 import { bestModel, referenceResult } from './results'
@@ -90,6 +90,7 @@ export function overview(dataset: DatasetId, experiments: Experiment[]): Overvie
     .slice(0, 5)
     .map(toSummary)
   return {
+    source: SIMULATED,
     dataset,
     status: systemStatus(dataset, experiments),
     findings: findings(dataset),

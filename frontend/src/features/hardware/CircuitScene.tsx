@@ -14,6 +14,7 @@ import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { useThemeColors } from '@/lib/useThemeColors'
 import type { NoiseParams } from '@/types'
+import { SCENE_DPR, useDisposable, useSceneActivity } from '@/components/three/useSceneActivity'
 
 const QUBITS = 4
 const REPS = 2
@@ -126,6 +127,7 @@ function Circuit({ noise, animate }: { noise: NoiseParams; animate: boolean }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
+  useDisposable(divider)
 
   return (
     <group>
@@ -215,10 +217,13 @@ function FitCamera() {
 }
 
 export default function CircuitScene({ noise }: { noise: NoiseParams }) {
+  const scene = useSceneActivity<HTMLCanvasElement>()
   const reduced = useReducedMotion() ?? false
   return (
     <Canvas
-      dpr={[1, 2]}
+      ref={scene.ref}
+      dpr={SCENE_DPR}
+      frameloop={scene.active ? 'always' : 'never'}
       camera={{ position: [0.8, 1.4, 10.8], fov: FOV, near: 0.1, far: 60 }}
       gl={{ antialias: true, alpha: true }}
       role="img"

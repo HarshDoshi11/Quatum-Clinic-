@@ -18,6 +18,7 @@ import { normInv } from '../src/mocks/data/math'
 import { overview } from '../src/mocks/data/overview'
 import { patientReport } from '../src/mocks/data/report'
 import { familySummary, readAloudScript } from '../src/lib/patientText'
+import { PATIENT_EN } from '../src/i18n/patient'
 import { bestModel, checkResponseConsistency, referenceResult, result, trainableParameters } from '../src/mocks/data/results'
 import { evolutionSweep, failureEnvelopeSweep, scalabilitySweep, smallDataSweep } from '../src/mocks/data/sweeps'
 import { trainResponse } from '../src/mocks/data/train'
@@ -27,6 +28,7 @@ function check(label: string, ok: boolean, detail = ''): void {
   if (!ok) failures += 1
   console.log(`${ok ? '  ok ' : ' FAIL'}  ${label}${ok || !detail ? '' : `\n        ${detail}`}`)
 }
+const eq2 = (a: number[], b: number[]) => JSON.stringify([...a].sort((x, y) => x - y)) === JSON.stringify([...b].sort((x, y) => x - y))
 const eq = (label: string, actual: unknown, expected: unknown) =>
   check(label, JSON.stringify(actual) === JSON.stringify(expected), `expected ${JSON.stringify(expected)}\n        actual   ${JSON.stringify(actual)}`)
 const inRange = (label: string, v: number, lo: number, hi: number) => check(`${label} = ${v} ∈ [${lo}, ${hi}]`, v >= lo && v <= hi)
@@ -321,6 +323,8 @@ for (const d of DATASET_IDS) {
 console.log('\nPatient Mode text has no research jargon')
 // Everything Patient Mode shows from the report (My Report never shows the checks' technical detail).
 const JARGON = /AUC|qubit|QSVM|VQC|FakeBackend|EXP-\d|log-odds|PCA|\bseeds?\b|backend|simulat/i
+check('Patient i18n words: no AUC, qubits, models, backends or experiments', !JARGON.test(JSON.stringify(PATIENT_EN)), JSON.stringify(PATIENT_EN).match(JARGON)?.[0])
+check('Emergency numbers are digits only, each with a label', PATIENT_EN.emergency.length > 0 && PATIENT_EN.emergency.every((n) => /^\d{3,}$/.test(n.number) && n.label.length > 0))
 for (const d of DATASET_IDS) {
   const sc = featureSchema(d)
   for (const [name, input] of [['sample', sc.samplePatient], ['unusual', sc.unusualPatient]] as const) {
@@ -341,9 +345,32 @@ for (const d of DATASET_IDS) {
   const numeric = new Set(sc.features.filter((f) => !f.options).map((f) => f.key))
   check(`${d}: reference ranges only for measured numbers, zones contiguous across the scale`, Object.entries(cfg.ranges).every(([k, r]) => numeric.has(k) && r.zones[0].from === r.scale[0] && r.zones[r.zones.length - 1].to === r.scale[1] && r.zones.every((z, i) => i === 0 || z.from === r.zones[i - 1].to) && r.source.length > 0))
   check(`${d}: with no ranges there is an explanation instead (and only then)`, (Object.keys(cfg.ranges).length === 0) === (cfg.rangesNote !== null))
-  const home = cfg.home
-  check(`${d}: Home copy is set (eyebrow, headline, subtext; hero is a known shape) and has no jargon or numbers`, [home.eyebrow, home.headline, home.subtext].every((t) => t.trim().length > 0 && !JARGON.test(t) && !/\d/.test(t)) && ['heart', 'cells'].includes(home.hero))
-  check(`${d}: the urgent strip, when set, names its symptoms and numbers to call (digits only)`, cfg.urgent === null || (cfg.urgent.symptoms.trim().length > 0 && cfg.urgent.numbers.length > 0 && cfg.urgent.numbers.every((n) => /^\d{3,}$/.test(n.number) && n.label.trim().length > 0)))
+  const words = PATIENT_EN.datasets[d]
+  check(`${d}: Home words are set (eyebrow, headline, subtext; hero is a known shape), no numbers`, [words.home.eyebrow, words.home.headline, words.home.subtext].every((t) => t.trim().length > 0 && !/\d/.test(t)) && ['heart', 'cells'].includes(cfg.home.hero))
+  check(`${d}: a safety check exactly when the config asks for one, with the signs to ask about`, cfg.safetyCheck === (words.urgent !== null) && (words.urgent === null || (words.urgent.strip.trim().length > 0 && words.urgent.signs.length > 0 && words.urgent.signs.every((x) => x.trim().length > 0))))
+  const steps = cfg.assessment.steps
+  eq(`${d}: the assessment asks every input exactly once`, steps.flatMap((x) => x.features).sort(), sc.features.map((f) => f.key).sort())
+  check(`${d}: every step and report section has a title`, steps.every((x) => (words.steps[x.id] ?? '').length > 0) && cfg.assessment.report.every((x) => (words.report.sections[x.id] ?? '').length > 0))
+  check(`${d}: every question has its words (the question and why we ask)`, sc.features.every((f) => (words.features[f.key]?.ask ?? '').length > 0 && (words.features[f.key]?.why ?? '').length > 0))
+  check(
+    `${d}: every answer card has a plain label (never a raw code), covering every value`,
+    sc.features.every((f) => {
+      const o = words.features[f.key]?.options
+      if (f.options) return !!o && eq2(Object.keys(o).map(Number), f.options.map((x) => x.value)) && Object.values(o).every((x) => x.label.trim().length > 0 && !/^\d+$/.test(x.label.trim()))
+      if (!o) return true
+      const all = Array.from({ length: f.max - f.min + 1 }, (_, i) => f.min + i)
+      return eq2(Object.keys(o).map(Number), all) && Object.values(o).every((x) => x.label.trim().length > 0)
+    }),
+  )
+  const reportKeys = steps.filter((x) => x.fromReport).flatMap((x) => x.features)
+  eq(`${d}: every report value is in exactly one section of the sample report`, cfg.assessment.report.flatMap((x) => x.features).sort(), [...reportKeys].sort())
+  check(`${d}: every report value says where to find it (its line, other names, a tip)`, reportKeys.every((k) => { const f = words.features[k]?.find; return !!f && f.reportLabel.length > 0 && f.names.length > 0 && f.tip.length > 0 }))
+  // An answer outside the usual range is passed on unchanged, so the trust checks abstain (no number anywhere).
+  const numeric0 = sc.features.find((f) => !f.options)
+  if (numeric0) {
+    const beyond = patientReport(d, { ...sc.samplePatient, [numeric0.key]: numeric0.max + numeric0.step * 5 }, '')
+    eq(`${d}: an out-of-range answer (${numeric0.key}) gives no reliable result and no number`, [beyond.result.outOfTen, beyond.result.riskBand, beyond.result.patientHeadline], [null, null, null])
+  }
   check(`${d}: at least four questions for the doctor, and the report uses them`, cfg.questions.length >= 4 && sampleReport.questions.every((q) => cfg.questions.includes(q)))
   eq(`${d}: patient headline follows the band; none when abstaining`, [sampleReport.result.patientHeadline !== null, unusualReport.result.patientHeadline, unusualReport.result.outOfTen], [true, null, null])
   // Shared with family: no identifiers, and no numbers except "N in 10".

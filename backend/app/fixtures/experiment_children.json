@@ -2558,5 +2558,763 @@
       }
     },
     "notes": "Design C20 of the circuit search EXP-2034."
+  },
+  {
+    "id": "REAL-WDBC-VQC",
+    "kind": "run",
+    "configKey": "wdbc|vqc|4q|angle|d2|full|ideal-sim|real",
+    "title": "VQC · 4q · real",
+    "dataset": "wdbc",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.9671,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc"
+      ],
+      "features": 10,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.9053,
+        "std": 0.0157
+      },
+      "sensitivity": {
+        "mean": 0.8952,
+        "std": 0.0464
+      },
+      "specificity": {
+        "mean": 0.9111,
+        "std": 0.0252
+      },
+      "auc": {
+        "mean": 0.9671,
+        "std": 0.0116
+      },
+      "trainTimeS": {
+        "mean": 132.1896,
+        "std": 62.2689
+      },
+      "inferenceMs": {
+        "mean": 1.6642,
+        "std": 1.1648
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; PennyLane lightning.qubit, noiseless."
+  },
+  {
+    "id": "REAL-WDBC-QSVM",
+    "kind": "run",
+    "configKey": "wdbc|qsvm|4q|angle|d2|full|ideal-sim|real",
+    "title": "QSVM · 4q · real",
+    "dataset": "wdbc",
+    "model": "qsvm",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.7811,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "qsvm"
+      ],
+      "features": 10,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.7368,
+        "std": 0.046
+      },
+      "sensitivity": {
+        "mean": 0.5476,
+        "std": 0.0673
+      },
+      "specificity": {
+        "mean": 0.8472,
+        "std": 0.0428
+      },
+      "auc": {
+        "mean": 0.7811,
+        "std": 0.0487
+      },
+      "trainTimeS": {
+        "mean": 2.374,
+        "std": 1.8679
+      },
+      "inferenceMs": {
+        "mean": 5.2221,
+        "std": 3.9714
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; PennyLane lightning.qubit, noiseless."
+  },
+  {
+    "id": "REAL-WDBC-LOGREG",
+    "kind": "run",
+    "configKey": "wdbc|logreg|cpu|real-pca4",
+    "title": "LogReg · real",
+    "dataset": "wdbc",
+    "model": "logreg",
+    "family": "classical",
+    "backend": "cpu",
+    "qubits": null,
+    "auc": 0.9819,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "logreg"
+      ],
+      "features": 10,
+      "pcaDims": 4,
+      "encoding": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "entanglement": null,
+      "backend": "cpu",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.9316,
+        "std": 0.019
+      },
+      "sensitivity": {
+        "mean": 0.8762,
+        "std": 0.0391
+      },
+      "specificity": {
+        "mean": 0.9639,
+        "std": 0.0158
+      },
+      "auc": {
+        "mean": 0.9819,
+        "std": 0.0089
+      },
+      "trainTimeS": {
+        "mean": 0.007,
+        "std": 0.0052
+      },
+      "inferenceMs": {
+        "mean": 0.0026,
+        "std": 0.0016
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; scikit-learn / XGBoost on CPU."
+  },
+  {
+    "id": "REAL-WDBC-SVM",
+    "kind": "run",
+    "configKey": "wdbc|svm|cpu|real-pca4",
+    "title": "SVM · real",
+    "dataset": "wdbc",
+    "model": "svm",
+    "family": "classical",
+    "backend": "cpu",
+    "qubits": null,
+    "auc": 0.9812,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "svm"
+      ],
+      "features": 10,
+      "pcaDims": 4,
+      "encoding": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "entanglement": null,
+      "backend": "cpu",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.9263,
+        "std": 0.0133
+      },
+      "sensitivity": {
+        "mean": 0.8952,
+        "std": 0.0398
+      },
+      "specificity": {
+        "mean": 0.9444,
+        "std": 0.0295
+      },
+      "auc": {
+        "mean": 0.9812,
+        "std": 0.0113
+      },
+      "trainTimeS": {
+        "mean": 0.0138,
+        "std": 0.0096
+      },
+      "inferenceMs": {
+        "mean": 0.0132,
+        "std": 0.0099
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; scikit-learn / XGBoost on CPU."
+  },
+  {
+    "id": "REAL-WDBC-RANDOMFOREST",
+    "kind": "run",
+    "configKey": "wdbc|rf|cpu|real-pca4",
+    "title": "Random Forest · real",
+    "dataset": "wdbc",
+    "model": "rf",
+    "family": "classical",
+    "backend": "cpu",
+    "qubits": null,
+    "auc": 0.9744,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "rf"
+      ],
+      "features": 10,
+      "pcaDims": 4,
+      "encoding": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "entanglement": null,
+      "backend": "cpu",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.9228,
+        "std": 0.019
+      },
+      "sensitivity": {
+        "mean": 0.9,
+        "std": 0.031
+      },
+      "specificity": {
+        "mean": 0.9361,
+        "std": 0.0304
+      },
+      "auc": {
+        "mean": 0.9744,
+        "std": 0.015
+      },
+      "trainTimeS": {
+        "mean": 0.5014,
+        "std": 0.288
+      },
+      "inferenceMs": {
+        "mean": 0.6339,
+        "std": 0.3268
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; scikit-learn / XGBoost on CPU."
+  },
+  {
+    "id": "REAL-WDBC-XGBOOST",
+    "kind": "run",
+    "configKey": "wdbc|xgboost|cpu|real-pca4",
+    "title": "XGBoost · real",
+    "dataset": "wdbc",
+    "model": "xgboost",
+    "family": "classical",
+    "backend": "cpu",
+    "qubits": null,
+    "auc": 0.9733,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "xgboost"
+      ],
+      "features": 10,
+      "pcaDims": 4,
+      "encoding": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "entanglement": null,
+      "backend": "cpu",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.9281,
+        "std": 0.0169
+      },
+      "sensitivity": {
+        "mean": 0.9,
+        "std": 0.0391
+      },
+      "specificity": {
+        "mean": 0.9444,
+        "std": 0.022
+      },
+      "auc": {
+        "mean": 0.9733,
+        "std": 0.012
+      },
+      "trainTimeS": {
+        "mean": 0.1998,
+        "std": 0.2686
+      },
+      "inferenceMs": {
+        "mean": 0.0173,
+        "std": 0.0107
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; scikit-learn / XGBoost on CPU."
+  },
+  {
+    "id": "REAL-WDBC",
+    "kind": "benchmark",
+    "configKey": null,
+    "title": "Real benchmark · 6 models · 4 PCA angles",
+    "dataset": "wdbc",
+    "model": null,
+    "family": null,
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.9819,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "wdbc",
+      "models": [
+        "vqc",
+        "qsvm",
+        "logreg",
+        "svm",
+        "rf",
+        "xgboost"
+      ],
+      "features": 10,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": null,
+    "notes": "Real benchmark (ml/run_pipeline.py). Every model sees the same 4 PCA angles; results are mean ± std (ddof=1) over seeds 0-4."
+  },
+  {
+    "id": "REAL-UCI-VQC",
+    "kind": "run",
+    "configKey": "heart|vqc|4q|angle|d2|full|ideal-sim|real",
+    "title": "VQC · 4q · real",
+    "dataset": "heart",
+    "model": "vqc",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.9043,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.8295,
+        "std": 0.0641
+      },
+      "sensitivity": {
+        "mean": 0.7857,
+        "std": 0.0668
+      },
+      "specificity": {
+        "mean": 0.8667,
+        "std": 0.073
+      },
+      "auc": {
+        "mean": 0.9043,
+        "std": 0.0332
+      },
+      "trainTimeS": {
+        "mean": 73.9126,
+        "std": 44.9719
+      },
+      "inferenceMs": {
+        "mean": 2.2701,
+        "std": 1.6963
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; PennyLane lightning.qubit, noiseless."
+  },
+  {
+    "id": "REAL-UCI-QSVM",
+    "kind": "run",
+    "configKey": "heart|qsvm|4q|angle|d2|full|ideal-sim|real",
+    "title": "QSVM · 4q · real",
+    "dataset": "heart",
+    "model": "qsvm",
+    "family": "quantum",
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.7402,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "qsvm"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.682,
+        "std": 0.0298
+      },
+      "sensitivity": {
+        "mean": 0.5214,
+        "std": 0.0598
+      },
+      "specificity": {
+        "mean": 0.8182,
+        "std": 0.0934
+      },
+      "auc": {
+        "mean": 0.7402,
+        "std": 0.0589
+      },
+      "trainTimeS": {
+        "mean": 1.4939,
+        "std": 1.0899
+      },
+      "inferenceMs": {
+        "mean": 5.313,
+        "std": 4.2249
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; PennyLane lightning.qubit, noiseless."
+  },
+  {
+    "id": "REAL-UCI-LOGREG",
+    "kind": "run",
+    "configKey": "heart|logreg|cpu|real-pca4",
+    "title": "LogReg · real",
+    "dataset": "heart",
+    "model": "logreg",
+    "family": "classical",
+    "backend": "cpu",
+    "qubits": null,
+    "auc": 0.9093,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "logreg"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "entanglement": null,
+      "backend": "cpu",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.8492,
+        "std": 0.0293
+      },
+      "sensitivity": {
+        "mean": 0.8214,
+        "std": 0.0253
+      },
+      "specificity": {
+        "mean": 0.8727,
+        "std": 0.0498
+      },
+      "auc": {
+        "mean": 0.9093,
+        "std": 0.0263
+      },
+      "trainTimeS": {
+        "mean": 0.0059,
+        "std": 0.0047
+      },
+      "inferenceMs": {
+        "mean": 0.0038,
+        "std": 0.0024
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; scikit-learn / XGBoost on CPU."
+  },
+  {
+    "id": "REAL-UCI-SVM",
+    "kind": "run",
+    "configKey": "heart|svm|cpu|real-pca4",
+    "title": "SVM · real",
+    "dataset": "heart",
+    "model": "svm",
+    "family": "classical",
+    "backend": "cpu",
+    "qubits": null,
+    "auc": 0.8981,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "svm"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "entanglement": null,
+      "backend": "cpu",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.859,
+        "std": 0.0443
+      },
+      "sensitivity": {
+        "mean": 0.8357,
+        "std": 0.0407
+      },
+      "specificity": {
+        "mean": 0.8788,
+        "std": 0.0678
+      },
+      "auc": {
+        "mean": 0.8981,
+        "std": 0.025
+      },
+      "trainTimeS": {
+        "mean": 0.0068,
+        "std": 0.0047
+      },
+      "inferenceMs": {
+        "mean": 0.0125,
+        "std": 0.0091
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; scikit-learn / XGBoost on CPU."
+  },
+  {
+    "id": "REAL-UCI-RANDOMFOREST",
+    "kind": "run",
+    "configKey": "heart|rf|cpu|real-pca4",
+    "title": "Random Forest · real",
+    "dataset": "heart",
+    "model": "rf",
+    "family": "classical",
+    "backend": "cpu",
+    "qubits": null,
+    "auc": 0.8907,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "rf"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "entanglement": null,
+      "backend": "cpu",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.8426,
+        "std": 0.0513
+      },
+      "sensitivity": {
+        "mean": 0.8071,
+        "std": 0.0319
+      },
+      "specificity": {
+        "mean": 0.8727,
+        "std": 0.0841
+      },
+      "auc": {
+        "mean": 0.8907,
+        "std": 0.038
+      },
+      "trainTimeS": {
+        "mean": 0.4225,
+        "std": 0.2299
+      },
+      "inferenceMs": {
+        "mean": 0.9867,
+        "std": 0.4494
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; scikit-learn / XGBoost on CPU."
+  },
+  {
+    "id": "REAL-UCI-XGBOOST",
+    "kind": "run",
+    "configKey": "heart|xgboost|cpu|real-pca4",
+    "title": "XGBoost · real",
+    "dataset": "heart",
+    "model": "xgboost",
+    "family": "classical",
+    "backend": "cpu",
+    "qubits": null,
+    "auc": 0.889,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "xgboost"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "entanglement": null,
+      "backend": "cpu",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": {
+      "accuracy": {
+        "mean": 0.8098,
+        "std": 0.0377
+      },
+      "sensitivity": {
+        "mean": 0.7786,
+        "std": 0.0639
+      },
+      "specificity": {
+        "mean": 0.8364,
+        "std": 0.0271
+      },
+      "auc": {
+        "mean": 0.889,
+        "std": 0.0369
+      },
+      "trainTimeS": {
+        "mean": 0.0782,
+        "std": 0.0492
+      },
+      "inferenceMs": {
+        "mean": 0.0238,
+        "std": 0.0148
+      }
+    },
+    "notes": "Real run (ml/run_pipeline.py): stratified 80/20 split per seed, 4 PCA angles fitted on the training split; scikit-learn / XGBoost on CPU."
+  },
+  {
+    "id": "REAL-UCI",
+    "kind": "benchmark",
+    "configKey": null,
+    "title": "Real benchmark · 6 models · 4 PCA angles",
+    "dataset": "heart",
+    "model": null,
+    "family": null,
+    "backend": "ideal-sim",
+    "qubits": 4,
+    "auc": 0.9093,
+    "timestamp": "2026-09-29T18:35:04+00:00",
+    "status": "complete",
+    "config": {
+      "dataset": "heart",
+      "models": [
+        "vqc",
+        "qsvm",
+        "logreg",
+        "svm",
+        "rf",
+        "xgboost"
+      ],
+      "features": 13,
+      "pcaDims": 4,
+      "encoding": "angle",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "entanglement": "full",
+      "backend": "ideal-sim",
+      "noise": null,
+      "seed": 0,
+      "seeds": 5
+    },
+    "metrics": null,
+    "notes": "Real benchmark (ml/run_pipeline.py). Every model sees the same 4 PCA angles; results are mean ± std (ddof=1) over seeds 0-4."
   }
 ]

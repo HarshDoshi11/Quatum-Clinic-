@@ -6,7 +6,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Term } from '@/components/ui/Term'
 import { BACKENDS, DATASETS, MODELS } from '@/lib/domain'
-import { durationColumn, formatDateTime, formatMs, formatStd } from '@/lib/format'
+import { durationColumn, formatAuc, formatDateTime, formatMs, formatNumber, formatPercent, formatPercentStd, formatStd } from '@/lib/format'
 import type { GlossaryKey } from '@/lib/glossary'
 import { useAppActions } from '@/features/actions'
 import { useDataVersion } from '@/state/dataVersion'
@@ -44,10 +44,10 @@ export function ExperimentDrawerProvider({ children }: { children: ReactNode }) 
 // ─── Detail view ────────────────────────────────────────────
 
 const METRIC_ROWS: { key: keyof ExperimentMetrics; label: ReactNode; format: (m: MeanStd) => [string, string] }[] = [
-  { key: 'auc', label: <Term>AUC</Term>, format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
-  { key: 'accuracy', label: 'Accuracy', format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
-  { key: 'sensitivity', label: <Term>Sensitivity</Term>, format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
-  { key: 'specificity', label: <Term>Specificity</Term>, format: (m) => [m.mean.toFixed(3), formatStd(m.std)] },
+  { key: 'auc', label: <Term>AUC</Term>, format: (m) => [formatAuc(m.mean), formatStd(m.std)] },
+  { key: 'accuracy', label: 'Accuracy', format: (m) => [formatPercent(m.mean), formatPercentStd(m.std)] },
+  { key: 'sensitivity', label: <Term>Sensitivity</Term>, format: (m) => [formatPercent(m.mean), formatPercentStd(m.std)] },
+  { key: 'specificity', label: <Term>Specificity</Term>, format: (m) => [formatPercent(m.mean), formatPercentStd(m.std)] },
   // One unit for the cell: mean and spread share the formatter chosen for the mean.
   { key: 'trainTimeS', label: 'Train time', format: (m) => ((f) => [f(m.mean), `±${f(m.std)}`] as [string, string])(durationColumn([m.mean])) },
   { key: 'inferenceMs', label: 'Inference', format: (m) => [formatMs(m.mean), `±${formatMs(m.std)}`] },
@@ -140,7 +140,7 @@ function ExperimentBody({ exp }: { exp: Experiment }) {
               <Row label="1Q gate error" term="gate error" value={`${n.gateError1q}%`} />
               <Row label="2Q gate error" term="gate error" value={`${n.gateError2q}%`} />
               <Row label="Readout error" term="readout error" value={`${n.readoutError}%`} />
-              <Row label="Shots" term="shots" value={n.shots?.toLocaleString('en-US') ?? dash} />
+              <Row label="Shots" term="shots" value={n.shots === null || n.shots === undefined ? dash : formatNumber(n.shots)} />
             </dl>
           ) : (
             <p className="border-t border-rule py-3 type-ui text-muted">

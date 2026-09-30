@@ -4,6 +4,7 @@ import type { Experiment, LossPoint, ModelId, TrainModelResult, TrainRequest, Tr
 import { NOISE_FOR_BACKEND, SELECTED_FEATURES } from './experiments'
 import { gaussian, hashSeed, rng, round } from './math'
 import { DEFAULT_BACKEND, result, type ModelConfig } from './results'
+import { SIMULATED } from './canon'
 
 const EPOCHS = 50
 
@@ -50,6 +51,7 @@ export function trainResults(req: TrainRequest): TrainModelResult[] {
 
 export function trainResponse(req: TrainRequest, jobId: string, experimentId: string, completedAt: string): TrainResponse {
   return {
+    source: SIMULATED,
     jobId,
     experimentId,
     epochs: EPOCHS,

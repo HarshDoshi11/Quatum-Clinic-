@@ -21,6 +21,8 @@ import * as THREE from 'three'
 import { SAFETY_RANK, safetyStatus } from '@/lib/safety'
 import { useThemeColors } from '@/lib/useThemeColors'
 import type { EnvelopeProfile, FailureEnvelopeSweep, SafetyStatus } from '@/types'
+import { formatPercent } from '@/lib/format'
+import { SCENE_DPR, useDisposable, useSceneActivity } from '@/components/three/useSceneActivity'
 
 const SIZE = 4
 const H = SIZE / 2
@@ -106,6 +108,8 @@ function Surface({ profile, threshold, s }: { profile: EnvelopeProfile; threshol
     lg.setAttribute('position', new THREE.Float32BufferAttribute(l, 3))
     return { geometry: g, lines: lg }
   }, [profile, threshold, s, colors.riskLow.hex, colors.riskMid.hex, colors.riskHigh.hex])
+  useDisposable(geometry)
+  useDisposable(lines)
 
   return (
     <group>
@@ -128,6 +132,7 @@ function ThresholdPlane({ threshold, s, animate }: { threshold: number; s: Scale
     if (g) g.position.y = animate ? g.position.y + (target - g.position.y) * (1 - Math.exp(-delta * 9)) : target
   })
   const edge = useMemo(() => new THREE.EdgesGeometry(new THREE.PlaneGeometry(SIZE, SIZE)), [])
+  useDisposable(edge)
   return (
     <group ref={group} position={[0, target, 0]}>
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
@@ -140,7 +145,7 @@ function ThresholdPlane({ threshold, s, animate }: { threshold: number; s: Scale
       {/* Right of the rightmost plane corner (+x, −z): nothing else lives there. */}
       <Html position={[H, 0, -H]} zIndexRange={[10, 0]}>
         <span className={`${TICK} rounded-[2px] px-1`} style={{ color: colors.accent.hex, background: colors.bg.hex, transform: 'translate(0.625rem, -50%)' }}>
-          {(threshold * 100).toFixed(1)}% threshold
+          {formatPercent(threshold)} threshold
         </span>
       </Html>
     </group>
@@ -163,6 +168,7 @@ function Axes({ sweep, s }: { sweep: FailureEnvelopeSweep; s: Scales }) {
     ].map(([x, y, z]) => new THREE.Vector3(x, y, z))
     return new THREE.BufferGeometry().setFromPoints(pts)
   }, [s, noiseTicks, corrTicks])
+  useDisposable(frame)
 
   // Floor axes: tick anchors sit just outside their edge; the title is placed per frame (below).
   const floorAxes = useMemo(
@@ -284,6 +290,7 @@ function YouAreHere({ profile, s }: { profile: EnvelopeProfile; s: Scales }) {
   const z = s.z(corruption)
   const y = s.y(sensitivity)
   const stem = useMemo(() => new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x, 0, z), new THREE.Vector3(x, y, z)]), [x, y, z])
+  useDisposable(stem)
   return (
     <group>
       <lineSegments geometry={stem}>
@@ -295,7 +302,7 @@ function YouAreHere({ profile, s }: { profile: EnvelopeProfile; s: Scales }) {
       </mesh>
       <Html position={[x, y, z]} zIndexRange={[20, 0]}>
         <span className={`${TICK} rounded-[2px] px-1.5 py-0.5`} style={{ color: colors.bg.hex, background: colors.ink.hex, transform: 'translate(0.75rem, -130%)' }}>
-          You are here · {(sensitivity * 100).toFixed(1)}%
+          You are here · {formatPercent(sensitivity)}
         </span>
       </Html>
     </group>
@@ -315,10 +322,13 @@ function Scene({ sweep, profile, threshold, animate }: SceneProps & { animate: b
 }
 
 export default function SurfaceScene({ sweep, profile, threshold }: SceneProps) {
+  const scene = useSceneActivity<HTMLCanvasElement>()
   const reduced = useReducedMotion() ?? false
   return (
     <Canvas
-      dpr={[1, 2]}
+      ref={scene.ref}
+      dpr={SCENE_DPR}
+      frameloop={scene.active ? 'always' : 'never'}
       camera={{ position: [6.6, 4.8, 7.8], fov: 40, near: 0.1, far: 60 }}
       gl={{ antialias: true, alpha: true }}
       role="img"

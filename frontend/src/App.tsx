@@ -2,20 +2,20 @@ import { AnimatePresence, MotionConfig } from 'motion/react'
 import { lazy, Suspense, type ReactNode } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AppShell } from '@/components/shell/AppShell'
+import { RouteErrorBoundary } from '@/components/ui/RouteErrorBoundary'
 import { ToastProvider } from '@/components/ui/Toast'
 import { CommandPalette } from '@/features/command/CommandPalette'
 import { ExperimentDrawerProvider } from '@/features/experiments/ExperimentDrawer'
 import { ShortcutsProvider } from '@/features/shortcuts/Shortcuts'
 import { TourProvider } from '@/features/tour/Tour'
-import { PlaceholderPage } from '@/pages/PlaceholderPage'
-import { Overview } from '@/pages/research/Overview'
-import { PATIENT_ROUTES, RESEARCH_ROUTES, type RouteMeta } from '@/routes'
+import { LIVE_PATIENT_ROUTES, PATIENT_BASE, PATIENT_MODE_ENABLED, RESEARCH_ROUTES, type PatientRouteId, type ResearchRouteId, type RouteMeta } from '@/routes'
 import { DataVersionProvider } from '@/state/dataVersion'
 import { PageBackendProvider } from '@/state/pageBackend'
 import { PatientProvider } from '@/state/patient'
 import { PlainLanguageProvider } from '@/state/plainLanguage'
 
-// Chart pages are code-split (Recharts is large); the Overview stays in the main bundle.
+// Every page is code-split, so the shell paints first and each page loads only when visited.
+const Overview = lazy(() => import('@/pages/research/Overview').then((m) => ({ default: m.Overview })))
 const Data = lazy(() => import('@/pages/research/Data').then((m) => ({ default: m.Data })))
 const Train = lazy(() => import('@/pages/research/Train').then((m) => ({ default: m.Train })))
 const Advantage = lazy(() => import('@/pages/research/Advantage').then((m) => ({ default: m.Advantage })))
@@ -31,6 +31,7 @@ const Failure = lazy(() => import('@/pages/research/Failure').then((m) => ({ def
 const PatientHome = lazy(() => import('@/pages/patient/Home').then((m) => ({ default: m.PatientHome })))
 const Assessment = lazy(() => import('@/pages/patient/Assessment').then((m) => ({ default: m.Assessment })))
 const MyReport = lazy(() => import('@/pages/patient/MyReport').then((m) => ({ default: m.MyReport })))
+const ComingSoon = lazy(() => import('@/pages/patient/ComingSoon').then((m) => ({ default: m.ComingSoon })))
 
 /** Shown for the instant a code-split page is loading: the page frame, no spinner. */
 function PageFallback() {
@@ -42,13 +43,17 @@ function PageFallback() {
   )
 }
 
-const lazyPage = (node: ReactNode) => <Suspense fallback={<PageFallback />}>{node}</Suspense>
+const lazyPage = (node: ReactNode) => (
+  <RouteErrorBoundary>
+    <Suspense fallback={<PageFallback />}>{node}</Suspense>
+  </RouteErrorBoundary>
+)
 
-/** Built pages; everything else renders a placeholder until its phase. */
-function researchPage(route: RouteMeta) {
+/** Research pages, one per route id (exhaustive: a new id without a page fails to compile). */
+function researchPage(route: RouteMeta<ResearchRouteId>) {
   switch (route.id) {
     case 'overview':
-      return <Overview route={route} />
+      return lazyPage(<Overview route={route} />)
     case 'data':
       return lazyPage(<Data route={route} />)
     case 'train':
@@ -73,13 +78,15 @@ function researchPage(route: RouteMeta) {
       return lazyPage(<Report route={route} />)
     case 'explain':
       return lazyPage(<Explain route={route} />)
-    default:
-      return <PlaceholderPage route={route} />
+    default: {
+      const unhandled: never = route.id
+      throw new Error(`No page for route ${String(unhandled)}`)
+    }
   }
 }
 
-/** Patient Mode pages; the rest render a placeholder until built. */
-function patientPage(route: RouteMeta) {
+/** Patient Mode pages (exhaustive, like the research pages). */
+function patientPage(route: RouteMeta<PatientRouteId>) {
   switch (route.id) {
     case 'patient-home':
       return lazyPage(<PatientHome route={route} />)
@@ -87,8 +94,12 @@ function patientPage(route: RouteMeta) {
       return lazyPage(<Assessment route={route} />)
     case 'patient-report':
       return lazyPage(<MyReport route={route} />)
-    default:
-      return <PlaceholderPage route={route} variant="patient" />
+    case 'patient-soon':
+      return lazyPage(<ComingSoon route={route} />)
+    default: {
+      const unhandled: never = route.id
+      throw new Error(`No page for route ${String(unhandled)}`)
+    }
   }
 }
 
@@ -100,9 +111,11 @@ function AnimatedRoutes() {
         {RESEARCH_ROUTES.map((route) => (
           <Route key={route.id} path={route.path} element={researchPage(route)} />
         ))}
-        {PATIENT_ROUTES.map((route) => (
+        {LIVE_PATIENT_ROUTES.map((route) => (
           <Route key={route.id} path={route.path} element={patientPage(route)} />
         ))}
+        {/* While Patient Mode is a teaser, its other addresses lead to it. */}
+        {!PATIENT_MODE_ENABLED && <Route path={`${PATIENT_BASE}/*`} element={<Navigate to={PATIENT_BASE} replace />} />}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>

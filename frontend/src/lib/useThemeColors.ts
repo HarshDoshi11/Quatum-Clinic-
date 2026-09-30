@@ -19,6 +19,8 @@ export interface ThemeColors {
   riskLow: RGBA
   riskMid: RGBA
   riskHigh: RGBA
+  /** Patient Mode's soft coral (the risk red outside Patient Mode). */
+  coral: RGBA
   /** Patient Home hero: the form's colour and its warm key light. */
   heroForm: RGBA
   heroLight: RGBA
@@ -60,6 +62,7 @@ export function useThemeColors(): ThemeColors {
       riskLow: read('--risk-low'),
       riskMid: read('--risk-mid'),
       riskHigh: read('--risk-high'),
+      coral: read('--coral'),
       heroForm: read('--hero-form'),
       heroLight: read('--hero-light'),
     }

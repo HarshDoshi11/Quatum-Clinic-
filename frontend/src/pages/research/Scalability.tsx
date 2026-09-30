@@ -69,7 +69,7 @@ function SmallMultiple({ sweep, panel }: { sweep: ScalabilitySweep; panel: Panel
               ticks={ticks}
               width={panel.key === 'runtimeS' ? 64 : 56}
               tickFormatter={(v: number) =>
-                panel.key === 'auc' ? v.toFixed(3) : panel.key === 'runtimeS' ? (v === 0 ? '00:00' : formatDuration(v)) : String(Math.round(v))
+                panel.key === 'auc' ? formatAuc(v) : panel.key === 'runtimeS' ? (v === 0 ? '00:00' : formatDuration(v)) : String(Math.round(v))
               }
             />
             <Tooltip
@@ -133,7 +133,7 @@ export function Scalability({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={data?.source}>
           <div className="mt-6">{data && <ExperimentTag id={data.experimentId} detail={`${MODELS[data.model].name} · 4→12 qubits`} />}</div>
         </PageHeader>
       </PageItem>

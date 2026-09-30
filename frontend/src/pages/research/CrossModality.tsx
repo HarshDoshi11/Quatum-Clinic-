@@ -82,7 +82,7 @@ function ComparisonChart({ data }: { data: CrossModalityAvailable }) {
             )
           }}
         />
-        <YAxis {...AXIS} domain={domain} ticks={ticks} tickFormatter={(v: number) => v.toFixed(2)} width={units.rem * 3.25} />
+        <YAxis {...AXIS} domain={domain} ticks={ticks} tickFormatter={formatAuc} width={units.rem * 4} />
         {best && (
           <ReferenceLine
             y={best.auc.mean}
@@ -192,7 +192,7 @@ export function CrossModality({ route }: { route: RouteMeta }) {
   return (
     <Page label={route.label}>
       <PageItem as="header">
-        <PageHeader route={route}>
+        <PageHeader route={route} source={res.data?.source}>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             {available && <ExperimentTag id={available.experimentId} detail={`${available.modalities.length} signals · 5 seeds`} />}
             {available && <BackendNote backend={available.backend} model={available.model} qubits={available.qubits} />}
@@ -262,7 +262,7 @@ export function CrossModality({ route }: { route: RouteMeta }) {
                       { key: 'c', label: 'All combined · QSVM', color: C.accent, shape: 'square' },
                       { key: 'b', label: 'Best single', color: C.ink, dashed: true },
                     ]}
-                    note={scale && scale.domain[0] > 0 ? `Axis zoomed · ${scale.domain[0].toFixed(2)}–${scale.domain[1].toFixed(2)}` : undefined}
+                    note={scale && scale.domain[0] > 0 ? `Axis zoomed · ${formatAuc(scale.domain[0])}–${formatAuc(scale.domain[1])}` : undefined}
                     loading={!available}
                     height="24rem"
                     table={{

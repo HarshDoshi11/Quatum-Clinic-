@@ -167,7 +167,7 @@ export function datasetSummary(dataset: DatasetId): DatasetSummary {
     explainCaption: meta.explainCaption,
     modalities: meta.modalities,
     condition: meta.condition,
-    patient: { home: meta.patient.home, urgent: meta.patient.urgent, name: meta.patient.name, ranges: meta.patient.ranges, rangesNote: meta.patient.rangesNote, learn: meta.patient.learn, questions: meta.patient.questions },
+    patient: { home: meta.patient.home, safetyCheck: meta.patient.safetyCheck, assessment: meta.patient.assessment, name: meta.patient.name, ranges: meta.patient.ranges, rangesNote: meta.patient.rangesNote, learn: meta.patient.learn, questions: meta.patient.questions },
   }
 }
 

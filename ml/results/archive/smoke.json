@@ -1,0 +1,1975 @@
+{
+  "meta": {
+    "generatedAt": "2026-09-29T18:33:20+00:00",
+    "seeds": [
+      0
+    ],
+    "testSize": 0.2,
+    "split": "stratified, one split per seed",
+    "threshold": 0.5,
+    "std": "sample std (ddof=1) across seeds",
+    "pipeline": "impute (train mean / mode) \u2192 clip to train range \u2192 StandardScaler \u2192 PCA(4) \u2192 min-max to [0, \u03c0]; fitted on train only",
+    "vqc": {
+      "embedding": "AngleEmbedding (RY)",
+      "ansatz": "StronglyEntanglingLayers",
+      "layers": 2,
+      "optimizer": "Adam (0.05)",
+      "epochs": 3,
+      "batchSize": 16,
+      "readout": "sigmoid(a\u00b7<Z0> + b)"
+    },
+    "qsvm": {
+      "featureMap": "ZZ (Qiskit convention)",
+      "reps": 2,
+      "entanglement": "full",
+      "kernel": "fidelity |<\u03c6(y)|\u03c6(x)>|\u00b2",
+      "kernelMode": "statevector",
+      "svc": "C=1, Platt probabilities",
+      "kernelCheck": "state-vector kernel vs overlap circuit: max |\u0394k| = 3.47e-17 on 12 random pairs"
+    },
+    "device": "pennylane lightning.qubit, 4 wires, noiseless",
+    "versions": {
+      "python": "3.12.0",
+      "pennylane": "0.45.1",
+      "scikit-learn": "1.9.1",
+      "xgboost": "3.4.1",
+      "numpy": "2.5.3"
+    },
+    "notes": [],
+    "runtimeS": 48.6
+  },
+  "datasets": {
+    "wdbc": {
+      "samples": 569,
+      "positive": 212,
+      "features": [
+        "radius_mean",
+        "texture_mean",
+        "perimeter_mean",
+        "area_mean",
+        "smoothness_mean",
+        "compactness_mean",
+        "concavity_mean",
+        "concave_points_mean",
+        "symmetry_mean",
+        "fractal_dimension_mean"
+      ],
+      "testPatients": 114,
+      "pcaExplainedVariance": {
+        "mean": 0.9392645686317944,
+        "min": 0.9392645686317944,
+        "max": 0.9392645686317944
+      },
+      "vqcLoss": [
+        [
+          0.6761314134828358,
+          0.6373864618339063,
+          0.48934885302605874
+        ]
+      ],
+      "notes": [
+        "WDBC: sklearn load_breast_cancer, 569 rows, the app's 10 'mean' features (sklearn provides 30)."
+      ]
+    },
+    "heart": {
+      "samples": 303,
+      "positive": 139,
+      "features": [
+        "age",
+        "sex",
+        "trestbps",
+        "cp",
+        "restecg",
+        "oldpeak",
+        "slope",
+        "thalach",
+        "exang",
+        "thal",
+        "ca",
+        "chol",
+        "fbs"
+      ],
+      "testPatients": 61,
+      "pcaExplainedVariance": {
+        "mean": 0.5405373890325801,
+        "min": 0.5405373890325801,
+        "max": 0.5405373890325801
+      },
+      "vqcLoss": [
+        [
+          0.6858597177893407,
+          0.667509768966301,
+          0.5880749319118941
+        ]
+      ],
+      "notes": [
+        "Heart: processed.cleveland.data, 303 rows.",
+        "cp recoded 1-4 \u2192 0-3.",
+        "slope recoded 1-3 \u2192 0-2.",
+        "thal recoded 3/6/7 \u2192 0/1/2 (normal / fixed / reversible).",
+        "Missing ca: 4, thal: 2 (imputed with the training-split mode)."
+      ]
+    }
+  },
+  "results": [
+    {
+      "dataset": "wdbc",
+      "model": "logreg",
+      "family": "classical",
+      "features": "pca4",
+      "configKey": "wdbc|logreg|cpu|real-pca4",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.9473684210526315,
+          "f1": 0.9285714285714286,
+          "auc": 0.9828042328042328,
+          "sensitivity": 0.9285714285714286,
+          "specificity": 0.9583333333333334,
+          "trainTimeS": 0.01975410000886768,
+          "inferenceMs": 0.008976315720039502
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9473684210526315,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.9285714285714286,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9828042328042328,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.9285714285714286,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9583333333333334,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.01975410000886768,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.008976315720039502,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "logreg",
+      "family": "classical",
+      "features": "full",
+      "configKey": "wdbc|logreg|cpu|real-full",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.9385964912280702,
+          "f1": 0.9176470588235294,
+          "auc": 0.9818121693121693,
+          "sensitivity": 0.9285714285714286,
+          "specificity": 0.9444444444444444,
+          "trainTimeS": 0.01233719999436289,
+          "inferenceMs": 0.00632456156604907
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9385964912280702,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.9176470588235294,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9818121693121693,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.9285714285714286,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9444444444444444,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.01233719999436289,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.00632456156604907,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "svm",
+      "family": "classical",
+      "features": "pca4",
+      "configKey": "wdbc|svm|cpu|real-pca4",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.9210526315789473,
+          "f1": 0.898876404494382,
+          "auc": 0.9837962962962963,
+          "sensitivity": 0.9523809523809523,
+          "specificity": 0.9027777777777778,
+          "trainTimeS": 0.030485800001770258,
+          "inferenceMs": 0.027588597221071258
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9210526315789473,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.898876404494382,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9837962962962963,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.9523809523809523,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9027777777777778,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.030485800001770258,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.027588597221071258,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "svm",
+      "family": "classical",
+      "features": "full",
+      "configKey": "wdbc|svm|cpu|real-full",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.9122807017543859,
+          "f1": 0.8863636363636364,
+          "auc": 0.9831349206349207,
+          "sensitivity": 0.9285714285714286,
+          "specificity": 0.9027777777777778,
+          "trainTimeS": 0.025246999925002456,
+          "inferenceMs": 0.025279825071297717
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9122807017543859,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8863636363636364,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9831349206349207,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.9285714285714286,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9027777777777778,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.025246999925002456,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.025279825071297717,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "rf",
+      "family": "classical",
+      "features": "pca4",
+      "configKey": "wdbc|rf|cpu|real-pca4",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.9035087719298246,
+          "f1": 0.8764044943820225,
+          "auc": 0.9733796296296297,
+          "sensitivity": 0.9285714285714286,
+          "specificity": 0.8888888888888888,
+          "trainTimeS": 0.8598882999503985,
+          "inferenceMs": 0.9324631578158261
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9035087719298246,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8764044943820225,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9733796296296297,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.9285714285714286,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8888888888888888,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.8598882999503985,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.9324631578158261,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "rf",
+      "family": "classical",
+      "features": "full",
+      "configKey": "wdbc|rf|cpu|real-full",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.9210526315789473,
+          "f1": 0.898876404494382,
+          "auc": 0.9826388888888888,
+          "sensitivity": 0.9523809523809523,
+          "specificity": 0.9027777777777778,
+          "trainTimeS": 0.8193102999357507,
+          "inferenceMs": 0.9541131582584951
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9210526315789473,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.898876404494382,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9826388888888888,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.9523809523809523,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9027777777777778,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.8193102999357507,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.9541131582584951,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "xgboost",
+      "family": "classical",
+      "features": "pca4",
+      "configKey": "wdbc|xgboost|cpu|real-pca4",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.9385964912280702,
+          "f1": 0.9195402298850575,
+          "auc": 0.9798280423280423,
+          "sensitivity": 0.9523809523809523,
+          "specificity": 0.9305555555555556,
+          "trainTimeS": 0.6516265999525785,
+          "inferenceMs": 0.04088070259936023
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9385964912280702,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.9195402298850575,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9798280423280423,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.9523809523809523,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9305555555555556,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.6516265999525785,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.04088070259936023,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "xgboost",
+      "family": "classical",
+      "features": "full",
+      "configKey": "wdbc|xgboost|cpu|real-full",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.9385964912280702,
+          "f1": 0.9195402298850575,
+          "auc": 0.9907407407407407,
+          "sensitivity": 0.9523809523809523,
+          "specificity": 0.9305555555555556,
+          "trainTimeS": 0.2023230999475345,
+          "inferenceMs": 0.020968421411357428
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9385964912280702,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.9195402298850575,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9907407407407407,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.9523809523809523,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9305555555555556,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.2023230999475345,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.020968421411357428,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "vqc",
+      "family": "quantum",
+      "features": "pca4",
+      "configKey": "wdbc|vqc|4q|angle|d2|full|ideal-sim|real",
+      "backend": "ideal-sim",
+      "simulator": "pennylane lightning.qubit (state vector, noiseless)",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "parameters": 24,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.8771929824561403,
+          "f1": 0.8108108108108109,
+          "auc": 0.9593253968253969,
+          "sensitivity": 0.7142857142857143,
+          "specificity": 0.9722222222222222,
+          "trainTimeS": 18.85680399998091,
+          "inferenceMs": 3.7861298248907063
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.8771929824561403,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8108108108108109,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9593253968253969,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.7142857142857143,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9722222222222222,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 18.85680399998091,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 3.7861298248907063,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "wdbc",
+      "model": "qsvm",
+      "family": "quantum",
+      "features": "pca4",
+      "configKey": "wdbc|qsvm|4q|angle|d2|full|ideal-sim|real",
+      "backend": "ideal-sim",
+      "simulator": "pennylane lightning.qubit (state vector, noiseless)",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "parameters": 0,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.7982456140350878,
+          "f1": 0.7012987012987013,
+          "auc": 0.8402777777777778,
+          "sensitivity": 0.6428571428571429,
+          "specificity": 0.8888888888888888,
+          "trainTimeS": 5.7475868000183254,
+          "inferenceMs": 12.53947719273958
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.7982456140350878,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.7012987012987013,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.8402777777777778,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.6428571428571429,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8888888888888888,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 5.7475868000183254,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 12.53947719273958,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "logreg",
+      "family": "classical",
+      "features": "pca4",
+      "configKey": "heart|logreg|cpu|real-pca4",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.8524590163934426,
+          "f1": 0.8421052631578947,
+          "auc": 0.9329004329004329,
+          "sensitivity": 0.8571428571428571,
+          "specificity": 0.8484848484848485,
+          "trainTimeS": 0.011401300085708499,
+          "inferenceMs": 0.007931146862321213
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.8524590163934426,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8421052631578947,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9329004329004329,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.8571428571428571,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8484848484848485,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.011401300085708499,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.007931146862321213,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "logreg",
+      "family": "classical",
+      "features": "full",
+      "configKey": "heart|logreg|cpu|real-full",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.819672131147541,
+          "f1": 0.8,
+          "auc": 0.9415584415584415,
+          "sensitivity": 0.7857142857142857,
+          "specificity": 0.8484848484848485,
+          "trainTimeS": 0.007392600062303245,
+          "inferenceMs": 0.006529508295972816
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.819672131147541,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9415584415584415,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.7857142857142857,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8484848484848485,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.007392600062303245,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.006529508295972816,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "svm",
+      "family": "classical",
+      "features": "pca4",
+      "configKey": "heart|svm|cpu|real-pca4",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.8852459016393442,
+          "f1": 0.8771929824561403,
+          "auc": 0.9199134199134199,
+          "sensitivity": 0.8928571428571429,
+          "specificity": 0.8787878787878788,
+          "trainTimeS": 0.014530500047840178,
+          "inferenceMs": 0.025067213144092288
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.8852459016393442,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8771929824561403,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9199134199134199,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.8928571428571429,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8787878787878788,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.014530500047840178,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.025067213144092288,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "svm",
+      "family": "classical",
+      "features": "full",
+      "configKey": "heart|svm|cpu|real-full",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.8524590163934426,
+          "f1": 0.8363636363636363,
+          "auc": 0.922077922077922,
+          "sensitivity": 0.8214285714285714,
+          "specificity": 0.8787878787878788,
+          "trainTimeS": 0.020485300105065107,
+          "inferenceMs": 0.0387852473306607
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.8524590163934426,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8363636363636363,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.922077922077922,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.8214285714285714,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8787878787878788,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.020485300105065107,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.0387852473306607,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "rf",
+      "family": "classical",
+      "features": "pca4",
+      "configKey": "heart|rf|cpu|real-pca4",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.8688524590163934,
+          "f1": 0.8571428571428571,
+          "auc": 0.9285714285714285,
+          "sensitivity": 0.8571428571428571,
+          "specificity": 0.8787878787878788,
+          "trainTimeS": 0.8809838000452146,
+          "inferenceMs": 1.9287918026360578
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.8688524590163934,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8571428571428571,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9285714285714285,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.8571428571428571,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8787878787878788,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.8809838000452146,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 1.9287918026360578,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "rf",
+      "family": "classical",
+      "features": "full",
+      "configKey": "heart|rf|cpu|real-full",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.8688524590163934,
+          "f1": 0.84,
+          "auc": 0.9356060606060606,
+          "sensitivity": 0.75,
+          "specificity": 0.9696969696969697,
+          "trainTimeS": 0.8501147000351921,
+          "inferenceMs": 1.8122573764842065
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.8688524590163934,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.84,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9356060606060606,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.75,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9696969696969697,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.8501147000351921,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 1.8122573764842065,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "xgboost",
+      "family": "classical",
+      "features": "pca4",
+      "configKey": "heart|xgboost|cpu|real-pca4",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.8524590163934426,
+          "f1": 0.8421052631578947,
+          "auc": 0.935064935064935,
+          "sensitivity": 0.8571428571428571,
+          "specificity": 0.8484848484848485,
+          "trainTimeS": 0.19201389991212636,
+          "inferenceMs": 0.04820819738030922
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.8524590163934426,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8421052631578947,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.935064935064935,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.8571428571428571,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8484848484848485,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.19201389991212636,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.04820819738030922,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "xgboost",
+      "family": "classical",
+      "features": "full",
+      "configKey": "heart|xgboost|cpu|real-full",
+      "backend": "cpu",
+      "simulator": null,
+      "qubits": null,
+      "circuitDepth": null,
+      "parameters": null,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.8360655737704918,
+          "f1": 0.8076923076923077,
+          "auc": 0.9069264069264069,
+          "sensitivity": 0.75,
+          "specificity": 0.9090909090909091,
+          "trainTimeS": 0.17204680002760142,
+          "inferenceMs": 0.04580491756806608
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.8360655737704918,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.8076923076923077,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9069264069264069,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.75,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.9090909090909091,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 0.17204680002760142,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 0.04580491756806608,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "vqc",
+      "family": "quantum",
+      "features": "pca4",
+      "configKey": "heart|vqc|4q|angle|d2|full|ideal-sim|real",
+      "backend": "ideal-sim",
+      "simulator": "pennylane lightning.qubit (state vector, noiseless)",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "parameters": 24,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.7868852459016393,
+          "f1": 0.7450980392156863,
+          "auc": 0.9220779220779222,
+          "sensitivity": 0.6785714285714286,
+          "specificity": 0.8787878787878788,
+          "trainTimeS": 10.05986010003835,
+          "inferenceMs": 3.6137885238486724
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.7868852459016393,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.7450980392156863,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.9220779220779222,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.6785714285714286,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8787878787878788,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 10.05986010003835,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 3.6137885238486724,
+          "std": 0.0
+        }
+      }
+    },
+    {
+      "dataset": "heart",
+      "model": "qsvm",
+      "family": "quantum",
+      "features": "pca4",
+      "configKey": "heart|qsvm|4q|angle|d2|full|ideal-sim|real",
+      "backend": "ideal-sim",
+      "simulator": "pennylane lightning.qubit (state vector, noiseless)",
+      "qubits": 4,
+      "circuitDepth": 2,
+      "parameters": 0,
+      "perSeed": [
+        {
+          "seed": 0,
+          "accuracy": 0.6721311475409836,
+          "f1": 0.5833333333333334,
+          "auc": 0.7510822510822511,
+          "sensitivity": 0.5,
+          "specificity": 0.8181818181818182,
+          "trainTimeS": 2.9824293000856414,
+          "inferenceMs": 12.513588526148776
+        }
+      ],
+      "metrics": {
+        "accuracy": {
+          "mean": 0.6721311475409836,
+          "std": 0.0
+        },
+        "f1": {
+          "mean": 0.5833333333333334,
+          "std": 0.0
+        },
+        "auc": {
+          "mean": 0.7510822510822511,
+          "std": 0.0
+        },
+        "sensitivity": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "specificity": {
+          "mean": 0.8181818181818182,
+          "std": 0.0
+        },
+        "trainTimeS": {
+          "mean": 2.9824293000856414,
+          "std": 0.0
+        },
+        "inferenceMs": {
+          "mean": 12.513588526148776,
+          "std": 0.0
+        }
+      }
+    }
+  ],
+  "deployed": {
+    "wdbc": {
+      "model": "qsvm",
+      "configKey": "wdbc|qsvm|4q|angle|d2|full|ideal-sim|real",
+      "perSeed": [
+        {
+          "seed": 0,
+          "yTest": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "pTest": [
+            0.116436,
+            0.48712,
+            0.491174,
+            0.415628,
+            0.150914,
+            0.666225,
+            0.104476,
+            0.749569,
+            0.559614,
+            0.23591,
+            0.249726,
+            0.575682,
+            0.823924,
+            0.253041,
+            0.609848,
+            0.162243,
+            0.190251,
+            0.397769,
+            0.381495,
+            0.505084,
+            0.743016,
+            0.630225,
+            0.696729,
+            0.433107,
+            0.529609,
+            0.716182,
+            0.296056,
+            0.147425,
+            0.316601,
+            0.33646,
+            0.228928,
+            0.568592,
+            0.674103,
+            0.705486,
+            0.182347,
+            0.151778,
+            0.412637,
+            0.21408,
+            0.386125,
+            0.571622,
+            0.285356,
+            0.136087,
+            0.528807,
+            0.450946,
+            0.195076,
+            0.261174,
+            0.272649,
+            0.19015,
+            0.663445,
+            0.424065,
+            0.429239,
+            0.06658,
+            0.331695,
+            0.57522,
+            0.167621,
+            0.343179,
+            0.106955,
+            0.353768,
+            0.1312,
+            0.111388,
+            0.401583,
+            0.387344,
+            0.225049,
+            0.655964,
+            0.358222,
+            0.636206,
+            0.39772,
+            0.350485,
+            0.5,
+            0.350126,
+            0.517432,
+            0.152281,
+            0.33115,
+            0.283788,
+            0.271017,
+            0.682131,
+            0.624889,
+            0.787035,
+            0.118236,
+            0.154138,
+            0.054988,
+            0.124989,
+            0.42544,
+            0.227384,
+            0.294515,
+            0.544029,
+            0.388327,
+            0.152011,
+            0.152826,
+            0.766406,
+            0.203251,
+            0.791326,
+            0.62013,
+            0.162281,
+            0.224335,
+            0.347539,
+            0.820655,
+            0.301454,
+            0.256734,
+            0.285074,
+            0.67818,
+            0.391977,
+            0.230212,
+            0.737059,
+            0.259228,
+            0.334942,
+            0.737215,
+            0.667723,
+            0.163533,
+            0.189599,
+            0.397561,
+            0.158531,
+            0.427337,
+            0.170343
+          ],
+          "abstain": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "subsampled": false
+        }
+      ],
+      "patients": {
+        "sample": {
+          "perSeed": [
+            0.7937973275264623
+          ],
+          "perturbed": {
+            "radius_mean:-1": [
+              0.7913893720303352
+            ],
+            "radius_mean:+1": [
+              0.7962054402758842
+            ],
+            "texture_mean:-1": [
+              0.8197390867673315
+            ],
+            "texture_mean:+1": [
+              0.7696407051193845
+            ],
+            "perimeter_mean:-1": [
+              0.7899847571231059
+            ],
+            "perimeter_mean:+1": [
+              0.7976882147577748
+            ],
+            "area_mean:-1": [
+              0.7899111231120252
+            ],
+            "area_mean:+1": [
+              0.7977311946028891
+            ],
+            "smoothness_mean:-1": [
+              0.7832667826730438
+            ],
+            "smoothness_mean:+1": [
+              0.8044087480345766
+            ],
+            "compactness_mean:-1": [
+              0.7733447736096241
+            ],
+            "compactness_mean:+1": [
+              0.8128609908221215
+            ],
+            "concavity_mean:-1": [
+              0.7730053854494786
+            ],
+            "concavity_mean:+1": [
+              0.8133959969197275
+            ],
+            "concave_points_mean:-1": [
+              0.7821270419155465
+            ],
+            "concave_points_mean:+1": [
+              0.805693050940056
+            ],
+            "symmetry_mean:-1": [
+              0.8694109271085451
+            ],
+            "symmetry_mean:+1": [
+              0.6687106579831555
+            ],
+            "fractal_dimension_mean:-1": [
+              0.7566483011432481
+            ],
+            "fractal_dimension_mean:+1": [
+              0.824882163150175
+            ]
+          }
+        },
+        "unusual": {
+          "perSeed": [
+            0.5222406680234452
+          ],
+          "perturbed": {
+            "radius_mean:-1": [
+              0.5
+            ],
+            "radius_mean:+1": [
+              0.5419039589392198
+            ],
+            "perimeter_mean:-1": [
+              0.5
+            ],
+            "perimeter_mean:+1": [
+              0.5380764477931106
+            ],
+            "area_mean:-1": [
+              0.5222406680234452
+            ],
+            "area_mean:+1": [
+              0.5222406680234452
+            ],
+            "smoothness_mean:-1": [
+              0.5222406680234452
+            ],
+            "smoothness_mean:+1": [
+              0.5222406680234452
+            ],
+            "compactness_mean:-1": [
+              0.5522997778073031
+            ],
+            "compactness_mean:+1": [
+              0.4822832574711948
+            ],
+            "concavity_mean:-1": [
+              0.5435938878247476
+            ],
+            "concavity_mean:+1": [
+              0.49039354397964746
+            ],
+            "concave_points_mean:-1": [
+              0.5255793670034062
+            ],
+            "concave_points_mean:+1": [
+              0.5133588266738787
+            ],
+            "symmetry_mean:-1": [
+              0.4715357897053851
+            ],
+            "symmetry_mean:+1": [
+              0.5263613786133959
+            ],
+            "fractal_dimension_mean:-1": [
+              0.5754143777550185
+            ],
+            "fractal_dimension_mean:+1": [
+              0.45773569349450877
+            ]
+          }
+        }
+      },
+      "population": {
+        "mean": {
+          "radius_mean": 14.127291739894552,
+          "texture_mean": 19.289648506151142,
+          "perimeter_mean": 91.96903339191564,
+          "area_mean": 654.8891036906855,
+          "smoothness_mean": 0.0963602811950791,
+          "compactness_mean": 0.10434098418277679,
+          "concavity_mean": 0.0887993158172232,
+          "concave_points_mean": 0.04891914586994728,
+          "symmetry_mean": 0.18116186291739894,
+          "fractal_dimension_mean": 0.06279760984182776
+        },
+        "sd": {
+          "radius_mean": 3.520950760711062,
+          "texture_mean": 4.297254637090421,
+          "perimeter_mean": 24.27761929305318,
+          "area_mean": 351.60475406323,
+          "smoothness_mean": 0.014051764066591203,
+          "compactness_mean": 0.05276632912535515,
+          "concavity_mean": 0.07964972534603185,
+          "concave_points_mean": 0.03876873246147477,
+          "symmetry_mean": 0.027390180864268532,
+          "fractal_dimension_mean": 0.007054155881537345
+        },
+        "typicalDistance": 3.0854599260445323
+      },
+      "errorSd": 0.1
+    },
+    "heart": {
+      "model": "qsvm",
+      "configKey": "heart|qsvm|4q|angle|d2|full|ideal-sim|real",
+      "perSeed": [
+        {
+          "seed": 0,
+          "yTest": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          "pTest": [
+            0.480006,
+            0.5,
+            0.509259,
+            0.5,
+            0.506011,
+            0.486695,
+            0.47293,
+            0.5,
+            0.486887,
+            0.5,
+            0.446541,
+            0.458451,
+            0.393927,
+            0.414085,
+            0.411771,
+            0.47703,
+            0.447087,
+            0.463093,
+            0.359301,
+            0.382796,
+            0.537538,
+            0.436164,
+            0.396452,
+            0.491407,
+            0.578617,
+            0.32338,
+            0.470334,
+            0.389579,
+            0.417167,
+            0.516266,
+            0.606601,
+            0.506301,
+            0.53356,
+            0.335908,
+            0.415895,
+            0.537746,
+            0.365091,
+            0.52966,
+            0.446799,
+            0.388373,
+            0.419028,
+            0.441695,
+            0.450601,
+            0.524421,
+            0.458091,
+            0.428322,
+            0.356738,
+            0.593263,
+            0.548845,
+            0.438732,
+            0.536025,
+            0.441981,
+            0.388975,
+            0.474408,
+            0.37543,
+            0.42149,
+            0.393832,
+            0.431444,
+            0.527015,
+            0.411327,
+            0.508664
+          ],
+          "abstain": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "subsampled": false
+        }
+      ],
+      "patients": {
+        "sample": {
+          "perSeed": [
+            0.5755086809992307
+          ],
+          "perturbed": {
+            "oldpeak:-1": [
+              0.5687039814143618
+            ],
+            "oldpeak:+1": [
+              0.5828347298387778
+            ]
+          }
+        },
+        "unusual": {
+          "perSeed": [
+            0.531387427615122
+          ],
+          "perturbed": {
+            "oldpeak:-1": [
+              0.5302616589371734
+            ],
+            "oldpeak:+1": [
+              0.5308646505493524
+            ]
+          }
+        }
+      },
+      "population": {
+        "mean": {
+          "age": 54.43894389438944,
+          "sex": 0.6798679867986799,
+          "trestbps": 131.68976897689768,
+          "cp": 2.1584158415841586,
+          "restecg": 0.9900990099009901,
+          "oldpeak": 1.0396039603960396,
+          "slope": 0.6006600660066007,
+          "thalach": 149.6072607260726,
+          "exang": 0.32673267326732675,
+          "thal": 0.8372093023255814,
+          "ca": 0.6722408026755853,
+          "chol": 246.69306930693068,
+          "fbs": 0.1485148514851485
+        },
+        "sd": {
+          "age": 9.02373483119838,
+          "sex": 0.46652707030245294,
+          "trestbps": 17.570681239512478,
+          "cp": 0.9585399368696783,
+          "restecg": 0.9933280677918277,
+          "oldpeak": 1.1591574732421364,
+          "slope": 0.6152084301256652,
+          "thalach": 22.83722455049312,
+          "exang": 0.4690185854386935,
+          "thal": 0.9558757891582194,
+          "ca": 0.935869382201651,
+          "chol": 51.6914064726489,
+          "fbs": 0.3556096038825341
+        },
+        "typicalDistance": 2.7264596161938264
+      },
+      "errorSd": 0.1
+    }
+  }
+}

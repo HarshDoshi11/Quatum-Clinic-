@@ -2,7 +2,7 @@
 
 Every route returns the same JSON shapes as the frontend mock layer (served
 from app/fixtures). Where the real hybrid quantum-classical pipeline will plug
-in, you'll find a `TODO(ml)` comment.
+in, you will find an "ML hook" comment.
 
 Run:  uvicorn app.main:app --reload --port 8000
 """
@@ -91,7 +91,7 @@ def health() -> dict[str, Any]:
 
 @app.get("/overview")
 def overview(dataset: DatasetId = "wdbc") -> dict[str, Any]:
-    # TODO(ml): derive status, findings and recent runs from the experiment store.
+    # ML hook: derive status, findings and recent runs from the experiment store.
     return fixture("overview")[dataset]
 
 
@@ -110,7 +110,7 @@ def list_datasets() -> list[dict[str, Any]]:
 
 @app.get("/datasets/{dataset}")
 def get_dataset(dataset: DatasetId) -> dict[str, Any]:
-    # TODO(ml): profile the stored dataset and run the preprocessing pipeline
+    # ML hook: profile the stored dataset and run the preprocessing pipeline
     #           (clean → impute → clip outliers → z-score → select → PCA).
     return fixture("dataset_detail")[dataset]
 
@@ -123,7 +123,7 @@ def get_feature_schema(dataset: DatasetId) -> dict[str, Any]:
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)) -> dict[str, Any]:
     """Profile an uploaded CSV. Mirrors profileCsv() in the frontend mock."""
-    # TODO(ml): persist the dataset and make it available to /train.
+    # ML hook: persist the dataset and make it available to /train.
     raw = (await file.read()).decode("utf-8-sig", errors="replace")
     rows = [r for r in csv.reader(io.StringIO(raw)) if any(cell.strip() for cell in r)]
     if len(rows) < 2:
@@ -194,7 +194,7 @@ async def upload(file: UploadFile = File(...)) -> dict[str, Any]:
 
 @app.post("/train")
 def train(req: TrainRequest) -> dict[str, Any]:
-    # TODO(ml): run the hybrid pipeline for each requested model:
+    # ML hook: run the hybrid pipeline for each requested model:
     #   classical — scikit-learn / XGBoost on the preprocessed features;
     #   quantum   — PCA → angle/amplitude encoding → VQC or QSVM kernel (e.g. Qiskit),
     #               with `qubits`, `encoding`, `circuitDepth`; repeat over `seeds`.
@@ -261,7 +261,7 @@ def get_experiment(experiment_id: str) -> dict[str, Any]:
 
 @app.post("/experiments/{experiment_id}/rerun")
 def rerun_experiment(experiment_id: str) -> dict[str, Any]:
-    # TODO(ml): re-execute with the stored config instead of copying results.
+    # ML hook: re-execute with the stored config instead of copying results.
     source = get_experiment(experiment_id)
     rerun = {**source, "id": _new_experiment_id(), "timestamp": _now(), "notes": f"Re-run of {experiment_id}."}
     _session_experiments.insert(0, rerun)
@@ -273,13 +273,13 @@ def rerun_experiment(experiment_id: str) -> dict[str, Any]:
 
 @app.get("/compare")
 def compare(dataset: DatasetId = "wdbc") -> dict[str, Any]:
-    # TODO(ml): aggregate per-seed metrics from the benchmark experiment.
+    # ML hook: aggregate per-seed metrics from the benchmark experiment.
     return fixture("compare")[dataset]
 
 
 @app.get("/sweeps/{sweep_type}")
 def sweeps(sweep_type: SweepType, dataset: DatasetId = "wdbc") -> dict[str, Any]:
-    # TODO(ml): small-data → retrain on subsampled training sets;
+    # ML hook: small-data → retrain on subsampled training sets;
     #           scalability → transpile + train VQC at 4…12 qubits;
     #           evolution → circuit search over encoding/depth/entanglement;
     #           failure-envelope → grid over 2Q gate error × data corruption.
@@ -293,7 +293,7 @@ def noise_profiles() -> list[dict[str, Any]]:
 
 @app.post("/noise/run")
 def noise_run(req: NoiseRunRequest) -> dict[str, Any]:
-    # TODO(ml): build a noise model from req.noise (T1, T2, gate and readout errors),
+    # ML hook: build a noise model from req.noise (T1, T2, gate and readout errors),
     #           re-evaluate the QSVM on the test split and sweep T2 for the chart.
     #           The stub returns the preset profile's result and ignores custom values.
     return fixture("noise_run")[req.dataset][req.profileId]
@@ -304,7 +304,7 @@ def noise_run(req: NoiseRunRequest) -> dict[str, Any]:
 
 @app.post("/predict")
 def predict(req: PredictRequest) -> dict[str, Any]:
-    # TODO(ml): score req.input with the deployed QSVM; compute trust signals
+    # ML hook: score req.input with the deployed QSVM; compute trust signals
     #           (seed stability, OOD distance, calibration, input/hardware sensitivity)
     #           and abstain when evidence is insufficient.
     kind = "unusual" if _is_unusual(req.dataset, req.input) else "sample"
@@ -318,7 +318,7 @@ def trust(dataset: DatasetId = "wdbc") -> dict[str, Any]:
 
 @app.post("/explain")
 def explain(req: ExplainRequest) -> dict[str, Any]:
-    # TODO(ml): per-feature attributions (e.g. SHAP on the kernel model) for req.input.
+    # ML hook: per-feature attributions (e.g. SHAP on the kernel model) for req.input.
     return fixture("explain")[req.dataset]
 
 
@@ -329,7 +329,7 @@ def cross_modality(dataset: DatasetId = "wdbc") -> dict[str, Any]:
 
 @app.post("/report")
 def report(req: ReportRequest) -> dict[str, Any]:
-    # TODO(ml): generate from the live prediction + explanation for req.input.
+    # ML hook: generate from the live prediction + explanation for req.input.
     kind = "unusual" if _is_unusual(req.dataset, req.input) else "sample"
     result = fixture("report")[req.dataset][kind]
     result["generatedAt"] = _now()

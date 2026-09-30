@@ -1,5 +1,9 @@
 {
   "wdbc": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "jobId": "JOB-2049",
     "experimentId": "EXP-2049",
     "epochs": 50,
@@ -338,6 +342,10 @@
     "completedAt": "2026-09-27T14:40:00+05:30"
   },
   "heart": {
+    "source": {
+      "kind": "simulated",
+      "seeds": 5
+    },
     "jobId": "JOB-2049",
     "experimentId": "EXP-2049",
     "epochs": 50,

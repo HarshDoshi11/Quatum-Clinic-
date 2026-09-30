@@ -104,7 +104,7 @@
  * small tabular mono numbers. Uppercase tracking never exceeds 0.06em.
  */
 /* Patient Mode's Fraunces: soft corners and optical sizing (Research never matches). */
-:root[data-mode='patient'] :is(.font-serif, [class*='type-display'], [class*='type-h2'], [class*='type-headline-soft']) {
+:root[data-mode='patient'] :is(.font-serif, [class*='type-display'], [class*='type-h2'], [class*='type-headline-soft'], [class*='type-question']) {
   font-variation-settings: 'SOFT' 100, 'WONK' 0;
   font-optical-sizing: auto;
 }
@@ -130,6 +130,16 @@
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.01em;
+  font-optical-sizing: auto;
+}
+
+/* Patient Mode's assessment question: one large, soft Fraunces question per screen. */
+@utility type-question {
+  font-family: var(--font-fraunces);
+  font-size: var(--type-question);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
   font-optical-sizing: auto;
 }
 
@@ -261,5 +271,36 @@
   html.theme-ready *::before,
   html.theme-ready *::after {
     transition-duration: 0ms !important;
+  }
+}
+
+/*
+ * Projector mode: thicker chart lines, axes and gridlines so they survive a projector. CSS beats the SVG
+ * presentation attributes the charts set, and dash patterns are untouched.
+ */
+:root[data-projector='on'] :is(.recharts-line-curve, .chart-line) {
+  stroke-width: 2.5px;
+}
+:root[data-projector='on'] :is(.recharts-line-curve, .chart-line-strong)[stroke='var(--accent)'] {
+  stroke-width: 3px;
+}
+:root[data-projector='on'] :is(.recharts-cartesian-axis-line, .recharts-reference-line-line, .recharts-errorBar line) {
+  stroke-width: 1.75px;
+}
+:root[data-projector='on'] .recharts-cartesian-grid line {
+  stroke-width: 1.25px;
+}
+
+/* Predict & Trust in projector mode on screens up to 960px tall: tighter gaps so the result, scale, threshold
+   scrubber and trust evidence stay on the first screen. */
+@media (max-height: 60rem) {
+  :root[data-projector='on'] .predict-page {
+    padding-top: 0.5rem !important;
+  }
+  :root[data-projector='on'] .predict-group-rule {
+    margin-block: 0.125rem;
+  }
+  :root[data-projector='on'] .predict-page [data-tour='trust-stats'] {
+    margin-top: 0.25rem;
   }
 }

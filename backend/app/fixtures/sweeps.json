@@ -1,6 +1,10 @@
 {
   "small-data": {
     "wdbc": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "small-data",
       "dataset": "wdbc",
       "experimentId": "EXP-2038",
@@ -208,6 +212,10 @@
       "takeaway": "With 25 training patients QSVM leads SVM by 4.3 AUC points (beyond seed noise); SVM overtakes at ~161 patients, where the bands separate again."
     },
     "heart": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "small-data",
       "dataset": "heart",
       "experimentId": "EXP-2032",
@@ -412,6 +420,10 @@
   },
   "scalability": {
     "wdbc": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "scalability",
       "dataset": "wdbc",
       "experimentId": "EXP-2039",
@@ -480,6 +492,10 @@
       "takeaway": "AUC stays flat within seed noise from 4 to 12 qubits (0.965–0.972); training time keeps rising, ×30 overall."
     },
     "heart": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "scalability",
       "dataset": "heart",
       "experimentId": "EXP-2033",
@@ -550,6 +566,10 @@
   },
   "evolution": {
     "wdbc": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "evolution",
       "dataset": "wdbc",
       "experimentId": "EXP-2040",
@@ -866,6 +886,10 @@
       "takeaway": "C16 reaches 0.966 AUC at depth 2 — 0.006 below the best (within seed noise) with 8 fewer trainable parameters."
     },
     "heart": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "evolution",
       "dataset": "heart",
       "experimentId": "EXP-2034",
@@ -1184,6 +1208,10 @@
   },
   "failure-envelope": {
     "wdbc": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "failure-envelope",
       "dataset": "wdbc",
       "experimentId": "EXP-2041",
@@ -2461,6 +2489,10 @@
       "takeaway": "With the threshold at 85%, 24% of tested conditions are safe beyond seed noise and 12% are borderline; FakeBackend-1 (82.6% ±1.8) sits below the 85% threshold beyond seed noise."
     },
     "heart": {
+      "source": {
+        "kind": "simulated",
+        "seeds": 5
+      },
       "type": "failure-envelope",
       "dataset": "heart",
       "experimentId": "EXP-2035",

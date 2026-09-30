@@ -36,7 +36,7 @@ const THRESHOLD_MIN = 0.05
 const THRESHOLD_MAX = 0.95
 
 /** Whitespace between the right column's groups, around the one hairline that separates them. */
-const GROUP_RULE = 'my-4 border-t border-rule [@media(max-height:52rem)]:my-2.5'
+const GROUP_RULE = 'predict-group-rule my-4 border-t border-rule [@media(max-height:52rem)]:my-2'
 
 // ─── Right column: result, threshold, trust, stats ─────────
 
@@ -265,10 +265,10 @@ export function Predict({ route }: { route: RouteMeta }) {
   }
 
   return (
-    <Page label={route.label} className="!pt-6 [@media(max-height:52rem)]:!pt-4">
+    <Page label={route.label} className="predict-page !pt-6 [@media(max-height:52rem)]:!pt-4">
       {/* One-line header: the question, with the experiment and backend on the same row */}
       <PageItem as="header">
-        <PageHeader route={route} compact>
+        <PageHeader route={route} source={trustData?.source} compact>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {trustData && <ExperimentTag id={trustData.experimentId} detail="5 seeds" />}
             {trustData && <BackendNote backend={trustData.backend} model={trustData.model} qubits={trustData.qubits} />}

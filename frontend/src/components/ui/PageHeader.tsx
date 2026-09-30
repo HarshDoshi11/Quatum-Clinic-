@@ -6,6 +6,8 @@ import { Drawer } from './Drawer'
 import { Headline } from './Headline'
 import { CompactPlainLine, PlainLine } from './PlainLine'
 import { SectionLabel } from './SectionLabel'
+import { SourceBadge } from './SourceBadge'
+import type { DataSource } from '@/types'
 
 interface PageHeaderProps {
   route: RouteMeta
@@ -18,6 +20,8 @@ interface PageHeaderProps {
    * the plain-language line (when the toggle is on) one line long beside "What is this?", so the header stays under ~120px.
    */
   compact?: boolean
+  /** Where the page's numbers come from (the response's `source`); a badge beside the section label. */
+  source?: DataSource | null
 }
 
 const PARTS = [
@@ -30,7 +34,7 @@ const PARTS = [
  * Section label + question headline + "What is this? ↗" + plain-language line.
  * Every page uses it so the beginner layer is never forgotten (see CLAUDE.md).
  */
-export function PageHeader({ route, headlineClassName, children, compact = false }: PageHeaderProps) {
+export function PageHeader({ route, headlineClassName, children, compact = false, source = null }: PageHeaderProps) {
   const [open, setOpen] = useState(false)
   // Patient pages are plain already: no "What is this?" panel there.
   const guide = useMode().mode === 'research' ? PAGE_CONTENT[route.id as keyof typeof PAGE_CONTENT] : undefined
@@ -39,6 +43,7 @@ export function PageHeader({ route, headlineClassName, children, compact = false
     <div data-tour="headline">
       <div className="flex items-center gap-5">
         <SectionLabel>{route.section}</SectionLabel>
+        {source && <SourceBadge source={source} />}
         {guide && (
           <button
             type="button"

@@ -13,13 +13,11 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-const systemQuery = () => window.matchMedia('(prefers-color-scheme: dark)')
-
 function initialTheme(): Theme {
-  // index.html has already resolved stored preference / system setting before paint.
+  // index.html has already resolved the stored preference (default dark) before paint.
   const fromDom = document.documentElement.dataset.theme
   if (fromDom === 'light' || fromDom === 'dark') return fromDom
-  return readStored(STORAGE_KEY, THEMES) ?? (systemQuery().matches ? 'dark' : 'light')
+  return readStored(STORAGE_KEY, THEMES) ?? 'dark'
 }
 
 /** Update the DOM attribute synchronously, so components that read CSS variables during render see the new theme. */
@@ -36,20 +34,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const id = requestAnimationFrame(() => document.documentElement.classList.add('theme-ready'))
     return () => cancelAnimationFrame(id)
-  }, [])
-
-  // Follow the OS setting until the user makes an explicit choice.
-  useEffect(() => {
-    if (readStored(STORAGE_KEY, THEMES)) return
-    const query = systemQuery()
-    const onChange = (event: MediaQueryListEvent) => {
-      if (readStored(STORAGE_KEY, THEMES)) return
-      const next = event.matches ? 'dark' : 'light'
-      applyTheme(next)
-      setThemeState(next)
-    }
-    query.addEventListener('change', onChange)
-    return () => query.removeEventListener('change', onChange)
   }, [])
 
   const setTheme = useCallback((next: Theme) => {

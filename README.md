@@ -1,24 +1,62 @@
 #JEEVSETU
 
-A hybrid quantum-classical machine-learning platform for early disease detection
-(Smart India Hackathon, problem statement 139). Two views:
+<!-- Screenshots: add the images to docs/screenshots/ with these names. -->
+| Overview | Advantage Observatory | Predict & Trust |
+| --- | --- | --- |
+| ![Overview](docs/screenshots/overview.png) | ![Advantage Observatory](docs/screenshots/advantage.png) | ![Predict & Trust](docs/screenshots/predict.png) |
+| **Hardware Reality Lab** | **Explain** | **Patient Mode (coming soon)** |
+| ![Hardware Reality Lab](docs/screenshots/hardware.png) | ![Explain](docs/screenshots/explain.png) | ![Patient Mode](docs/screenshots/patient.png) |
 
-- **Research Mode** — a lab dashboard asking three questions: *Does quantum help? Does it survive
-  reality? Can a patient trust it?*
-- **Patient Mode** — a calm, plain-language view of a result and what to do next.
+A hybrid quantum-classical machine-learning lab for early disease detection (Smart India Hackathon,
+problem statement 139), tested on breast-cancer biopsies (WDBC) and heart-disease records (UCI Heart, Cleveland).
 
 > Decision support, not a diagnosis.
 
-## Repository
+## The pitch, in three stories
 
-```
-qclinical/
-├── frontend/   Vite + React 18 + TypeScript + Tailwind v4
-├── backend/    FastAPI stub serving the same JSON as the mocks
-└── docs/       design notes
-```
+1. **Does quantum help?** The Advantage Observatory, Small-Data Explorer, Scalability Lab and Model Evolution
+   Engine compare quantum models (VQC, QSVM) with classical baselines on the same patients, over 5 seeds, and
+   only call a difference real when it beats the seed noise.
+2. **Does it survive reality?** The Hardware Reality Lab and Failure Envelope run the quantum model under real
+   hardware noise and corrupted patient data, and show where it stops being safe.
+3. **Can a patient trust it?** Predict & Trust, Explain and the Patient Report show one prediction with its
+   evidence (seed stability, data quality, distribution shift, calibration, input and hardware sensitivity), and
+   the system says "no reliable answer" instead of guessing when the evidence is not there.
 
-## Frontend
+Patient Mode, the same model explained for the person it is about, is shown as a *Coming soon* page with its
+build log; its screens are built and switched off behind one flag (`PATIENT_MODE_ENABLED` in `frontend/src/routes.ts`).
+
+## Real vs simulated results
+
+Every results page carries a badge next to its title, driven by the `source` field of the data it shows:
+
+- **REAL · 5 SEEDS** (cobalt): produced by the real pipeline in [`ml/`](ml/README.md). Advantage Observatory and
+  Predict & Trust show real results when the app runs against the backend (`VITE_USE_MOCK=false`).
+- **SIMULATED** (graphite): the calibrated results store in `frontend/src/mocks/`, used by every page in mock
+  mode and by the other research pages (Hardware Reality Lab, Scalability Lab, Failure Envelope, Model Evolution
+  Engine, Small-Data Explorer, Explain, Cross-Modality, Train, Report) in both modes.
+
+**The real results are reported as they came out.** Seeds 0–4, stratified 80/20 split per seed, every model on
+the same 4 PCA features, quantum circuits on PennyLane `lightning.qubit` (noiseless), threshold 0.5:
+
+| AUC (mean ± std) | VQC | QSVM | LogReg | SVM (RBF) | Random Forest | XGBoost |
+| --- | --- | --- | --- | --- | --- | --- |
+| WDBC | 0.967 ± 0.012 | 0.781 ± 0.049 | **0.982 ± 0.009** | 0.981 ± 0.011 | 0.974 ± 0.015 | 0.973 ± 0.012 |
+| UCI Heart | 0.904 ± 0.033 | 0.740 ± 0.059 | **0.909 ± 0.026** | 0.898 ± 0.025 | 0.891 ± 0.038 | 0.889 ± 0.037 |
+
+Quantum does not beat classical here. VQC ties LogReg on Heart within seed noise and trails it on WDBC just
+beyond it; the QSVM's ZZ-feature-map kernel is concentrated (its values sit near those of random states) and
+trails every classical model. Full metrics (accuracy, F1, sensitivity, specificity, train and inference time,
+all-feature baselines) are in `ml/results/real_results.json`.
+
+## Tech stack
+
+- **Frontend:** Vite, React 18, TypeScript (strict), Tailwind CSS v4, Framer Motion (`motion`), Recharts,
+  React Three Fiber + drei (three.js), cmdk, React Router.
+- **Backend:** FastAPI stub serving JSON fixtures in exactly the frontend's API shapes.
+- **ML:** Python, scikit-learn, XGBoost, PennyLane + `lightning.qubit`.
+
+## Run it
 
 Requires Node 20+.
 
@@ -28,91 +66,27 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-| Script              | Does                           |
-| ------------------- | ------------------------------ |
-| `npm run dev`       | Dev server with HMR            |
-| `npm run build`     | Typecheck + production build   |
-| `npm run typecheck` | TypeScript only                |
-| `npm run lint`      | ESLint (`no-explicit-any` on)  |
-| `npm run preview`   | Serve the production build     |
-| `npm run check:mocks` | Assert mock numbers agree with the spec and across pages |
+The app opens in the dark theme; `Shift T` switches theme and `Shift P` turns on projector mode.
+
+| Script | Does |
+| --- | --- |
+| `npm run dev` | Dev server with hot reload |
+| `npm run build` | Typecheck + production build |
+| `npm run preview` | Serve the production build |
+| `npm run typecheck` / `npm run lint` | TypeScript / ESLint |
+| `npm run check:mocks` | Assert the simulated results agree with the spec and across pages |
 | `npm run export:fixtures` | Regenerate `backend/app/fixtures/*.json` from the mocks |
 
 ### Configuration
 
 Copy `frontend/.env.example` to `frontend/.env.local`:
 
-| Variable        | Default                 | Meaning                                            |
-| --------------- | ----------------------- | -------------------------------------------------- |
-| `VITE_USE_MOCK` | `true`                  | Serve mock data; a `MOCK DATA` tag shows in the status strip |
-| `VITE_API_URL`  | `http://localhost:8000` | FastAPI backend, used when `VITE_USE_MOCK=false`   |
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `VITE_USE_MOCK` | `true` | Serve the simulated results store in the browser |
+| `VITE_API_URL` | `http://localhost:8000` | FastAPI backend, used when `VITE_USE_MOCK=false` |
 
-### Structure
-
-```
-frontend/src/
-├── types/               TypeScript types for every API request/response
-├── api/                 service layer: `api` switches between mock and HTTP; `useResource` hook
-├── mocks/               mock implementation (`mockApi`) + deterministic data builders
-├── routes.ts            single source of truth for navigation (sidebar, router, palette)
-├── state/               theme, dataset (persisted) and mode (derived from URL: /patient/* = Patient)
-├── styles/tokens.css    design tokens for both themes — see docs/design-tokens.md
-├── lib/                 domain constants, formatting, motion vocabulary, storage helpers
-├── components/shell/    sidebar, top bar, status strip
-├── components/ui/       SectionLabel, Headline, Metric, Term, HairlineTable, Drawer, Toast,
-│                        ExperimentTag, Button, Skeleton, EmptyState, SegmentedToggle…
-├── features/            command palette, experiment drawer, overview (Bloch sphere, pipeline)
-└── pages/
-```
-
-### Data layer
-
-Pages call `api.*` from `src/api` and never know whether data is mocked:
-
-```ts
-const overview = useResource((signal) => api.getOverview(datasetId, { signal }), [datasetId])
-```
-
-- **Mock mode** (`VITE_USE_MOCK` unset or `true`): `src/mocks/mockApi.ts` answers with 300–800ms simulated
-  latency. A `MOCK DATA` tag shows in the status strip.
-- **HTTP mode** (`VITE_USE_MOCK=false`): `src/api/http.ts` calls the FastAPI backend at `VITE_API_URL`.
-
-**One source of truth.** Only a handful of anchor values are hand-written, in
-`src/mocks/data/canon.ts`: each model's AUC ± std per dataset, each modality's AUC ± std (Heart), the noise
-profiles, and the safety threshold. Everything else is derived from them by the results store
-(`src/mocks/data/results.ts`, keyed by dataset + model + config): sensitivity and specificity (equal-variance
-binormal ROC), noise tolerance, learning curves, the circuit search, calibration, the threshold curve, the
-cross-modality gain, and the abstain rate. `npm run check:mocks` asserts realistic per-dataset results, one
-value per config key across every endpoint, noise-aware wording for every claim, Predict = Explain = Report
-for the same patient, and that every experiment ID referenced anywhere resolves.
-
-**Per-dataset behaviour** (locked what-if inputs, the Explain caption, which kinds of test exist for the
-cross-modality study, how the report words its influences) is declared on the dataset config (`DATASETS` in
-`src/lib/domain.ts`). No page or mock special-cases a dataset ID.
-
-**The patient being assessed** is set on Predict & Trust and read by Explain and the Patient Report
-(`src/state/patient.tsx`). It is held in memory only and never written to storage.
-
-### Global features
-
-- **Command palette:** `Ctrl K` / `⌘K`, or the Search button. Jump to any page, switch dataset, theme or
-  mode, run a prediction, start an experiment, open a recent experiment.
-- **Experiment drawer:** any experiment ID (table rows, `EXP-…` tags) opens its full config, metrics and a
-  Re-run button. Re-runs create a new ID and refresh the status strip and lists.
-- **Glossary:** `<Term>` adds a dotted underline and a one-line definition on hover or focus
-  (`src/lib/glossary.ts`).
-- **Toasts:** bottom-left, via `useToast()`. Shared actions (dataset, theme, re-run, copy ID…) toast through
-  `useAppActions()`.
-- **Beginner layer:** a *Plain language* toggle in the top bar adds an "In simple words:" line under every section;
-  every page has a *What is this? ↗* panel; `?` → *Take the guided tour* walks through the Overview in 8 steps.
-  Standing rules for new pages are in [CLAUDE.md](CLAUDE.md).
-- **Readability:** one rem-based type scale (`type-*` utilities, nothing under 12px), muted text ≥ 4.5:1 in both
-  themes. **Projector mode** (`Shift P`, or the palette) scales the UI 115% and boosts contrast.
-- **Patient report:** *Download PDF for your doctor* opens the print dialog; print styles keep only the letter,
-  on white paper. *Share* uses the Web Share API where available, otherwise copies a text summary.
-- **Keyboard:** `Ctrl K` palette · `Shift T` theme · `Shift L` plain language · `Shift P` projector · `?` all shortcuts.
-
-## Backend
+### Backend (for the real results)
 
 Requires Python 3.10+.
 
@@ -124,15 +98,54 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-Interactive docs: http://localhost:8000/docs. To point the frontend at it, set `VITE_USE_MOCK=false` in
-`frontend/.env.local` and restart `npm run dev`.
+Then set `VITE_USE_MOCK=false` in `frontend/.env.local` and restart `npm run dev`. Interactive API docs:
+http://localhost:8000/docs.
 
-The backend is a **stub**: routes return JSON fixtures exported from the frontend mocks
-(`npm run export:fixtures`), so both modes show identical data. `TODO(ml)` comments in
-`backend/app/main.py` mark where the ML pipeline plugs in.
+### ML pipeline
+
+```bash
+python -m venv ml/.venv
+ml/.venv/Scripts/python -m pip install -r ml/requirements.txt      # macOS/Linux: ml/.venv/bin/python
+curl -o ml/data/processed.cleveland.data https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data
+
+ml/.venv/Scripts/python ml/run_pipeline.py --quick      # smoke test, ~1 min
+ml/.venv/Scripts/python ml/run_pipeline.py              # full run, ~20 min on a laptop CPU
+ml/.venv/Scripts/python ml/export_to_fixtures.py        # merge into the backend fixtures
+```
+
+`npm run export:fixtures` rebuilds every fixture from the mocks, so run `export_to_fixtures.py` again after it.
+Details: [`ml/README.md`](ml/README.md).
+
+## How it is built
+
+```
+qclinical/
+├── frontend/   the app (src/pages, src/features, src/components, src/api, src/mocks)
+├── backend/    FastAPI stub serving the fixtures
+├── ml/         real pipeline: data, preprocessing, models, export to fixtures
+└── docs/       product brief and design tokens
+```
+
+- **One API, two sources.** Pages call `api.*` (`frontend/src/api`) and never know whether the data is
+  simulated or served by the backend.
+- **One source of truth.** The simulated numbers derive from a handful of anchors in
+  `frontend/src/mocks/data/canon.ts` through the results store, keyed by dataset + model + config, so the same
+  configuration shows the same number on every page. Real configurations carry their own keys.
+- **Honest by construction.** Claims are worded by whether a difference exceeds the combined seed noise; an
+  abstained patient never shows a probability anywhere.
+- **Readable.** One rem-based type scale, contrast ≥ 4.5:1 in both themes, a *Plain language* toggle, a
+  glossary on every technical term, a guided tour, and projector mode (larger type, thicker chart lines,
+  stronger contrast).
+- **Accessible.** Keyboard navigation throughout, visible focus rings, labelled controls, and a screen-reader
+  summary and table view for every chart; reduced-motion settings are respected, including the 3D scenes.
+- **Light.** Every page and 3D scene is code-split; 3D canvases cap their pixel ratio and pause when off-screen.
+
+Standing rules for changes are in [CLAUDE.md](CLAUDE.md); the product spec is in [docs/brief.md](docs/brief.md).
+
+## Backend routes
 
 | Method | Route | Returns |
-| ------ | ----- | ------- |
+| --- | --- | --- |
 | GET | `/health` | Service status |
 | GET | `/overview?dataset=` · `/status?dataset=` | Overview page · status strip |
 | GET | `/datasets` · `/datasets/{id}` · `/datasets/{id}/schema` | Dataset list · profile + preprocessing · patient feature schema |
@@ -147,15 +160,11 @@ The backend is a **stub**: routes return JSON fixtures exported from the fronten
 | GET | `/cross-modality?dataset=` | Per-modality AUCs (Heart only) |
 | POST | `/report` | Plain-language patient report |
 
-CORS allows any `localhost` port; add deployed origins with `CORS_ORIGINS=https://a.example,https://b.example`.
+"ML hook" comments in `backend/app/main.py` mark where a live pipeline would replace each fixture.
 
 ## Build status
 
-- [x] Phase 1 — setup, design tokens, app shell, routing
-- [x] Phase 2 — types, mock data, API service layer, backend stub
-- [x] Phase 3 — Overview + global features
-- [x] Phase 4 — Data, Train, and research pages (section I)
-- [x] Phase 5 — Hardware Reality Lab, Failure Envelope
-- [x] Phase 6 — Predict & Trust, Explain, Cross-Modality, Patient Report
-- [x] Phase 7 — Patient Mode
-- [ ] Phase 8 — Polish
+- [x] Phases 1–6: shell, data layer, research pages, Hardware Reality Lab, Failure Envelope, Predict & Trust, Explain, Cross-Modality, Patient Report
+- [x] Phase 7: Patient Mode (built; shown as a Coming soon page for the Grand Finale)
+- [x] ML track: real 5-seed benchmark for Advantage Observatory and Predict & Trust
+- [x] Phase 8: polish for submission

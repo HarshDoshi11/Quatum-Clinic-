@@ -23,7 +23,7 @@ import type {
   TrustResponse,
   TrustSignal,
 } from '../../types'
-import { ABSTAINED, BEST_QUANTUM, SAFE_SENSITIVITY, SEEDS, dPrime, operatingPoint, prevalence, probToScore, sensSpecAtScore } from './canon'
+import { ABSTAINED, BEST_QUANTUM, dPrime, operatingPoint, prevalence, probToScore, SAFE_SENSITIVITY, SEEDS, sensSpecAtScore, SIMULATED } from './canon'
 import { EXPERIMENT_IDS } from './ids'
 import { referenceResult, result } from './results'
 import { MODEL_FEATURES, SAMPLE_PATIENTS, SAMPLE_PROBABILITY, type ModelFeature } from './features'
@@ -344,6 +344,7 @@ export function predict(dataset: DatasetId, input: PatientInput, thresholdIn?: n
 
   predictionCounter += 1
   const base = {
+    source: SIMULATED,
     predictionId: `PRD-${dataset.toUpperCase()}-${String(predictionCounter).padStart(4, '0')}`,
     dataset,
     model: MODEL,
@@ -419,6 +420,7 @@ export function explain(dataset: DatasetId, input: PatientInput): ExplainRespons
   const abstain = abstains(check)
   const raw = round(probability(dataset, input))
   return {
+    source: SIMULATED,
     dataset,
     model: MODEL,
     experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
@@ -530,6 +532,7 @@ export function trust(dataset: DatasetId): TrustResponse {
 
   const n = testSize(dataset)
   return {
+    source: SIMULATED,
     dataset,
     model: MODEL,
     experimentId: EXPERIMENT_IDS[dataset].qsvmRun,
