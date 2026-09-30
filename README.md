@@ -1,4 +1,4 @@
-#JEEVSETU
+# JeevSetu
 
 <!-- Screenshots: add the images to docs/screenshots/ with these names. -->
 | Overview | Advantage Observatory | Predict & Trust |

@@ -1,35 +1,36 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Q/Clinical — Early Signal Lab</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
-    />
-    <script>
-      // Set theme before first paint to avoid a flash of the wrong theme.
-      (function () {
-        var theme;
-        try {
-          theme = localStorage.getItem('qc.theme');
-        } catch (e) {}
-        if (theme !== 'light' && theme !== 'dark') {
-          theme = 'dark'; // default until the user picks a theme
-        }
-        document.documentElement.dataset.theme = theme;
-        try {
-          if (localStorage.getItem('qc.projector') === 'on') document.documentElement.dataset.projector = 'on';
-        } catch (e) {}
-      })();
-    </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JeevSetu — Early Signal Lab</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" />
+  <script>
+    // Set theme before first paint to avoid a flash of the wrong theme.
+    (function () {
+      var theme;
+      try {
+        theme = localStorage.getItem('qc.theme');
+      } catch (e) { }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = 'dark'; // default until the user picks a theme
+      }
+      document.documentElement.dataset.theme = theme;
+      try {
+        if (localStorage.getItem('qc.projector') === 'on') document.documentElement.dataset.projector = 'on';
+      } catch (e) { }
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

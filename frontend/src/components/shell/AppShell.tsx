@@ -35,10 +35,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     mainRef.current?.scrollTo({ top: 0 })
   }, [pathname])
 
-  // "Hardware Reality Lab — Q/Clinical"; the Overview keeps the product name.
+  // "Hardware Reality Lab — JeevSetu"; the Overview keeps the product name.
   useEffect(() => {
     const route = [...RESEARCH_ROUTES, ...LIVE_PATIENT_ROUTES].find((r) => r.path === pathname)
-    document.title = !route || route.id === 'overview' ? 'Q/Clinical — Early Signal Lab' : `${route.label} — Q/Clinical`
+    document.title = !route || route.id === 'overview' ? 'JeevSetu — Early Signal Lab' : `${route.label} — JeevSetu`
   }, [pathname])
 
   // Patient Mode is its own calm app: its top bar, no sidebar, no status strip.

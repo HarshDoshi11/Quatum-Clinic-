@@ -68,7 +68,7 @@ export function ReportLetter({ report: r, aside }: ReportLetterProps) {
     <article aria-label="Patient report" className="flex flex-col gap-16">
       <header className="flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-4">
         <div>
-          <p className="type-label text-ink">Q/Clinical · Screening report</p>
+          <p className="type-label text-ink">JeevSetu · Screening report</p>
           <p className="num mt-1 type-small text-muted">
             {r.reportId} · {formatDateTime(r.generatedAt)} · about {r.condition}
           </p>

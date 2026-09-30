@@ -26,7 +26,7 @@ export function PatientTopBar() {
   return (
     <header className="@container flex h-full items-center gap-6 px-6 md:px-10">
       <Link to={PATIENT_BASE} className="shrink-0 type-h2 text-ink" aria-label={t.home}>
-        Q/Clinical
+        JeevSetu
       </Link>
 
       {/* Where you are: the three steps of the check */}

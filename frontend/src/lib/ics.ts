@@ -23,7 +23,7 @@ export function calendarFile({ start, minutes, title, description }: CalendarEve
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Q/Clinical//Patient Mode//EN',
+    'PRODID:-//JeevSetu//Patient Mode//EN',
     'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
     `UID:${now.getTime()}-${Math.round(start.getTime() / 1000)}@qclinical.local`,

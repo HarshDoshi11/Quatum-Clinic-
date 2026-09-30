@@ -40,7 +40,7 @@ export function DoctorPack({
       {/* ── Page 1: for the patient to bring */}
       <section>
         <p className="type-label text-muted">
-          Q/Clinical · Your health check · {r.reportId} · {formatDateTime(r.generatedAt)}
+          JeevSetu · Your health check · {r.reportId} · {formatDateTime(r.generatedAt)}
         </p>
         <h1 className="mt-6 type-headline-soft">{abstained ? NO_ANSWER : r.result.patientHeadline}</h1>
         {!abstained && <p className="mt-3 type-body-lg">{r.result.frequency}</p>}

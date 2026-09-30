@@ -27,7 +27,7 @@ export function TeaserTopBar() {
     <header className="flex h-full items-center gap-4 px-6 md:px-10">
       <div className="flex min-w-0 flex-1 items-center">
         <Link to={PATIENT_BASE} className="shrink-0 type-h2 text-ink" aria-label={t.shell.home}>
-          Q/Clinical
+          JeevSetu
         </Link>
       </div>
       <SegmentedToggle<Mode> options={modes} value={mode} onChange={setMode} layoutId="mode-indicator" ariaLabel={t.teaser.modeLabel} />

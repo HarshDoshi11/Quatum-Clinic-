@@ -30,7 +30,7 @@ export const common = {
     peekLabel: 'PREVIEW · NOT FINAL',
   },
   shell: {
-    home: 'Q/Clinical, home',
+    home: 'JeevSetu, home',
     stepsLabel: 'Steps',
     steps: { 'patient-home': 'Home', 'patient-assessment': 'Check', 'patient-report': 'My result' } as Record<string, string>,
     language: 'Language',

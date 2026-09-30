@@ -4,7 +4,7 @@ import type { PatientReport } from '@/types'
 /** Plain-text summary of a report, for sharing (Web Share or clipboard). */
 export function reportSummaryText(r: PatientReport): string {
   return [
-    `Q/Clinical screening report · ${r.reportId} · ${formatDateTime(r.generatedAt)}`,
+    `JeevSetu screening report · ${r.reportId} · ${formatDateTime(r.generatedAt)}`,
     '',
     `Result: ${r.result.headline}${r.result.frequency ? `. ${r.result.frequency}` : ''}`,
     r.meaning,
