@@ -11,3 +11,8 @@ venv/
 # ML track: raw data (download, see ml/README.md) and scratch outputs
 ml/data/*
 !ml/data/.gitkeep
+
+# Deploy: local venv, frontend build, brag/video output
+backend/.venv/
+frontend/dist/
+brag-output/

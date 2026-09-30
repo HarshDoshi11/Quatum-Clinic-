@@ -7,7 +7,8 @@ import type { Api, RequestOptions } from './types'
 type Query = Record<string, string | number | undefined>
 
 async function request<T>(method: 'GET' | 'POST', path: string, opts: RequestOptions & { query?: Query; body?: unknown } = {}): Promise<T> {
-  const url = new URL(path.replace(/^\//, ''), API_URL.endsWith('/') ? API_URL : `${API_URL}/`)
+  const base = new URL(API_URL.endsWith('/') ? API_URL : `${API_URL}/`, window.location.origin)
+  const url = new URL(path.replace(/^\//, ''), base)
   for (const [key, value] of Object.entries(opts.query ?? {})) {
     if (value !== undefined) url.searchParams.set(key, String(value))
   }

@@ -84,7 +84,7 @@ Copy `frontend/.env.example` to `frontend/.env.local`:
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `VITE_USE_MOCK` | `true` | Serve the simulated results store in the browser |
-| `VITE_API_URL` | `http://localhost:8000` | FastAPI backend, used when `VITE_USE_MOCK=false` |
+| `VITE_API_URL` | `/api` | API base, used when `VITE_USE_MOCK=false` (relative; `npm run dev` proxies it to :8000) |
 
 ### Backend (for the real results)
 
@@ -100,6 +100,15 @@ uvicorn app.main:app --reload --port 8000
 
 Then set `VITE_USE_MOCK=false` in `frontend/.env.local` and restart `npm run dev`. Interactive API docs:
 http://localhost:8000/docs.
+
+### Deploy (one Render web service)
+
+FastAPI serves both the API (under `/api`) and the built frontend (`frontend/dist`, with an SPA fallback), so
+the whole app is one service. [`render.yaml`](render.yaml) holds the settings:
+
+- **Build:** `cd frontend && npm ci && VITE_USE_MOCK=false npm run build && cd ../backend && pip install -r requirements.txt`
+- **Start:** `cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- **Health check:** `/api/health`
 
 ### ML pipeline
 
@@ -144,9 +153,11 @@ Standing rules for changes are in [CLAUDE.md](CLAUDE.md); the product spec is in
 
 ## Backend routes
 
+All routes are under `/api` (e.g. `GET /api/compare?dataset=heart`); every other GET serves the frontend.
+
 | Method | Route | Returns |
 | --- | --- | --- |
-| GET | `/health` | Service status |
+| GET | `/health` | Liveness probe: `{"status": "ok"}` |
 | GET | `/overview?dataset=` · `/status?dataset=` | Overview page · status strip |
 | GET | `/datasets` · `/datasets/{id}` · `/datasets/{id}/schema` | Dataset list · profile + preprocessing · patient feature schema |
 | POST | `/upload` | CSV profile (multipart `file`) |

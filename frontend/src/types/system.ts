@@ -3,8 +3,9 @@ import type { ExperimentSummary } from './experiment'
 
 export interface Health {
   status: 'ok'
-  version: string
-  mock: boolean
+  /** Reported by the mock layer; the backend's /api/health is a bare liveness probe. */
+  version?: string
+  mock?: boolean
 }
 
 export interface ActiveBackend {

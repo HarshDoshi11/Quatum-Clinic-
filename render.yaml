@@ -1,0 +1,15 @@
+# One Render web service: FastAPI serves the API under /api and the built frontend (frontend/dist) at /.
+services:
+  - type: web
+    name: jeevsetu
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: cd frontend && npm ci && VITE_USE_MOCK=false npm run build && cd ../backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: PYTHON_VERSION
+        value: 3.11.9

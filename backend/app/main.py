@@ -4,7 +4,7 @@ Every route returns the same JSON shapes as the frontend mock layer (served
 from app/fixtures). Where the real hybrid quantum-classical pipeline will plug
 in, you will find an "ML hook" comment.
 
-Run:  uvicorn app.main:app --reload --port 8000
+Run:  uvicorn app.main:app --reload --port 8000   (API at /api, built frontend at /)
 """
 
 import csv
@@ -13,7 +13,11 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
-from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+from pathlib import Path
+
+from fastapi import APIRouter, FastAPI, File, HTTPException, Query, UploadFile
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import __version__
@@ -30,6 +34,9 @@ from .schemas import (
 )
 
 app = FastAPI(title="Q/Clinical API", version=__version__)
+
+# Every API route lives under /api; the built frontend is served from / (see the end of this file).
+api = APIRouter()
 
 # Any localhost port in development; add deployed origins via CORS_ORIGINS (comma-separated).
 app.add_middleware(
@@ -84,18 +91,19 @@ def _is_unusual(dataset: DatasetId, patient: PatientInput) -> bool:
 # ─── System ─────────────────────────────────────────────────
 
 
-@app.get("/health")
-def health() -> dict[str, Any]:
-    return {"status": "ok", "version": __version__, "mock": True}
+@api.get("/health")
+def health() -> dict[str, str]:
+    """Liveness probe (Render's health check)."""
+    return {"status": "ok"}
 
 
-@app.get("/overview")
+@api.get("/overview")
 def overview(dataset: DatasetId = "wdbc") -> dict[str, Any]:
     # ML hook: derive status, findings and recent runs from the experiment store.
     return fixture("overview")[dataset]
 
 
-@app.get("/status")
+@api.get("/status")
 def status(dataset: DatasetId = "wdbc") -> dict[str, Any]:
     return fixture("status")[dataset]
 
@@ -103,24 +111,24 @@ def status(dataset: DatasetId = "wdbc") -> dict[str, Any]:
 # ─── Data ───────────────────────────────────────────────────
 
 
-@app.get("/datasets")
+@api.get("/datasets")
 def list_datasets() -> list[dict[str, Any]]:
     return fixture("datasets")
 
 
-@app.get("/datasets/{dataset}")
+@api.get("/datasets/{dataset}")
 def get_dataset(dataset: DatasetId) -> dict[str, Any]:
     # ML hook: profile the stored dataset and run the preprocessing pipeline
     #           (clean → impute → clip outliers → z-score → select → PCA).
     return fixture("dataset_detail")[dataset]
 
 
-@app.get("/datasets/{dataset}/schema")
+@api.get("/datasets/{dataset}/schema")
 def get_feature_schema(dataset: DatasetId) -> dict[str, Any]:
     return fixture("schema")[dataset]
 
 
-@app.post("/upload")
+@api.post("/upload")
 async def upload(file: UploadFile = File(...)) -> dict[str, Any]:
     """Profile an uploaded CSV. Mirrors profileCsv() in the frontend mock."""
     # ML hook: persist the dataset and make it available to /train.
@@ -192,7 +200,7 @@ async def upload(file: UploadFile = File(...)) -> dict[str, Any]:
 # ─── Training & experiments ─────────────────────────────────
 
 
-@app.post("/train")
+@api.post("/train")
 def train(req: TrainRequest) -> dict[str, Any]:
     # ML hook: run the hybrid pipeline for each requested model:
     #   classical — scikit-learn / XGBoost on the preprocessed features;
@@ -243,14 +251,14 @@ def train(req: TrainRequest) -> dict[str, Any]:
     return response
 
 
-@app.get("/experiments")
+@api.get("/experiments")
 def list_experiments(dataset: Optional[DatasetId] = None, limit: Optional[int] = Query(default=None, ge=1)) -> list[dict[str, Any]]:
     items = [e for e in _all_experiments() if dataset is None or e["dataset"] == dataset]
     items.sort(key=lambda e: e["timestamp"], reverse=True)
     return [_summary(e) for e in items[:limit]]
 
 
-@app.get("/experiments/{experiment_id}")
+@api.get("/experiments/{experiment_id}")
 def get_experiment(experiment_id: str) -> dict[str, Any]:
     # Circuit-search designs (e.g. EXP-2040.C07) are resolvable but not listed.
     for exp in _all_experiments() + fixture("experiment_children"):
@@ -259,7 +267,7 @@ def get_experiment(experiment_id: str) -> dict[str, Any]:
     raise HTTPException(404, f"Experiment {experiment_id} not found")
 
 
-@app.post("/experiments/{experiment_id}/rerun")
+@api.post("/experiments/{experiment_id}/rerun")
 def rerun_experiment(experiment_id: str) -> dict[str, Any]:
     # ML hook: re-execute with the stored config instead of copying results.
     source = get_experiment(experiment_id)
@@ -271,13 +279,13 @@ def rerun_experiment(experiment_id: str) -> dict[str, Any]:
 # ─── Analysis ───────────────────────────────────────────────
 
 
-@app.get("/compare")
+@api.get("/compare")
 def compare(dataset: DatasetId = "wdbc") -> dict[str, Any]:
     # ML hook: aggregate per-seed metrics from the benchmark experiment.
     return fixture("compare")[dataset]
 
 
-@app.get("/sweeps/{sweep_type}")
+@api.get("/sweeps/{sweep_type}")
 def sweeps(sweep_type: SweepType, dataset: DatasetId = "wdbc") -> dict[str, Any]:
     # ML hook: small-data → retrain on subsampled training sets;
     #           scalability → transpile + train VQC at 4…12 qubits;
@@ -286,12 +294,12 @@ def sweeps(sweep_type: SweepType, dataset: DatasetId = "wdbc") -> dict[str, Any]
     return fixture("sweeps")[sweep_type][dataset]
 
 
-@app.get("/noise/profiles")
+@api.get("/noise/profiles")
 def noise_profiles() -> list[dict[str, Any]]:
     return fixture("noise_profiles")
 
 
-@app.post("/noise/run")
+@api.post("/noise/run")
 def noise_run(req: NoiseRunRequest) -> dict[str, Any]:
     # ML hook: build a noise model from req.noise (T1, T2, gate and readout errors),
     #           re-evaluate the QSVM on the test split and sweep T2 for the chart.
@@ -302,7 +310,7 @@ def noise_run(req: NoiseRunRequest) -> dict[str, Any]:
 # ─── Patient ────────────────────────────────────────────────
 
 
-@app.post("/predict")
+@api.post("/predict")
 def predict(req: PredictRequest) -> dict[str, Any]:
     # ML hook: score req.input with the deployed QSVM; compute trust signals
     #           (seed stability, OOD distance, calibration, input/hardware sensitivity)
@@ -311,26 +319,52 @@ def predict(req: PredictRequest) -> dict[str, Any]:
     return fixture("predict")[req.dataset][kind]
 
 
-@app.get("/trust")
+@api.get("/trust")
 def trust(dataset: DatasetId = "wdbc") -> dict[str, Any]:
     return fixture("trust")[dataset]
 
 
-@app.post("/explain")
+@api.post("/explain")
 def explain(req: ExplainRequest) -> dict[str, Any]:
     # ML hook: per-feature attributions (e.g. SHAP on the kernel model) for req.input.
     return fixture("explain")[req.dataset]
 
 
-@app.get("/cross-modality")
+@api.get("/cross-modality")
 def cross_modality(dataset: DatasetId = "wdbc") -> dict[str, Any]:
     return fixture("cross_modality")[dataset]
 
 
-@app.post("/report")
+@api.post("/report")
 def report(req: ReportRequest) -> dict[str, Any]:
     # ML hook: generate from the live prediction + explanation for req.input.
     kind = "unusual" if _is_unusual(req.dataset, req.input) else "sample"
     result = fixture("report")[req.dataset][kind]
     result["generatedAt"] = _now()
     return result
+
+
+app.include_router(api, prefix="/api")
+
+
+# ─── Frontend (single-service deploy) ───────────────────────
+# Serves the Vite build from frontend/dist, resolved from this file so the working directory doesn't matter.
+# Registered after the /api router, so API routes always win; any other GET falls back to index.html (SPA).
+
+DIST = (Path(__file__).resolve().parents[2] / "frontend" / "dist").resolve()
+
+if (DIST / "assets").is_dir():
+    app.mount("/assets", StaticFiles(directory=DIST / "assets"), name="assets")
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+def spa(full_path: str) -> FileResponse:
+    if full_path == "api" or full_path.startswith("api/"):
+        raise HTTPException(status_code=404, detail="Not found")
+    index = DIST / "index.html"
+    if not index.is_file():
+        raise HTTPException(status_code=404, detail="Frontend not built: run `npm run build` in frontend/")
+    candidate = (DIST / full_path).resolve()
+    if full_path and candidate.is_file() and candidate.is_relative_to(DIST):
+        return FileResponse(candidate)
+    return FileResponse(index)
