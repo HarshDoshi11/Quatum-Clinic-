@@ -16,3 +16,7 @@ ml/data/*
 backend/.venv/
 frontend/dist/
 brag-output/
+
+# Claude Code files (kept locally, not in the repo)
+.claude/
+CLAUDE.md
