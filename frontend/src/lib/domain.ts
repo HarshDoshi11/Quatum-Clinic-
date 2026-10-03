@@ -117,6 +117,8 @@ export interface PatientConfig {
 export interface DatasetMeta {
   id: DatasetId
   name: string
+  /** Full name in the dataset catalogue (strip, popover): "UCI Heart Disease". */
+  catalogName: string
   code: string
   /** Condition name used in patient-facing copy. */
   condition: string
@@ -148,6 +150,7 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
   wdbc: {
     id: 'wdbc',
     name: 'Breast Cancer',
+    catalogName: 'Wisconsin Breast Cancer',
     code: 'WDBC',
     condition: 'breast cancer',
     samples: 569,
@@ -243,6 +246,7 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
   heart: {
     id: 'heart',
     name: 'Heart Disease',
+    catalogName: 'UCI Heart Disease',
     code: 'UCI',
     condition: 'heart disease',
     samples: 303,
@@ -374,6 +378,63 @@ export const DATASETS: Record<DatasetId, DatasetMeta> = {
 }
 
 export const DATASET_IDS: readonly DatasetId[] = ['wdbc', 'heart']
+
+/** Seeds (repeated runs) behind every reported result: values are the mean ± std over them. */
+export const SEEDS = 5
+
+/**
+ * Datasets whose pipeline is still being built. They are listed in the dataset strip and shown greyed out in
+ * every dataset switcher, but they have no DatasetId on purpose: no results store entry, chart, fixture or
+ * check can reference them, and they carry no results.
+ */
+export interface UpcomingDataset {
+  key: string
+  name: string
+  count: number
+  unit: 'patients' | 'recordings'
+  source: string
+  status: 'coming_soon'
+}
+
+export const UPCOMING_DATASETS: readonly UpcomingDataset[] = [
+  { key: 'ilpd', name: 'Indian Liver Patient Dataset (ILPD)', count: 583, unit: 'patients', source: 'UCI ML Repository · collected in Andhra Pradesh, India', status: 'coming_soon' },
+  { key: 'pima', name: 'Pima Indians Diabetes', count: 768, unit: 'patients', source: 'National Institute of Diabetes and Digestive and Kidney Diseases', status: 'coming_soon' },
+  { key: 'ckd', name: 'Chronic Kidney Disease', count: 400, unit: 'patients', source: 'UCI ML Repository', status: 'coming_soon' },
+  { key: 'parkinsons', name: 'Parkinson’s (voice measurements)', count: 195, unit: 'recordings', source: 'UCI ML Repository', status: 'coming_soon' },
+]
+
+export type DatasetStatus = 'in_use' | 'coming_soon'
+
+/** One row of the dataset catalogue: the datasets in use (read from DATASETS), then the coming-soon ones. */
+export interface CatalogEntry {
+  key: string
+  name: string
+  count: number
+  unit: 'patients' | 'recordings'
+  source: string
+  status: DatasetStatus
+  /** Set for datasets in use. */
+  datasetId?: DatasetId
+}
+
+/** Order of the datasets in use in the catalogue (the strip reads Heart first). */
+const CATALOG_ORDER: readonly DatasetId[] = ['heart', 'wdbc']
+
+export const DATASET_CATALOG: readonly CatalogEntry[] = [
+  ...CATALOG_ORDER.map((id): CatalogEntry => ({
+    key: id,
+    name: DATASETS[id].catalogName,
+    count: DATASETS[id].samples,
+    unit: 'patients',
+    source: DATASETS[id].source,
+    status: 'in_use',
+    datasetId: id,
+  })),
+  ...UPCOMING_DATASETS,
+]
+
+/** Patients across the datasets in use. */
+export const PATIENTS_IN_USE: number = DATASET_IDS.reduce((sum, id) => sum + DATASETS[id].samples, 0)
 
 /** 70/30 stratified split used by every experiment. */
 export const TEST_FRACTION = 0.3

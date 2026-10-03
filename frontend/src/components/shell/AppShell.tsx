@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 import { tBase } from '@/lib/motion'
 import { LIVE_PATIENT_ROUTES, PATIENT_MODE_ENABLED, RESEARCH_ROUTES } from '@/routes'
 import { useMode } from '@/state/mode'
+import { DataStrip } from './DataStrip'
 import { Logo } from './Logo'
 import { PatientTopBar } from './PatientTopBar'
 import { TeaserTopBar } from './TeaserTopBar'
@@ -15,7 +16,9 @@ import { TopBar } from './TopBar'
  * Fixed shell:
  *  ┌─────────┬──────────────────────┐
  *  │ logo    │ top bar              │
- *  ├─────────┼──────────────────────┤
+ *  ├─────────┴──────────────────────┤
+ *  │ dataset strip                  │
+ *  ├─────────┬──────────────────────┤
  *  │ sidebar │ main (scrolls)       │
  *  ├─────────┴──────────────────────┤
  *  │ status strip                   │
@@ -67,7 +70,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       className="grid h-full min-w-[1024px] overflow-hidden bg-bg text-ink print:block print:h-auto print:min-w-0 print:overflow-visible"
       style={{
         gridTemplateColumns: 'var(--sidebar-w) minmax(0, 1fr)',
-        gridTemplateRows: 'var(--topbar-h) minmax(0, 1fr) var(--strip-h)',
+        gridTemplateRows: 'var(--topbar-h) var(--datastrip-h) minmax(0, 1fr) var(--strip-h)',
       }}
     >
       <a
@@ -82,6 +85,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
       <div className="border-b border-rule print:hidden">
         <TopBar />
+      </div>
+      <div className="col-span-2 print:hidden">
+        <DataStrip />
       </div>
 
       <aside className="relative overflow-hidden border-r border-rule print:hidden">

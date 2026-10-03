@@ -31,7 +31,7 @@ import { PATIENT_SOURCE_LABEL, useCurrentPatient } from '@/state/patient'
 import type { DatasetId, ExplainResponse, FeatureContribution, FeatureSpec, PatientInput } from '@/types'
 
 /** ≥ 40px between the right column's groups; the SectionHeader draws the one hairline. */
-const GROUP = 'mt-10'
+const GROUP = 'mt-10 [@media(max-height:52rem)]:mt-6'
 
 // ─── Left: one control per feature ──────────────────────────
 
@@ -308,7 +308,7 @@ export function Explain({ route }: { route: RouteMeta }) {
   const isChanged = changed.length > 0
 
   return (
-    <Page label={route.label} className="!pt-6">
+    <Page label={route.label} className="!pt-6 [@media(max-height:52rem)]:!pt-3">
       <PageItem as="header">
         <PageHeader route={route} source={originalData?.source} compact>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -318,7 +318,7 @@ export function Explain({ route }: { route: RouteMeta }) {
         </PageHeader>
       </PageItem>
 
-      <PageItem className="@container mt-4">
+      <PageItem className="@container mt-4 [@media(max-height:52rem)]:mt-2">
         <div className="grid grid-cols-1 gap-x-16 gap-y-12 [grid-template-areas:'result'_'controls'] @min-[60rem]:grid-cols-[minmax(0,40fr)_minmax(0,60fr)] @min-[60rem]:[grid-template-areas:'controls_result']">
           {/* 01 — controls: the hero is the active group */}
           <section className="[grid-area:controls]" aria-label="What if" data-tour="whatif">

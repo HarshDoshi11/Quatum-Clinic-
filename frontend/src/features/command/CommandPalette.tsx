@@ -8,7 +8,8 @@ import { COMMAND_PALETTE_EVENT } from '@/components/shell/TopBar'
 import { useAppActions } from '@/features/actions'
 import { useExperimentDrawer } from '@/features/experiments/ExperimentDrawer'
 import { useShortcuts } from '@/features/shortcuts/Shortcuts'
-import { DATASET_IDS, DATASETS, MODELS } from '@/lib/domain'
+import { Tooltip } from '@/components/ui/Tooltip'
+import { DATASET_IDS, DATASETS, MODELS, UPCOMING_DATASETS } from '@/lib/domain'
 import { formatTime } from '@/lib/format'
 import { easePrecise } from '@/lib/motion'
 import { isMac } from '@/lib/platform'
@@ -20,13 +21,28 @@ import { useProjector } from '@/state/projector'
 import { useTheme } from '@/state/theme'
 import type { ExperimentSummary } from '@/types'
 
-function Item({ value, keywords, onSelect, children, hint }: { value: string; keywords?: string[]; onSelect: () => void; children: ReactNode; hint?: ReactNode }) {
+function Item({
+  value,
+  keywords,
+  onSelect,
+  children,
+  hint,
+  disabled = false,
+}: {
+  value: string
+  keywords?: string[]
+  onSelect: () => void
+  children: ReactNode
+  hint?: ReactNode
+  disabled?: boolean
+}) {
   return (
     <Command.Item
       value={value}
       keywords={keywords}
       onSelect={onSelect}
-      className="group flex cursor-pointer items-center gap-3 rounded-[2px] px-3 py-2.5 type-body text-muted data-[selected=true]:bg-surface data-[selected=true]:text-ink"
+      disabled={disabled}
+      className="group flex cursor-pointer items-center gap-3 rounded-[2px] px-3 py-2.5 type-body text-muted data-[disabled=true]:cursor-not-allowed data-[selected=true]:bg-surface data-[selected=true]:text-ink"
     >
       <span className="block h-[6px] w-[6px] shrink-0 bg-transparent group-data-[selected=true]:bg-accent" aria-hidden="true" />
       <span className="flex-1 truncate">{children}</span>
@@ -179,6 +195,19 @@ export function CommandPalette() {
                           </Item>
                         )
                       })}
+                      {UPCOMING_DATASETS.map((d) => (
+                        <Tooltip key={d.key} content="Pipeline in progress" width={180}>
+                          <Item
+                            value={`Switch to ${d.name}`}
+                            keywords={['dataset', 'coming soon']}
+                            onSelect={() => {}}
+                            disabled
+                            hint={<span className="rounded-[2px] border border-rule-strong px-1.5 py-px">Coming soon</span>}
+                          >
+                            {d.name}
+                          </Item>
+                        </Tooltip>
+                      ))}
                     </>
                   )}
                   <Item

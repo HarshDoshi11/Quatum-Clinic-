@@ -29,6 +29,10 @@ The full product spec lives in `docs/brief.md`. This file holds the **standing r
 - Phase 8 (polish for submission): done. Every results page shows a `SourceBadge` (REAL · 5 SEEDS / SIMULATED)
   beside its section label, driven by the typed `source` field on each API response; route switches are exhaustive;
   every page sits in a `RouteErrorBoundary`; the default theme is dark; vendor chunks are split in `vite.config.ts`.
+- Dataset strip (Research Mode): one 2rem line under the top bar (`DataStrip`, full width) with the DATA · REAL
+  badge, each dataset in use and its patient count, the total and the seed count, all read from the dataset config;
+  any of them opens the catalogue popover (name, count, source, IN USE / COMING SOON). Predict and Explain tightened
+  their gaps on short viewports so their first screens still fit. Not shown in Patient Mode.
 - After Phase 6, an ML track begins in `ml/` (real pipeline + experiment scripts). Its outputs must match the mock
   response shapes exactly, so switching USE_MOCK=false needs no UI changes.
 - ML track, first cut: `ml/run_pipeline.py` trains the six models for real (5 seeds, PennyLane lightning.qubit for
@@ -74,6 +78,10 @@ Backend: `cd backend && .venv\Scripts\activate && uvicorn app.main:app --reload 
   Never hard-code a result number in UI copy or in `src/content/`.
 - User actions that other parts of the UI can also trigger go through `useAppActions()` (`src/features/actions.ts`),
   so each action shows the same toast wherever it's triggered.
+- Coming-soon datasets live in `UPCOMING_DATASETS` (`src/lib/domain.ts`) with `status: 'coming_soon'` and no
+  `DatasetId`, so no results store entry, chart, fixture or check can reference them. Every dataset switcher shows
+  them greyed out, non-selectable, tagged COMING SOON with the tooltip "Pipeline in progress". Give one a
+  `DatasetId` only when its pipeline produces real results.
 - Per-dataset behaviour is declared on the dataset config (`DATASETS` in `src/lib/domain.ts`, e.g. `lockedFeatures`,
   `explainCaption`, `modalities`, `reportSubject`, `riskBandEdges`) and reaches pages through the API. Never special-case a dataset ID in a page or mock; a new
   dataset defines its own behaviour by adding a config entry.

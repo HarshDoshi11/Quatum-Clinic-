@@ -36,7 +36,7 @@ const THRESHOLD_MIN = 0.05
 const THRESHOLD_MAX = 0.95
 
 /** Whitespace between the right column's groups, around the one hairline that separates them. */
-const GROUP_RULE = 'predict-group-rule my-4 border-t border-rule [@media(max-height:52rem)]:my-2'
+const GROUP_RULE = 'predict-group-rule my-3 border-t border-rule [@media(max-height:52rem)]:my-1'
 
 // ─── Right column: result, threshold, trust, stats ─────────
 
@@ -265,7 +265,7 @@ export function Predict({ route }: { route: RouteMeta }) {
   }
 
   return (
-    <Page label={route.label} className="predict-page !pt-6 [@media(max-height:52rem)]:!pt-4">
+    <Page label={route.label} className="predict-page !pt-4 [@media(max-height:52rem)]:!pt-1">
       {/* One-line header: the question, with the experiment and backend on the same row */}
       <PageItem as="header">
         <PageHeader route={route} source={trustData?.source} compact>
@@ -280,7 +280,7 @@ export function Predict({ route }: { route: RouteMeta }) {
         The form on the left scrolls; the answer on the right is sticky, so the result, threshold and
         trust evidence stay on the first screen. Stacked (zoom, projector): result first, then the form.
       */}
-      <PageItem className="@container mt-4 [@media(max-height:52rem)]:mt-3">
+      <PageItem className="@container mt-3 [@media(max-height:52rem)]:mt-2">
         <div className="grid grid-cols-1 gap-x-16 gap-y-10 [grid-template-areas:'result'_'form'] @min-[60rem]:grid-cols-[minmax(0,42fr)_minmax(0,58fr)] @min-[60rem]:[grid-template-areas:'form_result']">
           {/* 01 — the patient: the form scrolls */}
           <section className="[grid-area:form]" aria-label="Patient">
@@ -339,7 +339,7 @@ export function Predict({ route }: { route: RouteMeta }) {
               plain="What the model estimates for this patient, what that means at the chosen cut-off, and how much to trust it."
             />
 
-            <div className="mt-4 [@media(max-height:52rem)]:mt-2">
+            <div className="mt-3 [@media(max-height:52rem)]:mt-1">
               {predictError ? (
                 <EmptyState tone="error" title="Couldn't score this patient." body={predictError.message} />
               ) : (

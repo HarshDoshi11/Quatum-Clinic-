@@ -90,6 +90,8 @@
 @media (max-height: 60rem) {
   :root[data-projector='on'] {
     font-size: 106.25%;
+    /* The dataset strip gives back a few pixels so Predict's trust evidence stays on the first screen. */
+    --datastrip-h: 1.75rem;
   }
 }
 :root[data-projector='on'][data-theme='light'],
@@ -211,6 +213,7 @@
   --sidebar-w: 16.5rem;
   --topbar-h: 4rem;
   --strip-h: 2rem;
+  --datastrip-h: 2rem;
   --gutter: 1.5rem;
   --page-pad-x: 3.5rem;
 

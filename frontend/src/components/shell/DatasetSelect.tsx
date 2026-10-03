@@ -1,7 +1,9 @@
 import { ChevronDown } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { Tooltip } from '@/components/ui/Tooltip'
 import { useAppActions } from '@/features/actions'
+import { UPCOMING_DATASETS } from '@/lib/domain'
 import { tQuick } from '@/lib/motion'
 import { useDismiss } from '@/lib/useDismiss'
 import { DATASETS, useDataset, type DatasetId, type DatasetMeta } from '@/state/dataset'
@@ -133,7 +135,7 @@ export function DatasetSelect() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={tQuick}
-            className="absolute top-[calc(100%+6px)] left-0 z-40 min-w-[22rem] rounded-[2px] border border-rule-strong bg-bg py-1"
+            className="absolute top-[calc(100%+6px)] left-0 z-40 w-max min-w-[22rem] rounded-[2px] border border-rule-strong bg-bg py-1"
           >
             {OPTIONS.map((option, i) => {
               const selected = option.id === dataset.id
@@ -159,6 +161,27 @@ export function DatasetSelect() {
                 </li>
               )
             })}
+            {/* Coming soon: listed, never selectable (not in the arrow-key order, no click), no results anywhere. */}
+            <li role="presentation" className="my-1 border-t border-rule" />
+            {UPCOMING_DATASETS.map((d) => (
+              <Tooltip key={d.key} content="Pipeline in progress" width={180}>
+                <li
+                  id={`${listId}-${d.key}`}
+                  role="option"
+                  aria-selected={false}
+                  aria-disabled="true"
+                  className="flex cursor-not-allowed items-center gap-3 px-3 py-2.5 type-ui text-muted"
+                >
+                  <span className="w-2" aria-hidden="true" />
+                  <span className="flex-1 whitespace-nowrap">
+                    {d.name}
+                    <span aria-hidden="true">{' · '}</span>
+                    <span className="num">{d.count}</span>
+                  </span>
+                  <span className="type-label rounded-[2px] border border-rule-strong px-1.5 py-px whitespace-nowrap">Coming soon</span>
+                </li>
+              </Tooltip>
+            ))}
           </motion.ul>
         )}
       </AnimatePresence>
